@@ -79,7 +79,7 @@ public class Utils {
 
 
     public static Uri buildFileContentUri(final Uri uriItem, final ContentResolver resolver) {
-        final String[] projection = new String[]{Item.Columns.FILE_URI_COLUMN};
+        final String[] projection = new String[]{Item.Columns.LOCATION_STANDARD_URI};
         final Cursor cursor = resolver.query(uriItem, projection, null, new String[]{}, null);
         if (cursor.getCount() <= 0) {
             Log.error("ContentResolver.query() returned no rows.");
@@ -87,7 +87,7 @@ public class Utils {
         }
 
         cursor.moveToFirst();
-        final int index = cursor.getColumnIndex(Item.Columns.FILE_URI_COLUMN);
+        final int index = cursor.getColumnIndex(Item.Columns.LOCATION_STANDARD_URI);
         if (index == -1) {
             Log.error("Cursor.getColumnIndex() failed.");
             return null;

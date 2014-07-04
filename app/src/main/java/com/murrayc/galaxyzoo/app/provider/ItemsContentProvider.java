@@ -38,12 +38,12 @@ import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Singleton;
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.provider.rest.FileResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.UriRequestTask;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
-import org.json.JSONArray;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -110,11 +110,9 @@ public class ItemsContentProvider extends ContentProvider {
         sItemsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
         sItemsProjectionMap.put(Item.Columns.SUBJECT_ID, DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID);
         sItemsProjectionMap.put(Item.Columns.ZOONIVERSE_ID, DatabaseHelper.DB_COLUMN_NAME_ZOONIVERSE_ID);
-        sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD, DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID);
-        sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL, DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID);
-        sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED, DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID);
-
-        sItemsProjectionMap.put(Item.Columns.FILE_URI_COLUMN, DatabaseHelper.DB_COLUMN_NAME_FILE_URI);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI, DatabaseHelper.DB_COLUMN_NAME_LOCATION_STANDARD_URI);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL_URI, DatabaseHelper.DB_COLUMN_NAME_LOCATION_THUMBNAIL_URI);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_URI, DatabaseHelper.DB_COLUMN_NAME_LOCATION_INVERTED_URI);
     }
 
 
@@ -195,6 +193,7 @@ public class ItemsContentProvider extends ContentProvider {
         return super.openFileHelper(uri, mode);
     }
 
+    //TODO: Is this actually used by anything?
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         // Validate the requested uri
@@ -214,6 +213,23 @@ public class ItemsContentProvider extends ContentProvider {
 
         // insert the initialValues into a new database row
         final SQLiteDatabase db = getDb();
+
+        final Subject subject = new Subject();
+        //TODO:.
+
+        final long rowId = addSubject(subject);
+        if (rowId >= 0) {
+            final Uri itemUri = ContentUris.withAppendedId(
+                    Item.CONTENT_URI, rowId);
+            getContext().getContentResolver().notifyChange(itemUri, null);
+            return itemUri; //The URI of the newly-added Item.
+        }
+
+        throw new SQLException("Failed to insert row into " + uri);
+    }
+
+    private Uri createFileUri(final String uriOfFileToCache) {
+        final SQLiteDatabase db = getDb();
         final long fileId = db.insertOrThrow(DatabaseHelper.TABLE_NAME_FILES,
                 DatabaseHelper.DB_COLUMN_NAME_FILE_DATA, null);
 
@@ -223,7 +239,7 @@ public class ItemsContentProvider extends ContentProvider {
             final Context context = getContext();
             if (context != null) {
                 final File realFile = new File(context.getExternalFilesDir(null),
-                        Long.toString(fileId) + ".glom"); //TODO: Is toString() affected by the locale?
+                        Long.toString(fileId)); //TODO: Is toString() affected by the locale?
 
                 //Actually create an empty file there -
                 //otherwise when we try to write to it via openOutputStream()
@@ -258,20 +274,25 @@ public class ItemsContentProvider extends ContentProvider {
             //TODO? getContext().getContentResolver().notifyChange(fileId, null);
         }
 
-        if (fileUri != null) {
-            // insert the initialValues, and the fileID, into a new database row
-            valuesToUse.put(DatabaseHelper.DB_COLUMN_NAME_FILE_URI, fileUri.toString());
-            final long rowId = db.insertOrThrow(DatabaseHelper.TABLE_NAME_ITEMS,
-                    DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID, valuesToUse);
-            if (rowId >= 0) {
-                final Uri itemUri = ContentUris.withAppendedId(
-                        Item.CONTENT_URI, rowId);
-                getContext().getContentResolver().notifyChange(itemUri, null);
-                return itemUri; //The URI of the newly-added Item.
-            }
-        }
+        //Actually cache the URI's data in the local file:
+        cacheUriToFile(uriOfFileToCache, realFileUri);
 
-        throw new SQLException("Failed to insert row into " + uri);
+
+        return fileUri;
+    }
+
+
+    /**
+     * Spawns a thread to download bytes from a url and store them in a file.
+     */
+    private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri) {
+        // use id as a unique request tag
+        final HttpGet get = new HttpGet(uriFileToCache);
+        final UriRequestTask requestTask = new UriRequestTask(
+                get, new FileResponseHandler(cacheFileUri),
+                getContext());
+        final Thread t = new Thread(requestTask);
+        t.start();
     }
 
     @Override
@@ -367,7 +388,9 @@ public class ItemsContentProvider extends ContentProvider {
                 Log.info("c count=" + c.getCount());
 
                 c.moveToFirst();
-                final int index = c.getColumnIndex(DatabaseHelper.DB_COLUMN_NAME_FILE_DATA);
+                final int index = c.getColumnIndex(DatabaseHelper.DB_COLUMN_NAME_FILE_DATA);.
+
+
                 if (index == -1) {
                     Log.error("Cursor.getColumnIndex() failed.");
                     return null;
@@ -468,23 +491,37 @@ public class ItemsContentProvider extends ContentProvider {
         return mOpenDbHelper.getWritableDatabase();
     }
 
-    public void addSubject(final Subject item) {
+    public long addSubject(final Subject item) {
         final SQLiteDatabase db = getDb();
 
         final ContentValues values = new ContentValues();
         values.put(DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID, item.mId);
         values.put(DatabaseHelper.DB_COLUMN_NAME_ZOONIVERSE_ID, item.mZooniverseId);
-        values.put(DatabaseHelper.DB_COLUMN_NAME_LOCATION_STANDARD, item.mLocationStandard);
-        values.put(DatabaseHelper.DB_COLUMN_NAME_LOCATION_THUMBNAIL, item.mLocationThumbnail);
-        values.put(DatabaseHelper.DB_COLUMN_NAME_LOCATION_INVERTED, item.mLocationInverted);
+
+        //Get (our) local content URIs of cache files instead of the remote URIs for the images:
+        Uri fileUri = createFileUri(item.mLocationStandard);
+        if (fileUri != null) {
+            values.put(DatabaseHelper.DB_COLUMN_NAME_LOCATION_STANDARD_URI, fileUri.toString());
+        }
+
+        fileUri = createFileUri(item.mLocationThumbnail);
+        if (fileUri != null) {
+            values.put(DatabaseHelper.DB_COLUMN_NAME_LOCATION_THUMBNAIL_URI, fileUri.toString());
+        }
+
+        fileUri = createFileUri(item.mLocationInverted);
+        if (fileUri != null) {
+            values.put(DatabaseHelper.DB_COLUMN_NAME_LOCATION_INVERTED_URI, fileUri.toString());
+        }
 
         final long rowId = db.insert(DatabaseHelper.TABLE_NAME_ITEMS,
                 Item.Columns._ID, values);
         if (rowId >= 0) {
-            Uri insertUri =
+            final Uri insertUri =
                     ContentUris.withAppendedId(
                             Item.CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(insertUri, null);
+            return rowId;
         } else {
             throw new IllegalStateException("could not insert " +
                     "content values: " + values);
@@ -503,13 +540,12 @@ public class ItemsContentProvider extends ContentProvider {
     private static class DatabaseHelper extends SQLiteOpenHelper {
         protected static final String DB_COLUMN_NAME_SUBJECT_ID = "subjectId";
         protected static final String DB_COLUMN_NAME_ZOONIVERSE_ID = "zooniverseId";
-        protected static final String DB_COLUMN_NAME_LOCATION_STANDARD = "locationStandard";
-        protected static final String DB_COLUMN_NAME_LOCATION_THUMBNAIL = "locationThumbnail";
-        protected static final String DB_COLUMN_NAME_LOCATION_INVERTED = "locationInverted";
-        protected static final String DB_COLUMN_NAME_FILE_URI = "uri"; //The content URI for a file in the files table.
+        protected static final String DB_COLUMN_NAME_LOCATION_STANDARD_URI = "locationStandardUri"; //The content URI for a file in the files table.
+        protected static final String DB_COLUMN_NAME_LOCATION_THUMBNAIL_URI = "locationThumbnailUri"; //The content URI for a file in the files table.
+        protected static final String DB_COLUMN_NAME_LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
         private static final String DATABASE_NAME = "items.db";
 
-        private static final int DATABASE_VERSION = 2;
+        private static final int DATABASE_VERSION = 3;
 
         private static final String TABLE_NAME_ITEMS = "items";
         private static final String TABLE_NAME_FILES = "files";
@@ -545,10 +581,9 @@ public class ItemsContentProvider extends ContentProvider {
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     DB_COLUMN_NAME_SUBJECT_ID + " TEXT, " +
                     DB_COLUMN_NAME_ZOONIVERSE_ID + " TEXT, " +
-                    DB_COLUMN_NAME_LOCATION_STANDARD + " TEXT, " +
-                    DB_COLUMN_NAME_LOCATION_THUMBNAIL + " TEXT, " +
-                    DB_COLUMN_NAME_LOCATION_INVERTED + " TEXT, " +
-                    DB_COLUMN_NAME_FILE_URI + " TEXT);";
+                    DB_COLUMN_NAME_LOCATION_STANDARD_URI + " TEXT, " +
+                    DB_COLUMN_NAME_LOCATION_THUMBNAIL_URI + " TEXT, " +
+                    DB_COLUMN_NAME_LOCATION_INVERTED_URI + " TEXT)";
             sqLiteDatabase.execSQL(qs);
 
             qs = "CREATE TABLE " + TABLE_NAME_FILES + " (" +

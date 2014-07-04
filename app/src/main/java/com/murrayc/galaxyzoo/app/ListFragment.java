@@ -20,24 +20,19 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.BaseColumns;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
@@ -62,7 +57,7 @@ public class ListFragment extends android.app.ListFragment
 
     private static final int URL_LOADER = 0;
     private ListCursorAdapter mAdapter;
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD };
+    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD_URI};
 
     private void requestMoreItems() {
         final Activity activity = getActivity();
