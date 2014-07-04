@@ -31,12 +31,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Singleton;
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooResponseHandler;
+import com.murrayc.galaxyzoo.app.provider.rest.UriRequestTask;
+
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.json.JSONArray;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,6 +54,7 @@ import java.util.Map;
 
 public class ItemsContentProvider extends ContentProvider {
 
+    public static final String METHOD_REQUEST_ITEMS = "request-items";
     public static final String URI_PART_ITEM = "item";
     public static final String URI_PART_FILE = "file";
 
@@ -62,6 +70,10 @@ public class ItemsContentProvider extends ContentProvider {
      */
     private static final String CONTENT_ITEM_TYPE =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.item";
+
+    /** REST uri for querying items. */
+    private static final String QUERY_URI =
+            "https://api.zooniverse.org/projects/galaxy_zoo/recents";
 
 
     //TODO: Use an enum?
@@ -264,6 +276,22 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     @Override
+    public Bundle call(String method, String arg, Bundle extras) {
+        if (!METHOD_REQUEST_ITEMS.equals(method)) {
+            return null;
+        }
+
+        /** Check with the remote REST API asynchronously,
+         * informing the calling client later via notification.
+         */
+        //TODO: Only do this if there are no unclassified items:
+        asyncQueryRequest(QUERY_URI);
+
+        return null;
+    }
+
+
+    @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         //TODO: Avoid a direct implicit mapping between the Cursor column names in "selection" and the
@@ -292,6 +320,10 @@ public class ItemsContentProvider extends ContentProvider {
 
                 c.setNotificationUri(getContext().getContentResolver(),
                         Item.CONTENT_URI);
+
+                //The client must call(TODO) sometime to actually fill the database with items,
+                //and the client will then be notified via the cursor that there are new items.
+
                 break;
             }
             case MATCHER_ID_ITEM: {
@@ -431,6 +463,24 @@ public class ItemsContentProvider extends ContentProvider {
         return mOpenDbHelper.getWritableDatabase();
     }
 
+    public void addClassification(Classification item) {
+        final SQLiteDatabase db = getDb();
+
+        final ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.DB_COLUMN_NAME_TITLE, "some title");
+        final long rowId = db.insert(DatabaseHelper.TABLE_NAME_ITEMS,
+                Item.Columns._ID, values);
+        if (rowId >= 0) {
+            Uri insertUri =
+                    ContentUris.withAppendedId(
+                            Item.CONTENT_URI, rowId);
+            getContext().getContentResolver().notifyChange(insertUri, null);
+        } else {
+            throw new IllegalStateException("could not insert " +
+                    "content values: " + values);
+        }
+    }
+
     /**
      * There are 2 tables: items and files.
      * The items table has a uri field that specifies a record in the files tables.
@@ -487,6 +537,14 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
+    public static class Classification {
+        public String mId;
+        public String mCreatedAt;
+        public String mProjectId;
+        public JSONArray mSubjectIds;
+        public String mSubjects;
+    }
+
     private class UriParts {
         public String itemId;
     }
@@ -500,4 +558,43 @@ public class ItemsContentProvider extends ContentProvider {
     */
 
 
+    /**
+     * Creates a new worker thread to carry out a RESTful network invocation.
+     *
+     * @param queryUri the complete URI that should be accessed by this request.
+     */
+    private void asyncQueryRequest(final String queryUri) {
+        //synchronized (mRequestsInProgress) {
+            UriRequestTask requestTask = null; //getRequestTask();
+            if (requestTask == null) {
+                requestTask = newQueryTask(queryUri);
+                Thread t = new Thread(requestTask);
+                // allows other requests to run in parallel.
+                t.start();
+            }
+        //}
+    }
+
+    UriRequestTask newQueryTask(final String url) {
+        UriRequestTask requestTask;
+
+        final HttpGet get = new HttpGet(url);
+        ResponseHandler handler = newResponseHandler();
+        requestTask = new UriRequestTask("" /* TODO */, this, get,
+                handler, getContext());
+
+        //mRequestsInProgress.put(requestTag, requestTask);
+        return requestTask;
+    }
+
+    /**
+     * Abstract method that allows a subclass to define the type of handler
+     * that should be used to parse the response of a given request.
+     *
+     * @return The response handler created by a subclass used to parse the
+     *         request response.
+     */
+    protected ResponseHandler newResponseHandler() {
+        return new GalaxyZooResponseHandler(this);
+    }
 }
