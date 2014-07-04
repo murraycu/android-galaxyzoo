@@ -19,14 +19,27 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.murrayc.galaxyzoo.app.provider.Item;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,69 +48,62 @@ import java.util.List;
  */
 class ListCursorAdapter extends CursorAdapter {
 
-    private final String[] mColumns;
-    private List<TextView> mTextViews;
+    private LayoutInflater mLayoutInflater;
 
-    public ListCursorAdapter(Context context, Cursor c, final String[] columns) {
+    public ListCursorAdapter(Context context, Cursor c) {
         super(context, c, 0 /* seems reasonable */);
-        mColumns = columns;
+
+        mLayoutInflater = LayoutInflater.from(context);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-
-        final List<Integer> widths; //TODO
-
-        final LinearLayout rowLayout = new LinearLayout(context);
-        //rowLayout.setId(View.generateViewId());
-        //rowLayout.setTag("content");
-
-        //Create the layout for the row:
-        mTextViews = new ArrayList<>();
-
-        final int MAX = 3; //TODO: Be more clever about how we don't use more than the available space.
-        for (int i = 0; i < mColumns.length; i++) {
-            if (i > MAX)
-                break;
-
-            final TextView textView = UiUtils.createTextView(context);
-
-            if (i != MAX) { //Let the last field take all available space.
-                textView.setWidth(50); //TODO: widths.get(i));
-            }
-
-            //Separate the views with some space:
-            if (i != 0) {
-                //final float paddingInDp = 16;
-                //final float scale = context.getResources().getDisplayMetrics().density;
-                //final int dpAsPixels = (int) (paddingInDp * scale + 0.5f); // See http://developer.android.com/guide/practices/screens_support.html#dips-pels
-                //textView.setPadding(dpAsPixels /* left */, 0, 0, 0);
-
-                //TODO: Align items so the width is the same for the whole column.
-                //final float paddingInDp = R.attr.listPreferredItemPaddingLeft;
-                //final float scale = context.getResources().getDisplayMetrics().density;
-                //final int dpAsPixels = (int) (paddingInDp * scale + 0.5f); // See http://developer.android.com/guide/practices/screens_support.html#dips-pels
-                //textView.setPadding(dpAsPixels /* left */, 0, 0, 0);
-
-                final int size = UiUtils.getStandardItemPadding(context);
-                textView.setPadding(size /* left */, 0, 0, 0);
-            }
-
-            rowLayout.addView(textView);
-            mTextViews.add(textView);
-        }
-
-        return rowLayout;
+        return mLayoutInflater.inflate(R.layout.listview_row_fragment_list, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        int i = 0;
-        for (final TextView textView : mTextViews) {
-            //TODO: Keep a list of the LayoutItemFields and do some real rendering here:
-            //TODO: Use the correct Cursor.get*() method depending on the column type.
-            textView.setText(cursor.getString(i));
-            i++;
+        //We can't use getColumnIndex because the Cursor (actually a SQliteDatabase cursor returned
+        //from our ContentProvider) only knows about the underlying SQLite database column names,
+        //not our ContentProvider's column names. That seems like a design error in the Android API.
+        final int subjectIdIndex = 1; //cursor.getColumnIndex(Item.Columns.SUBJECT_ID);
+        final int imageUrlIndex = 2; //cursor.getColumnIndex(Item.Columns.LOCATION_THUMBNAIL_URI);
+        if (subjectIdIndex == -1) {
+            return;
+        }
+
+        if (imageUrlIndex == -1) {
+            return;
+        }
+
+        final String subjectId = cursor.getString(subjectIdIndex);
+        final String imageUriStr = cursor.getString(imageUrlIndex);
+
+        /**
+         * Next set the title of the entry.
+         */
+
+        final TextView textView = (TextView) view.findViewById(R.id.item_text);
+        if (textView != null) {
+            textView.setText(subjectId);
+        }
+
+        if (!TextUtils.isEmpty(imageUriStr)) {
+            final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);
+
+            ContentResolver contentResolver = context.getContentResolver();
+
+            Bitmap bMap = null;
+            try {
+                final Uri uri = Uri.parse(imageUriStr);
+                final InputStream stream = contentResolver.openInputStream(uri);
+                bMap = BitmapFactory.decodeStream(stream);
+            } catch (IOException e) {
+                Log.error("BitmapFactory.decodeStream() failed.", e);
+                return;
+            }
+
+            imageView.setImageBitmap(bMap);
         }
     }
 }

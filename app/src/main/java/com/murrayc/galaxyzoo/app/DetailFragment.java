@@ -181,8 +181,6 @@ public class DetailFragment extends Fragment
         if (activity == null)
             return;
 
-        final Context context = activity.getApplicationContext();
-
         if (mCursor.getCount() <= 0) { //In case the query returned no rows.
             Log.error("The ContentProvider query returned no rows.");
         }
@@ -194,9 +192,6 @@ public class DetailFragment extends Fragment
             Log.error("mRootView is null.");
             return;
         }
-
-        final TableLayout tableLayout = getTableLayout(mRootView);
-
     }
 
     @Override

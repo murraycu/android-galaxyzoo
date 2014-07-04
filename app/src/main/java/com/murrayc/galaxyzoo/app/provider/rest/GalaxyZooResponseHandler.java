@@ -119,7 +119,6 @@ public class GalaxyZooResponseHandler implements ResponseHandler<String> {
             }
         } catch (JSONException e) {
             Log.error("JSON parsing of object fields failed.", e);
-            return;
         }
     }
 

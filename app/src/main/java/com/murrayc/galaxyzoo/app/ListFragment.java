@@ -57,7 +57,7 @@ public class ListFragment extends android.app.ListFragment
 
     private static final int URL_LOADER = 0;
     private ListCursorAdapter mAdapter;
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD_URI};
+    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_THUMBNAIL_URI};
 
     private void requestMoreItems() {
         final Activity activity = getActivity();
@@ -204,8 +204,7 @@ public class ListFragment extends android.app.ListFragment
 
         mAdapter = new ListCursorAdapter(
                 activity,
-                null, //No cursor yet.
-                mColumns);
+                null /* No cursor yet */);
 
         try {
             setListAdapter(mAdapter);
