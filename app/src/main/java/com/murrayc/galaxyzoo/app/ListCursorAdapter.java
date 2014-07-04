@@ -63,21 +63,9 @@ class ListCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        //We can't use getColumnIndex because the Cursor (actually a SQliteDatabase cursor returned
-        //from our ContentProvider) only knows about the underlying SQLite database column names,
-        //not our ContentProvider's column names. That seems like a design error in the Android API.
-        final int subjectIdIndex = 1; //cursor.getColumnIndex(Item.Columns.SUBJECT_ID);
-        final int imageUrlIndex = 2; //cursor.getColumnIndex(Item.Columns.LOCATION_THUMBNAIL_URI);
-        if (subjectIdIndex == -1) {
-            return;
-        }
 
-        if (imageUrlIndex == -1) {
-            return;
-        }
-
-        final String subjectId = cursor.getString(subjectIdIndex);
-        final String imageUriStr = cursor.getString(imageUrlIndex);
+        final String subjectId = cursor.getString(ListFragment.COLUMN_INDEX_SUBJECT_ID);
+        final String imageUriStr = cursor.getString(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_URI);
 
         /**
          * Next set the title of the entry.

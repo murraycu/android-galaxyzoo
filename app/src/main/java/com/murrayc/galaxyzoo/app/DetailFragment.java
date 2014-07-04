@@ -22,7 +22,6 @@ package com.murrayc.galaxyzoo.app;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
@@ -79,12 +78,12 @@ public class DetailFragment extends Fragment
      * The fragment argument representing the database table that this fragment
      * represents.
      */
-    public static final String ARG_SUBJECT_ID = "item-id";
+    public static final String ARG_ITEM_ID = "item-id";
 
 
     private static final int URL_LOADER = 0;
     private long mUserId = -1;
-    private String mSubjectId;
+    private String mItemId;
     private Cursor mCursor;
 
     private View mRootView;
@@ -101,7 +100,7 @@ public class DetailFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         final Bundle bundle = getArguments();
-        mSubjectId = bundle.getString(ARG_SUBJECT_ID);
+        mItemId = bundle.getString(ARG_ITEM_ID);
 
         setHasOptionsMenu(true);
     }
@@ -200,15 +199,15 @@ public class DetailFragment extends Fragment
             return null;
         }
 
-        final String subjectId = getSubjectId();
-        if (TextUtils.isEmpty(subjectId)) {
+        final String itemId = getItemId();
+        if (TextUtils.isEmpty(itemId)) {
             return null;
         }
 
         final Activity activity = getActivity();
 
         final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
-        builder.appendPath(subjectId);
+        builder.appendPath(itemId);
 
         //The content provider ignores the projection (the list of fields).
         //Instead, it assumes that we know what fields will be returned,
@@ -239,7 +238,7 @@ public class DetailFragment extends Fragment
         mCursor = null;
     }
 
-    public String getSubjectId() {
-        return mSubjectId;
+    public String getItemId() {
+        return mItemId;
     }
 }

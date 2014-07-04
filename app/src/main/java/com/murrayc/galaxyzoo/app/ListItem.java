@@ -22,6 +22,7 @@ package com.murrayc.galaxyzoo.app;
 /**
  * This is just something to give to ArrayAdapter
  * so it can call toString() on something.
+ * TODO: Remove this?
  */
 class ListItem {
     public final String subjectId;

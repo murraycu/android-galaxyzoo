@@ -35,11 +35,15 @@ import android.view.MenuItem;
  */
 public class DetailActivity extends BaseActivity implements DetailFragment.Callbacks {
 
-    private String mSubjectId;
+    private String mItemId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Intent intent = getIntent();
+        setUserId(intent.getStringExtra(ARG_USER_ID));
+        setItemId(intent.getStringExtra(DetailFragment.ARG_ITEM_ID));
 
         setContentView(R.layout.activity_detail);
 
@@ -58,13 +62,11 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Callb
             final Bundle arguments = new Bundle();
             arguments.putString(ARG_USER_ID,
                     getUserId()); //Obtained in the super class.
-            arguments.putString(DetailFragment.ARG_SUBJECT_ID,
-                    getSubjectId());
+            arguments.putString(DetailFragment.ARG_ITEM_ID,
+                    getItemId());
 
             // TODO: Find a simpler way to just pass this through to the fragment.
             // For instance, pass the intent.getExtras() as the bundle?.
-            final Intent intent = getIntent();
-
             final DetailFragment fragment = new DetailFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()
@@ -100,7 +102,6 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Callb
             //
             final Intent intent = new Intent(this, ListActivity.class);
             intent.putExtra(ARG_USER_ID, getUserId());
-            intent.putExtra(DetailFragment.ARG_SUBJECT_ID, getSubjectId());
             navigateUpTo(intent);
             return true;
         }
@@ -108,7 +109,11 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Callb
         return super.onOptionsItemSelected(item);
     }
 
-    public String getSubjectId() {
-        return mSubjectId;
+    public String getItemId() {
+        return mItemId;
+    }
+
+    public void setItemId(final String itemId) {
+        mItemId = itemId;
     }
 }

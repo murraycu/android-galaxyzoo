@@ -80,7 +80,7 @@ public class ListActivity extends BaseActivity
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(final String subjectId) {
-        navigate(subjectId);
+    public void onItemSelected(final String itemId) {
+        navigate(itemId);
     }
 }

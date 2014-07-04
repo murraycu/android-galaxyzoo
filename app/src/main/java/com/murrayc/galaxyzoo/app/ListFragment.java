@@ -59,6 +59,15 @@ public class ListFragment extends android.app.ListFragment
     private ListCursorAdapter mAdapter;
     private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_THUMBNAIL_URI};
 
+    // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
+    // (actually a SQliteDatabase cursor returned
+    // from our ContentProvider) only knows about the underlying SQLite database column names,
+    // not our ContentProvider's column names. That seems like a design error in the Android API.
+    //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
+    private static final int COLUMN_INDEX_ID = 0;
+    static final int COLUMN_INDEX_SUBJECT_ID = 1;
+    static final int COLUMN_INDEX_LOCATION_THUMBNAIL_URI = 2;
+
     private void requestMoreItems() {
         final Activity activity = getActivity();
         if (activity == null) {
@@ -85,7 +94,7 @@ public class ListFragment extends android.app.ListFragment
      */
     private static final Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(final String tableName) {
+        public void onItemSelected(final String itemId) {
         }
     };
 
@@ -315,15 +324,9 @@ public class ListFragment extends android.app.ListFragment
             return;
         }
 
-        final int index = cursor.getColumnIndex(Item.Columns.SUBJECT_ID);
-        if (index == -1) {
-            Log.error("Couldn't find subjectId index.");
-            return;
-        }
+        final String itemId = cursor.getString(COLUMN_INDEX_ID);
 
-        final String subjectId = cursor.getString(index);
-
-        mCallbacks.onItemSelected(subjectId);
+        mCallbacks.onItemSelected(itemId);
     }
 
     /**
@@ -340,6 +343,6 @@ public class ListFragment extends android.app.ListFragment
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(String subjectId);
+        public void onItemSelected(final String itemId);
     }
 }

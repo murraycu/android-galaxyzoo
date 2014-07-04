@@ -66,14 +66,14 @@ public class BaseActivity extends Activity {
      * Navigate to the item,
      *
      */
-    protected void navigate(final String subjectId) {
+    protected void navigate(final String itemId) {
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
             final Bundle arguments = new Bundle();
             arguments.putString(ARG_USER_ID, getUserId());
-            arguments.putString(DetailFragment.ARG_SUBJECT_ID, subjectId);
+            arguments.putString(DetailFragment.ARG_ITEM_ID, itemId);
 
             Fragment fragment = new DetailFragment();
             fragment.setArguments(arguments);
@@ -85,7 +85,7 @@ public class BaseActivity extends Activity {
             // for the selected item ID.
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(ARG_USER_ID, getUserId());
-            intent.putExtra(DetailFragment.ARG_SUBJECT_ID, subjectId);
+            intent.putExtra(DetailFragment.ARG_ITEM_ID, itemId);
 
             startActivity(intent);
         }
@@ -115,5 +115,9 @@ public class BaseActivity extends Activity {
 
     public String getUserId() {
         return mUserId;
+    }
+
+    public void setUserId(final String userId) {
+        mUserId = userId;
     }
 }

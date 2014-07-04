@@ -383,23 +383,6 @@ public class ItemsContentProvider extends ContentProvider {
                         prependToArray(selectionArgs, fileId), null, null, orderBy
                 );
 
-                //debugging:
-                /*
-                Log.info("c count=" + c.getCount());
-
-                c.moveToFirst();
-                final int index = c.getColumnIndex(DatabaseHelper.DB_COLUMN_NAME_FILE_DATA);.
-
-
-                if (index == -1) {
-                    Log.error("Cursor.getColumnIndex() failed.");
-                    return null;
-                }
-
-                final String strRealUri = c.getString(index);
-                Log.info("strRealUri=" + strRealUri);
-                */
-
                 c.setNotificationUri(getContext().getContentResolver(),
                         Item.FILE_URI); //TODO: More precise?
                 break;
