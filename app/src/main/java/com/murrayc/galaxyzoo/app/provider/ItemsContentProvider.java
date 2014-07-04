@@ -492,6 +492,12 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     public long addSubject(final Subject item) {
+        if(subjectIsInDatabase(item.mId)) {
+            //It is already in the database.
+            //TODO: Update the row?
+            return 0;
+        }
+
         final SQLiteDatabase db = getDb();
 
         final ContentValues values = new ContentValues();
@@ -526,6 +532,19 @@ public class ItemsContentProvider extends ContentProvider {
             throw new IllegalStateException("could not insert " +
                     "content values: " + values);
         }
+    }
+
+    private boolean subjectIsInDatabase(final String subjectId) {
+        final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
+        builder.setProjectionMap(sItemsProjectionMap);
+        builder.appendWhere(Item.Columns.SUBJECT_ID + " = ?"); //We use ? to avoid SQL Injection.
+        final String[] projection = {Item.Columns.SUBJECT_ID};
+        final String[] selectionArgs = {subjectId};
+        final Cursor c = builder.query(getDb(), projection,
+                null, selectionArgs,
+                null, null, null);
+        return c.getCount() > 0;
     }
 
     /**
