@@ -22,7 +22,6 @@ package com.murrayc.galaxyzoo.app;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.SparseArray;
 import android.view.MenuItem;
 
 /**
@@ -36,7 +35,7 @@ import android.view.MenuItem;
  */
 public class DetailActivity extends BaseActivity implements DetailFragment.Callbacks {
 
-    private String mItemId;
+    private String mSubjectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +58,8 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Callb
             final Bundle arguments = new Bundle();
             arguments.putString(ARG_USER_ID,
                     getUserId()); //Obtained in the super class.
-            arguments.putString(DetailFragment.ARG_ITEM_ID,
-                    getItemId());
+            arguments.putString(DetailFragment.ARG_SUBJECT_ID,
+                    getSubjectId());
 
             // TODO: Find a simpler way to just pass this through to the fragment.
             // For instance, pass the intent.getExtras() as the bundle?.
@@ -101,6 +100,7 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Callb
             //
             final Intent intent = new Intent(this, ListActivity.class);
             intent.putExtra(ARG_USER_ID, getUserId());
+            intent.putExtra(DetailFragment.ARG_SUBJECT_ID, getSubjectId());
             navigateUpTo(intent);
             return true;
         }
@@ -108,7 +108,7 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Callb
         return super.onOptionsItemSelected(item);
     }
 
-    public String getItemId() {
-        return mItemId;
+    public String getSubjectId() {
+        return mSubjectId;
     }
 }

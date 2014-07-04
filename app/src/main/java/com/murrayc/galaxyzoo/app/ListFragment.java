@@ -29,6 +29,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,6 +38,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
+import android.widget.HeaderViewListAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
@@ -58,7 +62,7 @@ public class ListFragment extends android.app.ListFragment
 
     private static final int URL_LOADER = 0;
     private ListCursorAdapter mAdapter;
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.TITLE_COLUMN };
+    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD };
 
     private void requestMoreItems() {
         final Activity activity = getActivity();
@@ -291,6 +295,43 @@ public class ListFragment extends android.app.ListFragment
         mActivatedPosition = position;
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        ListAdapter adapter = l.getAdapter();
+
+        //When the ListView has header views, our adaptor will be wrapped by HeaderViewListAdapter:
+        if (adapter instanceof HeaderViewListAdapter) {
+            final HeaderViewListAdapter parentAdapter = (HeaderViewListAdapter) adapter;
+            adapter = parentAdapter.getWrappedAdapter();
+        }
+
+        if (!(adapter instanceof CursorAdapter)) {
+            Log.error("Unexpected Adapter class: " + adapter.getClass().toString());
+            return;
+        }
+
+        // CursorAdapter.getItem() returns a  Cursor but that seems to be completely undocumented:
+        // https://code.google.com/p/android/issues/detail?id=69973&thanks=69973&ts=1400841331
+        final CursorAdapter cursorAdapter = (CursorAdapter) adapter;
+        final Cursor cursor = (Cursor) cursorAdapter.getItem(position - 1 /* Because we have a header */);
+        if (cursor == null) {
+            Log.error("cursorAdapter.getItem() returned null.");
+            return;
+        }
+
+        final int index = cursor.getColumnIndex(Item.Columns.SUBJECT_ID);
+        if (index == -1) {
+            Log.error("Couldn't find subjectId index.");
+            return;
+        }
+
+        final String subjectId = cursor.getString(index);
+
+        mCallbacks.onItemSelected(subjectId);
+    }
+
     /**
      * A callback interface that all activities containing some fragments must
      * implement. This mechanism allows activities to be notified of table
@@ -305,6 +346,6 @@ public class ListFragment extends android.app.ListFragment
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(String tableName);
+        public void onItemSelected(String subjectId);
     }
 }

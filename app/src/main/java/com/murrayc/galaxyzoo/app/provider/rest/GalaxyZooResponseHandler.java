@@ -85,30 +85,45 @@ public class GalaxyZooResponseHandler implements ResponseHandler<String> {
                 return inserted;
             }
 
-            parseJsonObject(obj);
+            parseJsonObjectClassification(obj);
         }
 
         return inserted;
     }
 
-    private void parseJsonObject(final JSONObject obj) {
-        ItemsContentProvider.Classification item = null;
+    private void parseJsonObjectClassification(final JSONObject objClassification) {
         try {
-            item = new ItemsContentProvider.Classification();
-            item.mId = obj.getString("id");
-            item.mCreatedAt = obj.getString("created_at");
-            item.mProjectId = obj.getString("project_id");
-            item.mSubjectIds = obj.getJSONArray("subject_ids");
-            item.mSubjects = obj.getString("subjects");
+            //mId = obj.getString("id");
+            //mCreatedAt = obj.getString("created_at");
+            //mProjectId = obj.getString("project_id");
+            //item.mSubjectIds = obj.getJSONArray("subject_ids");
+            final JSONArray jsonArraySubjects = objClassification.getJSONArray("subjects");
+
+            for(int i = 0; i < jsonArraySubjects.length(); ++i) {
+                final JSONObject objSubject = jsonArraySubjects.getJSONObject(i);
+                if (objSubject == null) {
+                    continue;
+                }
+
+                final ItemsContentProvider.Subject subject = new ItemsContentProvider.Subject();
+                subject.mId = objSubject.getString("id");
+                subject.mZooniverseId = objSubject.getString("zooniverse_id");
+                final JSONObject objLocation = objSubject.getJSONObject("location");
+                if (objLocation != null) {
+                    subject.mLocationStandard = objLocation.getString("standard");
+                    subject.mLocationThumbnail = objLocation.getString("thumbnail");
+                    subject.mLocationInverted = objLocation.getString("inverted");
+                }
+
+                insertIntoContentProvider(subject);
+            }
         } catch (JSONException e) {
             Log.error("JSON parsing of object fields failed.", e);
             return;
         }
-
-        insertIntoContentProvider(item);
     }
 
-    private void insertIntoContentProvider(ItemsContentProvider.Classification item) {
-        mContentProvider.addClassification(item);
+    private void insertIntoContentProvider(final ItemsContentProvider.Subject subject) {
+        mContentProvider.addSubject(subject);
     }
 }

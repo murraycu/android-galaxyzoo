@@ -53,7 +53,11 @@ public class Item {
 
     public static final class Columns implements BaseColumns {
         //The ID is BaseColumns._ID;
-        public static final String TITLE_COLUMN = "title";
+        public static final String SUBJECT_ID = "subjectId";
+        public static final String ZOONIVERSE_ID = "zooniverseId";
+        public static final String LOCATION_STANDARD = "locationStandard";
+        public static final String LOCATION_THUMBNAIL = "locationThumbnail";
+        public static final String LOCATION_INVERTED = "locationInverted";
         public static final String FILE_URI_COLUMN = "uri";
     }
 }

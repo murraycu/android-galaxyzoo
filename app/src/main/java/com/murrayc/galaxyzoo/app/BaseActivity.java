@@ -23,7 +23,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -33,6 +32,7 @@ import android.view.MenuItem;
 @SuppressLint("Registered") //This is a base class for other Activities.
 public class BaseActivity extends Activity {
 
+    //TODO: Avoid duplcation with the ARGs in the fragments:
     protected static final String ARG_USER_ID = "user-id";
 
     protected final Singleton documentSingleton = Singleton.getInstance();
@@ -66,14 +66,14 @@ public class BaseActivity extends Activity {
      * Navigate to the item,
      *
      */
-    protected void navigate(final String itemId) {
+    protected void navigate(final String subjectId) {
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
             final Bundle arguments = new Bundle();
             arguments.putString(ARG_USER_ID, getUserId());
-            arguments.putString(DetailFragment.ARG_ITEM_ID, itemId);
+            arguments.putString(DetailFragment.ARG_SUBJECT_ID, subjectId);
 
             Fragment fragment = new DetailFragment();
             fragment.setArguments(arguments);
@@ -85,7 +85,7 @@ public class BaseActivity extends Activity {
             // for the selected item ID.
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(ARG_USER_ID, getUserId());
-            intent.putExtra(DetailFragment.ARG_ITEM_ID, itemId);
+            intent.putExtra(DetailFragment.ARG_SUBJECT_ID, subjectId);
 
             startActivity(intent);
         }

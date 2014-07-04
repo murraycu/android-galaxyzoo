@@ -108,7 +108,12 @@ public class ItemsContentProvider extends ContentProvider {
         sItemsProjectionMap = new HashMap<>();
 
         sItemsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-        sItemsProjectionMap.put(Item.Columns.TITLE_COLUMN, DatabaseHelper.DB_COLUMN_NAME_TITLE);
+        sItemsProjectionMap.put(Item.Columns.SUBJECT_ID, DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID);
+        sItemsProjectionMap.put(Item.Columns.ZOONIVERSE_ID, DatabaseHelper.DB_COLUMN_NAME_ZOONIVERSE_ID);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD, DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL, DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED, DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID);
+
         sItemsProjectionMap.put(Item.Columns.FILE_URI_COLUMN, DatabaseHelper.DB_COLUMN_NAME_FILE_URI);
     }
 
@@ -257,7 +262,7 @@ public class ItemsContentProvider extends ContentProvider {
             // insert the initialValues, and the fileID, into a new database row
             valuesToUse.put(DatabaseHelper.DB_COLUMN_NAME_FILE_URI, fileUri.toString());
             final long rowId = db.insertOrThrow(DatabaseHelper.TABLE_NAME_ITEMS,
-                    DatabaseHelper.DB_COLUMN_NAME_TITLE, valuesToUse);
+                    DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID, valuesToUse);
             if (rowId >= 0) {
                 final Uri itemUri = ContentUris.withAppendedId(
                         Item.CONTENT_URI, rowId);
@@ -463,11 +468,16 @@ public class ItemsContentProvider extends ContentProvider {
         return mOpenDbHelper.getWritableDatabase();
     }
 
-    public void addClassification(Classification item) {
+    public void addSubject(final Subject item) {
         final SQLiteDatabase db = getDb();
 
         final ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.DB_COLUMN_NAME_TITLE, "some title");
+        values.put(DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID, item.mId);
+        values.put(DatabaseHelper.DB_COLUMN_NAME_ZOONIVERSE_ID, item.mZooniverseId);
+        values.put(DatabaseHelper.DB_COLUMN_NAME_LOCATION_STANDARD, item.mLocationStandard);
+        values.put(DatabaseHelper.DB_COLUMN_NAME_LOCATION_THUMBNAIL, item.mLocationThumbnail);
+        values.put(DatabaseHelper.DB_COLUMN_NAME_LOCATION_INVERTED, item.mLocationInverted);
+
         final long rowId = db.insert(DatabaseHelper.TABLE_NAME_ITEMS,
                 Item.Columns._ID, values);
         if (rowId >= 0) {
@@ -491,11 +501,15 @@ public class ItemsContentProvider extends ContentProvider {
      * class. We just store its name in the Document.
      */
     private static class DatabaseHelper extends SQLiteOpenHelper {
-        protected static final String DB_COLUMN_NAME_TITLE = "title"; //TODO: Internationalization of its contents.
+        protected static final String DB_COLUMN_NAME_SUBJECT_ID = "subjectId";
+        protected static final String DB_COLUMN_NAME_ZOONIVERSE_ID = "zooniverseId";
+        protected static final String DB_COLUMN_NAME_LOCATION_STANDARD = "locationStandard";
+        protected static final String DB_COLUMN_NAME_LOCATION_THUMBNAIL = "locationThumbnail";
+        protected static final String DB_COLUMN_NAME_LOCATION_INVERTED = "locationInverted";
         protected static final String DB_COLUMN_NAME_FILE_URI = "uri"; //The content URI for a file in the files table.
         private static final String DATABASE_NAME = "items.db";
 
-        private static final int DATABASE_VERSION = 1;
+        private static final int DATABASE_VERSION = 2;
 
         private static final String TABLE_NAME_ITEMS = "items";
         private static final String TABLE_NAME_FILES = "files";
@@ -515,17 +529,25 @@ public class ItemsContentProvider extends ContentProvider {
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase,
                               int oldv, int newv) {
-            //TODO: Don't just lose the data:
-            //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " +
-            //        TABLE_NAME_ITEMS + ";");
-            //createTable(sqLiteDatabase);
+            //TODO: Don't just lose the data?
+            if (oldv != newv) {
+                sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " +
+                        TABLE_NAME_ITEMS + ";");
+                sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " +
+                        TABLE_NAME_FILES+ ";");
+                createTable(sqLiteDatabase);
+            }
         }
 
         private void createTable(SQLiteDatabase sqLiteDatabase) {
             String qs = "CREATE TABLE " + TABLE_NAME_ITEMS + " (" +
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    DB_COLUMN_NAME_TITLE + " TEXT, " +
+                    DB_COLUMN_NAME_SUBJECT_ID + " TEXT, " +
+                    DB_COLUMN_NAME_ZOONIVERSE_ID + " TEXT, " +
+                    DB_COLUMN_NAME_LOCATION_STANDARD + " TEXT, " +
+                    DB_COLUMN_NAME_LOCATION_THUMBNAIL + " TEXT, " +
+                    DB_COLUMN_NAME_LOCATION_INVERTED + " TEXT, " +
                     DB_COLUMN_NAME_FILE_URI + " TEXT);";
             sqLiteDatabase.execSQL(qs);
 
@@ -537,12 +559,12 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    public static class Classification {
+    public static class Subject {
         public String mId;
-        public String mCreatedAt;
-        public String mProjectId;
-        public JSONArray mSubjectIds;
-        public String mSubjects;
+        public String mZooniverseId;
+        public String mLocationStandard;
+        public String mLocationThumbnail;
+        public String mLocationInverted;
     }
 
     private class UriParts {
