@@ -600,7 +600,7 @@ public class ItemsContentProvider extends ContentProvider {
         protected static final String DB_COLUMN_NAME_LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
         private static final String DATABASE_NAME = "items.db";
 
-        private static final int DATABASE_VERSION = 6;
+        private static final int DATABASE_VERSION = 7;
 
         private static final String TABLE_NAME_ITEMS = "items";
         private static final String TABLE_NAME_FILES = "files";
@@ -634,8 +634,8 @@ public class ItemsContentProvider extends ContentProvider {
             String qs = "CREATE TABLE " + TABLE_NAME_ITEMS + " (" +
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    DB_COLUMN_NAME_DONE + " INTEGER, " +
-                    DB_COLUMN_NAME_SKIPPED + " INTEGER, " +
+                    DB_COLUMN_NAME_DONE + " INTEGER DEFAULT 0, " +
+                    DB_COLUMN_NAME_SKIPPED + " INTEGER DEFAULT 0, " +
                     DB_COLUMN_NAME_SUBJECT_ID + " TEXT, " +
                     DB_COLUMN_NAME_ZOONIVERSE_ID + " TEXT, " +
                     DB_COLUMN_NAME_LOCATION_STANDARD_URI + " TEXT, " +
