@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 /**
@@ -73,7 +74,10 @@ public class BaseActivity extends Activity {
             // fragment transaction.
             final Bundle arguments = new Bundle();
             arguments.putString(ARG_USER_ID, getUserId());
-            arguments.putString(DetailFragment.ARG_ITEM_ID, itemId);
+
+            if (!TextUtils.isEmpty(itemId)) {
+                arguments.putString(DetailFragment.ARG_ITEM_ID, itemId);
+            }
 
             Fragment fragment = new DetailFragment();
             fragment.setArguments(arguments);
@@ -85,7 +89,10 @@ public class BaseActivity extends Activity {
             // for the selected item ID.
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(ARG_USER_ID, getUserId());
-            intent.putExtra(DetailFragment.ARG_ITEM_ID, itemId);
+
+            if (!TextUtils.isEmpty(itemId)) {
+                intent.putExtra(DetailFragment.ARG_ITEM_ID, itemId);
+            }
 
             startActivity(intent);
         }

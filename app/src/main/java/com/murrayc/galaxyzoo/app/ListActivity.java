@@ -83,4 +83,9 @@ public class ListActivity extends BaseActivity
     public void onItemSelected(final String itemId) {
         navigate(itemId);
     }
+
+    @Override
+    public void navigateToNextAvailable() {
+        navigate(null); //null means next.
+    }
 }

@@ -96,6 +96,10 @@ public class ListFragment extends android.app.ListFragment
         @Override
         public void onItemSelected(final String itemId) {
         }
+
+        @Override
+        public void navigateToNextAvailable() {
+        }
     };
 
     /**
@@ -199,6 +203,9 @@ public class ListFragment extends android.app.ListFragment
         switch (item.getItemId()) {
             case R.id.option_menu_item_more:
                 requestMoreItems();
+                return true;
+            case R.id.option_menu_item_next:
+                mCallbacks.navigateToNextAvailable();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -344,5 +351,7 @@ public class ListFragment extends android.app.ListFragment
          * Callback for when an item has been selected.
          */
         public void onItemSelected(final String itemId);
+
+        public void navigateToNextAvailable();
     }
 }
