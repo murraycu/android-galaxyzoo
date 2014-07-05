@@ -22,7 +22,10 @@ package com.murrayc.galaxyzoo.app;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
+
+import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 /**
  * An activity representing a single record of a single Table. This
@@ -43,7 +46,13 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Callb
 
         final Intent intent = getIntent();
         setUserId(intent.getStringExtra(ARG_USER_ID));
-        setItemId(intent.getStringExtra(DetailFragment.ARG_ITEM_ID));
+
+        //Show a requested item, or just show the next available item:
+        String itemId = intent.getStringExtra(DetailFragment.ARG_ITEM_ID);
+        if(TextUtils.isEmpty(itemId)) {
+            itemId = ItemsContentProvider.URI_PART_ITEM_ID_NEXT;
+        }
+        setItemId(itemId);
 
         setContentView(R.layout.activity_detail);
 

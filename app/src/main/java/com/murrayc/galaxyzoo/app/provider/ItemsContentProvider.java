@@ -56,6 +56,7 @@ public class ItemsContentProvider extends ContentProvider {
 
     public static final String METHOD_REQUEST_ITEMS = "request-items";
     public static final String URI_PART_ITEM = "item";
+    public static final String URI_PART_ITEM_ID_NEXT = "next"; //Use in place of the item ID to get the next unclassified item.
     public static final String URI_PART_FILE = "file";
 
     /**
@@ -79,7 +80,8 @@ public class ItemsContentProvider extends ContentProvider {
     //TODO: Use an enum?
     private static final int MATCHER_ID_ITEMS = 1;
     private static final int MATCHER_ID_ITEM = 2;
-    private static final int MATCHER_ID_FILE = 3;
+    private static final int MATCHER_ID_ITEM_NEXT= 3;
+    private static final int MATCHER_ID_FILE = 4;
     private static final UriMatcher sUriMatcher;
 
     static {
@@ -87,6 +89,9 @@ public class ItemsContentProvider extends ContentProvider {
 
         // A URI for the list of all items:
         sUriMatcher.addURI(Item.AUTHORITY, URI_PART_ITEM, MATCHER_ID_ITEMS);
+
+        // A URI for a single item:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_ITEM + "/" + URI_PART_ITEM_ID_NEXT, MATCHER_ID_ITEM_NEXT);
 
         // A URI for a single item:
         sUriMatcher.addURI(Item.AUTHORITY, URI_PART_ITEM + "/#", MATCHER_ID_ITEM);
@@ -163,6 +168,7 @@ public class ItemsContentProvider extends ContentProvider {
             case MATCHER_ID_ITEMS:
                 return CONTENT_TYPE;
             case MATCHER_ID_ITEM:
+            case MATCHER_ID_ITEM_NEXT:
                 return CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown item type: " +
@@ -373,6 +379,27 @@ public class ItemsContentProvider extends ContentProvider {
                 break;
             }
 
+            case MATCHER_ID_ITEM_NEXT: {
+                c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
+                if(c.getCount() < 1) {
+                    //Get some more from the REST server and then try again.
+                    final Thread thread = asyncQueryRequest(QUERY_URI);
+                    if (thread != null) {
+                        try {
+                            thread.join(); //Wait until it finishes.
+                        } catch (InterruptedException e) {
+                            Log.error("thread.join() failed.", e);
+                        }
+                    }
+
+                    c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
+                }
+
+                c.setNotificationUri(getContext().getContentResolver(),
+                        Item.CONTENT_URI); //TODO: More precise?
+                break;
+            }
+
             case MATCHER_ID_FILE:
                 // query the database for a specific file:
                 // The caller will then use the _data value (the normal filesystem URI of a file).
@@ -394,6 +421,25 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         //TODO: Can we avoid passing a Sqlite cursor up as a ContentResolver cursor?
+        return c;
+    }
+
+    private Cursor queryItemNext(Uri uri, String[] projection, String selection, String[] selectionArgs, String orderBy) {
+        Cursor c;// query the database for a single  item that is not yet done or skipped:
+        final String whereClause =
+                "(" + DatabaseHelper.DB_COLUMN_NAME_DONE + " != 1) AND " +
+                "(" + DatabaseHelper.DB_COLUMN_NAME_SKIPPED + " != 1)";
+
+        //Prepend our ID=? argument to the selection arguments.
+        //This lets us use the ? syntax to avoid SQL injection
+
+        final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
+        builder.setProjectionMap(sItemsProjectionMap);
+        builder.appendWhere(whereClause);
+        c = builder.query(getDb(), projection,
+                selection, selectionArgs,
+                null, null, orderBy, "1");
         return c;
     }
 
@@ -631,16 +677,19 @@ public class ItemsContentProvider extends ContentProvider {
      *
      * @param queryUri the complete URI that should be accessed by this request.
      */
-    private void asyncQueryRequest(final String queryUri) {
+    private Thread asyncQueryRequest(final String queryUri) {
         //synchronized (mRequestsInProgress) {
             UriRequestTask requestTask = null; //getRequestTask();
             if (requestTask == null) {
                 requestTask = newQueryTask(queryUri);
-                Thread t = new Thread(requestTask);
+                final Thread t = new Thread(requestTask);
                 // allows other requests to run in parallel.
                 t.start();
+                return t;
             }
         //}
+
+        return null;
     }
 
     UriRequestTask newQueryTask(final String url) {
