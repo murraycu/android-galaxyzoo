@@ -20,13 +20,20 @@
 package com.murrayc.galaxyzoo.app;
 
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -100,5 +107,21 @@ class UiUtils {
         }
 
         return result;
+    }
+
+    static void fillImageViewFromContentUri(final Context context, final String imageUriStr, final ImageView imageView) {
+        final ContentResolver contentResolver = context.getContentResolver();
+
+        Bitmap bMap = null;
+        try {
+            final Uri uri = Uri.parse(imageUriStr);
+            final InputStream stream = contentResolver.openInputStream(uri);
+            bMap = BitmapFactory.decodeStream(stream);
+        } catch (IOException e) {
+            Log.error("BitmapFactory.decodeStream() failed.", e);
+            return;
+        }
+
+        imageView.setImageBitmap(bMap);
     }
 }

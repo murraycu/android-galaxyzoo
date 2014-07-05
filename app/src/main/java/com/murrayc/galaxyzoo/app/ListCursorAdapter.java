@@ -19,29 +19,15 @@
 
 package com.murrayc.galaxyzoo.app;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.murrayc.galaxyzoo.app.provider.Item;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by murrayc on 5/16/14.
@@ -79,19 +65,8 @@ class ListCursorAdapter extends CursorAdapter {
         if (!TextUtils.isEmpty(imageUriStr)) {
             final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);
 
-            ContentResolver contentResolver = context.getContentResolver();
-
-            Bitmap bMap = null;
-            try {
-                final Uri uri = Uri.parse(imageUriStr);
-                final InputStream stream = contentResolver.openInputStream(uri);
-                bMap = BitmapFactory.decodeStream(stream);
-            } catch (IOException e) {
-                Log.error("BitmapFactory.decodeStream() failed.", e);
-                return;
-            }
-
-            imageView.setImageBitmap(bMap);
+            UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
         }
     }
+
 }
