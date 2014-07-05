@@ -108,6 +108,8 @@ public class ItemsContentProvider extends ContentProvider {
         sItemsProjectionMap = new HashMap<>();
 
         sItemsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+        sItemsProjectionMap.put(Item.Columns.DONE, DatabaseHelper.DB_COLUMN_NAME_DONE);
+        sItemsProjectionMap.put(Item.Columns.SKIPPED, DatabaseHelper.DB_COLUMN_NAME_SKIPPED);
         sItemsProjectionMap.put(Item.Columns.SUBJECT_ID, DatabaseHelper.DB_COLUMN_NAME_SUBJECT_ID);
         sItemsProjectionMap.put(Item.Columns.ZOONIVERSE_ID, DatabaseHelper.DB_COLUMN_NAME_ZOONIVERSE_ID);
         sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI, DatabaseHelper.DB_COLUMN_NAME_LOCATION_STANDARD_URI);
@@ -540,6 +542,11 @@ public class ItemsContentProvider extends ContentProvider {
      * class. We just store its name in the Document.
      */
     private static class DatabaseHelper extends SQLiteOpenHelper {
+        //Specific to our app:
+        protected static final String DB_COLUMN_NAME_DONE = "done"; //1 or 0. Whether the user has classified it already.
+        protected static final String DB_COLUMN_NAME_SKIPPED = "skipped"; //1 or 0. Whether the user has skipped it already.
+
+        //From the REST API:
         protected static final String DB_COLUMN_NAME_SUBJECT_ID = "subjectId";
         protected static final String DB_COLUMN_NAME_ZOONIVERSE_ID = "zooniverseId";
         protected static final String DB_COLUMN_NAME_LOCATION_STANDARD_URI = "locationStandardUri"; //The content URI for a file in the files table.
@@ -547,7 +554,7 @@ public class ItemsContentProvider extends ContentProvider {
         protected static final String DB_COLUMN_NAME_LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
         private static final String DATABASE_NAME = "items.db";
 
-        private static final int DATABASE_VERSION = 5;
+        private static final int DATABASE_VERSION = 6;
 
         private static final String TABLE_NAME_ITEMS = "items";
         private static final String TABLE_NAME_FILES = "files";
@@ -581,6 +588,8 @@ public class ItemsContentProvider extends ContentProvider {
             String qs = "CREATE TABLE " + TABLE_NAME_ITEMS + " (" +
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    DB_COLUMN_NAME_DONE + " INTEGER, " +
+                    DB_COLUMN_NAME_SKIPPED + " INTEGER, " +
                     DB_COLUMN_NAME_SUBJECT_ID + " TEXT, " +
                     DB_COLUMN_NAME_ZOONIVERSE_ID + " TEXT, " +
                     DB_COLUMN_NAME_LOCATION_STANDARD_URI + " TEXT, " +
