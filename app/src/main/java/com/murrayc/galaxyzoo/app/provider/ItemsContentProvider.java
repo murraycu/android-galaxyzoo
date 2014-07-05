@@ -547,7 +547,7 @@ public class ItemsContentProvider extends ContentProvider {
         protected static final String DB_COLUMN_NAME_LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
         private static final String DATABASE_NAME = "items.db";
 
-        private static final int DATABASE_VERSION = 3;
+        private static final int DATABASE_VERSION = 5;
 
         private static final String TABLE_NAME_ITEMS = "items";
         private static final String TABLE_NAME_FILES = "files";

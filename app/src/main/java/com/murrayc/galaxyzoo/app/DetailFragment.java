@@ -33,7 +33,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TableLayout;
+import android.widget.TextView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
@@ -87,6 +89,18 @@ public class DetailFragment extends Fragment
     private Cursor mCursor;
 
     private View mRootView;
+
+    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
+
+    // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
+    // (actually a SQliteDatabase cursor returned
+    // from our ContentProvider) only knows about the underlying SQLite database column names,
+    // not our ContentProvider's column names. That seems like a design error in the Android API.
+    //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
+    private static final int COLUMN_INDEX_ID = 0;
+    static final int COLUMN_INDEX_SUBJECT_ID = 1;
+    static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 2;
+    static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 3;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -150,14 +164,7 @@ public class DetailFragment extends Fragment
         mCallbacks = sDummyCallbacks;
     }
 
-    private TableLayout getTableLayout(final View rootView) {
-        return ((TableLayout) rootView.findViewById(R.id.tableLayout));
-    }
-
     public void update() {
-        //TODO: Separate building the UI and showing the data in the UI,
-        //so we can show a different record in the same table without rebuilding the UI.
-
         final Activity activity = getActivity();
         if (activity == null)
             return;
@@ -191,6 +198,15 @@ public class DetailFragment extends Fragment
             Log.error("mRootView is null.");
             return;
         }
+
+        final ImageView imageView = (ImageView)mRootView.findViewById(R.id.imageView);
+        if (imageView == null) {
+            Log.error("imageView is null.");
+            return;
+        }
+
+        final String imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI);
+        UiUtils.fillImageViewFromContentUri(activity, imageUriStr, imageView);
     }
 
     @Override
@@ -216,8 +232,8 @@ public class DetailFragment extends Fragment
         return new CursorLoader(
                 activity,
                 builder.build(),
-                null, /* fieldNames */
-                null, // No where clause, return all records.
+                mColumns,
+                null, // No where clause, return all records. We already specify just one via the itemId in the URI
                 null, // No where clause, therefore no where column values.
                 null // Use the default sort order.
         );
