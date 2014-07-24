@@ -72,9 +72,10 @@ public class ItemsContentProvider extends ContentProvider {
     private static final String CONTENT_ITEM_TYPE =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.item";
 
-    /** REST uri for querying items. */
+    /** REST uri for querying items.
+     * Like, the Galaxy-Zoo website's code, this hard-codes the Group ID for the Sloan survey: */
     private static final String QUERY_URI =
-            "https://api.zooniverse.org/projects/galaxy_zoo/recents";
+            "https://api.zooniverse.org/projects/galaxy_zoo/groups/50251c3b516bcb6ecb000002/subjects?limit=5";
 
 
     //TODO: Use an enum?

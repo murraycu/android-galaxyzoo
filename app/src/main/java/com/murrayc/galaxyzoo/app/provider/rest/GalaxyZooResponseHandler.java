@@ -85,38 +85,25 @@ public class GalaxyZooResponseHandler implements ResponseHandler<String> {
                 return inserted;
             }
 
-            parseJsonObjectClassification(obj);
+            parseJsonObjectSubject(obj);
         }
 
         return inserted;
     }
 
-    private void parseJsonObjectClassification(final JSONObject objClassification) {
+    private void parseJsonObjectSubject(final JSONObject objSubject) {
         try {
-            //mId = obj.getString("id");
-            //mCreatedAt = obj.getString("created_at");
-            //mProjectId = obj.getString("project_id");
-            //item.mSubjectIds = obj.getJSONArray("subject_ids");
-            final JSONArray jsonArraySubjects = objClassification.getJSONArray("subjects");
-
-            for(int i = 0; i < jsonArraySubjects.length(); ++i) {
-                final JSONObject objSubject = jsonArraySubjects.getJSONObject(i);
-                if (objSubject == null) {
-                    continue;
-                }
-
-                final ItemsContentProvider.Subject subject = new ItemsContentProvider.Subject();
-                subject.mId = objSubject.getString("id");
-                subject.mZooniverseId = objSubject.getString("zooniverse_id");
-                final JSONObject objLocation = objSubject.getJSONObject("location");
-                if (objLocation != null) {
-                    subject.mLocationStandard = objLocation.getString("standard");
-                    subject.mLocationThumbnail = objLocation.getString("thumbnail");
-                    subject.mLocationInverted = objLocation.getString("inverted");
-                }
-
-                insertIntoContentProvider(subject);
+            final ItemsContentProvider.Subject subject = new ItemsContentProvider.Subject();
+            subject.mId = objSubject.getString("id");
+            subject.mZooniverseId = objSubject.getString("zooniverse_id");
+            final JSONObject objLocation = objSubject.getJSONObject("location");
+            if (objLocation != null) {
+                subject.mLocationStandard = objLocation.getString("standard");
+                subject.mLocationThumbnail = objLocation.getString("thumbnail");
+                subject.mLocationInverted = objLocation.getString("inverted");
             }
+
+            insertIntoContentProvider(subject);
         } catch (JSONException e) {
             Log.error("JSON parsing of object fields failed.", e);
         }
