@@ -37,10 +37,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.GridView;
-import android.widget.HeaderViewListAdapter;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
@@ -116,7 +113,7 @@ public class ListFragment extends Fragment
     /**
      * The current activated item position. Only used on tablets.
      */
-    private int mActivatedPosition = ListView.INVALID_POSITION;
+    private int mActivatedPosition = GridView.INVALID_POSITION;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -274,7 +271,7 @@ public class ListFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mActivatedPosition != ListView.INVALID_POSITION) {
+        if (mActivatedPosition != GridView.INVALID_POSITION) {
             // Serialize and persist the activated item position.
             outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
         }
@@ -292,8 +289,8 @@ public class ListFragment extends Fragment
             return;
 
         gridView.setChoiceMode(activateOnItemClick
-                ? ListView.CHOICE_MODE_SINGLE
-                : ListView.CHOICE_MODE_NONE);
+                ? GridView.CHOICE_MODE_SINGLE
+                : GridView.CHOICE_MODE_NONE);
     }
 
     private void setActivatedPosition(int position) {
@@ -301,7 +298,7 @@ public class ListFragment extends Fragment
         if (gridView == null)
             return;
 
-        if (position == ListView.INVALID_POSITION) {
+        if (position == GridView.INVALID_POSITION) {
             gridView.setItemChecked(mActivatedPosition, false);
         } else {
             gridView.setItemChecked(position, true);
@@ -313,11 +310,13 @@ public class ListFragment extends Fragment
     private void onGridItemClicked(GridView gridView, int position) {
         ListAdapter adapter = gridView.getAdapter();
 
-        //When the ListView has header views, our adaptor will be wrapped by HeaderViewListAdapter:
+        /*
+        //When a ListView has header views, our adaptor will be wrapped by HeaderViewListAdapter:
         if (adapter instanceof HeaderViewListAdapter) {
             final HeaderViewListAdapter parentAdapter = (HeaderViewListAdapter) adapter;
             adapter = parentAdapter.getWrappedAdapter();
         }
+        */
 
         if (!(adapter instanceof CursorAdapter)) {
             Log.error("Unexpected Adapter class: " + adapter.getClass().toString());
