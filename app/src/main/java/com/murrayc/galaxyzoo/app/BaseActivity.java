@@ -36,8 +36,6 @@ public class BaseActivity extends Activity {
     //TODO: Avoid duplcation with the ARGs in the fragments:
     protected static final String ARG_USER_ID = "user-id";
 
-    protected final Singleton documentSingleton = Singleton.getInstance();
-
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.

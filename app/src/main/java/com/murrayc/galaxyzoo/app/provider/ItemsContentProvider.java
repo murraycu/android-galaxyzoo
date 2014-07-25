@@ -36,7 +36,6 @@ import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 
-import com.murrayc.galaxyzoo.app.Singleton;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.provider.rest.FileResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooResponseHandler;
@@ -123,8 +122,6 @@ public class ItemsContentProvider extends ContentProvider {
         sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_URI, DatabaseHelper.DB_COLUMN_NAME_LOCATION_INVERTED_URI);
     }
 
-
-    private final Singleton documentSingleton = Singleton.getInstance();
     private DatabaseHelper mOpenDbHelper;
 
     public ItemsContentProvider() {

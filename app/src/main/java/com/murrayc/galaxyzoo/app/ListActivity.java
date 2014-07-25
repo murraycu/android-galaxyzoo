@@ -69,12 +69,6 @@ public class ListActivity extends BaseActivity
         }
     }
 
-
-    private ListFragment getTableNavFragment() {
-        return ((ListFragment) getFragmentManager()
-                .findFragmentById(R.id.table_nav));
-    }
-
     /**
      * Callback method from {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks}
      * indicating that the item with the given ID was selected.

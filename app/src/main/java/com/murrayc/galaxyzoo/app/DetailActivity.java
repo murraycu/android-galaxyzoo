@@ -91,11 +91,6 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Callb
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    private DetailFragment getTableDetailFragment() {
-        return ((DetailFragment) getFragmentManager()
-                .findFragmentById(R.id.table_data_container));
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
