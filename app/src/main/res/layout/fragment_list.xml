@@ -14,11 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <include
-        layout="@android:layout/list_content"
+    <GridView
+        android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp" />
-
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textView"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="16dp"
+        android:stretchMode="columnWidth"
+        android:columnWidth="100dp"
+        android:drawSelectorOnTop="true" />
 
 </RelativeLayout>

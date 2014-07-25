@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 /**
  * Created by murrayc on 5/16/14.
@@ -44,23 +43,25 @@ class ListCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return mLayoutInflater.inflate(R.layout.listview_row_fragment_list, parent, false);
+        return mLayoutInflater.inflate(R.layout.gridview_cell_fragment_list, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        final String subjectId = cursor.getString(ListFragment.COLUMN_INDEX_SUBJECT_ID);
+        //final String subjectId = cursor.getString(ListFragment.COLUMN_INDEX_SUBJECT_ID);
         final String imageUriStr = cursor.getString(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_URI);
 
         /**
          * Next set the title of the entry.
          */
 
+        /*
         final TextView textView = (TextView) view.findViewById(R.id.item_text);
         if (textView != null) {
             textView.setText(subjectId);
         }
+        */
 
         if (!TextUtils.isEmpty(imageUriStr)) {
             final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);

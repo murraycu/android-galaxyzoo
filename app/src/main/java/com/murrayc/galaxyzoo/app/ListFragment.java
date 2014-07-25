@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
@@ -33,8 +34,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.GridView;
 import android.widget.HeaderViewListAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -52,8 +56,10 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  * Activities containing this fragment MUST implement the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks}
  * interface.
  */
-public class ListFragment extends android.app.ListFragment
+public class ListFragment extends Fragment
     implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private View mRootView;
 
     private static final int URL_LOADER = 0;
     private ListCursorAdapter mAdapter;
@@ -170,23 +176,22 @@ public class ListFragment extends android.app.ListFragment
         // We would only call the base class's onCreateView if we wanted the default layout:
         // super.onCreateView(inflater, container, savedInstanceState);
 
-        final View rootView = inflater.inflate(R.layout.fragment_list, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_list, container, false);
+        assert mRootView != null;
+
+        getGridView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                final GridView gridView = (GridView)parent;
+                onGridItemClicked(gridView, position);
+            }
+        });
+
 
         setHasOptionsMenu(true);
 
         update();
 
-        return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        final ListView listView = getListView();
-        if (listView == null) {
-            return;
-        }
-
-        super.onActivityCreated(savedInstanceState);
+        return mRootView;
     }
 
     @Override
@@ -223,7 +228,7 @@ public class ListFragment extends android.app.ListFragment
                 null /* No cursor yet */);
 
         try {
-            setListAdapter(mAdapter);
+            getGridView().setAdapter(mAdapter);
         } catch (final Exception e) {
             Log.error("glom", "setListAdapter() failed for query  with exception: " + e.getMessage());
         }
@@ -282,34 +287,31 @@ public class ListFragment extends android.app.ListFragment
     public void setActivateOnItemClick(boolean activateOnItemClick) {
         // When setting CHOICE_MODE_SINGLE, ListView will automatically
         // give items the 'activated' state when touched.
-        final ListView listView = getListView();
-        if (listView == null)
+        final GridView gridView = getGridView();
+        if (gridView == null)
             return;
 
-        listView.setChoiceMode(activateOnItemClick
+        gridView.setChoiceMode(activateOnItemClick
                 ? ListView.CHOICE_MODE_SINGLE
                 : ListView.CHOICE_MODE_NONE);
     }
 
     private void setActivatedPosition(int position) {
-        final ListView listView = getListView();
-        if (listView == null)
+        final GridView gridView = getGridView();
+        if (gridView == null)
             return;
 
         if (position == ListView.INVALID_POSITION) {
-            listView.setItemChecked(mActivatedPosition, false);
+            gridView.setItemChecked(mActivatedPosition, false);
         } else {
-            listView.setItemChecked(position, true);
+            gridView.setItemChecked(position, true);
         }
 
         mActivatedPosition = position;
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        ListAdapter adapter = l.getAdapter();
+    private void onGridItemClicked(GridView gridView, int position) {
+        ListAdapter adapter = gridView.getAdapter();
 
         //When the ListView has header views, our adaptor will be wrapped by HeaderViewListAdapter:
         if (adapter instanceof HeaderViewListAdapter) {
@@ -334,6 +336,15 @@ public class ListFragment extends android.app.ListFragment
         final String itemId = cursor.getString(COLUMN_INDEX_ID);
 
         mCallbacks.onItemSelected(itemId);
+    }
+
+    public GridView getGridView() {
+        final GridView gridView = (GridView)mRootView.findViewById(R.id.gridView);
+        if (gridView == null) {
+            Log.error("gridView is null.");
+        }
+
+        return gridView;
     }
 
     /**
