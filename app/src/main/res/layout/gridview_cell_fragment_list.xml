@@ -13,7 +13,6 @@
         <ImageView android:id="@+id/item_image"
             android:layout_width="150dp"
             android:layout_height="66dp"
-            android:layout_alignParentRight="true"
             android:paddingRight="5sp"
             android:contentDescription="Thumbnail" />
 
