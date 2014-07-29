@@ -34,8 +34,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TextView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 

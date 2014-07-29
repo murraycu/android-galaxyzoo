@@ -1,10 +1,8 @@
 package com.murrayc.galaxyzoo.app.provider.rest;
 
-import android.net.Uri;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
