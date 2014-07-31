@@ -37,7 +37,7 @@ import java.io.IOException;
  */
 public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider> {
 
-    private static final String VALID_TITLE = "Some Item";
+    private static final String VALID_SUBJECT_ID = "SomeSubjectID";
     private MockContentResolver mMockResolver;
 
     public ContentProviderTest() {
@@ -49,7 +49,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
      */
     private static ContentValues getFullContentValues() {
         final ContentValues v = new ContentValues(7);
-        v.put(Item.Columns.TITLE_COLUMN, VALID_TITLE);
+        v.put(Item.Columns.SUBJECT_ID, VALID_SUBJECT_ID);
         return v;
     }
 
@@ -71,7 +71,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
         assertNotNull(cursor);
         assertEquals(1, cursor.getCount());
         assertTrue(cursor.moveToFirst());
-        assertEquals(VALID_TITLE, cursor.getString(cursor.getColumnIndex(Item.Columns.TITLE_COLUMN)));
+        assertEquals(VALID_SUBJECT_ID, cursor.getString(cursor.getColumnIndex(Item.Columns.SUBJECT_ID)));
     }
 
     public void testInsertThenQuerySpecific() {
@@ -81,7 +81,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
         assertNotNull(cursor);
         assertEquals(1, cursor.getCount());
         assertTrue(cursor.moveToFirst());
-        assertEquals(VALID_TITLE, cursor.getString(cursor.getColumnIndex(Item.Columns.TITLE_COLUMN)));
+        assertEquals(VALID_SUBJECT_ID, cursor.getString(cursor.getColumnIndex(Item.Columns.SUBJECT_ID)));
     }
 
 
@@ -93,7 +93,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
         assertTrue(cursor.moveToFirst());
 
         //Get the content: URI for the Item's file:
-        final String fileContentUri = cursor.getString(cursor.getColumnIndex(Item.Columns.FILE_URI_COLUMN));
+        final String fileContentUri = cursor.getString(cursor.getColumnIndex(Item.Columns.LOCATION_STANDARD_URI));
         assertNotNull(fileContentUri);
 
         //Open the actual file data at that content: URI:
