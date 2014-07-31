@@ -1,0 +1,37 @@
+package com.murrayc.galaxyzoo.app;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+
+import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
+
+/**
+ * Created by murrayc on 8/1/14.
+ */
+public class ItemActivity extends BaseActivity {
+    private String mItemId;
+
+    public String getItemId() {
+        return mItemId;
+    }
+
+    public void setItemId(final String itemId) {
+        mItemId = itemId;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        final Intent intent = getIntent();
+        setUserId(intent.getStringExtra(ARG_USER_ID));
+
+        //Show a requested item, or just show the next available item:
+        String itemId = intent.getStringExtra(ItemFragment.ARG_ITEM_ID);
+        if(TextUtils.isEmpty(itemId)) {
+            itemId = ItemsContentProvider.URI_PART_ITEM_ID_NEXT;
+        }
+        setItemId(itemId);
+    }
+}

@@ -21,7 +21,6 @@ package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -34,17 +33,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 /**
  * A fragment representing a single subject.
- * This fragment is either contained in a {@link ListActivity}
- * in two-pane mode (on tablets) or a {@link DetailActivity}
+ * This fragment is either contained in a {@link com.murrayc.galaxyzoo.app.ListActivity}
+ * in two-pane mode (on tablets) or a {@link com.murrayc.galaxyzoo.app.DetailActivity}
  * on handsets.
  */
-public class DetailFragment extends ItemFragment
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+public class QuestionFragment extends ItemFragment  {
+
+    public static final String ARG_QUESTION_ID = "question-id";
+    protected String mQuestionId;
 
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
@@ -62,7 +65,7 @@ public class DetailFragment extends ItemFragment
 
     /**
      * A callback interface that all activities containing some fragments must
-     * implement. This mechanism allows activities to be notified of table
+     * implement. This mechanism allows activities to be notified of
      * navigation selections.
      * <p/>
      * This is the recommended way for activities and fragments to communicate,
@@ -74,25 +77,28 @@ public class DetailFragment extends ItemFragment
 
     }
 
-
     private static final int URL_LOADER = 0;
+    private long mUserId = -1;
+    private String mItemId;
     private Cursor mCursor;
 
     private View mRootView;
-
-    //TODO: Remove this and the loader?
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public DetailFragment() {
+    public QuestionFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Bundle bundle = getArguments();
+        if (bundle != null) {
+            mQuestionId = bundle.getString(ARG_QUESTION_ID);
+        }
 
         setHasOptionsMenu(true);
     }
@@ -100,24 +106,11 @@ public class DetailFragment extends ItemFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_question, container, false);
         assert mRootView != null;
 
         setHasOptionsMenu(true);
 
-        final Bundle arguments = new Bundle();
-        //TODO? arguments.putString(ARG_USER_ID,
-        //        getUserId()); //Obtained in the super class.
-        arguments.putString(ItemFragment.ARG_ITEM_ID,
-                getItemId());
-
-        //Add the nested child fragments.
-        //This can only be done programmatically, not in the layout XML.
-        //See http://developer.android.com/about/versions/android-4.2.html#NestedFragments
-        final Fragment fragmentSubject = new SubjectFragment();
-        fragmentSubject.setArguments(arguments);
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.child_fragment_subject, fragmentSubject).commit();
         update();
 
         return mRootView;
@@ -129,6 +122,10 @@ public class DetailFragment extends ItemFragment
         //menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private long getUserId() {
+        return mUserId;
     }
 
     @Override
@@ -156,82 +153,33 @@ public class DetailFragment extends ItemFragment
         if (activity == null)
             return;
 
-         /*
-         * Initializes the CursorLoader. The URL_LOADER value is eventually passed
-         * to onCreateLoader().
-         * We generally don't want to do this until we know that the document has been loaded.
-         */
-        getLoaderManager().initLoader(URL_LOADER, null, this);
-    }
 
-    private void updateFromCursor() {
-        if (mCursor == null) {
-            Log.error("mCursor is null.");
-            return;
-        }
-
-        final Activity activity = getActivity();
-        if (activity == null)
-            return;
-
-        if (mCursor.getCount() <= 0) { //In case the query returned no rows.
-            Log.error("The ContentProvider query returned no rows.");
-        }
-
-        mCursor.moveToFirst(); //There should only be one anyway.
-
-        //Look at each group in the layout:
         if (mRootView == null) {
             Log.error("mRootView is null.");
             return;
         }
 
-        //TODO?
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
-        if (loaderId != URL_LOADER) {
-            return null;
+        final TextView textView = (TextView)mRootView.findViewById(R.id.textView);
+        if (textView == null) {
+            Log.error("textView is null.");
+            return;
         }
 
-        final String itemId = getItemId();
-        if (TextUtils.isEmpty(itemId)) {
-            return null;
+        final Singleton singleton = Singleton.getInstance(activity);
+        final DecisionTree tree = singleton.getDecisionTree();
+
+        DecisionTree.Question question = null;
+        if (TextUtils.isEmpty(mQuestionId)) {
+            question = tree.getFirstQuestion();
+        } else {
+            question = tree.getQuestion(mQuestionId);
         }
 
-        final Activity activity = getActivity();
-
-        final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
-        builder.appendPath(itemId);
-
-        //The content provider ignores the projection (the list of fields).
-        //Instead, it assumes that we know what fields will be returned,
-        //because we have the layout from the Document.
-        //final String[] fieldNames = getFieldNamesToGet();
-        return new CursorLoader(
-                activity,
-                builder.build(),
-                mColumns,
-                null, // No where clause, return all records. We already specify just one via the itemId in the URI
-                null, // No where clause, therefore no where column values.
-                null // Use the default sort order.
-        );
+        textView.setText(question.getText());
     }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        mCursor = cursor;
-        updateFromCursor();
-    }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        /*
-         * Clears out our reference to the Cursor.
-         * This prevents memory leaks.
-         */
-        mCursor = null;
+    public String getItemId() {
+        return mItemId;
     }
-
 }

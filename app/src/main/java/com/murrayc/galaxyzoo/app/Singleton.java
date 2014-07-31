@@ -19,19 +19,10 @@
 
 package com.murrayc.galaxyzoo.app;
 
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.util.LongSparseArray;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * A singleton that allows our various Activities to share the same data.
@@ -41,17 +32,28 @@ import java.io.OutputStream;
  */
 public class Singleton {
 
-    private static final Singleton ourInstance = new Singleton();
+    private static Singleton ourInstance = null;
 
     private DecisionTree mDecisionTree = null;
 
-    private Singleton() {
-        final InputStream inputStream = Singleton.class.getClassLoader().getResourceAsStream("sloan_tree.xml");
+    private Singleton(final Context context) {
+        InputStream inputStream = null;
+        try {
+            inputStream = context.getAssets().open("sloan_tree.xml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         mDecisionTree = new DecisionTree(inputStream);
     }
 
-    public static Singleton getInstance() {
+    public static Singleton getInstance(final Context context) {
+        if (ourInstance == null) {
+            ourInstance = new Singleton(context);
+        }
+
         return ourInstance;
+
     }
 
     public DecisionTree getDecisionTree() {

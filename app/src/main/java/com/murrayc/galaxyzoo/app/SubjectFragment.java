@@ -21,7 +21,6 @@ package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -34,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
@@ -43,36 +43,8 @@ import com.murrayc.galaxyzoo.app.provider.Item;
  * in two-pane mode (on tablets) or a {@link DetailActivity}
  * on handsets.
  */
-public class DetailFragment extends ItemFragment
+public class SubjectFragment extends ItemFragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
-
-    /**
-     * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
-     * nothing. Used only when this fragment is not attached to an activity.
-     */
-    private static final Callbacks sDummyCallbacks = new Callbacks() {
-
-    };
-
-    /**
-     * The fragment's current callback object, which is notified of list item
-     * clicks.
-     */
-    private Callbacks mCallbacks = sDummyCallbacks;
-
-    /**
-     * A callback interface that all activities containing some fragments must
-     * implement. This mechanism allows activities to be notified of table
-     * navigation selections.
-     * <p/>
-     * This is the recommended way for activities and fragments to communicate,
-     * presumably because, unlike a direct function call, it still keeps the
-     * fragment and activity implementations separate.
-     * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
-     */
-    static interface Callbacks {
-
-    }
 
 
     private static final int URL_LOADER = 0;
@@ -80,14 +52,23 @@ public class DetailFragment extends ItemFragment
 
     private View mRootView;
 
-    //TODO: Remove this and the loader?
     private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
+
+    // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
+    // (actually a SQliteDatabase cursor returned
+    // from our ContentProvider) only knows about the underlying SQLite database column names,
+    // not our ContentProvider's column names. That seems like a design error in the Android API.
+    //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
+    private static final int COLUMN_INDEX_ID = 0;
+    static final int COLUMN_INDEX_SUBJECT_ID = 1;
+    static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 2;
+    static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 3;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public DetailFragment() {
+    public SubjectFragment() {
     }
 
     @Override
@@ -100,24 +81,11 @@ public class DetailFragment extends ItemFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_subject, container, false);
         assert mRootView != null;
 
         setHasOptionsMenu(true);
 
-        final Bundle arguments = new Bundle();
-        //TODO? arguments.putString(ARG_USER_ID,
-        //        getUserId()); //Obtained in the super class.
-        arguments.putString(ItemFragment.ARG_ITEM_ID,
-                getItemId());
-
-        //Add the nested child fragments.
-        //This can only be done programmatically, not in the layout XML.
-        //See http://developer.android.com/about/versions/android-4.2.html#NestedFragments
-        final Fragment fragmentSubject = new SubjectFragment();
-        fragmentSubject.setArguments(arguments);
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.child_fragment_subject, fragmentSubject).commit();
         update();
 
         return mRootView;
@@ -134,21 +102,11 @@ public class DetailFragment extends ItemFragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
-        // Activities containing this fragment must implement its callbacks.
-        if (!(activity instanceof Callbacks)) {
-            throw new IllegalStateException("Activity must implement fragment's callbacks.");
-        }
-
-        mCallbacks = (Callbacks) activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
-        // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks;
     }
 
     public void update() {
@@ -186,7 +144,14 @@ public class DetailFragment extends ItemFragment
             return;
         }
 
-        //TODO?
+        final ImageView imageView = (ImageView)mRootView.findViewById(R.id.imageView);
+        if (imageView == null) {
+            Log.error("imageView is null.");
+            return;
+        }
+
+        final String imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI);
+        UiUtils.fillImageViewFromContentUri(activity, imageUriStr, imageView);
     }
 
     @Override
@@ -233,5 +198,4 @@ public class DetailFragment extends ItemFragment
          */
         mCursor = null;
     }
-
 }

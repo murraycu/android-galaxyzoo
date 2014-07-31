@@ -74,10 +74,11 @@ public class BaseActivity extends Activity {
             arguments.putString(ARG_USER_ID, getUserId());
 
             if (!TextUtils.isEmpty(itemId)) {
-                arguments.putString(DetailFragment.ARG_ITEM_ID, itemId);
+                arguments.putString(ClassifyFragment.ARG_ITEM_ID, itemId);
             }
 
-            Fragment fragment = new DetailFragment();
+            // TODO: Just view it with DetailFragment if it has already been classified.
+            final Fragment fragment = new ClassifyFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()
                     .replace(R.id.table_data_container, fragment)
@@ -85,11 +86,12 @@ public class BaseActivity extends Activity {
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
-            Intent intent = new Intent(this, DetailActivity.class);
+            // TODO: Just view it with DetailActivity if it has already been classified.
+            final Intent intent = new Intent(this, ClassifyActivity.class);
             intent.putExtra(ARG_USER_ID, getUserId());
 
             if (!TextUtils.isEmpty(itemId)) {
-                intent.putExtra(DetailFragment.ARG_ITEM_ID, itemId);
+                intent.putExtra(ItemFragment.ARG_ITEM_ID, itemId);
             }
 
             startActivity(intent);

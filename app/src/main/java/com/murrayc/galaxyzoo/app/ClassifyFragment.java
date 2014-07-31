@@ -34,16 +34,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 /**
  * A fragment representing a single subject.
- * This fragment is either contained in a {@link ListActivity}
- * in two-pane mode (on tablets) or a {@link DetailActivity}
+ * This fragment is either contained in a {@link com.murrayc.galaxyzoo.app.ListActivity}
+ * in two-pane mode (on tablets) or a {@link com.murrayc.galaxyzoo.app.DetailActivity}
  * on handsets.
  */
-public class DetailFragment extends ItemFragment
+public class ClassifyFragment extends ItemFragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
@@ -74,20 +75,36 @@ public class DetailFragment extends ItemFragment
 
     }
 
+    /**
+     * The fragment argument representing the database table that this fragment
+     * represents.
+     */
+    public static final String ARG_ITEM_ID = "item-id";
+
 
     private static final int URL_LOADER = 0;
+    private long mUserId = -1;
     private Cursor mCursor;
 
     private View mRootView;
 
-    //TODO: Remove this and the loader?
     private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
+
+    // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
+    // (actually a SQliteDatabase cursor returned
+    // from our ContentProvider) only knows about the underlying SQLite database column names,
+    // not our ContentProvider's column names. That seems like a design error in the Android API.
+    //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
+    private static final int COLUMN_INDEX_ID = 0;
+    static final int COLUMN_INDEX_SUBJECT_ID = 1;
+    static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 2;
+    static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 3;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public DetailFragment() {
+    public ClassifyFragment() {
     }
 
     @Override
@@ -100,7 +117,7 @@ public class DetailFragment extends ItemFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_classify, container, false);
         assert mRootView != null;
 
         setHasOptionsMenu(true);
@@ -118,6 +135,12 @@ public class DetailFragment extends ItemFragment
         fragmentSubject.setArguments(arguments);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.child_fragment_subject, fragmentSubject).commit();
+
+        final Fragment fragmentQuestion = new QuestionFragment();
+        fragmentQuestion.setArguments(arguments);
+        transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.child_fragment_question, fragmentQuestion).commit();
+
         update();
 
         return mRootView;
@@ -129,6 +152,10 @@ public class DetailFragment extends ItemFragment
         //menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private long getUserId() {
+        return mUserId;
     }
 
     @Override
@@ -186,7 +213,19 @@ public class DetailFragment extends ItemFragment
             return;
         }
 
-        //TODO?
+        //Tell the SubjectFragment to show the image:
+
+        //Tell the QuestionFragment to show the first question:
+/*
+        final ImageView imageView = (ImageView)mRootView.findViewById(R.id.imageView);
+        if (imageView == null) {
+            Log.error("imageView is null.");
+            return;
+        }
+
+        final String imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI);
+        UiUtils.fillImageViewFromContentUri(activity, imageUriStr, imageView);
+        */
     }
 
     @Override
@@ -233,5 +272,4 @@ public class DetailFragment extends ItemFragment
          */
         mCursor = null;
     }
-
 }

@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -130,6 +131,14 @@ public class DecisionTree {
             final Question question = loadQuestion(element);
             questionsMap.put(question.getId(), question);
         }
+    }
+
+    public Question getFirstQuestion() {
+        if (questionsMap == null) {
+            return null;
+        }
+
+        return getQuestion("sloan-1"); //TODO: Awful hack. Use an ordered collection?
     }
 
     public Question getQuestion(final String questionId) {

@@ -31,18 +31,22 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  * An activity showing a single subject. This
  * activity is only used on handset devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link ListActivity}.
+ * in a {@link com.murrayc.galaxyzoo.app.ListActivity}.
  * <p/>
  * This activity is mostly just a 'shell' activity containing nothing
- * more than a {@link DetailFragment}.
+ * more than a {@link com.murrayc.galaxyzoo.app.ClassifyFragment}.
  */
-public class DetailActivity extends ItemActivity implements DetailFragment.Callbacks {
+public class ClassifyActivity extends ItemActivity implements ClassifyFragment.Callbacks, QuestionFragment.Callbacks {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_detail);
+        if(TextUtils.isEmpty(getItemId())) {
+            setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
+        }
+
+        setContentView(R.layout.activity_classify);
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -64,7 +68,7 @@ public class DetailActivity extends ItemActivity implements DetailFragment.Callb
 
             // TODO: Find a simpler way to just pass this through to the fragment.
             // For instance, pass the intent.getExtras() as the bundle?.
-            final DetailFragment fragment = new DetailFragment();
+            final ClassifyFragment fragment = new ClassifyFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()
                     .add(R.id.table_data_container, fragment)
@@ -100,4 +104,5 @@ public class DetailActivity extends ItemActivity implements DetailFragment.Callb
 
         return super.onOptionsItemSelected(item);
     }
+
 }

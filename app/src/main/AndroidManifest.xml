@@ -25,6 +25,15 @@
         </activity>
 
         <activity
+            android:name=".ClassifyActivity"
+            android:label="@string/title_classify"
+            android:parentActivityName=".ListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.murrayc.galaxyzoo.app.TableListActivity" />
+        </activity>
+
+        <activity
             android:name=".DetailActivity"
             android:label="@string/title_detail"
             android:parentActivityName=".ListActivity">
