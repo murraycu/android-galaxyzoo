@@ -38,7 +38,7 @@ import android.widget.ImageView;
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 /**
- * A fragment representing a single Table detail screen.
+ * A fragment representing a single subject.
  * This fragment is either contained in a {@link ListActivity}
  * in two-pane mode (on tablets) or a {@link DetailActivity}
  * on handsets.

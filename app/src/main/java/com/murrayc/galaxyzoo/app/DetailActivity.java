@@ -28,7 +28,7 @@ import android.view.MenuItem;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 /**
- * An activity representing a single record of a single Table. This
+ * An activity showing a single subject. This
  * activity is only used on handset devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
  * in a {@link ListActivity}.
