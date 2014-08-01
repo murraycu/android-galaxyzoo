@@ -66,20 +66,25 @@ public class DecisionTree {
 
     public static class Question {
         public String id;
+        public String title;
         public String text;
         public String help;
 
         public final Hashtable<String, Answer> answersMap = new Hashtable<>();
 
-        Question(final String id, final String text, final String help) {
+        Question(final String id, final String title, final String text, final String help) {
             this.id = id;
+            this.title = title;
             this.text = text;
             this.help = help;
         }
 
-
         public String getId() {
             return id;
+        }
+
+        public String getTitle() {
+            return title;
         }
 
         public String getText() {
@@ -233,6 +238,7 @@ public class DecisionTree {
     private Question loadQuestion(final Element questionNode) {
         final Question result = new Question(
                 questionNode.getAttribute("id"),
+                getTextOfChildNode(questionNode, "title"),
                 getTextOfChildNode(questionNode, "text"),
                 getTextOfChildNode(questionNode, "help"));
 

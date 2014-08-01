@@ -59,6 +59,7 @@ public class DecisionTreeTest extends AndroidTestCase {
         final String QUESTION_ID = "sloan-3";
         final DecisionTree.Question question = decisionTree.getQuestion(QUESTION_ID);
         assertEquals(QUESTION_ID, question.getId());
+        assertEquals("Spiral", question.getTitle());
         assertEquals("Is there any sign of a spiral arm pattern?", question.getText());
 
         final DecisionTree.Question nextQuestion = decisionTree.getNextQuestionForAnswer(QUESTION_ID, "a-1");
