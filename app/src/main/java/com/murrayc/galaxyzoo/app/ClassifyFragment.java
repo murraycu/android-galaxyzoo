@@ -85,12 +85,6 @@ public class ClassifyFragment extends ItemFragment {
 
     }
 
-    /**
-     * The fragment argument representing the database table that this fragment
-     * represents.
-     */
-    public static final String ARG_ITEM_ID = "item-id";
-
     private long mUserId = -1;
 
     private View mRootView;

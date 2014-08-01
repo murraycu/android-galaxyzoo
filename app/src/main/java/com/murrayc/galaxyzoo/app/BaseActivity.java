@@ -74,7 +74,7 @@ public class BaseActivity extends Activity {
             arguments.putString(ARG_USER_ID, getUserId());
 
             if (!TextUtils.isEmpty(itemId)) {
-                arguments.putString(ClassifyFragment.ARG_ITEM_ID, itemId);
+                arguments.putString(ItemFragment.ARG_ITEM_ID, itemId);
             }
 
             // TODO: Just view it with DetailFragment if it has already been classified.

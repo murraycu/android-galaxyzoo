@@ -94,8 +94,6 @@ public class DetailFragment extends ItemFragment {
         setHasOptionsMenu(true);
 
         final Bundle arguments = new Bundle();
-        //TODO? arguments.putString(ARG_USER_ID,
-        //        getUserId()); //Obtained in the super class.
         arguments.putString(ItemFragment.ARG_ITEM_ID,
                 getItemId());
 
