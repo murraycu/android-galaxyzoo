@@ -47,10 +47,10 @@ public class DecisionTree {
     private static final String NODE_ANSWER = "answer";
 
     static class Answer {
-        public String id;
-        public String text;
+        private String id;
+        private String text;
         public String icon;
-        public String leadsToQuestionId;
+        private String leadsToQuestionId;
 
         Answer(final String id, final String text, final String icon, final String leadsToQuestionId) {
             this.id = id;
@@ -62,6 +62,10 @@ public class DecisionTree {
         public String getId() {
             return id;
         }
+
+        public String getText() {
+            return text;
+        }
     }
 
     public static class Question {
@@ -70,7 +74,7 @@ public class DecisionTree {
         public String text;
         public String help;
 
-        public final Hashtable<String, Answer> answersMap = new Hashtable<>();
+        public final List<Answer> answers = new ArrayList<>();
 
         Question(final String id, final String title, final String text, final String help) {
             this.id = id;
@@ -161,11 +165,20 @@ public class DecisionTree {
             return null;
         }
 
-        if (question.answersMap == null) {
+        if (question.answers == null) {
             return null;
         }
 
-        final Answer answer = question.answersMap.get(answerId);
+        //TODO: Use a map for performance if there are many answers:
+        //For now we use a list, instead of a map, for the answers, to have an order.
+        Answer answer = null;
+        for (final Answer anAnswer : question.answers) {
+            if (TextUtils.equals(anAnswer.getId(), answerId)) {
+                answer = anAnswer;
+                break;
+            }
+        }
+
         if (answer == null) {
             return null;
         }
@@ -251,7 +264,7 @@ public class DecisionTree {
 
             final Element element = (Element) node;
             final Answer answer = loadAnswer(element);
-            result.answersMap.put(answer.getId(), answer);
+            result.answers.add(answer);
         }
 
         return result;

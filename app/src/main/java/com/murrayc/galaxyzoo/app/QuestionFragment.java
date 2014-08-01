@@ -33,7 +33,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
@@ -91,13 +93,21 @@ public class QuestionFragment extends ItemFragment  {
     public QuestionFragment() {
     }
 
+    public String getQuestionId() {
+        return mQuestionId;
+    }
+
+    public void setQuestionId(final String questionId) {
+        mQuestionId = questionId;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         final Bundle bundle = getArguments();
         if (bundle != null) {
-            mQuestionId = bundle.getString(ARG_QUESTION_ID);
+            setQuestionId(bundle.getString(ARG_QUESTION_ID));
         }
 
         setHasOptionsMenu(true);
@@ -122,10 +132,6 @@ public class QuestionFragment extends ItemFragment  {
         //menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    private long getUserId() {
-        return mUserId;
     }
 
     @Override
@@ -164,10 +170,11 @@ public class QuestionFragment extends ItemFragment  {
         final DecisionTree tree = singleton.getDecisionTree();
 
         DecisionTree.Question question = null;
-        if (TextUtils.isEmpty(mQuestionId)) {
+        if (TextUtils.isEmpty(getQuestionId())) {
             question = tree.getFirstQuestion();
+            setQuestionId(question.getId());
         } else {
-            question = tree.getQuestion(mQuestionId);
+            question = tree.getQuestion(getQuestionId());
         }
 
         //Show the title:
@@ -186,10 +193,44 @@ public class QuestionFragment extends ItemFragment  {
         }
         textViewText.setText(question.getText());
 
+
+        //Answers:
+        final LinearLayout layoutAnswers = (LinearLayout)mRootView.findViewById(R.id.layoutAnswers);
+        if (layoutAnswers == null) {
+            Log.error("layoutAnswers is null.");
+            return;
+        }
+
+        layoutAnswers.removeAllViews();
+        for(final DecisionTree.Answer answer : question.answers) {
+            final Button button = new Button(activity);
+            button.setText(answer.getText());
+            layoutAnswers.addView(button);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    // Perform action on click
+                    onAnswerButtonClicked(answer.getId());
+                }
+            });
+
+        }
     }
 
+    private void onAnswerButtonClicked(final String answerId) {
+        final Activity activity = getActivity();
+        if (activity == null)
+            return;
 
-    public String getItemId() {
-        return mItemId;
+        final Singleton singleton = Singleton.getInstance(activity);
+        final DecisionTree tree = singleton.getDecisionTree();
+
+        final DecisionTree.Question question = tree.getNextQuestionForAnswer(getQuestionId(), answerId);
+        if(question != null) {
+            setQuestionId(question.getId());
+            update();
+        }
+
+        //TODO: Save the whole classification.
     }
 }
