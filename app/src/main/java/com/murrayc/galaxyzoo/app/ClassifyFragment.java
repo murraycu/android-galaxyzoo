@@ -38,6 +38,9 @@ import android.widget.ImageView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A fragment representing a single subject.
  * This fragment is either contained in a {@link com.murrayc.galaxyzoo.app.ListActivity}
@@ -46,6 +49,18 @@ import com.murrayc.galaxyzoo.app.provider.Item;
  */
 public class ClassifyFragment extends ItemFragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    static private class Classification {
+        static private class QuestionAnswer {
+            String questionId;
+            String answerId;
+        }
+
+        List<QuestionAnswer> answers = new ArrayList<>();
+    }
+
+    //TODO: Can this fragment be reused, meaning we'd need to reset this?
+    private Classification mClassification = new Classification();
 
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
