@@ -45,18 +45,6 @@ import java.util.List;
  */
 public class ClassifyFragment extends ItemFragment {
 
-    static private class Classification {
-        static private class QuestionAnswer {
-            String questionId;
-            String answerId;
-        }
-
-        List<QuestionAnswer> answers = new ArrayList<>();
-    }
-
-    //TODO: Can this fragment be reused, meaning we'd need to reset this?
-    private Classification mClassification = new Classification();
-
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.

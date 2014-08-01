@@ -40,6 +40,9 @@ import android.widget.TextView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A fragment representing a single subject.
  * This fragment is either contained in a {@link com.murrayc.galaxyzoo.app.ListActivity}
@@ -50,6 +53,27 @@ public class QuestionFragment extends ItemFragment  {
 
     public static final String ARG_QUESTION_ID = "question-id";
     protected String mQuestionId;
+
+
+    static private class Classification {
+        public void add(final String questionId, final String answerId) {
+            answers.add(new QuestionAnswer(questionId, answerId));
+        }
+
+        static private class QuestionAnswer {
+            public QuestionAnswer(final String questionId, final String answerId) {
+
+            }
+
+            private String questionId;
+            private String answerId;
+        }
+
+        private List<QuestionAnswer> answers = new ArrayList<>();
+    }
+
+    //TODO: Can this fragment be reused, meaning we'd need to reset this?
+    private Classification mClassification = new Classification();
 
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
@@ -218,9 +242,13 @@ public class QuestionFragment extends ItemFragment  {
     }
 
     private void onAnswerButtonClicked(final String answerId) {
+        //TODO: Move this logic to the parent ClassifyFragment?
         final Activity activity = getActivity();
         if (activity == null)
             return;
+
+        //Remember the answer:
+        mClassification.add(getQuestionId(), answerId);
 
         final Singleton singleton = Singleton.getInstance(activity);
         final DecisionTree tree = singleton.getDecisionTree();
@@ -229,8 +257,9 @@ public class QuestionFragment extends ItemFragment  {
         if(question != null) {
             setQuestionId(question.getId());
             update();
+        } else {
+            //The classification is finished.
+            //TODO: Save it to the ContentProvider, which will upload it.
         }
-
-        //TODO: Save the whole classification.
     }
 }
