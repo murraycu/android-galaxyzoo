@@ -159,11 +159,6 @@ public class QuestionFragment extends ItemFragment  {
             return;
         }
 
-        final TextView textView = (TextView)mRootView.findViewById(R.id.textView);
-        if (textView == null) {
-            Log.error("textView is null.");
-            return;
-        }
 
         final Singleton singleton = Singleton.getInstance(activity);
         final DecisionTree tree = singleton.getDecisionTree();
@@ -175,7 +170,22 @@ public class QuestionFragment extends ItemFragment  {
             question = tree.getQuestion(mQuestionId);
         }
 
-        textView.setText(question.getText());
+        //Show the title:
+        final TextView textViewTitle = (TextView)mRootView.findViewById(R.id.textViewTitle);
+        if (textViewTitle == null) {
+            Log.error("textViewTitle is null.");
+            return;
+        }
+        textViewTitle.setText(question.getTitle());
+
+        //Show the text:
+        final TextView textViewText = (TextView)mRootView.findViewById(R.id.textViewText);
+        if (textViewText == null) {
+            Log.error("textViewText is null.");
+            return;
+        }
+        textViewText.setText(question.getText());
+
     }
 
 
