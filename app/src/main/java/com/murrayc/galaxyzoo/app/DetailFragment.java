@@ -22,10 +22,6 @@ package com.murrayc.galaxyzoo.app;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -43,8 +39,7 @@ import com.murrayc.galaxyzoo.app.provider.Item;
  * in two-pane mode (on tablets) or a {@link DetailActivity}
  * on handsets.
  */
-public class DetailFragment extends ItemFragment
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DetailFragment extends ItemFragment {
 
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
@@ -74,14 +69,7 @@ public class DetailFragment extends ItemFragment
 
     }
 
-
-    private static final int URL_LOADER = 0;
-    private Cursor mCursor;
-
     private View mRootView;
-
-    //TODO: Remove this and the loader?
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -155,83 +143,5 @@ public class DetailFragment extends ItemFragment
         final Activity activity = getActivity();
         if (activity == null)
             return;
-
-         /*
-         * Initializes the CursorLoader. The URL_LOADER value is eventually passed
-         * to onCreateLoader().
-         * We generally don't want to do this until we know that the document has been loaded.
-         */
-        getLoaderManager().initLoader(URL_LOADER, null, this);
     }
-
-    private void updateFromCursor() {
-        if (mCursor == null) {
-            Log.error("mCursor is null.");
-            return;
-        }
-
-        final Activity activity = getActivity();
-        if (activity == null)
-            return;
-
-        if (mCursor.getCount() <= 0) { //In case the query returned no rows.
-            Log.error("The ContentProvider query returned no rows.");
-        }
-
-        mCursor.moveToFirst(); //There should only be one anyway.
-
-        //Look at each group in the layout:
-        if (mRootView == null) {
-            Log.error("mRootView is null.");
-            return;
-        }
-
-        //TODO?
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
-        if (loaderId != URL_LOADER) {
-            return null;
-        }
-
-        final String itemId = getItemId();
-        if (TextUtils.isEmpty(itemId)) {
-            return null;
-        }
-
-        final Activity activity = getActivity();
-
-        final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
-        builder.appendPath(itemId);
-
-        //The content provider ignores the projection (the list of fields).
-        //Instead, it assumes that we know what fields will be returned,
-        //because we have the layout from the Document.
-        //final String[] fieldNames = getFieldNamesToGet();
-        return new CursorLoader(
-                activity,
-                builder.build(),
-                mColumns,
-                null, // No where clause, return all records. We already specify just one via the itemId in the URI
-                null, // No where clause, therefore no where column values.
-                null // Use the default sort order.
-        );
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        mCursor = cursor;
-        updateFromCursor();
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        /*
-         * Clears out our reference to the Cursor.
-         * This prevents memory leaks.
-         */
-        mCursor = null;
-    }
-
 }

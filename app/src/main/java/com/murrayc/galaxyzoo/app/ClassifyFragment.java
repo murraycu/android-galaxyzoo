@@ -22,10 +22,6 @@ package com.murrayc.galaxyzoo.app;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -47,8 +43,7 @@ import java.util.List;
  * in two-pane mode (on tablets) or a {@link com.murrayc.galaxyzoo.app.DetailActivity}
  * on handsets.
  */
-public class ClassifyFragment extends ItemFragment
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ClassifyFragment extends ItemFragment {
 
     static private class Classification {
         static private class QuestionAnswer {
@@ -96,24 +91,10 @@ public class ClassifyFragment extends ItemFragment
      */
     public static final String ARG_ITEM_ID = "item-id";
 
-
-    private static final int URL_LOADER = 0;
     private long mUserId = -1;
-    private Cursor mCursor;
 
     private View mRootView;
 
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
-
-    // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
-    // (actually a SQliteDatabase cursor returned
-    // from our ContentProvider) only knows about the underlying SQLite database column names,
-    // not our ContentProvider's column names. That seems like a design error in the Android API.
-    //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
-    private static final int COLUMN_INDEX_ID = 0;
-    static final int COLUMN_INDEX_SUBJECT_ID = 1;
-    static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 2;
-    static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 3;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -197,94 +178,5 @@ public class ClassifyFragment extends ItemFragment
         final Activity activity = getActivity();
         if (activity == null)
             return;
-
-         /*
-         * Initializes the CursorLoader. The URL_LOADER value is eventually passed
-         * to onCreateLoader().
-         * We generally don't want to do this until we know that the document has been loaded.
-         */
-        getLoaderManager().initLoader(URL_LOADER, null, this);
-    }
-
-    private void updateFromCursor() {
-        if (mCursor == null) {
-            Log.error("mCursor is null.");
-            return;
-        }
-
-        final Activity activity = getActivity();
-        if (activity == null)
-            return;
-
-        if (mCursor.getCount() <= 0) { //In case the query returned no rows.
-            Log.error("The ContentProvider query returned no rows.");
-        }
-
-        mCursor.moveToFirst(); //There should only be one anyway.
-
-        //Look at each group in the layout:
-        if (mRootView == null) {
-            Log.error("mRootView is null.");
-            return;
-        }
-
-        //Tell the SubjectFragment to show the image:
-
-        //Tell the QuestionFragment to show the first question:
-/*
-        final ImageView imageView = (ImageView)mRootView.findViewById(R.id.imageView);
-        if (imageView == null) {
-            Log.error("imageView is null.");
-            return;
-        }
-
-        final String imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI);
-        UiUtils.fillImageViewFromContentUri(activity, imageUriStr, imageView);
-        */
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
-        if (loaderId != URL_LOADER) {
-            return null;
-        }
-
-        final String itemId = getItemId();
-        if (TextUtils.isEmpty(itemId)) {
-            return null;
-        }
-
-        final Activity activity = getActivity();
-
-        final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
-        builder.appendPath(itemId);
-
-        //The content provider ignores the projection (the list of fields).
-        //Instead, it assumes that we know what fields will be returned,
-        //because we have the layout from the Document.
-        //final String[] fieldNames = getFieldNamesToGet();
-        return new CursorLoader(
-                activity,
-                builder.build(),
-                mColumns,
-                null, // No where clause, return all records. We already specify just one via the itemId in the URI
-                null, // No where clause, therefore no where column values.
-                null // Use the default sort order.
-        );
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        mCursor = cursor;
-        updateFromCursor();
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        /*
-         * Clears out our reference to the Cursor.
-         * This prevents memory leaks.
-         */
-        mCursor = null;
     }
 }
