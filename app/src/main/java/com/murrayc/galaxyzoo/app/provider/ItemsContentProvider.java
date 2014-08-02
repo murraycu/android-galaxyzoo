@@ -362,6 +362,18 @@ public class ItemsContentProvider extends ContentProvider {
         return uriInserted;
     }
 
+    private int updateMappedValues(final String tableName, final ContentValues values, final Map<String, String> projectionMap, String selection,
+                                   String[] selectionArgs) {
+        final ContentValues valuesToUse = getMappedContentValues(values, projectionMap);
+
+        // insert the initialValues into a new database row
+        final SQLiteDatabase db = getDb();
+
+        return db.update(tableName, valuesToUse,
+                selection, selectionArgs);
+    }
+
+
     private Uri insertMappedValues(final String tableName, final ContentValues values, final Map<String, String> projectionMap, final Uri uriPrefix) {
         final ContentValues valuesToUse = getMappedContentValues(values, projectionMap);
 
@@ -740,12 +752,15 @@ public class ItemsContentProvider extends ContentProvider {
                       String[] selectionArgs) {
         int affected;
 
-        //TODO: Use builder.setProjectionMap(),
-        //or our utility methods as in insert().
+        // Note: We map the values' columns names to the internal database columns names.
+        // Strangely, I can't find any example code, or open source code, that bothers to do this,
+        // though examples for query() generally do.
+        // Maybe they don't do it because it's so awkward. murrayc.
+        // But if we don't do this then we are leaking the internal database structure out as our API.
 
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_ITEMS:
-                affected = getDb().update(DatabaseHelper.TABLE_NAME_ITEMS, values,
+                affected = updateMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, values, sItemsProjectionMap,
                         selection, selectionArgs);
                 break;
 
@@ -754,15 +769,15 @@ public class ItemsContentProvider extends ContentProvider {
 
                 //Prepend our ID=? argument to the selection arguments.
                 //This lets us use the ? syntax to avoid SQL injection
-                affected = getDb().update(DatabaseHelper.TABLE_NAME_ITEMS, values,
+                affected = updateMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, values, sItemsProjectionMap,
                         prependIdToSelection(selection),
-                        prependToArray(selectionArgs, uriParts.itemId)
-                );
+                        prependToArray(selectionArgs, uriParts.itemId));
                 break;
             }
 
             case MATCHER_ID_CLASSIFICATIONS:
-                affected = getDb().update(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS, values,
+                affected = updateMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS,
+                        values, sClassificationsProjectionMap,
                         selection, selectionArgs);
                 break;
 
@@ -771,7 +786,8 @@ public class ItemsContentProvider extends ContentProvider {
 
                 //Prepend our ID=? argument to the selection arguments.
                 //This lets us use the ? syntax to avoid SQL injection
-                affected = getDb().update(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS, values,
+                affected = updateMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS,
+                        values, sClassificationsProjectionMap,
                         prependIdToSelection(selection),
                         prependToArray(selectionArgs, uriParts.itemId)
                 );
@@ -779,7 +795,8 @@ public class ItemsContentProvider extends ContentProvider {
             }
 
             case MATCHER_ID_CLASSIFICATION_ANSWERS:
-                affected = getDb().update(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS, values,
+                affected = updateMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
+                        values, sClassificationAnswersProjectionMap,
                         selection, selectionArgs);
                 break;
 
@@ -788,7 +805,8 @@ public class ItemsContentProvider extends ContentProvider {
 
                 //Prepend our ID=? argument to the selection arguments.
                 //This lets us use the ? syntax to avoid SQL injection
-                affected = getDb().update(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS, values,
+                affected = updateMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
+                        values, sClassificationAnswersProjectionMap,
                         prependIdToSelection(selection),
                         prependToArray(selectionArgs, uriParts.itemId)
                 );
