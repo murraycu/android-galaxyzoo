@@ -301,39 +301,126 @@ public class ItemsContentProvider extends ContentProvider {
 
     //TODO: Is this actually used by anything?
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
-        // Validate the requested uri
-        if (sUriMatcher.match(uri) != MATCHER_ID_ITEMS) {
-            throw new IllegalArgumentException("Unknown URI " + uri);
+    public Uri insert(final Uri uri, final ContentValues values) {
+
+        // Note: We map the values' columns names to the internal database columns names.
+        // Strangely, I can't find any example code, or open source code, that bothers to do this,
+        // though examples for query() generally do.
+        // Maybe they don't do it because it's so awkward. murrayc.
+        // But if we don't do this then we are leaking the internal database structure out as our API.
+
+        Uri uriInserted = null;
+
+        switch (sUriMatcher.match(uri)) {
+            case MATCHER_ID_ITEMS:
+            case MATCHER_ID_ITEM: {
+                // Get (our) local content URIs for the local caches of any (or any future) remote URIs for the images:
+                // Notice that we allow the client to provide a remote URI for each but we then change
+                // it to our local URI of our local cache of that remote file.
+                // Even if no URI is provided by the client, we still create the local URI and put
+                // it in the table row for later use.
+                final ContentValues valuesComplete = new ContentValues(values);
+
+                Uri fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_STANDARD_URI));
+                if (fileUri != null) {
+                    valuesComplete.put(Item.Columns.LOCATION_STANDARD_URI, fileUri.toString());
+                }
+
+                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_THUMBNAIL_URI));
+                if (fileUri != null) {
+                    valuesComplete.put(Item.Columns.LOCATION_THUMBNAIL_URI, fileUri.toString());
+                }
+
+                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_INVERTED_URI));
+                if (fileUri != null) {
+                    valuesComplete.put(Item.Columns.LOCATION_INVERTED_URI, fileUri.toString());
+                }
+
+                uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, valuesComplete,
+                        sItemsProjectionMap, Item.ITEMS_URI);
+
+                break;
+            }
+            case MATCHER_ID_CLASSIFICATIONS:
+            case MATCHER_ID_CLASSIFICATION: {
+                uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS, values,
+                        sClassificationsProjectionMap, Classification.CLASSIFICATIONS_URI);
+                break;
+            }
+            case MATCHER_ID_CLASSIFICATION_ANSWERS:
+            case MATCHER_ID_CLASSIFICATION_ANSWER: {
+                uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
+                        values, sClassificationAnswersProjectionMap,
+                        ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
+                break;
+            }
+            default:
+                //This could be because of an invalid -1 ID in the # position.
+                throw new IllegalArgumentException("unsupported uri: " + uri);
         }
 
-        // Cope with a null values:
-        ContentValues valuesToUse;
-        if (values != null) {
-            valuesToUse = new ContentValues(values);
-        } else {
-            valuesToUse = new ContentValues();
-        }
+        return uriInserted;
+    }
 
-        //TODO: verifyValues(values);
+    private Uri insertMappedValues(final String tableName, final ContentValues values, final Map<String, String> projectionMap, final Uri uriPrefix) {
+        final ContentValues valuesToUse = getMappedContentValues(values, projectionMap);
 
         // insert the initialValues into a new database row
         final SQLiteDatabase db = getDb();
 
-        final Subject subject = new Subject();
-        //TODO:.
-
-        final long rowId = addSubject(subject);
+        final long rowId = db.insert(tableName,
+                Item.Columns._ID, valuesToUse);
         if (rowId >= 0) {
-            final Uri itemUri = ContentUris.withAppendedId(
-                    Item.CONTENT_URI, rowId);
+            final Uri itemUri =
+                    ContentUris.withAppendedId(
+                            uriPrefix, rowId);
             getContext().getContentResolver().notifyChange(itemUri, null);
             return itemUri; //The URI of the newly-added Item.
+        } else {
+            throw new IllegalStateException("could not insert " +
+                    "content values: " + values);
         }
-
-        throw new SQLException("Failed to insert row into " + uri);
     }
 
+    private static ContentValues getMappedContentValues(final ContentValues values, final Map<String, String> projectionMap) {
+        final ContentValues result = new ContentValues();
+
+        for (final String keyExternal : values.keySet()) {
+            final String keyInternal = projectionMap.get(keyExternal);
+            if (!TextUtils.isEmpty(keyInternal)) {
+                final Object value = values.get(keyExternal);
+                putValueinContentValues(result, keyInternal, value);
+            }
+        }
+
+        return result;
+    }
+
+    /** There is no ContentValues.put(key, object),
+     * only put(key, String), put(key, Boolean), etc.
+     *  so we use this tedious implementation instead,
+     *  so our code can be more generic.
+     * @param values
+     * @param key
+     * @param value
+     */
+    private static void putValueinContentValues(final ContentValues values, final String key, final Object value) {
+        if (value instanceof String) {
+            values.put(key, (String) value);
+        } else if (value instanceof Boolean) {
+            values.put(key, (Boolean) value);
+        } else if (value instanceof Integer) {
+            values.put(key, (Integer) value);
+        } else if (value instanceof Long) {
+            values.put(key, (Long) value);
+        } else if (value instanceof Double) {
+            values.put(key, (Double) value);
+        }
+    }
+
+    /**
+     * @param uriOfFileToCache This may be null if the new file should be empty.
+     */
     private Uri createFileUri(final String uriOfFileToCache) {
         final SQLiteDatabase db = getDb();
         final long fileId = db.insertOrThrow(DatabaseHelper.TABLE_NAME_FILES,
@@ -381,7 +468,9 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         //Actually cache the URI's data in the local file:
-        cacheUriToFile(uriOfFileToCache, realFileUri);
+        if (uriOfFileToCache != null) {
+            cacheUriToFile(uriOfFileToCache, realFileUri);
+        }
 
 
         return fileUri;
@@ -651,7 +740,8 @@ public class ItemsContentProvider extends ContentProvider {
                       String[] selectionArgs) {
         int affected;
 
-        //TODO: Use builder.setProjectionMap();
+        //TODO: Use builder.setProjectionMap(),
+        //or our utility methods as in insert().
 
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_ITEMS:
@@ -724,6 +814,8 @@ public class ItemsContentProvider extends ContentProvider {
         return mOpenDbHelper.getWritableDatabase();
     }
 
+    //TODO: Reimplement this, in GalaxyZooResponseHandler, as an insert(uri) call,
+    //to avoid repetition, or would that be too inefficient?
     public long addSubject(final Subject item) {
         if(subjectIsInDatabase(item.mId)) {
             //It is already in the database.
@@ -758,7 +850,7 @@ public class ItemsContentProvider extends ContentProvider {
         if (rowId >= 0) {
             final Uri insertUri =
                     ContentUris.withAppendedId(
-                            Item.CONTENT_URI, rowId);
+                            Item.ITEMS_URI, rowId);
             getContext().getContentResolver().notifyChange(insertUri, null);
             return rowId;
         } else {
