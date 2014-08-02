@@ -57,8 +57,8 @@ public class Item {
         public static final String SKIPPED = "skipped";
         public static final String SUBJECT_ID = "subjectId";
         public static final String ZOONIVERSE_ID = "zooniverseId";
-        public static final String LOCATION_STANDARD_URI = "locationStandard";
-        public static final String LOCATION_THUMBNAIL_URI = "locationThumbnail";
-        public static final String LOCATION_INVERTED_URI = "locationInverted";
+        public static final String LOCATION_STANDARD_URI = "locationStandardUri";
+        public static final String LOCATION_THUMBNAIL_URI = "locationThumbnailUri";
+        public static final String LOCATION_INVERTED_URI = "locationInvertedUri";
     }
 }

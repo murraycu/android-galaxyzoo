@@ -71,6 +71,10 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
         assertNotNull(cursor);
         assertEquals(1, cursor.getCount());
         assertTrue(cursor.moveToFirst());
+
+        // TODO: Avoid calling getColumnIndex() when using null to get all fields,
+        // because it requires this client code to know the actual column name of the internal database table,
+        // because the Cursor won't have the column names mapped.
         assertEquals(VALID_SUBJECT_ID, cursor.getString(cursor.getColumnIndex(Item.Columns.SUBJECT_ID)));
     }
 
@@ -81,6 +85,10 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
         assertNotNull(cursor);
         assertEquals(1, cursor.getCount());
         assertTrue(cursor.moveToFirst());
+
+        // TODO: Avoid calling getColumnIndex() when using null to get all fields,
+        // because it requires this client code to know the actual column name of the internal database table,
+        // because the Cursor won't have the column names mapped.
         assertEquals(VALID_SUBJECT_ID, cursor.getString(cursor.getColumnIndex(Item.Columns.SUBJECT_ID)));
     }
 
@@ -92,7 +100,10 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
         assertEquals(1, cursor.getCount());
         assertTrue(cursor.moveToFirst());
 
-        //Get the content: URI for the Item's file:
+        // Get the content: URI for the Item's file:
+        // TODO: Avoid calling getColumnIndex() when using null to get all fields,
+        // because it requires this client code to know the actual column name of the internal database table,
+        // because the Cursor won't have the column names mapped.
         final String fileContentUri = cursor.getString(cursor.getColumnIndex(Item.Columns.LOCATION_STANDARD_URI));
         assertNotNull(fileContentUri);
 
