@@ -57,19 +57,47 @@ public class ItemsContentProvider extends ContentProvider {
     public static final String URI_PART_ITEM = "item";
     public static final String URI_PART_ITEM_ID_NEXT = "next"; //Use in place of the item ID to get the next unclassified item.
     public static final String URI_PART_FILE = "file";
+    public static final String URI_PART_CLASSIFICATION = "classification";
+    public static final String URI_PART_CLASSIFICATION_ANSWER = "classification-answer";
 
     /**
-     * The MIME type of {@link Item#CONTENT_URI} providing a directory of notes.
+     * The MIME type of {@link Item#CONTENT_URI} providing a directory of items.
      */
-    private static final String CONTENT_TYPE =
+    private static final String CONTENT_TYPE_ITEMS =
             "vnd.android.cursor.dir/vnd.android-galaxyzoo.item";
 
     /**
      * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
      * item.
      */
-    private static final String CONTENT_ITEM_TYPE =
+    private static final String CONTENT_TYPE_ITEM =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.item";
+
+    /**
+     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATIONS =
+            "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification";
+
+    /**
+     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
+     * classification.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATION =
+            "vnd.android.cursor.item/vnd.android-galaxyzoo.classification";
+
+    /**
+     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATION_ANSWERS =
+            "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification-answer";
+
+    /**
+     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
+     * classification answer.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATION_ANSWER =
+            "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-answer";
 
     /** REST uri for querying items.
      * Like, the Galaxy-Zoo website's code, this hard-codes the Group ID for the Sloan survey: */
@@ -82,6 +110,10 @@ public class ItemsContentProvider extends ContentProvider {
     private static final int MATCHER_ID_ITEM = 2;
     private static final int MATCHER_ID_ITEM_NEXT= 3;
     private static final int MATCHER_ID_FILE = 4;
+    private static final int MATCHER_ID_CLASSIFICATIONS = 5;
+    private static final int MATCHER_ID_CLASSIFICATION = 6;
+    private static final int MATCHER_ID_CLASSIFICATION_ANSWERS = 7;
+    private static final int MATCHER_ID_CLASSIFICATION_ANSWER = 8;
     private static final UriMatcher sUriMatcher;
 
     static {
@@ -98,6 +130,12 @@ public class ItemsContentProvider extends ContentProvider {
 
         // A URI for a single file:
         sUriMatcher.addURI(Item.AUTHORITY, URI_PART_FILE + "/#", MATCHER_ID_FILE);
+
+        // A URI for the list of all classifications:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION, MATCHER_ID_CLASSIFICATIONS);
+
+        // A URI for a single classification:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION + "/#", MATCHER_ID_CLASSIFICATION);
     }
 
     private static final String[] FILE_MIME_TYPES = new String[]{"application/x-glom"};
@@ -108,10 +146,11 @@ public class ItemsContentProvider extends ContentProvider {
      * for /item/ URIs, mapping to the items tables.
      */
     private static final Map<String, String> sItemsProjectionMap;
+    private static final Map<String, String> sClassificationsProjectionMap;
+    private static final Map<String, String> sClassificationAnswersProjectionMap;
 
     static {
         sItemsProjectionMap = new HashMap<>();
-
         sItemsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
         sItemsProjectionMap.put(Item.Columns.DONE, DatabaseHelper.ItemsDbColumns.DONE);
         sItemsProjectionMap.put(Item.Columns.SKIPPED, DatabaseHelper.ItemsDbColumns.SKIPPED);
@@ -120,6 +159,17 @@ public class ItemsContentProvider extends ContentProvider {
         sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI);
         sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL_URI, DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI);
         sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_URI, DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI);
+
+        sClassificationsProjectionMap = new HashMap<>();
+        sClassificationsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+        sClassificationsProjectionMap.put(Classification.Columns.SUBJECT_ID, DatabaseHelper.ClassificationsDbColumns.SUBJECT_ID);
+
+        sClassificationAnswersProjectionMap = new HashMap<>();
+        sClassificationAnswersProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.SEQUENCE, DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE);
+        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.QUESTION_ID, DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID);
+        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.ANSWER_ID, DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID);
+
     }
 
     private DatabaseHelper mOpenDbHelper;
@@ -134,7 +184,7 @@ public class ItemsContentProvider extends ContentProvider {
 
         switch (match) {
             //TODO: Do not support this because it would delete everything in one go?
-            case MATCHER_ID_ITEMS:
+            case MATCHER_ID_ITEMS: {
                 affected = getDb().delete(DatabaseHelper.TABLE_NAME_ITEMS,
                         (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
@@ -142,7 +192,8 @@ public class ItemsContentProvider extends ContentProvider {
                 );
                 //TODO: Delete all associated files too.
                 break;
-            case MATCHER_ID_ITEM:
+            }
+            case MATCHER_ID_ITEM: {
                 final UriParts uriParts = parseContentUri(uri);
                 affected = getDb().delete(DatabaseHelper.TABLE_NAME_ITEMS,
                         prependIdToSelection(selection),
@@ -150,6 +201,47 @@ public class ItemsContentProvider extends ContentProvider {
                 );
                 //TODO: Delete the associated files too.
                 break;
+            }
+
+            //TODO: Do not support this because it would delete everything in one go?
+            case MATCHER_ID_CLASSIFICATIONS: {
+                affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS,
+                                (!TextUtils.isEmpty(selection) ?
+                                        " AND (" + selection + ')' : ""),
+                        selectionArgs
+                );
+                //TODO: Delete all associated files too.
+                break;
+            }
+            case MATCHER_ID_CLASSIFICATION: {
+                final UriParts uriParts = parseContentUri(uri);
+                affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS,
+                        prependIdToSelection(selection),
+                        prependToArray(selectionArgs, uriParts.itemId)
+                );
+                //TODO: Delete the associated files too.
+                break;
+            }
+
+            //TODO: Do not support this because it would delete everything in one go?
+            case MATCHER_ID_CLASSIFICATION_ANSWERS: {
+                affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
+                                (!TextUtils.isEmpty(selection) ?
+                                        " AND (" + selection + ')' : ""),
+                        selectionArgs
+                );
+                //TODO: Delete all associated files too.
+                break;
+            }
+            case MATCHER_ID_CLASSIFICATION_ANSWER: {
+                final UriParts uriParts = parseContentUri(uri);
+                affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
+                        prependIdToSelection(selection),
+                        prependToArray(selectionArgs, uriParts.itemId)
+                );
+                //TODO: Delete the associated files too.
+                break;
+            }
             //TODO?: case MATCHER_ID_FILE:
             default:
                 throw new IllegalArgumentException("unknown item: " +
@@ -164,10 +256,18 @@ public class ItemsContentProvider extends ContentProvider {
     public String getType(Uri uri) {
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_ITEMS:
-                return CONTENT_TYPE;
+                return CONTENT_TYPE_ITEMS;
             case MATCHER_ID_ITEM:
             case MATCHER_ID_ITEM_NEXT:
-                return CONTENT_ITEM_TYPE;
+                return CONTENT_TYPE_ITEM;
+            case MATCHER_ID_CLASSIFICATIONS:
+                return CONTENT_TYPE_CLASSIFICATIONS;
+            case MATCHER_ID_CLASSIFICATION:
+                return CONTENT_TYPE_CLASSIFICATION;
+            case MATCHER_ID_CLASSIFICATION_ANSWERS:
+                return CONTENT_TYPE_CLASSIFICATION_ANSWERS;
+            case MATCHER_ID_CLASSIFICATION_ANSWER:
+                return CONTENT_TYPE_CLASSIFICATION_ANSWER;
             default:
                 throw new IllegalArgumentException("Unknown item type: " +
                         uri);
@@ -413,6 +513,73 @@ public class ItemsContentProvider extends ContentProvider {
                 c.setNotificationUri(getContext().getContentResolver(),
                         Item.FILE_URI); //TODO: More precise?
                 break;
+
+            case MATCHER_ID_CLASSIFICATIONS: {
+                // query the database for all items:
+                final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS);
+                builder.setProjectionMap(sClassificationsProjectionMap);
+                c = builder.query(getDb(), projection,
+                        selection, selectionArgs,
+                        null, null, orderBy);
+
+                c.setNotificationUri(getContext().getContentResolver(),
+                        Classification.CONTENT_URI);
+
+                break;
+            }
+            case MATCHER_ID_CLASSIFICATION: {
+                // query the database for a specific item:
+                final UriParts uriParts = parseContentUri(uri);
+
+                //Prepend our ID=? argument to the selection arguments.
+                //This lets us use the ? syntax to avoid SQL injection
+
+                final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS);
+                builder.setProjectionMap(sClassificationsProjectionMap);
+                builder.appendWhere(BaseColumns._ID + " = ?"); //We use ? to avoid SQL Injection.
+                c = builder.query(getDb(), projection,
+                        selection, prependToArray(selectionArgs, uriParts.itemId),
+                        null, null, orderBy);
+                c.setNotificationUri(getContext().getContentResolver(),
+                        Classification.CONTENT_URI); //TODO: More precise?
+                break;
+            }
+
+            case MATCHER_ID_CLASSIFICATION_ANSWERS: {
+                // query the database for all items:
+                final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);
+                builder.setProjectionMap(sClassificationAnswersProjectionMap);
+                c = builder.query(getDb(), projection,
+                        selection, selectionArgs,
+                        null, null, orderBy);
+
+                c.setNotificationUri(getContext().getContentResolver(),
+                        Classification.CONTENT_URI);
+
+                break;
+            }
+            case MATCHER_ID_CLASSIFICATION_ANSWER: {
+                // query the database for a specific item:
+                final UriParts uriParts = parseContentUri(uri);
+
+                //Prepend our ID=? argument to the selection arguments.
+                //This lets us use the ? syntax to avoid SQL injection
+
+                final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);
+                builder.setProjectionMap(sClassificationAnswersProjectionMap);
+                builder.appendWhere(BaseColumns._ID + " = ?"); //We use ? to avoid SQL Injection.
+                c = builder.query(getDb(), projection,
+                        selection, prependToArray(selectionArgs, uriParts.itemId),
+                        null, null, orderBy);
+                c.setNotificationUri(getContext().getContentResolver(),
+                        Classification.CONTENT_URI); //TODO: More precise?
+                break;
+            }
+
             default:
                 //This could be because of an invalid -1 ID in the # position.
                 throw new IllegalArgumentException("unsupported uri: " + uri);
@@ -484,13 +651,15 @@ public class ItemsContentProvider extends ContentProvider {
                       String[] selectionArgs) {
         int affected;
 
+        //TODO: Use builder.setProjectionMap();
+
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_ITEMS:
                 affected = getDb().update(DatabaseHelper.TABLE_NAME_ITEMS, values,
                         selection, selectionArgs);
                 break;
 
-            case MATCHER_ID_ITEM:
+            case MATCHER_ID_ITEM: {
                 final UriParts uriParts = parseContentUri(uri);
 
                 //Prepend our ID=? argument to the selection arguments.
@@ -500,6 +669,41 @@ public class ItemsContentProvider extends ContentProvider {
                         prependToArray(selectionArgs, uriParts.itemId)
                 );
                 break;
+            }
+
+            case MATCHER_ID_CLASSIFICATIONS:
+                affected = getDb().update(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS, values,
+                        selection, selectionArgs);
+                break;
+
+            case MATCHER_ID_CLASSIFICATION: {
+                final UriParts uriParts = parseContentUri(uri);
+
+                //Prepend our ID=? argument to the selection arguments.
+                //This lets us use the ? syntax to avoid SQL injection
+                affected = getDb().update(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS, values,
+                        prependIdToSelection(selection),
+                        prependToArray(selectionArgs, uriParts.itemId)
+                );
+                break;
+            }
+
+            case MATCHER_ID_CLASSIFICATION_ANSWERS:
+                affected = getDb().update(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS, values,
+                        selection, selectionArgs);
+                break;
+
+            case MATCHER_ID_CLASSIFICATION_ANSWER: {
+                final UriParts uriParts = parseContentUri(uri);
+
+                //Prepend our ID=? argument to the selection arguments.
+                //This lets us use the ? syntax to avoid SQL injection
+                affected = getDb().update(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS, values,
+                        prependIdToSelection(selection),
+                        prependToArray(selectionArgs, uriParts.itemId)
+                );
+                break;
+            }
 
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -587,7 +791,7 @@ public class ItemsContentProvider extends ContentProvider {
      */
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 7;
+        private static final int DATABASE_VERSION = 8;
         private static final String DATABASE_NAME = "items.db";
 
         private static final String TABLE_NAME_ITEMS = "items";
@@ -609,6 +813,20 @@ public class ItemsContentProvider extends ContentProvider {
             private static final String FILE_DATA = "_data"; //The real URI
         }
 
+        //Each classification row has many classification_answer rows.
+        private static final String TABLE_NAME_CLASSIFICATIONS = "classifications";
+        private static class ClassificationsDbColumns implements BaseColumns  {
+            private static final String SUBJECT_ID = "subjectId";
+        }
+
+        private static final String TABLE_NAME_CLASSIFICATION_ANSWERS = "classification_answers";
+        private static class ClassificationAnswersDbColumns implements BaseColumns  {
+
+            private static final String CLASSIFICATION_ID = "subjectId";
+            private static final String SEQUENCE = "sequence";
+            private static final String QUESTION_ID = "questionId";
+            private static final String ANSWER_ID = "answerId";
+        }
 
         private static final String DEFAULT_SORT_ORDER = Item.Columns._ID + " DESC";
 
@@ -626,12 +844,18 @@ public class ItemsContentProvider extends ContentProvider {
                               int oldv, int newv) {
             //TODO: Don't just lose the data?
             if (oldv != newv) {
-                sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " +
-                        TABLE_NAME_ITEMS + ";");
-                sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " +
-                        TABLE_NAME_FILES+ ";");
+                dropTable(sqLiteDatabase, TABLE_NAME_ITEMS);
+                dropTable(sqLiteDatabase, TABLE_NAME_FILES);
+                dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATIONS);
+                dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_ANSWERS);
+
                 createTable(sqLiteDatabase);
             }
+        }
+
+        private void dropTable(final SQLiteDatabase sqLiteDatabase, final String tableName) {
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " +
+                    tableName + ";");
         }
 
         private void createTable(SQLiteDatabase sqLiteDatabase) {
@@ -651,6 +875,21 @@ public class ItemsContentProvider extends ContentProvider {
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     FilesDbColumns.FILE_DATA + " TEXT);";
+            sqLiteDatabase.execSQL(qs);
+
+            qs = "CREATE TABLE " + TABLE_NAME_CLASSIFICATIONS + " (" +
+                    BaseColumns._ID +
+                    " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    ClassificationsDbColumns.SUBJECT_ID + " TEXT)";
+            sqLiteDatabase.execSQL(qs);
+
+            qs = "CREATE TABLE " + TABLE_NAME_CLASSIFICATION_ANSWERS + " (" +
+                    BaseColumns._ID +
+                    " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    ClassificationAnswersDbColumns.SEQUENCE + " INTEGER DEFAULT 0, " +
+                    ClassificationAnswersDbColumns.CLASSIFICATION_ID + " TEXT, " +
+                    ClassificationAnswersDbColumns.QUESTION_ID + " TEXT, " +
+                    ClassificationAnswersDbColumns.ANSWER_ID + " TEXT)";
             sqLiteDatabase.execSQL(qs);
         }
     }
