@@ -309,11 +309,13 @@ public class QuestionFragment extends ItemFragment
         if((TextUtils.equals(questionId, QUESTION_ID_DISCUSS)) &&
                 (TextUtils.equals(answerId, ANSWER_ID_DISCUSS_YES))) {
             //Open a link to the discussion page.
-            //TODO: Make sure that the subsequent code in this method will still run in the background.
 
             //Todo: Find a way to use Uri.Builder with a URI with # in it.
+            //Using Uri.parse() (with Uri.Builder) removes the #.
+            //Using Uri.Builder() leads to an ActivityNotFoundException.
             //final String encodedHash = Uri.encode("#"); //This just puts %23 in the URL instead of #.
-            //final Uri.Builder uriBuilder = Uri.parse("http://talk.galaxyzoo.org/" + encodedHash + "/subjects/").buildUpon();
+            //final Uri.Builder uriBuilder = new Uri.Builder();
+            //uriBuilder.path("http://talk.galaxyzoo.org/#/subjects/");
             //uriBuilder.appendPath(getZooniverseId());
             final String uriTalk = "http://talk.galaxyzoo.org/#/subjects/" + getZooniverseId();
 
