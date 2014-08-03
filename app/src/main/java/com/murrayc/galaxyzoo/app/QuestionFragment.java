@@ -20,13 +20,15 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,11 +36,13 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.murrayc.galaxyzoo.app.provider.Classification;
+import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.Item;
+import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,25 +59,44 @@ public class QuestionFragment extends ItemFragment  {
     protected String mQuestionId;
 
 
-    static private class Classification {
+    /** This lets us store the classification's answers
+     * during the classification. Alternatively,
+     * we could insert the answers into the ContentProvider along the
+     * way, but this lets us avoid having half-complete classifications
+     * in the content provider.
+     */
+    static private class ClassificationInProgress {
         public void add(final String questionId, final String answerId) {
             answers.add(new QuestionAnswer(questionId, answerId));
         }
 
         static private class QuestionAnswer {
-            public QuestionAnswer(final String questionId, final String answerId) {
-
-            }
-
             private String questionId;
             private String answerId;
+
+            public QuestionAnswer(final String questionId, final String answerId) {
+                this.questionId = questionId;
+                this.answerId = answerId;
+            }
+
+            public String getQuestionId() {
+                return questionId;
+            }
+
+            public String getAnswerId() {
+                return answerId;
+            }
+        }
+
+        List<QuestionAnswer> getAnswers() {
+            return answers;
         }
 
         private List<QuestionAnswer> answers = new ArrayList<>();
     }
 
     //TODO: Can this fragment be reused, meaning we'd need to reset this?
-    private Classification mClassification = new Classification();
+    private ClassificationInProgress mClassificationInProgress = new ClassificationInProgress();
 
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
@@ -248,7 +271,7 @@ public class QuestionFragment extends ItemFragment  {
             return;
 
         //Remember the answer:
-        mClassification.add(getQuestionId(), answerId);
+        mClassificationInProgress.add(getQuestionId(), answerId);
 
         final Singleton singleton = Singleton.getInstance(activity);
         final DecisionTree tree = singleton.getDecisionTree();
@@ -260,6 +283,66 @@ public class QuestionFragment extends ItemFragment  {
         } else {
             //The classification is finished.
             //TODO: Save it to the ContentProvider, which will upload it.
+            saveClassification(mClassificationInProgress);
+            mClassificationInProgress = new ClassificationInProgress();
         }
+    }
+
+    private void saveClassification(final ClassificationInProgress classificationInProgress) {
+        final Activity activity = getActivity();
+        if (activity == null)
+            return;
+
+        final ContentResolver resolver = activity.getContentResolver();
+
+        // Add the Classification:
+        // We can't do this together with the other ContentProviderOperations,
+        // because we need to get the generated Classification ID before
+        // adding the Classification Answers.
+        // ContentProviderOperation.Builder.withValueBackReferences() would only be useful
+        // for one insert of a Classification Answer.
+        final ContentValues values = new ContentValues();
+        values.put(Classification.Columns.ITEM_ID, getItemId());
+        final Uri uriClassification = resolver.insert(Classification.CLASSIFICATIONS_URI, values);
+        final long classificationId = ContentUris.parseId(uriClassification);
+
+        // Add the related Classification Answers:
+        // Use a ContentProvider operation to perform operations together,
+        // either completely or not at all, as a transaction.
+        // This should prevent an incomplete classification from being uploaded
+        // before we have finished adding it.
+        final ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+
+        for (final ClassificationInProgress.QuestionAnswer answer : classificationInProgress.getAnswers()) {
+            final ContentProviderOperation.Builder builder =
+                    ContentProviderOperation.newInsert(ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
+            final ContentValues valuesAnswers = new ContentValues();
+            valuesAnswers.put(ClassificationAnswer.Columns.CLASSIFICATION_ID, classificationId);
+            valuesAnswers.put(ClassificationAnswer.Columns.QUESTION_ID, answer.getQuestionId());
+            valuesAnswers.put(ClassificationAnswer.Columns.ANSWER_ID, answer.getAnswerId());
+            builder.withValues(valuesAnswers);
+
+            ops.add(builder.build());
+        }
+
+        //Mark the Item (Subject) as done:
+        final Uri.Builder uriBuilder = Item.ITEMS_URI.buildUpon();
+        uriBuilder.appendPath(getItemId());
+        final ContentProviderOperation.Builder builder =
+                ContentProviderOperation.newUpdate(uriBuilder.build());
+        final ContentValues valuesDone = new ContentValues();
+        valuesDone.put(Item.Columns.DONE, true);
+        builder.withValues(valuesDone);
+        ops.add(builder.build());
+
+        try {
+            resolver.applyBatch(ClassificationAnswer.AUTHORITY, ops);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (OperationApplicationException e) {
+            e.printStackTrace();
+        }
+
+        //The ItemsContentProvider will upload the classification later.
     }
 }

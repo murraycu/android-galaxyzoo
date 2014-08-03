@@ -26,7 +26,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -47,6 +46,7 @@ import org.apache.http.client.methods.HttpGet;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,6 +136,12 @@ public class ItemsContentProvider extends ContentProvider {
 
         // A URI for a single classification:
         sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION + "/#", MATCHER_ID_CLASSIFICATION);
+
+        // A URI for the list of all classifications:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_ANSWER, MATCHER_ID_CLASSIFICATION_ANSWERS);
+
+        // A URI for a single classification:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_ANSWER + "/#", MATCHER_ID_CLASSIFICATION_ANSWER);
     }
 
     private static final String[] FILE_MIME_TYPES = new String[]{"application/x-glom"};
@@ -162,7 +168,7 @@ public class ItemsContentProvider extends ContentProvider {
 
         sClassificationsProjectionMap = new HashMap<>();
         sClassificationsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-        sClassificationsProjectionMap.put(Classification.Columns.SUBJECT_ID, DatabaseHelper.ClassificationsDbColumns.SUBJECT_ID);
+        sClassificationsProjectionMap.put(Classification.Columns.ITEM_ID, DatabaseHelper.ClassificationsDbColumns.ITEM_ID);
 
         sClassificationAnswersProjectionMap = new HashMap<>();
         sClassificationAnswersProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
@@ -381,18 +387,24 @@ public class ItemsContentProvider extends ContentProvider {
         // insert the initialValues into a new database row
         final SQLiteDatabase db = getDb();
 
-        final long rowId = db.insert(tableName,
-                Item.Columns._ID, valuesToUse);
-        if (rowId >= 0) {
-            final Uri itemUri =
-                    ContentUris.withAppendedId(
-                            uriPrefix, rowId);
-            getContext().getContentResolver().notifyChange(itemUri, null);
-            return itemUri; //The URI of the newly-added Item.
-        } else {
-            throw new IllegalStateException("could not insert " +
-                    "content values: " + values);
+        try {
+            final long rowId = db.insertOrThrow(tableName,
+                    Item.Columns._ID, valuesToUse);
+            if (rowId >= 0) {
+                final Uri itemUri =
+                        ContentUris.withAppendedId(
+                                uriPrefix, rowId);
+                getContext().getContentResolver().notifyChange(itemUri, null);
+                return itemUri; //The URI of the newly-added Item.
+            } else {
+                throw new IllegalStateException("could not insert " +
+                        "content values: " + values);
+            }
+        } catch (android.database.SQLException e) {
+            Log.error("insert failed", e);
         }
+
+        return null;
     }
 
     private static ContentValues getMappedContentValues(final ContentValues values, final Map<String, String> projectionMap) {
@@ -902,7 +914,7 @@ public class ItemsContentProvider extends ContentProvider {
      */
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 8;
+        private static final int DATABASE_VERSION = 9;
         private static final String DATABASE_NAME = "items.db";
 
         private static final String TABLE_NAME_ITEMS = "items";
@@ -927,7 +939,7 @@ public class ItemsContentProvider extends ContentProvider {
         //Each classification row has many classification_answer rows.
         private static final String TABLE_NAME_CLASSIFICATIONS = "classifications";
         private static class ClassificationsDbColumns implements BaseColumns  {
-            private static final String SUBJECT_ID = "subjectId";
+            private static final String ITEM_ID = "itemId";
         }
 
         private static final String TABLE_NAME_CLASSIFICATION_ANSWERS = "classification_answers";
@@ -991,7 +1003,7 @@ public class ItemsContentProvider extends ContentProvider {
             qs = "CREATE TABLE " + TABLE_NAME_CLASSIFICATIONS + " (" +
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    ClassificationsDbColumns.SUBJECT_ID + " TEXT)"; /* Foreign key. See TABLE_NAME_ITEMS . SUBJECT_ID. */
+                    ClassificationsDbColumns.ITEM_ID + " TEXT)"; /* Foreign key. See TABLE_NAME_ITEMS ._ID. We can get the subject ID from this. */
             sqLiteDatabase.execSQL(qs);
 
             qs = "CREATE TABLE " + TABLE_NAME_CLASSIFICATION_ANSWERS + " (" +

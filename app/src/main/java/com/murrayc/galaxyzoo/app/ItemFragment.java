@@ -21,7 +21,7 @@ public class ItemFragment extends Fragment {
 
     public String getItemId() {
         return mItemId;
-    }
+    } //TODO: Should this be a long?
 
     private void setItemId(final String itemId) {
         mItemId = itemId;

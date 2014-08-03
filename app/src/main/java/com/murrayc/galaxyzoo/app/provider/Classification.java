@@ -43,6 +43,6 @@ public class Classification {
 
     public static final class Columns implements BaseColumns {
         //The ID is BaseColumns._ID;
-        public static final String SUBJECT_ID = "subjectId";
+        public static final String ITEM_ID = "itemId";
     }
 }
