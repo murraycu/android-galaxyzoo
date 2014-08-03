@@ -20,10 +20,15 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.ActivityNotFoundException;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.Loader;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
@@ -42,7 +47,6 @@ import android.widget.TextView;
 import com.murrayc.galaxyzoo.app.provider.Classification;
 import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.Item;
-import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,10 +57,41 @@ import java.util.List;
  * in two-pane mode (on tablets) or a {@link com.murrayc.galaxyzoo.app.DetailActivity}
  * on handsets.
  */
-public class QuestionFragment extends ItemFragment  {
+public class QuestionFragment extends ItemFragment
+        implements LoaderManager.LoaderCallbacks<Cursor>{
 
     public static final String ARG_QUESTION_ID = "question-id";
-    protected String mQuestionId;
+
+    private static final int URL_LOADER = 0;
+    private Cursor mCursor;
+
+    private final String[] mColumns = { Item.Columns._ID, Item.Columns.ZOONIVERSE_ID };
+
+    // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
+    // (actually a SQliteDatabase cursor returned
+    // from our ContentProvider) only knows about the underlying SQLite database column names,
+    // not our ContentProvider's column names. That seems like a design error in the Android API.
+    //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
+    private static final int COLUMN_INDEX_ID = 0;
+    static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
+
+
+    //We hard-code this.
+    //Alternatively, we could hard-code the removal of this question from the XML
+    //when generating the XML file,
+    //and then always ask the question at the end via Java code.
+    private static final CharSequence QUESTION_ID_DISCUSS = "sloan-11";
+    private static final CharSequence ANSWER_ID_DISCUSS_YES = "a-0";
+    private String mQuestionId;
+    private String mZooniverseId; //Only used for the talk URI so far.
+
+    private void setZooniverseId(final String zooniverseId) {
+        mZooniverseId = zooniverseId;
+    }
+
+    private String getZooniverseId() {
+        return mZooniverseId;
+    }
 
 
     /** This lets us store the classification's answers
@@ -126,11 +161,6 @@ public class QuestionFragment extends ItemFragment  {
 
     }
 
-    private static final int URL_LOADER = 0;
-    private long mUserId = -1;
-    private String mItemId;
-    private Cursor mCursor;
-
     private View mRootView;
 
     /**
@@ -167,6 +197,13 @@ public class QuestionFragment extends ItemFragment  {
         assert mRootView != null;
 
         setHasOptionsMenu(true);
+
+        /*
+         * Initializes the CursorLoader. The URL_LOADER value is eventually passed
+         * to onCreateLoader().
+         * This lets us get the Subject ID for the item, for use in the discussion page's URI.
+         */
+        getLoaderManager().initLoader(URL_LOADER, null, this);
 
         update();
 
@@ -211,7 +248,6 @@ public class QuestionFragment extends ItemFragment  {
             Log.error("mRootView is null.");
             return;
         }
-
 
         final Singleton singleton = Singleton.getInstance(activity);
         final DecisionTree tree = singleton.getDecisionTree();
@@ -260,7 +296,6 @@ public class QuestionFragment extends ItemFragment  {
                     onAnswerButtonClicked(answer.getId());
                 }
             });
-
         }
     }
 
@@ -270,13 +305,33 @@ public class QuestionFragment extends ItemFragment  {
         if (activity == null)
             return;
 
-        //Remember the answer:
-        mClassificationInProgress.add(getQuestionId(), answerId);
+        final String questionId = getQuestionId();
+        if((TextUtils.equals(questionId, QUESTION_ID_DISCUSS)) &&
+                (TextUtils.equals(answerId, ANSWER_ID_DISCUSS_YES))) {
+            //Open a link to the discussion page.
+            //TODO: Make sure that the subsequent code in this method will still run in the background.
+
+            //Todo: Find a way to use Uri.Builder with a URI with # in it.
+            //final String encodedHash = Uri.encode("#"); //This just puts %23 in the URL instead of #.
+            //final Uri.Builder uriBuilder = Uri.parse("http://talk.galaxyzoo.org/" + encodedHash + "/subjects/").buildUpon();
+            //uriBuilder.appendPath(getZooniverseId());
+            final String uriTalk = "http://talk.galaxyzoo.org/#/subjects/" + getZooniverseId();
+
+            try {
+                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriTalk));
+                startActivity(intent);
+            } catch (final ActivityNotFoundException e) {
+                Log.error("Could not open the discussion URI.", e);
+            }
+        } else {
+            //Remember the answer:
+            mClassificationInProgress.add(questionId, answerId);
+        }
 
         final Singleton singleton = Singleton.getInstance(activity);
         final DecisionTree tree = singleton.getDecisionTree();
 
-        final DecisionTree.Question question = tree.getNextQuestionForAnswer(getQuestionId(), answerId);
+        final DecisionTree.Question question = tree.getNextQuestionForAnswer(questionId, answerId);
         if(question != null) {
             setQuestionId(question.getId());
             update();
@@ -347,5 +402,72 @@ public class QuestionFragment extends ItemFragment  {
         }
 
         //The ItemsContentProvider will upload the classification later.
+    }
+
+    private void updateFromCursor() {
+        if (mCursor == null) {
+            Log.error("mCursor is null.");
+            return;
+        }
+
+        final Activity activity = getActivity();
+        if (activity == null)
+            return;
+
+        if (mCursor.getCount() <= 0) { //In case the query returned no rows.
+            Log.error("The ContentProvider query returned no rows.");
+        }
+
+        mCursor.moveToFirst(); //There should only be one anyway.
+
+        //Look at each group in the layout:
+        if (mRootView == null) {
+            Log.error("mRootView is null.");
+            return;
+        }
+
+        final String zooniverseId = mCursor.getString(COLUMN_INDEX_ZOONIVERSE_ID);
+        setZooniverseId(zooniverseId);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+        if (loaderId != URL_LOADER) {
+            return null;
+        }
+
+        final String itemId = getItemId();
+        if (TextUtils.isEmpty(itemId)) {
+            return null;
+        }
+
+        final Activity activity = getActivity();
+
+        final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
+        builder.appendPath(itemId);
+
+        return new CursorLoader(
+                activity,
+                builder.build(),
+                mColumns,
+                null, // No where clause, return all records. We already specify just one via the itemId in the URI
+                null, // No where clause, therefore no where column values.
+                null // Use the default sort order.
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        mCursor = cursor;
+        updateFromCursor();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        /*
+         * Clears out our reference to the Cursor.
+         * This prevents memory leaks.
+         */
+        mCursor = null;
     }
 }
