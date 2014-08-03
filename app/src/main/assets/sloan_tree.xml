@@ -118,6 +118,27 @@
         <answer id="a-0" icon="yes" leadsTo="sloan-11">
             <text>Done</text>
         </answer>
+        <checkbox id="x-0" icon="ring">
+            <text>Ring</text>
+        </checkbox>
+        <checkbox id="x-1" icon="lens">
+            <text>Lens or arc</text>
+        </checkbox>
+        <checkbox id="x-2" icon="disturbed">
+            <text>Disturbed</text>
+        </checkbox>
+        <checkbox id="x-3" icon="irregular">
+            <text>Irregular</text>
+        </checkbox>
+        <checkbox id="x-4" icon="other">
+            <text>Other</text>
+        </checkbox>
+        <checkbox id="x-5" icon="merger">
+            <text>Merger</text>
+        </checkbox>
+        <checkbox id="x-6" icon="dustlane">
+            <text>Dust lane</text>
+        </checkbox>
     </question>
     <question id="sloan-7">
         <title>Round</title>
