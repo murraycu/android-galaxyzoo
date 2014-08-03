@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Openismus GmbH
+ * Copyright (C) 2014 Murray Cumming
  *
  * This file is part of android-galaxyzoo.
  *
