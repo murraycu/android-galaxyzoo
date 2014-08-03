@@ -114,10 +114,9 @@ public class SubjectFragment extends ItemFragment
         if (activity == null)
             return;
 
-         /*
+        /*
          * Initializes the CursorLoader. The URL_LOADER value is eventually passed
          * to onCreateLoader().
-         * We generally don't want to do this until we know that the document has been loaded.
          */
         getLoaderManager().initLoader(URL_LOADER, null, this);
     }
@@ -170,10 +169,6 @@ public class SubjectFragment extends ItemFragment
         final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
         builder.appendPath(itemId);
 
-        //The content provider ignores the projection (the list of fields).
-        //Instead, it assumes that we know what fields will be returned,
-        //because we have the layout from the Document.
-        //final String[] fieldNames = getFieldNamesToGet();
         return new CursorLoader(
                 activity,
                 builder.build(),
