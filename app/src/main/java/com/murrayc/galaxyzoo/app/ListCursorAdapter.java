@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Created by murrayc on 5/16/14.
@@ -51,6 +52,7 @@ class ListCursorAdapter extends CursorAdapter {
 
         //final String subjectId = cursor.getString(ListFragment.COLUMN_INDEX_SUBJECT_ID);
         final String imageUriStr = cursor.getString(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_URI);
+        final Boolean done = (cursor.getInt(ListFragment.COLUMN_INDEX_DONE) == 1);
 
         /**
          * Next set the title of the entry.
@@ -65,8 +67,10 @@ class ListCursorAdapter extends CursorAdapter {
 
         if (!TextUtils.isEmpty(imageUriStr)) {
             final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);
-
             UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
+
+            final TextView textView = (TextView) view.findViewById(R.id.item_text);
+            textView.setText(done ? "Done" : ""); //TODO: Replace this with a check icon.
         }
     }
 

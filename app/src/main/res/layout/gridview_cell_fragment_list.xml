@@ -5,17 +5,29 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <ImageView android:id="@+id/item_image"
-            android:layout_width="150dp"
-            android:layout_height="66dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:paddingRight="5sp"
-            android:contentDescription="Thumbnail" />
+            android:contentDescription="Thumbnail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    </LinearLayout>
+        <TextView android:id="@+id/item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:layout_alignRight="@id/item_image"
+            android:layout_alignBottom="@id/item_image"
+            android:layout_alignParentEnd="false"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

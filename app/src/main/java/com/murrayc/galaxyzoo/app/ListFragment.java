@@ -60,7 +60,8 @@ public class ListFragment extends Fragment
 
     private static final int URL_LOADER = 0;
     private ListCursorAdapter mAdapter;
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_THUMBNAIL_URI};
+    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID,
+            Item.Columns.LOCATION_THUMBNAIL_URI, Item.Columns.DONE};
 
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
@@ -70,6 +71,7 @@ public class ListFragment extends Fragment
     private static final int COLUMN_INDEX_ID = 0;
     static final int COLUMN_INDEX_SUBJECT_ID = 1;
     static final int COLUMN_INDEX_LOCATION_THUMBNAIL_URI = 2;
+    static final int COLUMN_INDEX_DONE = 3;
 
     private void requestMoreItems() {
         final Activity activity = getActivity();
