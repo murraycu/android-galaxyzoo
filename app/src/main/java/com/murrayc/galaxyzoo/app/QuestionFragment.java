@@ -284,7 +284,7 @@ public class QuestionFragment extends ItemFragment  {
             //The classification is finished.
             //TODO: Save it to the ContentProvider, which will upload it.
             saveClassification(mClassificationInProgress);
-            mClassificationInProgress = new ClassificationInProgress();
+            mClassificationInProgress = new ClassificationInProgress();;
         }
     }
 

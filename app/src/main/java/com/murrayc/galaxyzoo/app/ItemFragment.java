@@ -19,11 +19,11 @@ public class ItemFragment extends Fragment {
         return mUserId;
     }
 
-    public String getItemId() {
+    protected String getItemId() {
         return mItemId;
     } //TODO: Should this be a long?
 
-    private void setItemId(final String itemId) {
+    protected void setItemId(final String itemId) {
         mItemId = itemId;
     }
 

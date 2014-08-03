@@ -22,6 +22,10 @@ package com.murrayc.galaxyzoo.app;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,6 +37,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
+import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +48,21 @@ import java.util.List;
  * in two-pane mode (on tablets) or a {@link com.murrayc.galaxyzoo.app.DetailActivity}
  * on handsets.
  */
-public class ClassifyFragment extends ItemFragment {
+public class ClassifyFragment extends ItemFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int URL_LOADER = 0;
+    private Cursor mCursor;
+
+    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID };
+
+    // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
+    // (actually a SQliteDatabase cursor returned
+    // from our ContentProvider) only knows about the underlying SQLite database column names,
+    // not our ContentProvider's column names. That seems like a design error in the Android API.
+    //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
+    private static final int COLUMN_INDEX_ID = 0;
+    static final int COLUMN_INDEX_SUBJECT_ID = 1;
+
 
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
@@ -100,6 +119,12 @@ public class ClassifyFragment extends ItemFragment {
 
         setHasOptionsMenu(true);
 
+        update();
+
+        return mRootView;
+    }
+
+    private void addChildFragments() {
         final Bundle arguments = new Bundle();
         //TODO? arguments.putString(ARG_USER_ID,
         //        getUserId()); //Obtained in the super class.
@@ -118,10 +143,6 @@ public class ClassifyFragment extends ItemFragment {
         fragmentQuestion.setArguments(arguments);
         transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.child_fragment_question, fragmentQuestion).commit();
-
-        update();
-
-        return mRootView;
     }
 
     @Override
@@ -160,5 +181,91 @@ public class ClassifyFragment extends ItemFragment {
         final Activity activity = getActivity();
         if (activity == null)
             return;
+
+
+        if (TextUtils.equals(getItemId(), ItemsContentProvider.URI_PART_ITEM_ID_NEXT)) {
+            /*
+             * Initializes the CursorLoader. The URL_LOADER value is eventually passed
+             * to onCreateLoader().
+             */
+            getLoaderManager().initLoader(URL_LOADER, null, this);
+        } else {
+            //Add the child fragments already, because we know the Item IDs:
+            addChildFragments();
+        }
+    }
+
+    private void updateFromCursor() {
+        if (mCursor == null) {
+            Log.error("mCursor is null.");
+            return;
+        }
+
+        final Activity activity = getActivity();
+        if (activity == null)
+            return;
+
+        if (mCursor.getCount() <= 0) { //In case the query returned no rows.
+            Log.error("The ContentProvider query returned no rows.");
+        }
+
+        mCursor.moveToFirst(); //There should only be one anyway.
+
+        //Look at each group in the layout:
+        if (mRootView == null) {
+            Log.error("mRootView is null.");
+            return;
+        }
+
+        //This will return the actual ID if we asked for the NEXT id.
+        final String itemId = mCursor.getString(COLUMN_INDEX_ID);
+        setItemId(itemId);
+
+        //TODO: Just update them.
+        addChildFragments();
+    }
+
+    //We only bother using this when we have asked for the "next" item,
+    //because we want to know its ID.
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+        if (loaderId != URL_LOADER) {
+            return null;
+        }
+        final String itemId = getItemId();
+        if (TextUtils.isEmpty(itemId)) {
+            return null;
+        }
+
+        //Asychronously get the actual ID,
+        //because we have just asked for the "next" item.
+        final Activity activity = getActivity();
+
+        final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
+        builder.appendPath(itemId);
+
+        return new CursorLoader(
+                activity,
+                builder.build(),
+                mColumns,
+                null, // No where clause, return all records. We already specify just one via the itemId in the URI
+                null, // No where clause, therefore no where column values.
+                null // Use the default sort order.
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        mCursor = cursor;
+        updateFromCursor();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        /*
+         * Clears out our reference to the Cursor.
+         * This prevents memory leaks.
+         */
+        mCursor = null;
     }
 }
