@@ -147,7 +147,7 @@ public class DecisionTree {
             return null;
         }
 
-        return getQuestion("sloan-1"); //TODO: Awful hack. Use an ordered collection?
+        return getQuestion("sloan-0"); //TODO: Awful hack. Use an ordered collection?
     }
 
     public Question getQuestion(final String questionId) {
