@@ -166,6 +166,7 @@ public class ItemsContentProvider extends ContentProvider {
 
         sClassificationAnswersProjectionMap = new HashMap<>();
         sClassificationAnswersProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.CLASSIFICATION_ID, DatabaseHelper.ClassificationAnswersDbColumns.CLASSIFICATION_ID);
         sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.SEQUENCE, DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE);
         sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.QUESTION_ID, DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID);
         sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.ANSWER_ID, DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID);
@@ -990,14 +991,14 @@ public class ItemsContentProvider extends ContentProvider {
             qs = "CREATE TABLE " + TABLE_NAME_CLASSIFICATIONS + " (" +
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    ClassificationsDbColumns.SUBJECT_ID + " TEXT)";
+                    ClassificationsDbColumns.SUBJECT_ID + " TEXT)"; /* Foreign key. See TABLE_NAME_ITEMS . SUBJECT_ID. */
             sqLiteDatabase.execSQL(qs);
 
             qs = "CREATE TABLE " + TABLE_NAME_CLASSIFICATION_ANSWERS + " (" +
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ClassificationAnswersDbColumns.SEQUENCE + " INTEGER DEFAULT 0, " +
-                    ClassificationAnswersDbColumns.CLASSIFICATION_ID + " TEXT, " +
+                    ClassificationAnswersDbColumns.CLASSIFICATION_ID + " INTEGER, " + /* Foreign key. See TABLE_NAME_CLASSIFICATIONS . _ID. */
                     ClassificationAnswersDbColumns.QUESTION_ID + " TEXT, " +
                     ClassificationAnswersDbColumns.ANSWER_ID + " TEXT)";
             sqLiteDatabase.execSQL(qs);
