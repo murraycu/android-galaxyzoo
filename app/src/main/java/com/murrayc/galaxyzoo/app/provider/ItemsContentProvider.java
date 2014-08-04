@@ -59,6 +59,7 @@ public class ItemsContentProvider extends ContentProvider {
     public static final String URI_PART_FILE = "file";
     public static final String URI_PART_CLASSIFICATION = "classification";
     public static final String URI_PART_CLASSIFICATION_ANSWER = "classification-answer";
+    public static final String URI_PART_CLASSIFICATION_CHECKBOX = "classification-checkbox";
 
     /**
      * The MIME type of {@link Item#CONTENT_URI} providing a directory of items.
@@ -99,6 +100,19 @@ public class ItemsContentProvider extends ContentProvider {
     private static final String CONTENT_TYPE_CLASSIFICATION_ANSWER =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-answer";
 
+    /**
+     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOXES =
+            "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification-checkboxes";
+
+    /**
+     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
+     * classification checkbox.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOX =
+            "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-checkbox";
+
     /** REST uri for querying items.
      * Like, the Galaxy-Zoo website's code, this hard-codes the Group ID for the Sloan survey: */
     private static final String QUERY_URI =
@@ -114,6 +128,8 @@ public class ItemsContentProvider extends ContentProvider {
     private static final int MATCHER_ID_CLASSIFICATION = 6;
     private static final int MATCHER_ID_CLASSIFICATION_ANSWERS = 7;
     private static final int MATCHER_ID_CLASSIFICATION_ANSWER = 8;
+    private static final int MATCHER_ID_CLASSIFICATION_CHECKBOXES = 9;
+    private static final int MATCHER_ID_CLASSIFICATION_CHECKBOX = 10;
     private static final UriMatcher sUriMatcher;
 
     static {
@@ -142,6 +158,12 @@ public class ItemsContentProvider extends ContentProvider {
 
         // A URI for a single classification:
         sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_ANSWER + "/#", MATCHER_ID_CLASSIFICATION_ANSWER);
+
+        // A URI for the list of all classifications:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_CHECKBOX, MATCHER_ID_CLASSIFICATION_CHECKBOXES);
+
+        // A URI for a single classification:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_CHECKBOX + "/#", MATCHER_ID_CLASSIFICATION_CHECKBOX);
     }
 
     private static final String[] FILE_MIME_TYPES = new String[]{"application/x-glom"};
@@ -154,6 +176,7 @@ public class ItemsContentProvider extends ContentProvider {
     private static final Map<String, String> sItemsProjectionMap;
     private static final Map<String, String> sClassificationsProjectionMap;
     private static final Map<String, String> sClassificationAnswersProjectionMap;
+    private static final Map<String, String> sClassificationCheckboxesProjectionMap;
 
     static {
         sItemsProjectionMap = new HashMap<>();
@@ -176,6 +199,13 @@ public class ItemsContentProvider extends ContentProvider {
         sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.SEQUENCE, DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE);
         sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.QUESTION_ID, DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID);
         sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.ANSWER_ID, DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID);
+
+        sClassificationCheckboxesProjectionMap = new HashMap<>();
+        sClassificationCheckboxesProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.CLASSIFICATION_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.CLASSIFICATION_ID);
+        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.SEQUENCE, DatabaseHelper.ClassificationCheckboxesDbColumns.SEQUENCE);
+        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.QUESTION_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.QUESTION_ID);
+        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.CHECKBOX_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID);
 
     }
 
@@ -249,6 +279,27 @@ public class ItemsContentProvider extends ContentProvider {
                 //TODO: Delete the associated files too.
                 break;
             }
+
+            //TODO: Do not support this because it would delete everything in one go?
+            case MATCHER_ID_CLASSIFICATION_CHECKBOXES: {
+                affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
+                        (!TextUtils.isEmpty(selection) ?
+                                " AND (" + selection + ')' : ""),
+                        selectionArgs
+                );
+                //TODO: Delete all associated files too.
+                break;
+            }
+            case MATCHER_ID_CLASSIFICATION_CHECKBOX: {
+                final UriParts uriParts = parseContentUri(uri);
+                affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
+                        prependIdToSelection(selection),
+                        prependToArray(selectionArgs, uriParts.itemId)
+                );
+                //TODO: Delete the associated files too.
+                break;
+            }
+
             //TODO?: case MATCHER_ID_FILE:
             default:
                 throw new IllegalArgumentException("unknown item: " +
@@ -275,6 +326,10 @@ public class ItemsContentProvider extends ContentProvider {
                 return CONTENT_TYPE_CLASSIFICATION_ANSWERS;
             case MATCHER_ID_CLASSIFICATION_ANSWER:
                 return CONTENT_TYPE_CLASSIFICATION_ANSWER;
+            case MATCHER_ID_CLASSIFICATION_CHECKBOXES:
+                return CONTENT_TYPE_CLASSIFICATION_CHECKBOXES;
+            case MATCHER_ID_CLASSIFICATION_CHECKBOX:
+                return CONTENT_TYPE_CLASSIFICATION_CHECKBOX;
             default:
                 throw new IllegalArgumentException("Unknown item type: " +
                         uri);
@@ -359,6 +414,13 @@ public class ItemsContentProvider extends ContentProvider {
                 uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
                         values, sClassificationAnswersProjectionMap,
                         ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
+                break;
+            }
+            case MATCHER_ID_CLASSIFICATION_CHECKBOXES:
+            case MATCHER_ID_CLASSIFICATION_CHECKBOX: {
+                uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
+                        values, sClassificationCheckboxesProjectionMap,
+                        ClassificationCheckbox.CLASSIFICATION_CHECKBOXES_URI);
                 break;
             }
             default:
@@ -671,7 +733,7 @@ public class ItemsContentProvider extends ContentProvider {
                         null, null, orderBy);
 
                 c.setNotificationUri(getContext().getContentResolver(),
-                        Classification.CONTENT_URI);
+                        ClassificationAnswer.CONTENT_URI);
 
                 break;
             }
@@ -690,7 +752,40 @@ public class ItemsContentProvider extends ContentProvider {
                         selection, prependToArray(selectionArgs, uriParts.itemId),
                         null, null, orderBy);
                 c.setNotificationUri(getContext().getContentResolver(),
-                        Classification.CONTENT_URI); //TODO: More precise?
+                        ClassificationAnswer.CONTENT_URI); //TODO: More precise?
+                break;
+            }
+
+            case MATCHER_ID_CLASSIFICATION_CHECKBOXES: {
+                // query the database for all items:
+                final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES);
+                builder.setProjectionMap(sClassificationCheckboxesProjectionMap);
+                c = builder.query(getDb(), projection,
+                        selection, selectionArgs,
+                        null, null, orderBy);
+
+                c.setNotificationUri(getContext().getContentResolver(),
+                        ClassificationCheckbox.CONTENT_URI);
+
+                break;
+            }
+            case MATCHER_ID_CLASSIFICATION_CHECKBOX: {
+                // query the database for a specific item:
+                final UriParts uriParts = parseContentUri(uri);
+
+                //Prepend our ID=? argument to the selection arguments.
+                //This lets us use the ? syntax to avoid SQL injection
+
+                final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES);
+                builder.setProjectionMap(sClassificationCheckboxesProjectionMap);
+                builder.appendWhere(BaseColumns._ID + " = ?"); //We use ? to avoid SQL Injection.
+                c = builder.query(getDb(), projection,
+                        selection, prependToArray(selectionArgs, uriParts.itemId),
+                        null, null, orderBy);
+                c.setNotificationUri(getContext().getContentResolver(),
+                        ClassificationCheckbox.CONTENT_URI); //TODO: More precise?
                 break;
             }
 
@@ -826,6 +921,25 @@ public class ItemsContentProvider extends ContentProvider {
                 break;
             }
 
+            case MATCHER_ID_CLASSIFICATION_CHECKBOXES:
+                affected = updateMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
+                        values, sClassificationCheckboxesProjectionMap,
+                        selection, selectionArgs);
+                break;
+
+            case MATCHER_ID_CLASSIFICATION_CHECKBOX: {
+                final UriParts uriParts = parseContentUri(uri);
+
+                //Prepend our ID=? argument to the selection arguments.
+                //This lets us use the ? syntax to avoid SQL injection
+                affected = updateMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
+                        values, sClassificationCheckboxesProjectionMap,
+                        prependIdToSelection(selection),
+                        prependToArray(selectionArgs, uriParts.itemId)
+                );
+                break;
+            }
+
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -914,7 +1028,7 @@ public class ItemsContentProvider extends ContentProvider {
      */
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 9;
+        private static final int DATABASE_VERSION = 10;
         private static final String DATABASE_NAME = "items.db";
 
         private static final String TABLE_NAME_ITEMS = "items";
@@ -951,6 +1065,15 @@ public class ItemsContentProvider extends ContentProvider {
             private static final String ANSWER_ID = "answerId";
         }
 
+        private static final String TABLE_NAME_CLASSIFICATION_CHECKBOXES = "classification_checkboxes";
+        private static class ClassificationCheckboxesDbColumns implements BaseColumns  {
+
+            private static final String CLASSIFICATION_ID = "classificationId";
+            private static final String SEQUENCE = "sequence";
+            private static final String QUESTION_ID = "questionId";
+            private static final String CHECKBOX_ID = "checkboxId";
+        }
+
         private static final String DEFAULT_SORT_ORDER = Item.Columns._ID + " DESC";
 
         DatabaseHelper(Context context) {
@@ -971,6 +1094,7 @@ public class ItemsContentProvider extends ContentProvider {
                 dropTable(sqLiteDatabase, TABLE_NAME_FILES);
                 dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATIONS);
                 dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_ANSWERS);
+                dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_CHECKBOXES);
 
                 createTable(sqLiteDatabase);
             }
@@ -1013,6 +1137,15 @@ public class ItemsContentProvider extends ContentProvider {
                     ClassificationAnswersDbColumns.CLASSIFICATION_ID + " INTEGER, " + /* Foreign key. See TABLE_NAME_CLASSIFICATIONS . _ID. */
                     ClassificationAnswersDbColumns.QUESTION_ID + " TEXT, " +
                     ClassificationAnswersDbColumns.ANSWER_ID + " TEXT)";
+            sqLiteDatabase.execSQL(qs);
+
+            qs = "CREATE TABLE " + TABLE_NAME_CLASSIFICATION_CHECKBOXES + " (" +
+                    BaseColumns._ID +
+                    " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    ClassificationCheckboxesDbColumns.SEQUENCE + " INTEGER DEFAULT 0, " +
+                    ClassificationCheckboxesDbColumns.CLASSIFICATION_ID + " INTEGER, " + /* Foreign key. See TABLE_NAME_CLASSIFICATIONS . _ID. */
+                    ClassificationCheckboxesDbColumns.QUESTION_ID + " TEXT, " +
+                    ClassificationCheckboxesDbColumns.CHECKBOX_ID + " TEXT)";
             sqLiteDatabase.execSQL(qs);
         }
     }
