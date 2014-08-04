@@ -133,6 +133,7 @@ public class SubjectFragment extends ItemFragment
 
         if (mCursor.getCount() <= 0) { //In case the query returned no rows.
             Log.error("The ContentProvider query returned no rows.");
+            return;
         }
 
         mCursor.moveToFirst(); //There should only be one anyway.

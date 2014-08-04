@@ -211,15 +211,16 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
         mCursor.moveToFirst(); //There should only be one anyway.
 
-        //Look at each group in the layout:
         if (mRootView == null) {
             Log.error("mRootView is null.");
             return;
         }
 
         //This will return the actual ID if we asked for the NEXT id.
-        final String itemId = mCursor.getString(COLUMN_INDEX_ID);
-        setItemId(itemId);
+        if(mCursor.getCount() > 0) {
+            final String itemId = mCursor.getString(COLUMN_INDEX_ID);
+            setItemId(itemId);
+        }
 
         //TODO: Just update them.
         addChildFragments();
