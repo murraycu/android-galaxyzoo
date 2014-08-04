@@ -41,14 +41,19 @@ import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.UriRequestTask;
 
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpParams;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1168,10 +1173,13 @@ public class ItemsContentProvider extends ContentProvider {
 
     UriRequestTask newPostTask(final String url, final String itemId, final String subjectId) {
         final HttpPost post = new HttpPost(url);
-        final HttpParams params = post.getParams();
         final String PARAM_PART_CLASSIFICATION = "classification";
 
-        params.setParameter(PARAM_PART_CLASSIFICATION + "[subject_ids][]", subjectId);
+        //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
+        //but that did not allow multiple parameters with the same name, which we need.s
+        final List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
+                subjectId));
 
         Cursor c = null;
         {
@@ -1188,6 +1196,7 @@ public class ItemsContentProvider extends ContentProvider {
                     null, null, orderBy);
         }
 
+
         //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         while(c.moveToNext()) {
             final int sequence = c.getInt(0);
@@ -1198,7 +1207,7 @@ public class ItemsContentProvider extends ContentProvider {
             //TODO: Is the string representation of sequence locale-dependent?
             final String questionKey =
                     PARAM_PART_CLASSIFICATION + "[annotations][" + sequence + "][" + questionId + "]";
-            params.setParameter(questionKey, answerId);
+            nameValuePairs.add(new BasicNameValuePair(questionKey, answerId));
 
             SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
             builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES);
@@ -1218,20 +1227,17 @@ public class ItemsContentProvider extends ContentProvider {
                 final String checkboxId = cursorCheckboxes.getString(0);
 
                 //TODO: The Galaxy-Zoo server expects us to reuse the parameter name,
-                //but HttpParams.setParameter() just replaces the previous parameter that had the same name.
                 //TODO: Is the string representation of sequence locale-dependent?
-                params.setParameter(questionKey, checkboxId);
+                nameValuePairs.add(new BasicNameValuePair(questionKey, checkboxId));
             }
         }
 
-        /*
         try {
             post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         } catch (final UnsupportedEncodingException e) {
             Log.error("Exception from UrlEncodedFormEntity: ", e);
             return null;
         }
-        */
 
         final ResponseHandler handler = new GalaxyZooPostResponseHandler(this);
         final UriRequestTask requestTask = new UriRequestTask("" /* TODO */, this, post,
