@@ -1195,22 +1195,11 @@ public class ItemsContentProvider extends ContentProvider {
         UriRequestTask requestTask;
 
         final HttpGet get = new HttpGet(url);
-        ResponseHandler handler = newResponseHandler();
+        ResponseHandler handler = new GalaxyZooResponseHandler(this);
         requestTask = new UriRequestTask("" /* TODO */, this, get,
                 handler, getContext());
 
         //mRequestsInProgress.put(requestTag, requestTask);
         return requestTask;
-    }
-
-    /**
-     * Abstract method that allows a subclass to define the type of handler
-     * that should be used to parse the response of a given request.
-     *
-     * @return The response handler created by a subclass used to parse the
-     *         request response.
-     */
-    protected ResponseHandler newResponseHandler() {
-        return new GalaxyZooResponseHandler(this);
     }
 }
