@@ -441,30 +441,34 @@ public class QuestionFragment extends ItemFragment
         final ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
 
         final String itemId = getItemId();
-        for (final ClassificationInProgress.QuestionAnswer answer : classificationInProgress.getAnswers()) {
-            ContentProviderOperation.Builder builder =
-                    ContentProviderOperation.newInsert(ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
-            final ContentValues valuesAnswers = new ContentValues();
-            valuesAnswers.put(ClassificationAnswer.Columns.ITEM_ID, itemId);
-            valuesAnswers.put(ClassificationAnswer.Columns.QUESTION_ID, answer.getQuestionId());
-            valuesAnswers.put(ClassificationAnswer.Columns.ANSWER_ID, answer.getAnswerId());
-            builder.withValues(valuesAnswers);
-            ops.add(builder.build());
-
-            //For instance, if the question has multiple-choice checkboxes to select before clicking
-            //the "Done" answer:
-            for (final String checkboxId : answer.getCheckboxIds()) {
-                builder =
+        final List<ClassificationInProgress.QuestionAnswer> answers = classificationInProgress.getAnswers();
+        if (answers != null) {
+            for (final ClassificationInProgress.QuestionAnswer answer : answers) {
+                ContentProviderOperation.Builder builder =
                         ContentProviderOperation.newInsert(ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
-                final ContentValues valuesCheckbox = new ContentValues();
-                valuesCheckbox.put(ClassificationCheckbox.Columns.ITEM_ID, itemId);
-                valuesCheckbox.put(ClassificationCheckbox.Columns.QUESTION_ID, answer.getQuestionId());
-                valuesCheckbox.put(ClassificationCheckbox.Columns.CHECKBOX_ID, checkboxId);
-                builder.withValues(valuesCheckbox);
+                final ContentValues valuesAnswers = new ContentValues();
+                valuesAnswers.put(ClassificationAnswer.Columns.ITEM_ID, itemId);
+                valuesAnswers.put(ClassificationAnswer.Columns.QUESTION_ID, answer.getQuestionId());
+                valuesAnswers.put(ClassificationAnswer.Columns.ANSWER_ID, answer.getAnswerId());
+                builder.withValues(valuesAnswers);
                 ops.add(builder.build());
+
+                //For instance, if the question has multiple-choice checkboxes to select before clicking
+                //the "Done" answer:
+                final List<String> checkboxIds = answer.getCheckboxIds();
+                if (checkboxIds != null) {
+                    for (final String checkboxId : checkboxIds) {
+                        builder =
+                                ContentProviderOperation.newInsert(ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
+                        final ContentValues valuesCheckbox = new ContentValues();
+                        valuesCheckbox.put(ClassificationCheckbox.Columns.ITEM_ID, itemId);
+                        valuesCheckbox.put(ClassificationCheckbox.Columns.QUESTION_ID, answer.getQuestionId());
+                        valuesCheckbox.put(ClassificationCheckbox.Columns.CHECKBOX_ID, checkboxId);
+                        builder.withValues(valuesCheckbox);
+                        ops.add(builder.build());
+                    }
+                }
             }
-
-
         }
 
         //Mark the Item (Subject) as done:
