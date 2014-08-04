@@ -43,13 +43,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.murrayc.galaxyzoo.app.provider.Classification;
 import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A fragment representing a single subject.
@@ -85,6 +88,9 @@ public class QuestionFragment extends ItemFragment
     private String mQuestionId;
     private String mZooniverseId; //Only used for the talk URI so far.
 
+    // A map of checkbox IDs to buttons.
+    private Map<String, ToggleButton> mCheckboxButtons = new HashMap<>();
+
     private void setZooniverseId(final String zooniverseId) {
         mZooniverseId = zooniverseId;
     }
@@ -105,13 +111,29 @@ public class QuestionFragment extends ItemFragment
             answers.add(new QuestionAnswer(questionId, answerId));
         }
 
+        public void add(final String questionId, final String answerId, final List<String> checkboxIds) {
+            answers.add(new QuestionAnswer(questionId, answerId, checkboxIds));
+        }
+
         static private class QuestionAnswer {
-            private String questionId;
-            private String answerId;
+            // The question that was answered.
+            private final String questionId;
+
+            // The Answer that was chosen.
+            private final String answerId;
+
+            // Any checkboxes that were selected before the answer (usually "Done") was chosen.
+            private List<String> checkboxIds;
 
             public QuestionAnswer(final String questionId, final String answerId) {
                 this.questionId = questionId;
                 this.answerId = answerId;
+            }
+
+            public QuestionAnswer(final String questionId, final String answerId, final List<String> checkboxIds) {
+                this.questionId = questionId;
+                this.answerId = answerId;
+                this.checkboxIds = checkboxIds;
             }
 
             public String getQuestionId() {
@@ -120,6 +142,10 @@ public class QuestionFragment extends ItemFragment
 
             public String getAnswerId() {
                 return answerId;
+            }
+
+            public List<String> getCheckboxIds() {
+                return checkboxIds;
             }
         }
 
@@ -249,16 +275,7 @@ public class QuestionFragment extends ItemFragment
             return;
         }
 
-        final Singleton singleton = Singleton.getInstance(activity);
-        final DecisionTree tree = singleton.getDecisionTree();
-
-        DecisionTree.Question question = null;
-        if (TextUtils.isEmpty(getQuestionId())) {
-            question = tree.getFirstQuestion();
-            setQuestionId(question.getId());
-        } else {
-            question = tree.getQuestion(getQuestionId());
-        }
+        DecisionTree.Question question = getQuestion(activity);
 
         //Show the title:
         final TextView textViewTitle = (TextView)mRootView.findViewById(R.id.textViewTitle);
@@ -276,6 +293,37 @@ public class QuestionFragment extends ItemFragment
         }
         textViewText.setText(question.getText());
 
+        //Checkboxes:
+        final LinearLayout layoutCheckboxes = (LinearLayout)mRootView.findViewById(R.id.layoutCheckboxes);
+        if (layoutCheckboxes == null) {
+            Log.error("layoutCheckboxes is null.");
+            return;
+        }
+
+        layoutCheckboxes.removeAllViews();
+        mCheckboxButtons.clear();
+        for(final DecisionTree.Checkbox checkbox : question.checkboxes) {
+            final ToggleButton button = new ToggleButton(activity);
+
+            //Use just the highlighting (line, color, etc) to show that it's selected,
+            //instead of On/Off, so we don't need a separate label.
+            //TODO: Use the icon. See http://stackoverflow.com/questions/18598255/android-create-a-toggle-button-with-image-and-no-text
+            button.setText(checkbox.getText());
+            button.setTextOn(checkbox.getText());
+            button.setTextOff(checkbox.getText());
+            layoutCheckboxes.addView(button);
+
+            mCheckboxButtons.put(checkbox.getId(), button);
+
+            /*
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    // Perform action on click
+                    onAnswerButtonClicked(checkbox.getId());
+                }
+            });
+            */
+        }
 
         //Answers:
         final LinearLayout layoutAnswers = (LinearLayout)mRootView.findViewById(R.id.layoutAnswers);
@@ -297,6 +345,20 @@ public class QuestionFragment extends ItemFragment
                 }
             });
         }
+    }
+
+    private DecisionTree.Question getQuestion(Activity activity) {
+        final Singleton singleton = Singleton.getInstance(activity);
+        final DecisionTree tree = singleton.getDecisionTree();
+
+        DecisionTree.Question question = null;
+        if (TextUtils.isEmpty(getQuestionId())) {
+            question = tree.getFirstQuestion();
+            setQuestionId(question.getId());
+        } else {
+            question = tree.getQuestion(getQuestionId());
+        }
+        return question;
     }
 
     private void onAnswerButtonClicked(final String answerId) {
@@ -326,8 +388,25 @@ public class QuestionFragment extends ItemFragment
                 Log.error("Could not open the discussion URI.", e);
             }
         } else {
+            List<String> checkboxes = null;
+
+            //Get the selected checkboxes too:
+            final Singleton singleton = Singleton.getInstance(activity);
+            final DecisionTree tree = singleton.getDecisionTree();
+            final DecisionTree.Question question = tree.getQuestion(questionId);
+            if (question.hasCheckboxes()) {
+                checkboxes = new ArrayList<>();
+                for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
+                    final String checkboxId = checkbox.getId();
+                    ToggleButton button = mCheckboxButtons.get(checkboxId);
+                    if ((button != null) && button.isChecked()) {
+                        checkboxes.add(checkboxId);
+                    }
+                }
+            }
+
             //Remember the answer:
-            mClassificationInProgress.add(questionId, answerId);
+            mClassificationInProgress.add(questionId, answerId, checkboxes);
         }
 
         final Singleton singleton = Singleton.getInstance(activity);
