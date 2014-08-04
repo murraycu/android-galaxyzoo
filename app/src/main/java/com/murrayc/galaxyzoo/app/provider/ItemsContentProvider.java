@@ -37,23 +37,29 @@ import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.provider.rest.FileResponseHandler;
+import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.UriRequestTask;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.params.HttpParams;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ItemsContentProvider extends ContentProvider {
 
+    //TODO: Remove these explicit method calls, or keep them just for debugging,
+    //when we make them happen automatically.
     public static final String METHOD_REQUEST_ITEMS = "request-items";
+    public static final String METHOD_UPLOAD_CLASSIFICATIONS = "upload-classifications";
+
     public static final String URI_PART_ITEM = "item";
     public static final String URI_PART_ITEM_ID_NEXT = "next"; //Use in place of the item ID to get the next unclassified item.
     public static final String URI_PART_FILE = "file";
@@ -113,10 +119,15 @@ public class ItemsContentProvider extends ContentProvider {
     private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOX =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-checkbox";
 
+    //TODO: Move these, and others, into a Config class.
     /** REST uri for querying items.
      * Like, the Galaxy-Zoo website's code, this hard-codes the Group ID for the Sloan survey: */
     private static final String QUERY_URI =
             "https://api.zooniverse.org/projects/galaxy_zoo/groups/50251c3b516bcb6ecb000002/subjects?limit=5";
+
+    private static final String POST_URI =
+            "http://www.murrayc.com/galaxyzootest"; //Avoid bothering the zooniverse server until we are more sure that this works.
+            //"https://api.zooniverse.org/projects/galaxy_zoo/workflows/50251c3b516bcb6ecb000002/classifications";
 
 
     //TODO: Use an enum?
@@ -551,17 +562,43 @@ public class ItemsContentProvider extends ContentProvider {
 
     @Override
     public Bundle call(String method, String arg, Bundle extras) {
-        if (!METHOD_REQUEST_ITEMS.equals(method)) {
-            return null;
+        if (METHOD_REQUEST_ITEMS.equals(method)) {
+            /** Check with the remote REST API asynchronously,
+             * informing the calling client later via notification.
+             */
+            //TODO: Only do this if there are no unclassified items:
+            asyncQueryRequest(QUERY_URI);
+        } else if (METHOD_UPLOAD_CLASSIFICATIONS.equals(method)) {
+            /** Upload any classifications that have not yet been uploaded.
+             */
+            uploadOutstandingClassifications();
         }
 
-        /** Check with the remote REST API asynchronously,
-         * informing the calling client later via notification.
-         */
-        //TODO: Only do this if there are no unclassified items:
-        asyncQueryRequest(QUERY_URI);
-
         return null;
+    }
+
+    private void uploadOutstandingClassifications() {
+        // query the database for any item whose classification is not yet uploaded.
+        final String whereClause =
+                "(" + DatabaseHelper.ItemsDbColumns.DONE + " == 1) AND " +
+                "(" + DatabaseHelper.ItemsDbColumns.SKIPPED + " != 1) AND " +
+                "(" + DatabaseHelper.ItemsDbColumns.UPLOADED + " != 1)";
+
+        //Prepend our ID=? argument to the selection arguments.
+        //This lets us use the ? syntax to avoid SQL injection
+
+        final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
+        builder.appendWhere(whereClause);
+        final String[] projection = {Item.Columns._ID, Item.Columns.SUBJECT_ID};
+        final Cursor c = builder.query(getDb(), projection,
+                null, null,
+                null, null, null); //TODO: Order by?
+        while(c.moveToNext()) {
+            final String itemId = c.getString(0);
+            final String subjectId = c.getString(1);
+            asyncQueryPost(POST_URI, itemId, subjectId);
+        }
     }
 
 
@@ -949,6 +986,7 @@ public class ItemsContentProvider extends ContentProvider {
         private static class ItemsDbColumns implements BaseColumns {
             //Specific to our app:
             protected static final String DONE = "done"; //1 or 0. Whether the user has classified it already.
+            protected static final String UPLOADED = "uploaded"; //1 or 0. Whether its classification has been submitted.
             protected static final String SKIPPED = "skipped"; //1 or 0. Whether the user has skipped it already.
 
             //From the REST API:
@@ -1018,6 +1056,7 @@ public class ItemsContentProvider extends ContentProvider {
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ItemsDbColumns.DONE + " INTEGER DEFAULT 0, " +
+                    ItemsDbColumns.UPLOADED + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.SKIPPED + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.SUBJECT_ID + " TEXT, " +
                     ItemsDbColumns.ZOONIVERSE_ID + " TEXT, " +
@@ -1094,12 +1133,78 @@ public class ItemsContentProvider extends ContentProvider {
         return null;
     }
 
+    /**
+     * Creates a new worker thread to carry out a RESTful network invocation.
+     *
+     * @param queryUri the complete URI that should be accessed by this request.
+     */
+    private Thread asyncQueryPost(final String queryUri, final String itemId, final String subjectId) {
+        //TODO: Check the return code so we can mark the item as uploaded.
+        //synchronized (mRequestsInProgress) {
+            UriRequestTask requestTask = null; //getRequestTask();
+            if (requestTask == null) {
+                requestTask = newPostTask(queryUri, itemId, subjectId);
+                final Thread t = new Thread(requestTask);
+                // allows other requests to run in parallel.
+                t.start();
+                return t;
+            }
+            //}
+
+            return null;
+    }
+
     UriRequestTask newQueryTask(final String url) {
         UriRequestTask requestTask;
 
         final HttpGet get = new HttpGet(url);
         ResponseHandler handler = new GalaxyZooResponseHandler(this);
         requestTask = new UriRequestTask("" /* TODO */, this, get,
+                handler, getContext());
+
+        //mRequestsInProgress.put(requestTag, requestTask);
+        return requestTask;
+    }
+
+    UriRequestTask newPostTask(final String url, final String itemId, final String subjectId) {
+        final HttpPost post = new HttpPost(url);
+        final HttpParams params = post.getParams();
+        final String PARAM_PART_CLASSIFICATION = "classification";
+
+        params.setParameter(PARAM_PART_CLASSIFICATION + "[subject_ids][]", subjectId);
+
+        final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);
+        builder.appendWhere(DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?"); //We use ? to avoid SQL Injection.
+        final String[] selectionArgs = {itemId};
+        final String[] projection = {DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE, DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID, DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID};
+        final Cursor c = builder.query(getDb(), projection,
+                null, selectionArgs,
+                null, null, null); //TODO: Order by sequence.
+
+        //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        while(c.moveToNext()) {
+            final int sequence = c.getInt(0);
+            final String questionId = c.getString(1);
+            final String answerId = c.getString(2);
+
+            //TODO: Is the string representation of sequence locale-dependent?
+            params.setParameter(PARAM_PART_CLASSIFICATION + "[annotations][" + sequence + "][" + questionId + "]", answerId);
+
+            //nameValuePairs.add(new BasicNameValuePair(questionId, answerId));
+        }
+
+        /*
+        try {
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        } catch (final UnsupportedEncodingException e) {
+            Log.error("Exception from UrlEncodedFormEntity: ", e);
+            return null;
+        }
+        */
+
+        final ResponseHandler handler = new GalaxyZooPostResponseHandler(this);
+        final UriRequestTask requestTask = new UriRequestTask("" /* TODO */, this, post,
                 handler, getContext());
 
         //mRequestsInProgress.put(requestTag, requestTask);

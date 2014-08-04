@@ -54,6 +54,7 @@ public class Item {
     public static final class Columns implements BaseColumns {
         //The ID is BaseColumns._ID;
         public static final String DONE = "done";
+        public static final String UPLOADED = "uploaded";
         public static final String SKIPPED = "skipped";
         public static final String SUBJECT_ID = "subjectId";
         public static final String ZOONIVERSE_ID = "zooniverseId";
