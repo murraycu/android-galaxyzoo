@@ -68,7 +68,7 @@ public class UriRequestTask implements Runnable {
             */
         }
 
-        // With our ResponseHandeler classes, when this is a string,
+        // With our ResponseHandler classes, when this is a string,
         // then it is null on success.
         //  Otherwise it describes an error.
         //  See our GalaxyZooResponseHandler.
