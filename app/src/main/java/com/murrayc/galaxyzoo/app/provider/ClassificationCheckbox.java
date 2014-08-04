@@ -43,7 +43,7 @@ public class ClassificationCheckbox {
 
     public static final class Columns implements BaseColumns {
         //The ID is BaseColumns._ID;
-        public static final String CLASSIFICATION_ID = "classificationId";
+        public static final String ITEM_ID = "itemId";
         public static final String SEQUENCE = "sequence";
         public static final String QUESTION_ID = "questionId";
         public static final String CHECKBOX_ID = "checkboxId";

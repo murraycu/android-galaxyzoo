@@ -174,7 +174,6 @@ public class ItemsContentProvider extends ContentProvider {
      * for /item/ URIs, mapping to the items tables.
      */
     private static final Map<String, String> sItemsProjectionMap;
-    private static final Map<String, String> sClassificationsProjectionMap;
     private static final Map<String, String> sClassificationAnswersProjectionMap;
     private static final Map<String, String> sClassificationCheckboxesProjectionMap;
 
@@ -189,20 +188,17 @@ public class ItemsContentProvider extends ContentProvider {
         sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL_URI, DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI);
         sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_URI, DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI);
 
-        sClassificationsProjectionMap = new HashMap<>();
-        sClassificationsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-        sClassificationsProjectionMap.put(Classification.Columns.ITEM_ID, DatabaseHelper.ClassificationsDbColumns.ITEM_ID);
 
         sClassificationAnswersProjectionMap = new HashMap<>();
         sClassificationAnswersProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.CLASSIFICATION_ID, DatabaseHelper.ClassificationAnswersDbColumns.CLASSIFICATION_ID);
+        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.ITEM_ID, DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID);
         sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.SEQUENCE, DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE);
         sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.QUESTION_ID, DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID);
         sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.ANSWER_ID, DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID);
 
         sClassificationCheckboxesProjectionMap = new HashMap<>();
         sClassificationCheckboxesProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.CLASSIFICATION_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.CLASSIFICATION_ID);
+        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.ITEM_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID);
         sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.SEQUENCE, DatabaseHelper.ClassificationCheckboxesDbColumns.SEQUENCE);
         sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.QUESTION_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.QUESTION_ID);
         sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.CHECKBOX_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID);
@@ -233,26 +229,6 @@ public class ItemsContentProvider extends ContentProvider {
             case MATCHER_ID_ITEM: {
                 final UriParts uriParts = parseContentUri(uri);
                 affected = getDb().delete(DatabaseHelper.TABLE_NAME_ITEMS,
-                        prependIdToSelection(selection),
-                        prependToArray(selectionArgs, uriParts.itemId)
-                );
-                //TODO: Delete the associated files too.
-                break;
-            }
-
-            //TODO: Do not support this because it would delete everything in one go?
-            case MATCHER_ID_CLASSIFICATIONS: {
-                affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS,
-                                (!TextUtils.isEmpty(selection) ?
-                                        " AND (" + selection + ')' : ""),
-                        selectionArgs
-                );
-                //TODO: Delete all associated files too.
-                break;
-            }
-            case MATCHER_ID_CLASSIFICATION: {
-                final UriParts uriParts = parseContentUri(uri);
-                affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS,
                         prependIdToSelection(selection),
                         prependToArray(selectionArgs, uriParts.itemId)
                 );
@@ -318,10 +294,6 @@ public class ItemsContentProvider extends ContentProvider {
             case MATCHER_ID_ITEM:
             case MATCHER_ID_ITEM_NEXT:
                 return CONTENT_TYPE_ITEM;
-            case MATCHER_ID_CLASSIFICATIONS:
-                return CONTENT_TYPE_CLASSIFICATIONS;
-            case MATCHER_ID_CLASSIFICATION:
-                return CONTENT_TYPE_CLASSIFICATION;
             case MATCHER_ID_CLASSIFICATION_ANSWERS:
                 return CONTENT_TYPE_CLASSIFICATION_ANSWERS;
             case MATCHER_ID_CLASSIFICATION_ANSWER:
@@ -401,12 +373,6 @@ public class ItemsContentProvider extends ContentProvider {
                 uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, valuesComplete,
                         sItemsProjectionMap, Item.ITEMS_URI);
 
-                break;
-            }
-            case MATCHER_ID_CLASSIFICATIONS:
-            case MATCHER_ID_CLASSIFICATION: {
-                uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS, values,
-                        sClassificationsProjectionMap, Classification.CLASSIFICATIONS_URI);
                 break;
             }
             case MATCHER_ID_CLASSIFICATION_ANSWERS:
@@ -690,39 +656,6 @@ public class ItemsContentProvider extends ContentProvider {
                         Item.FILE_URI); //TODO: More precise?
                 break;
 
-            case MATCHER_ID_CLASSIFICATIONS: {
-                // query the database for all items:
-                final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS);
-                builder.setProjectionMap(sClassificationsProjectionMap);
-                c = builder.query(getDb(), projection,
-                        selection, selectionArgs,
-                        null, null, orderBy);
-
-                c.setNotificationUri(getContext().getContentResolver(),
-                        Classification.CONTENT_URI);
-
-                break;
-            }
-            case MATCHER_ID_CLASSIFICATION: {
-                // query the database for a specific item:
-                final UriParts uriParts = parseContentUri(uri);
-
-                //Prepend our ID=? argument to the selection arguments.
-                //This lets us use the ? syntax to avoid SQL injection
-
-                final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS);
-                builder.setProjectionMap(sClassificationsProjectionMap);
-                builder.appendWhere(BaseColumns._ID + " = ?"); //We use ? to avoid SQL Injection.
-                c = builder.query(getDb(), projection,
-                        selection, prependToArray(selectionArgs, uriParts.itemId),
-                        null, null, orderBy);
-                c.setNotificationUri(getContext().getContentResolver(),
-                        Classification.CONTENT_URI); //TODO: More precise?
-                break;
-            }
-
             case MATCHER_ID_CLASSIFICATION_ANSWERS: {
                 // query the database for all items:
                 final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -883,25 +816,6 @@ public class ItemsContentProvider extends ContentProvider {
                 break;
             }
 
-            case MATCHER_ID_CLASSIFICATIONS:
-                affected = updateMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS,
-                        values, sClassificationsProjectionMap,
-                        selection, selectionArgs);
-                break;
-
-            case MATCHER_ID_CLASSIFICATION: {
-                final UriParts uriParts = parseContentUri(uri);
-
-                //Prepend our ID=? argument to the selection arguments.
-                //This lets us use the ? syntax to avoid SQL injection
-                affected = updateMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATIONS,
-                        values, sClassificationsProjectionMap,
-                        prependIdToSelection(selection),
-                        prependToArray(selectionArgs, uriParts.itemId)
-                );
-                break;
-            }
-
             case MATCHER_ID_CLASSIFICATION_ANSWERS:
                 affected = updateMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
                         values, sClassificationAnswersProjectionMap,
@@ -1028,7 +942,7 @@ public class ItemsContentProvider extends ContentProvider {
      */
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 10;
+        private static final int DATABASE_VERSION = 11;
         private static final String DATABASE_NAME = "items.db";
 
         private static final String TABLE_NAME_ITEMS = "items";
@@ -1050,25 +964,20 @@ public class ItemsContentProvider extends ContentProvider {
             private static final String FILE_DATA = "_data"; //The real URI
         }
 
-        //Each classification row has many classification_answer rows.
-        private static final String TABLE_NAME_CLASSIFICATIONS = "classifications";
-        private static class ClassificationsDbColumns implements BaseColumns  {
-            private static final String ITEM_ID = "itemId";
-        }
-
+        //Each item row has many classification_answers rows.
         private static final String TABLE_NAME_CLASSIFICATION_ANSWERS = "classification_answers";
         private static class ClassificationAnswersDbColumns implements BaseColumns  {
-
-            private static final String CLASSIFICATION_ID = "classificationId";
+            private static final String ITEM_ID = "itemId";
             private static final String SEQUENCE = "sequence";
             private static final String QUESTION_ID = "questionId";
             private static final String ANSWER_ID = "answerId";
         }
 
+        //Each item row has some classification_checkboxes rows.
         private static final String TABLE_NAME_CLASSIFICATION_CHECKBOXES = "classification_checkboxes";
         private static class ClassificationCheckboxesDbColumns implements BaseColumns  {
 
-            private static final String CLASSIFICATION_ID = "classificationId";
+            private static final String ITEM_ID = "classificationId";
             private static final String SEQUENCE = "sequence";
             private static final String QUESTION_ID = "questionId";
             private static final String CHECKBOX_ID = "checkboxId";
@@ -1092,7 +1001,6 @@ public class ItemsContentProvider extends ContentProvider {
             if (oldv != newv) {
                 dropTable(sqLiteDatabase, TABLE_NAME_ITEMS);
                 dropTable(sqLiteDatabase, TABLE_NAME_FILES);
-                dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATIONS);
                 dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_ANSWERS);
                 dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_CHECKBOXES);
 
@@ -1124,17 +1032,12 @@ public class ItemsContentProvider extends ContentProvider {
                     FilesDbColumns.FILE_DATA + " TEXT);";
             sqLiteDatabase.execSQL(qs);
 
-            qs = "CREATE TABLE " + TABLE_NAME_CLASSIFICATIONS + " (" +
-                    BaseColumns._ID +
-                    " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    ClassificationsDbColumns.ITEM_ID + " TEXT)"; /* Foreign key. See TABLE_NAME_ITEMS ._ID. We can get the subject ID from this. */
-            sqLiteDatabase.execSQL(qs);
 
             qs = "CREATE TABLE " + TABLE_NAME_CLASSIFICATION_ANSWERS + " (" +
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ClassificationAnswersDbColumns.SEQUENCE + " INTEGER DEFAULT 0, " +
-                    ClassificationAnswersDbColumns.CLASSIFICATION_ID + " INTEGER, " + /* Foreign key. See TABLE_NAME_CLASSIFICATIONS . _ID. */
+                    ClassificationAnswersDbColumns.ITEM_ID + " INTEGER, " + /* Foreign key. See TABLE_NAME_CLASSIFICATIONS . _ID. */
                     ClassificationAnswersDbColumns.QUESTION_ID + " TEXT, " +
                     ClassificationAnswersDbColumns.ANSWER_ID + " TEXT)";
             sqLiteDatabase.execSQL(qs);
@@ -1143,7 +1046,7 @@ public class ItemsContentProvider extends ContentProvider {
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ClassificationCheckboxesDbColumns.SEQUENCE + " INTEGER DEFAULT 0, " +
-                    ClassificationCheckboxesDbColumns.CLASSIFICATION_ID + " INTEGER, " + /* Foreign key. See TABLE_NAME_CLASSIFICATIONS . _ID. */
+                    ClassificationCheckboxesDbColumns.ITEM_ID + " INTEGER, " + /* Foreign key. See TABLE_NAME_CLASSIFICATIONS . _ID. */
                     ClassificationCheckboxesDbColumns.QUESTION_ID + " TEXT, " +
                     ClassificationCheckboxesDbColumns.CHECKBOX_ID + " TEXT)";
             sqLiteDatabase.execSQL(qs);

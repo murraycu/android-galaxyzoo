@@ -24,7 +24,6 @@ import android.app.LoaderManager;
 import android.content.ActivityNotFoundException;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -45,7 +44,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.murrayc.galaxyzoo.app.provider.Classification;
 import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
 import com.murrayc.galaxyzoo.app.provider.Item;
@@ -435,17 +433,6 @@ public class QuestionFragment extends ItemFragment
 
         final ContentResolver resolver = activity.getContentResolver();
 
-        // Add the Classification:
-        // We can't do this together with the other ContentProviderOperations,
-        // because we need to get the generated Classification ID before
-        // adding the Classification Answers.
-        // ContentProviderOperation.Builder.withValueBackReferences() would only be useful
-        // for one insert of a Classification Answer.
-        final ContentValues values = new ContentValues();
-        values.put(Classification.Columns.ITEM_ID, getItemId());
-        final Uri uriClassification = resolver.insert(Classification.CLASSIFICATIONS_URI, values);
-        final long classificationId = ContentUris.parseId(uriClassification);
-
         // Add the related Classification Answers:
         // Use a ContentProvider operation to perform operations together,
         // either completely or not at all, as a transaction.
@@ -453,11 +440,12 @@ public class QuestionFragment extends ItemFragment
         // before we have finished adding it.
         final ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
 
+        final String itemId = getItemId();
         for (final ClassificationInProgress.QuestionAnswer answer : classificationInProgress.getAnswers()) {
             ContentProviderOperation.Builder builder =
                     ContentProviderOperation.newInsert(ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
             final ContentValues valuesAnswers = new ContentValues();
-            valuesAnswers.put(ClassificationAnswer.Columns.CLASSIFICATION_ID, classificationId);
+            valuesAnswers.put(ClassificationAnswer.Columns.ITEM_ID, itemId);
             valuesAnswers.put(ClassificationAnswer.Columns.QUESTION_ID, answer.getQuestionId());
             valuesAnswers.put(ClassificationAnswer.Columns.ANSWER_ID, answer.getAnswerId());
             builder.withValues(valuesAnswers);
@@ -469,7 +457,7 @@ public class QuestionFragment extends ItemFragment
                 builder =
                         ContentProviderOperation.newInsert(ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
                 final ContentValues valuesCheckbox = new ContentValues();
-                valuesCheckbox.put(ClassificationCheckbox.Columns.CLASSIFICATION_ID, classificationId);
+                valuesCheckbox.put(ClassificationCheckbox.Columns.ITEM_ID, itemId);
                 valuesCheckbox.put(ClassificationCheckbox.Columns.QUESTION_ID, answer.getQuestionId());
                 valuesCheckbox.put(ClassificationCheckbox.Columns.CHECKBOX_ID, checkboxId);
                 builder.withValues(valuesCheckbox);
