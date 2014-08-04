@@ -979,7 +979,7 @@ public class ItemsContentProvider extends ContentProvider {
      */
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 11;
+        private static final int DATABASE_VERSION = 13;
         private static final String DATABASE_NAME = "items.db";
 
         private static final String TABLE_NAME_ITEMS = "items";
@@ -1173,15 +1173,20 @@ public class ItemsContentProvider extends ContentProvider {
 
         params.setParameter(PARAM_PART_CLASSIFICATION + "[subject_ids][]", subjectId);
 
-        final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);
-        builder.appendWhere(DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?"); //We use ? to avoid SQL Injection.
-        final String[] selectionArgs = {itemId};
-        final String[] projection = {DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE, DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID, DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID};
-        final String orderBy = DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE + " ASC";
-        final Cursor c = builder.query(getDb(), projection,
-                null, selectionArgs,
-                null, null, orderBy); //TODO: Order by sequence.
+        Cursor c = null;
+        {
+            SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+            builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);
+            builder.appendWhere(DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?"); //We use ? to avoid SQL Injection.
+            final String[] selectionArgs = {itemId};
+            final String[] projection = {DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE,
+                    DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID,
+                    DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID};
+            final String orderBy = DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE + " ASC";
+            c = builder.query(getDb(), projection,
+                    null, selectionArgs,
+                    null, null, orderBy);
+        }
 
         //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         while(c.moveToNext()) {
@@ -1189,10 +1194,34 @@ public class ItemsContentProvider extends ContentProvider {
             final String questionId = c.getString(1);
             final String answerId = c.getString(2);
 
+            //Add the question's answer:
             //TODO: Is the string representation of sequence locale-dependent?
-            params.setParameter(PARAM_PART_CLASSIFICATION + "[annotations][" + sequence + "][" + questionId + "]", answerId);
+            final String questionKey =
+                    PARAM_PART_CLASSIFICATION + "[annotations][" + sequence + "][" + questionId + "]";
+            params.setParameter(questionKey, answerId);
 
-            //nameValuePairs.add(new BasicNameValuePair(questionId, answerId));
+            SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+            builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES);
+            builder.appendWhere("(" + DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID + " = ?) AND " +
+                    "(" + DatabaseHelper.ClassificationCheckboxesDbColumns.QUESTION_ID + " == ?)"); //We use ? to avoid SQL Injection.
+            final String[] selectionArgs = {itemId, questionId};
+
+            //Add the question's answer's selected checkboxes, if any:
+            //The sequence will be the same for any selected checkbox for the same answer,
+            //so we don't bother getting that, or sorting by that.
+            final String[] projection = {DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID};
+            final String orderBy = DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID + " ASC";
+            final Cursor cursorCheckboxes = builder.query(getDb(), projection,
+                    null, selectionArgs,
+                    null, null, orderBy);
+            while (cursorCheckboxes.moveToNext()) {
+                final String checkboxId = cursorCheckboxes.getString(0);
+
+                //TODO: The Galaxy-Zoo server expects us to reuse the parameter name,
+                //but HttpParams.setParameter() just replaces the previous parameter that had the same name.
+                //TODO: Is the string representation of sequence locale-dependent?
+                params.setParameter(questionKey, checkboxId);
+            }
         }
 
         /*
