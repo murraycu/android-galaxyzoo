@@ -24,7 +24,7 @@ import java.io.IOException;
 public class UriRequestTask implements Runnable {
     private HttpUriRequest mRequest;
     private ResponseHandler mHandler;
-    private String handlerResult;
+    private Object handlerResult;
 
     protected Context mAppContext;
 
@@ -57,7 +57,7 @@ public class UriRequestTask implements Runnable {
 
         try {
             response = execute(mRequest);
-            handlerResult = (String)mHandler.handleResponse(response);
+            handlerResult = mHandler.handleResponse(response);
         } catch (IOException e) {
             Log.error("exception processing async request", e);
         } finally {
@@ -68,11 +68,15 @@ public class UriRequestTask implements Runnable {
             */
         }
 
-        //This is null on success.
-        //Otherwise it describes an error.
-        //See our GalaxyZooResponseHandler.
-        if(!TextUtils.isEmpty(handlerResult)) {
-            Log.error("Error processing async request: ", handlerResult);
+        // With our ResponseHandeler classes, when this is a string,
+        // then it is null on success.
+        //  Otherwise it describes an error.
+        //  See our GalaxyZooResponseHandler.
+        if(handlerResult instanceof String) {
+            final String strResult = (String) handlerResult;
+            if (!TextUtils.isEmpty(strResult)) {
+                Log.error("Error processing async request: ", strResult);
+            }
         }
     }
 
