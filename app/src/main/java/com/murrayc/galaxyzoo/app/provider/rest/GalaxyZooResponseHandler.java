@@ -35,11 +35,11 @@ public class GalaxyZooResponseHandler implements ResponseHandler<String> {
     @Override
     public String handleResponse(HttpResponse response) {
         try {
-            int newCount = parseEntity(response.getEntity());
+            final int newCount = parseEntity(response.getEntity());
 
             // only flush old state now that new state has arrived
-            if (newCount > 0) {
-                //TODO? deleteOld();
+            if (newCount <= 0) {
+                return "Failed. No JSON entities parsed."; //TODO: Use some constant error code?
             }
 
         } catch (IOException e) {
@@ -88,6 +88,10 @@ public class GalaxyZooResponseHandler implements ResponseHandler<String> {
             parseJsonObjectSubject(obj);
         }
 
+        //TODO: If this is 0 then something went wrong. Let the user know,
+        //maybe via the handleResponse() return string, which seems to be for whatever we want.
+        //For instance, the Galaxy-Zoo server could be down for maintenance (this has happened before),
+        //or there could be some other network problem.
         return inserted;
     }
 

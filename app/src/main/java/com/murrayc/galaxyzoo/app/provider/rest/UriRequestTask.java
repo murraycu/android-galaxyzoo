@@ -3,7 +3,9 @@ package com.murrayc.galaxyzoo.app.provider.rest;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
+import android.text.TextUtils;
+
+import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 import org.apache.http.HttpResponse;
@@ -22,6 +24,7 @@ import java.io.IOException;
 public class UriRequestTask implements Runnable {
     private HttpUriRequest mRequest;
     private ResponseHandler mHandler;
+    private String handlerResult;
 
     protected Context mAppContext;
 
@@ -54,15 +57,22 @@ public class UriRequestTask implements Runnable {
 
         try {
             response = execute(mRequest);
-            mHandler.handleResponse(response);
+            handlerResult = (String)mHandler.handleResponse(response);
         } catch (IOException e) {
-            Log.w("exception processing async request", e);
+            Log.error("exception processing async request", e);
         } finally {
             /*
             if (mSiteProvider != null) {
                 mSiteProvider.requestComplete(mRequestTag);
             }
             */
+        }
+
+        //This is null on success.
+        //Otherwise it describes an error.
+        //See our GalaxyZooResponseHandler.
+        if(!TextUtils.isEmpty(handlerResult)) {
+            Log.error("Error processing async request: ", handlerResult);
         }
     }
 
