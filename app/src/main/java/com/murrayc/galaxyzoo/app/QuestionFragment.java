@@ -461,7 +461,7 @@ public class QuestionFragment extends ItemFragment
                 if (checkboxIds != null) {
                     for (final String checkboxId : checkboxIds) {
                         builder =
-                                ContentProviderOperation.newInsert(ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
+                                ContentProviderOperation.newInsert(ClassificationCheckbox.CLASSIFICATION_CHECKBOXES_URI);
                         final ContentValues valuesCheckbox = new ContentValues();
                         valuesCheckbox.put(ClassificationCheckbox.Columns.ITEM_ID, itemId);
                         valuesCheckbox.put(ClassificationCheckbox.Columns.SEQUENCE, sequence);
