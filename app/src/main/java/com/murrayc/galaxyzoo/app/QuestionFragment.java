@@ -47,6 +47,7 @@ import android.widget.ToggleButton;
 
 import com.murrayc.galaxyzoo.app.provider.Classification;
 import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
+import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 import java.util.ArrayList;
@@ -453,15 +454,29 @@ public class QuestionFragment extends ItemFragment
         final ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
 
         for (final ClassificationInProgress.QuestionAnswer answer : classificationInProgress.getAnswers()) {
-            final ContentProviderOperation.Builder builder =
+            ContentProviderOperation.Builder builder =
                     ContentProviderOperation.newInsert(ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
             final ContentValues valuesAnswers = new ContentValues();
             valuesAnswers.put(ClassificationAnswer.Columns.CLASSIFICATION_ID, classificationId);
             valuesAnswers.put(ClassificationAnswer.Columns.QUESTION_ID, answer.getQuestionId());
             valuesAnswers.put(ClassificationAnswer.Columns.ANSWER_ID, answer.getAnswerId());
             builder.withValues(valuesAnswers);
-
             ops.add(builder.build());
+
+            //For instance, if the question has multiple-choice checkboxes to select before clicking
+            //the "Done" answer:
+            for (final String checkboxId : answer.getCheckboxIds()) {
+                builder =
+                        ContentProviderOperation.newInsert(ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
+                final ContentValues valuesCheckbox = new ContentValues();
+                valuesCheckbox.put(ClassificationCheckbox.Columns.CLASSIFICATION_ID, classificationId);
+                valuesCheckbox.put(ClassificationCheckbox.Columns.QUESTION_ID, answer.getQuestionId());
+                valuesCheckbox.put(ClassificationCheckbox.Columns.CHECKBOX_ID, checkboxId);
+                builder.withValues(valuesCheckbox);
+                ops.add(builder.build());
+            }
+
+
         }
 
         //Mark the Item (Subject) as done:
