@@ -945,7 +945,7 @@ public class ItemsContentProvider extends ContentProvider {
         private static final String TABLE_NAME_CLASSIFICATION_ANSWERS = "classification_answers";
         private static class ClassificationAnswersDbColumns implements BaseColumns  {
 
-            private static final String CLASSIFICATION_ID = "subjectId";
+            private static final String CLASSIFICATION_ID = "classificationId";
             private static final String SEQUENCE = "sequence";
             private static final String QUESTION_ID = "questionId";
             private static final String ANSWER_ID = "answerId";
