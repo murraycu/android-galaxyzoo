@@ -441,6 +441,7 @@ public class QuestionFragment extends ItemFragment
         final ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
 
         final String itemId = getItemId();
+        int sequence = 0;
         final List<ClassificationInProgress.QuestionAnswer> answers = classificationInProgress.getAnswers();
         if (answers != null) {
             for (final ClassificationInProgress.QuestionAnswer answer : answers) {
@@ -448,6 +449,7 @@ public class QuestionFragment extends ItemFragment
                         ContentProviderOperation.newInsert(ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
                 final ContentValues valuesAnswers = new ContentValues();
                 valuesAnswers.put(ClassificationAnswer.Columns.ITEM_ID, itemId);
+                valuesAnswers.put(ClassificationAnswer.Columns.SEQUENCE, sequence);
                 valuesAnswers.put(ClassificationAnswer.Columns.QUESTION_ID, answer.getQuestionId());
                 valuesAnswers.put(ClassificationAnswer.Columns.ANSWER_ID, answer.getAnswerId());
                 builder.withValues(valuesAnswers);
@@ -462,12 +464,15 @@ public class QuestionFragment extends ItemFragment
                                 ContentProviderOperation.newInsert(ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
                         final ContentValues valuesCheckbox = new ContentValues();
                         valuesCheckbox.put(ClassificationCheckbox.Columns.ITEM_ID, itemId);
+                        valuesCheckbox.put(ClassificationCheckbox.Columns.SEQUENCE, sequence);
                         valuesCheckbox.put(ClassificationCheckbox.Columns.QUESTION_ID, answer.getQuestionId());
                         valuesCheckbox.put(ClassificationCheckbox.Columns.CHECKBOX_ID, checkboxId);
                         builder.withValues(valuesCheckbox);
                         ops.add(builder.build());
                     }
                 }
+
+                sequence++;
             }
         }
 
