@@ -1178,9 +1178,10 @@ public class ItemsContentProvider extends ContentProvider {
         builder.appendWhere(DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?"); //We use ? to avoid SQL Injection.
         final String[] selectionArgs = {itemId};
         final String[] projection = {DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE, DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID, DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID};
+        final String orderBy = DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE + " ASC";
         final Cursor c = builder.query(getDb(), projection,
                 null, selectionArgs,
-                null, null, null); //TODO: Order by sequence.
+                null, null, orderBy); //TODO: Order by sequence.
 
         //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         while(c.moveToNext()) {
