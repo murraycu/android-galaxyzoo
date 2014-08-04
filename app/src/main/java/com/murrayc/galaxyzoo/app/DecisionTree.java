@@ -44,8 +44,32 @@ public class DecisionTree {
 
     private static final String NODE_ROOT = "murrayc_zoonverse_questions";
     private static final String NODE_QUESTION = "question";
+    private static final String NODE_CHECKBOX = "checkbox";
     private static final String NODE_ANSWER = "answer";
 
+    //These are multiple-selection.
+    static class Checkbox {
+        private String id;
+        private String text;
+        public String icon;
+
+        Checkbox(final String id, final String text, final String icon) {
+            this.id = id;
+            this.text = text;
+            this.icon = icon;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getText() {
+            return text;
+        }
+    }
+
+    //These are single selection.
+    //Sometimes it's just "Done" to accept the checkbox selections.
     static class Answer {
         private String id;
         private String text;
@@ -74,6 +98,7 @@ public class DecisionTree {
         public String text;
         public String help;
 
+        public final List<Checkbox> checkboxes = new ArrayList<>();
         public final List<Answer> answers = new ArrayList<>();
 
         Question(final String id, final String title, final String text, final String help) {
@@ -93,6 +118,18 @@ public class DecisionTree {
 
         public String getText() {
             return text;
+        }
+
+        public boolean hasCheckboxes() {
+            if (checkboxes == null) {
+                return false;
+            }
+
+            if (checkboxes.size() == 0) {
+                return false;
+            }
+
+            return true;
         }
     }
 
@@ -255,6 +292,16 @@ public class DecisionTree {
                 getTextOfChildNode(questionNode, "text"),
                 getTextOfChildNode(questionNode, "help"));
 
+        final List<Node> listCheckboxes = getChildrenByTagName(questionNode, NODE_CHECKBOX);
+        for (final Node node : listCheckboxes) {
+            if (!(node instanceof Element)) {
+                continue;
+            }
+
+            final Element element = (Element) node;
+            final Checkbox checkbox = loadCheckbox(element);
+            result.checkboxes.add(checkbox);
+        }
 
         final List<Node> listAnswers = getChildrenByTagName(questionNode, NODE_ANSWER);
         for (final Node node : listAnswers) {
@@ -267,6 +314,14 @@ public class DecisionTree {
             result.answers.add(answer);
         }
 
+        return result;
+    }
+
+    private Checkbox loadCheckbox(final Element checkboxNode) {
+        final Checkbox result = new Checkbox(
+                checkboxNode.getAttribute("id"),
+                getTextOfChildNode(checkboxNode, "text"),
+                checkboxNode.getAttribute("icon"));
         return result;
     }
 
