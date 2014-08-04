@@ -6,5 +6,6 @@
     <string name="title_detail">Detail</string>
     <string name="action_more">More</string>
     <string name="action_next">Next</string>
+    <string name="action_upload">Upload</string>
 
 </resources>

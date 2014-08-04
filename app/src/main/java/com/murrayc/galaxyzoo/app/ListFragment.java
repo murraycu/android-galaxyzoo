@@ -87,6 +87,20 @@ public class ListFragment extends Fragment
         contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_REQUEST_ITEMS, null, null);
     }
 
+    private void requestUpload() {
+        final Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+
+        final ContentResolver contentResolver = activity.getContentResolver();
+        if (contentResolver == null) {
+            return;
+        }
+
+        contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_UPLOAD_CLASSIFICATIONS, null, null);
+    }
+
     /**
      * The serialization (saved instance state) Bundle key representing the
      * activated item position. Only used on tablets.
@@ -207,6 +221,9 @@ public class ListFragment extends Fragment
         switch (item.getItemId()) {
             case R.id.option_menu_item_more:
                 requestMoreItems();
+                return true;
+            case R.id.option_menu_item_upload:
+                requestUpload();
                 return true;
             case R.id.option_menu_item_next:
                 mCallbacks.navigateToNextAvailable();

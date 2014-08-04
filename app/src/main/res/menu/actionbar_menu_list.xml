@@ -9,4 +9,8 @@
         android:id="@+id/option_menu_item_next"
         android:showAsAction="ifRoom"
         android:title="@string/action_next" />
+    <item
+        android:id="@+id/option_menu_item_upload"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_upload" />
 </menu>
