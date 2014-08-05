@@ -47,6 +47,12 @@
             android:authorities="com.murrayc.galaxyzoo.app"
             android:enabled="true"
             android:exported="false" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
     </application>
 
 </manifest>
