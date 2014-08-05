@@ -65,6 +65,8 @@ public class ItemsContentProvider extends ContentProvider {
     public static final String METHOD_REQUEST_ITEMS = "request-items";
     public static final String METHOD_UPLOAD_CLASSIFICATIONS = "upload-classifications";
     public static final String METHOD_LOGIN = "login";
+    public static final String METHOD_LOGIN_ARG_USERNAME= "username";
+    public static final String METHOD_LOGIN_ARG_PASSWORD = "password";
 
     public static final String URI_PART_ITEM = "item";
     public static final String URI_PART_ITEM_ID_NEXT = "next"; //Use in place of the item ID to get the next unclassified item.
@@ -569,10 +571,16 @@ public class ItemsContentProvider extends ContentProvider {
              */
             uploadOutstandingClassifications();
         } else if (METHOD_LOGIN.equals(method)) {
+            final String username = extras.getString(METHOD_LOGIN_ARG_USERNAME);
+            final String password = extras.getString(METHOD_LOGIN_ARG_PASSWORD);
+            if((username == null) || (password == null)) {
+                return null;
+            }
+
             /** Attempt to login to the server.
              */
             //TODO: Get the actual username and password from the user.
-            asyncQueryPostLogin(Config.LOGIN_URI, "testuser", "testpassword");
+            asyncQueryPostLogin(Config.LOGIN_URI, username, password);
         }
 
         return null;
