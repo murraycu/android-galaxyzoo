@@ -438,7 +438,7 @@ public class QuestionFragment extends ItemFragment
         // either completely or not at all, as a transaction.
         // This should prevent an incomplete classification from being uploaded
         // before we have finished adding it.
-        final ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        final ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
         final String itemId = getItemId();
         int sequence = 0;

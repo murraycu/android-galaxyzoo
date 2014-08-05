@@ -1167,7 +1167,7 @@ public class ItemsContentProvider extends ContentProvider {
 
         //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
         //but that did not allow multiple parameters with the same name, which we need.s
-        final List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        final List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
                 subjectId));
 
