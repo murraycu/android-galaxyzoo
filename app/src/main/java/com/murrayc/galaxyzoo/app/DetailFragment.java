@@ -69,8 +69,6 @@ public class DetailFragment extends ItemFragment {
 
     }
 
-    private View mRootView;
-
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -88,7 +86,7 @@ public class DetailFragment extends ItemFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        View mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
         assert mRootView != null;
 
         setHasOptionsMenu(true);

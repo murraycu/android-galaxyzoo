@@ -31,7 +31,6 @@ import java.util.List;
  * Simple test to ensure that the generated bindings are working.
  */
 public class DecisionTreeTest extends AndroidTestCase {
-    private static InputStream inputStream;
     private static DecisionTree decisionTree;
 
 
@@ -39,7 +38,7 @@ public class DecisionTreeTest extends AndroidTestCase {
     public void setUp() {
         //For some reason DecisionTreeTest.class.getResourceAsStream() doesn't work,
         //so we use DecisionTreeTest.class.getClassLoader().getResourceAsStream(), which does.
-        inputStream = DecisionTreeTest.class.getClassLoader().getResourceAsStream("test_decision_tree.xml");
+        final InputStream inputStream = DecisionTreeTest.class.getClassLoader().getResourceAsStream("test_decision_tree.xml");
         assertNotNull(inputStream);
 
         decisionTree = new DecisionTree(inputStream);
