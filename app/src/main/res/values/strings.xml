@@ -4,6 +4,7 @@
     <string name="app_name">Android GalaxyZoo</string>
     <string name="title_classify">Classify</string>
     <string name="title_detail">Detail</string>
+    <string name="action_login">Login</string>
     <string name="action_more">More</string>
     <string name="action_next">Next</string>
     <string name="action_upload">Upload</string>

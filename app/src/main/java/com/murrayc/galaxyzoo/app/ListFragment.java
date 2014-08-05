@@ -101,6 +101,20 @@ public class ListFragment extends Fragment
         contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_UPLOAD_CLASSIFICATIONS, null, null);
     }
 
+    private void requestLogin() {
+        final Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+
+        final ContentResolver contentResolver = activity.getContentResolver();
+        if (contentResolver == null) {
+            return;
+        }
+
+        contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_LOGIN, null, null);
+    }
+
     /**
      * The serialization (saved instance state) Bundle key representing the
      * activated item position. Only used on tablets.
@@ -219,6 +233,9 @@ public class ListFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
+            case R.id.option_menu_item_login:
+                requestLogin();
+                return true;
             case R.id.option_menu_item_more:
                 requestMoreItems();
                 return true;

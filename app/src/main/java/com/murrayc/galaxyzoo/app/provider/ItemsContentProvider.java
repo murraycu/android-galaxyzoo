@@ -37,6 +37,7 @@ import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.provider.rest.FileResponseHandler;
+import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostLoginResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.UriRequestTask;
@@ -63,6 +64,7 @@ public class ItemsContentProvider extends ContentProvider {
     //when we make them happen automatically.
     public static final String METHOD_REQUEST_ITEMS = "request-items";
     public static final String METHOD_UPLOAD_CLASSIFICATIONS = "upload-classifications";
+    public static final String METHOD_LOGIN = "login";
 
     public static final String URI_PART_ITEM = "item";
     public static final String URI_PART_ITEM_ID_NEXT = "next"; //Use in place of the item ID to get the next unclassified item.
@@ -566,12 +568,20 @@ public class ItemsContentProvider extends ContentProvider {
             /** Upload any classifications that have not yet been uploaded.
              */
             uploadOutstandingClassifications();
+        } else if (METHOD_LOGIN.equals(method)) {
+            /** Attempt to login to the server.
+             */
+            //TODO: Get the actual username and password from the user.
+            asyncQueryPostLogin(Config.LOGIN_URI, "testuser", "testpassword");
         }
 
         return null;
     }
 
     private void uploadOutstandingClassifications() {
+        // TODO: Request re-authentication when the server says we have used the wrong name + api_key.
+        // What does the server reply in that case?
+
         // query the database for any item whose classification is not yet uploaded.
         final String whereClause =
                 "(" + DatabaseHelper.ItemsDbColumns.DONE + " == 1) AND " +
@@ -595,8 +605,11 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
+    private void login() {
+    }
 
-    @Override
+
+        @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         //TODO: Avoid a direct implicit mapping between the Cursor column names in "selection" and the
@@ -1148,6 +1161,27 @@ public class ItemsContentProvider extends ContentProvider {
             return null;
     }
 
+    /**
+     * Creates a new worker thread to carry out a RESTful network invocation.
+     *
+     * @param queryUri the complete URI that should be accessed by this request.
+     */
+    private Thread asyncQueryPostLogin(final String queryUri, final String username, final String password) {
+        //TODO: Check the response so we can get the api_key for later use.
+        //synchronized (mRequestsInProgress) {
+        UriRequestTask requestTask = null; //getRequestTask();
+        if (requestTask == null) {
+            requestTask = newPostLoginTask(queryUri, username, password);
+            final Thread t = new Thread(requestTask);
+            // allows other requests to run in parallel.
+            t.start();
+            return t;
+        }
+        //}
+
+        return null;
+    }
+
     UriRequestTask newQueryTask(final String url) {
         UriRequestTask requestTask;
 
@@ -1165,7 +1199,7 @@ public class ItemsContentProvider extends ContentProvider {
         final String PARAM_PART_CLASSIFICATION = "classification";
 
         //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
-        //but that did not allow multiple parameters with the same name, which we need.s
+        //but that did not allow multiple parameters with the same name, which we need.
         final List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
                 subjectId));
@@ -1229,6 +1263,28 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         final ResponseHandler handler = new GalaxyZooPostResponseHandler(this);
+        final UriRequestTask requestTask = new UriRequestTask("" /* TODO */, this, post,
+                handler, getContext());
+
+        //mRequestsInProgress.put(requestTag, requestTask);
+        return requestTask;
+    }
+
+    UriRequestTask newPostLoginTask(final String url, final String username, final String password) {
+        final HttpPost post = new HttpPost(url);
+
+        final List<NameValuePair> nameValuePairs = new ArrayList<>();
+        nameValuePairs.add(new BasicNameValuePair("username", username));
+        nameValuePairs.add(new BasicNameValuePair("password", password));
+
+        try {
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        } catch (final UnsupportedEncodingException e) {
+            Log.error("Exception from UrlEncodedFormEntity: ", e);
+            return null;
+        }
+
+        final ResponseHandler handler = new GalaxyZooPostLoginResponseHandler(this);
         final UriRequestTask requestTask = new UriRequestTask("" /* TODO */, this, post,
                 handler, getContext());
 
