@@ -151,11 +151,7 @@ public class DecisionTree {
 
         try {
             xmlDocument = documentBuilder.parse(inputStream);
-        } catch (final SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return;
-        } catch (final IOException e) {
+        } catch (final SAXException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return;

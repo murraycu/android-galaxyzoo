@@ -488,9 +488,7 @@ public class QuestionFragment extends ItemFragment
 
         try {
             resolver.applyBatch(ClassificationAnswer.AUTHORITY, ops);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (OperationApplicationException e) {
+        } catch (RemoteException | OperationApplicationException e) {
             e.printStackTrace();
         }
 
