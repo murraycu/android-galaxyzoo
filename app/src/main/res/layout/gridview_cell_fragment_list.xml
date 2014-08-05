@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="false"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
+            android:text=""
             android:layout_alignRight="@id/item_image"
             android:layout_alignBottom="@id/item_image"
             android:layout_alignParentEnd="false"/>
