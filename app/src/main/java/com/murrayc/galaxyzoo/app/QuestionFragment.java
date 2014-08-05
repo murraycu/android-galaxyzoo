@@ -46,6 +46,7 @@ import android.widget.ToggleButton;
 
 import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
+import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 import java.util.ArrayList;
@@ -378,7 +379,7 @@ public class QuestionFragment extends ItemFragment
             //final Uri.Builder uriBuilder = new Uri.Builder();
             //uriBuilder.path("http://talk.galaxyzoo.org/#/subjects/");
             //uriBuilder.appendPath(getZooniverseId());
-            final String uriTalk = "http://talk.galaxyzoo.org/#/subjects/" + getZooniverseId();
+            final String uriTalk = Config.TALK_URI + getZooniverseId();
 
             try {
                 final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriTalk));
