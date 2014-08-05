@@ -24,10 +24,12 @@ import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -102,17 +104,8 @@ public class ListFragment extends Fragment
     }
 
     private void requestLogin() {
-        final Activity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
-
-        final ContentResolver contentResolver = activity.getContentResolver();
-        if (contentResolver == null) {
-            return;
-        }
-
-        contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_LOGIN, null, null);
+        final Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
     }
 
     /**
