@@ -20,7 +20,6 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;

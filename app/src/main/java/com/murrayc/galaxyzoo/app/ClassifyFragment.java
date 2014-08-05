@@ -34,13 +34,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment representing a single subject.

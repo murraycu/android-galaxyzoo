@@ -22,10 +22,7 @@ package com.murrayc.galaxyzoo.app;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.MenuItem;
-
-import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 /**
  * An activity showing a single subject. This

@@ -22,16 +22,12 @@ package com.murrayc.galaxyzoo.app;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.murrayc.galaxyzoo.app.provider.Item;
 
 /**
  * A fragment representing a single subject.

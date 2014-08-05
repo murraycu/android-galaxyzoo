@@ -1,21 +1,10 @@
 package com.murrayc.galaxyzoo.app.provider.rest;
 
-import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ResponseHandler;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 
 /**

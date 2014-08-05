@@ -24,8 +24,6 @@ import android.test.AndroidTestCase;
 import com.murrayc.galaxyzoo.app.DecisionTree;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Simple test to ensure that the generated bindings are working.

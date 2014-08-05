@@ -47,7 +47,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpParams;
 
 import java.io.File;
 import java.io.FileNotFoundException;
