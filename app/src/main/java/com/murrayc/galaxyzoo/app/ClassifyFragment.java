@@ -92,8 +92,6 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
     }
 
-    private long mUserId = -1;
-
     private View mRootView;
 
 
@@ -151,10 +149,6 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         //menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    private long getUserId() {
-        return mUserId;
     }
 
     @Override
