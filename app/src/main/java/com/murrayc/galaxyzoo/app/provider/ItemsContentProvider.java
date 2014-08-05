@@ -124,16 +124,6 @@ public class ItemsContentProvider extends ContentProvider {
     private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOX =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-checkbox";
 
-    //TODO: Move these, and others, into a Config class.
-    /** REST uri for querying items.
-     * Like, the Galaxy-Zoo website's code, this hard-codes the Group ID for the Sloan survey: */
-    private static final String QUERY_URI =
-            "https://api.zooniverse.org/projects/galaxy_zoo/groups/50251c3b516bcb6ecb000002/subjects?limit=5";
-
-    private static final String POST_URI =
-            "http://www.murrayc.com/galaxyzootest"; //Avoid bothering the zooniverse server until we are more sure that this works.
-            //"https://api.zooniverse.org/projects/galaxy_zoo/workflows/50251c3b516bcb6ecb000002/classifications";
-
 
     //TODO: Use an enum?
     private static final int MATCHER_ID_ITEMS = 1;
@@ -572,7 +562,7 @@ public class ItemsContentProvider extends ContentProvider {
              * informing the calling client later via notification.
              */
             //TODO: Only do this if there are no unclassified items:
-            asyncQueryRequest(QUERY_URI);
+            asyncQueryRequest(Config.QUERY_URI);
         } else if (METHOD_UPLOAD_CLASSIFICATIONS.equals(method)) {
             /** Upload any classifications that have not yet been uploaded.
              */
@@ -602,7 +592,7 @@ public class ItemsContentProvider extends ContentProvider {
         while(c.moveToNext()) {
             final String itemId = c.getString(0);
             final String subjectId = c.getString(1);
-            asyncQueryPost(POST_URI, itemId, subjectId);
+            asyncQueryPost(Config.POST_URI, itemId, subjectId);
         }
     }
 
@@ -665,7 +655,7 @@ public class ItemsContentProvider extends ContentProvider {
                 c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
                 if(c.getCount() < 1) {
                     //Get some more from the REST server and then try again.
-                    final Thread thread = asyncQueryRequest(QUERY_URI);
+                    final Thread thread = asyncQueryRequest(Config.QUERY_URI);
                     if (thread != null) {
                         try {
                             thread.join(); //Wait until it finishes.
