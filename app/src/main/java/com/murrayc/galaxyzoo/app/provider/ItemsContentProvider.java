@@ -30,6 +30,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
@@ -40,18 +41,22 @@ import com.murrayc.galaxyzoo.app.provider.rest.FileResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostLoginResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooResponseHandler;
-import com.murrayc.galaxyzoo.app.provider.rest.UriRequestTask;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -539,17 +544,80 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
 
+    private class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
+        @Override
+        protected Boolean doInBackground(final String... params) {
+            if (params.length < 2) {
+                Log.error("LoginTask: not enough params.");
+                return false;
+            }
+
+            final String uriFileToCache = params[0];
+            final String cacheFileUri = params[1];
+
+            final HttpGet get = new HttpGet(uriFileToCache);
+            final ResponseHandler handler = new FileResponseHandler(cacheFileUri);
+
+            if (executeHttpRequest(get, handler)) return false;
+
+            return true; //Login succeeded.
+        }
+
+        @Override
+        protected void onProgressUpdate(final Integer... progress) {
+            super.onProgressUpdate();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+            onFileCacheTaskFinished(result);
+        }
+    }
+
+    private boolean executeHttpRequest(final HttpUriRequest request, ResponseHandler handler) {
+        Object handlerResult = null;
+        HttpResponse response = null;
+        try {
+            final HttpClient client = new DefaultHttpClient();
+            response = client.execute(request);
+            handlerResult = handler.handleResponse(response);
+        } catch (IOException e) {
+            Log.error("exception processing async request", e);
+            return false;
+        } finally {
+        /*
+        if (mSiteProvider != null) {
+            mSiteProvider.requestComplete(mRequestTag);
+        }
+        */
+        }
+
+        // With our ResponseHandler classes, when this is a string,
+        // then it is null on success.
+        //  Otherwise it describes an error.
+        //  See our GalaxyZooResponseHandler.
+        if(handlerResult instanceof String) {
+            final String strResult = (String) handlerResult;
+            if (!TextUtils.isEmpty(strResult)) {
+                Log.error("Error processing async request: ", strResult);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void onFileCacheTaskFinished(final Boolean result) {
+    }
+
     /**
      * Spawns a thread to download bytes from a url and store them in a file.
      */
     private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri) {
-        // use id as a unique request tag
-        final HttpGet get = new HttpGet(uriFileToCache);
-        final UriRequestTask requestTask = new UriRequestTask(
-                get, new FileResponseHandler(cacheFileUri),
-                getContext());
-        final Thread t = new Thread(requestTask);
-        t.start();
+        final LoginAsyncTask task = new LoginAsyncTask();
+        task.execute(uriFileToCache, cacheFileUri);
     }
 
     @Override
@@ -565,7 +633,8 @@ public class ItemsContentProvider extends ContentProvider {
              * informing the calling client later via notification.
              */
             //TODO: Only do this if there are no unclassified items:
-            asyncQueryRequest(Config.QUERY_URI);
+            final QueryAsyncTask task = new QueryAsyncTask();
+            task.execute();
         } else if (METHOD_UPLOAD_CLASSIFICATIONS.equals(method)) {
             /** Upload any classifications that have not yet been uploaded.
              */
@@ -579,8 +648,8 @@ public class ItemsContentProvider extends ContentProvider {
 
             /** Attempt to login to the server.
              */
-            //TODO: Get the actual username and password from the user.
-            asyncQueryPostLogin(Config.LOGIN_URI, username, password);
+            final LoginAsyncTask task = new LoginAsyncTask();
+            task.execute(username, password);
         }
 
         return null;
@@ -609,7 +678,9 @@ public class ItemsContentProvider extends ContentProvider {
         while(c.moveToNext()) {
             final String itemId = c.getString(0);
             final String subjectId = c.getString(1);
-            asyncQueryPost(Config.POST_URI, itemId, subjectId);
+
+            final PostAsyncTask task = new PostAsyncTask();
+            task.execute(itemId, subjectId);
         }
     }
 
@@ -675,14 +746,7 @@ public class ItemsContentProvider extends ContentProvider {
                 c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
                 if(c.getCount() < 1) {
                     //Get some more from the REST server and then try again.
-                    final Thread thread = asyncQueryRequest(Config.QUERY_URI);
-                    if (thread != null) {
-                        try {
-                            thread.join(); //Wait until it finishes.
-                        } catch (InterruptedException e) {
-                            Log.error("thread.join() failed.", e);
-                        }
-                    }
+                    //TODO: Do AsyncQueryTask work, but not asynchronously.
 
                     c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
                 }
@@ -1127,176 +1191,190 @@ public class ItemsContentProvider extends ContentProvider {
     }
     */
 
-
-    /**
-     * Creates a new worker thread to carry out a RESTful network invocation.
-     *
-     * @param queryUri the complete URI that should be accessed by this request.
-     */
-    private Thread asyncQueryRequest(final String queryUri) {
-        //synchronized (mRequestsInProgress) {
-            UriRequestTask requestTask = null; //getRequestTask();
-            if (requestTask == null) {
-                requestTask = newQueryTask(queryUri);
-                final Thread t = new Thread(requestTask);
-                // allows other requests to run in parallel.
-                t.start();
-                return t;
+    private class QueryAsyncTask extends AsyncTask<Void, Integer, Boolean> {
+        @Override
+        protected Boolean doInBackground(final Void... params) {
+            if (requestMoreItemsSync()) {
+                return false;
             }
-        //}
 
-        return null;
-    }
-
-    /**
-     * Creates a new worker thread to carry out a RESTful network invocation.
-     *
-     * @param queryUri the complete URI that should be accessed by this request.
-     */
-    private Thread asyncQueryPost(final String queryUri, final String itemId, final String subjectId) {
-        //TODO: Check the return code so we can mark the item as uploaded.
-        //synchronized (mRequestsInProgress) {
-            UriRequestTask requestTask = null; //getRequestTask();
-            if (requestTask == null) {
-                requestTask = newPostTask(queryUri, itemId, subjectId);
-                final Thread t = new Thread(requestTask);
-                // allows other requests to run in parallel.
-                t.start();
-                return t;
-            }
-            //}
-
-            return null;
-    }
-
-    /**
-     * Creates a new worker thread to carry out a RESTful network invocation.
-     *
-     * @param queryUri the complete URI that should be accessed by this request.
-     */
-    private Thread asyncQueryPostLogin(final String queryUri, final String username, final String password) {
-        //TODO: Check the response so we can get the api_key for later use.
-        //synchronized (mRequestsInProgress) {
-        UriRequestTask requestTask = null; //getRequestTask();
-        if (requestTask == null) {
-            requestTask = newPostLoginTask(queryUri, username, password);
-            final Thread t = new Thread(requestTask);
-            // allows other requests to run in parallel.
-            t.start();
-            return t;
-        }
-        //}
-
-        return null;
-    }
-
-    UriRequestTask newQueryTask(final String url) {
-        UriRequestTask requestTask;
-
-        final HttpGet get = new HttpGet(url);
-        ResponseHandler handler = new GalaxyZooResponseHandler(this);
-        requestTask = new UriRequestTask("" /* TODO */, this, get,
-                handler, getContext());
-
-        //mRequestsInProgress.put(requestTag, requestTask);
-        return requestTask;
-    }
-
-    UriRequestTask newPostTask(final String url, final String itemId, final String subjectId) {
-        final HttpPost post = new HttpPost(url);
-        final String PARAM_PART_CLASSIFICATION = "classification";
-
-        //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
-        //but that did not allow multiple parameters with the same name, which we need.
-        final List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
-                subjectId));
-
-        Cursor c = null;
-        {
-            SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-            builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);
-            builder.appendWhere(DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?"); //We use ? to avoid SQL Injection.
-            final String[] selectionArgs = {itemId};
-            final String[] projection = {DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE,
-                    DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID,
-                    DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID};
-            final String orderBy = DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE + " ASC";
-            c = builder.query(getDb(), projection,
-                    null, selectionArgs,
-                    null, null, orderBy);
+            return true; //Login succeeded.
         }
 
+        @Override
+        protected void onProgressUpdate(final Integer... progress) {
+            super.onProgressUpdate();
+        }
 
-        //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        while(c.moveToNext()) {
-            final int sequence = c.getInt(0);
-            final String questionId = c.getString(1);
-            final String answerId = c.getString(2);
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
 
-            //Add the question's answer:
-            //TODO: Is the string representation of sequence locale-dependent?
-            final String questionKey =
-                    PARAM_PART_CLASSIFICATION + "[annotations][" + sequence + "][" + questionId + "]";
-            nameValuePairs.add(new BasicNameValuePair(questionKey, answerId));
+            onQueryTaskFinished(result);
+        }
+    }
 
-            SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-            builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES);
-            builder.appendWhere("(" + DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID + " = ?) AND " +
-                    "(" + DatabaseHelper.ClassificationCheckboxesDbColumns.QUESTION_ID + " == ?)"); //We use ? to avoid SQL Injection.
-            final String[] selectionArgs = {itemId, questionId};
+    private boolean requestMoreItemsSync() {
+        final HttpGet get = new HttpGet(Config.QUERY_URI);
+        final ResponseHandler handler = new GalaxyZooResponseHandler(ItemsContentProvider.this);
 
-            //Add the question's answer's selected checkboxes, if any:
-            //The sequence will be the same for any selected checkbox for the same answer,
-            //so we don't bother getting that, or sorting by that.
-            final String[] projection = {DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID};
-            final String orderBy = DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID + " ASC";
-            final Cursor cursorCheckboxes = builder.query(getDb(), projection,
-                    null, selectionArgs,
-                    null, null, orderBy);
-            while (cursorCheckboxes.moveToNext()) {
-                final String checkboxId = cursorCheckboxes.getString(0);
+        return executeHttpRequest(get, handler);
+    }
 
-                //TODO: The Galaxy-Zoo server expects us to reuse the parameter name,
+    private void onQueryTaskFinished(final Boolean result) {
+    }
+
+    private class LoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
+        @Override
+        protected Boolean doInBackground(final String... params) {
+            if (params.length < 2) {
+                Log.error("LoginTask: not enough params.");
+                return false;
+            }
+
+            final String username = params[0];
+            final String password = params[1];
+
+
+            final HttpPost post = new HttpPost(Config.LOGIN_URI);
+
+            final List<NameValuePair> nameValuePairs = new ArrayList<>();
+            nameValuePairs.add(new BasicNameValuePair("username", username));
+            nameValuePairs.add(new BasicNameValuePair("password", password));
+
+            try {
+                post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            } catch (final UnsupportedEncodingException e) {
+                Log.error("Exception from UrlEncodedFormEntity: ", e);
+                return null;
+            }
+
+            final ResponseHandler handler = new GalaxyZooPostLoginResponseHandler(ItemsContentProvider.this);
+
+            if (executeHttpRequest(post, handler)) {
+                return false;
+            }
+
+            return true; //Login succeeded.
+        }
+
+        @Override
+        protected void onProgressUpdate(final Integer... progress) {
+            super.onProgressUpdate();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+            onLoginTaskFinished(result);
+        }
+    }
+
+    private void onLoginTaskFinished(final Boolean result) {
+    }
+
+    private class PostAsyncTask extends AsyncTask<String, Integer, Boolean> {
+        @Override
+        protected Boolean doInBackground(final String... params) {
+            if (params.length < 2) {
+                Log.error("UploadAsyncTask: not enough params.");
+                return false;
+            }
+
+            final String itemId = params[0];
+            final String subjectId = params[1];
+
+            final HttpPost post = new HttpPost(Config.POST_URI);
+            final String PARAM_PART_CLASSIFICATION = "classification";
+
+            //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
+            //but that did not allow multiple parameters with the same name, which we need.
+            final List<NameValuePair> nameValuePairs = new ArrayList<>();
+            nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
+                    subjectId));
+
+            Cursor c = null;
+            {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);
+                builder.appendWhere(DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?"); //We use ? to avoid SQL Injection.
+                final String[] selectionArgs = {itemId};
+                final String[] projection = {DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE,
+                        DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID,
+                        DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID};
+                final String orderBy = DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE + " ASC";
+                c = builder.query(getDb(), projection,
+                        null, selectionArgs,
+                        null, null, orderBy);
+            }
+
+
+            //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            while(c.moveToNext()) {
+                final int sequence = c.getInt(0);
+                final String questionId = c.getString(1);
+                final String answerId = c.getString(2);
+
+                //Add the question's answer:
                 //TODO: Is the string representation of sequence locale-dependent?
-                nameValuePairs.add(new BasicNameValuePair(questionKey, checkboxId));
+                final String questionKey =
+                        PARAM_PART_CLASSIFICATION + "[annotations][" + sequence + "][" + questionId + "]";
+                nameValuePairs.add(new BasicNameValuePair(questionKey, answerId));
+
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES);
+                builder.appendWhere("(" + DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID + " = ?) AND " +
+                        "(" + DatabaseHelper.ClassificationCheckboxesDbColumns.QUESTION_ID + " == ?)"); //We use ? to avoid SQL Injection.
+                final String[] selectionArgs = {itemId, questionId};
+
+                //Add the question's answer's selected checkboxes, if any:
+                //The sequence will be the same for any selected checkbox for the same answer,
+                //so we don't bother getting that, or sorting by that.
+                final String[] projection = {DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID};
+                final String orderBy = DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID + " ASC";
+                final Cursor cursorCheckboxes = builder.query(getDb(), projection,
+                        null, selectionArgs,
+                        null, null, orderBy);
+                while (cursorCheckboxes.moveToNext()) {
+                    final String checkboxId = cursorCheckboxes.getString(0);
+
+                    //TODO: The Galaxy-Zoo server expects us to reuse the parameter name,
+                    //TODO: Is the string representation of sequence locale-dependent?
+                    nameValuePairs.add(new BasicNameValuePair(questionKey, checkboxId));
+                }
             }
+
+            try {
+                post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            } catch (final UnsupportedEncodingException e) {
+                Log.error("Exception from UrlEncodedFormEntity: ", e);
+                return null;
+            }
+
+            final ResponseHandler handler = new GalaxyZooPostResponseHandler(ItemsContentProvider.this);
+
+            if (executeHttpRequest(post, handler)) {
+                return false;
+            }
+
+            return true; //Login succeeded.
         }
 
-        try {
-            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        } catch (final UnsupportedEncodingException e) {
-            Log.error("Exception from UrlEncodedFormEntity: ", e);
-            return null;
+        @Override
+        protected void onProgressUpdate(final Integer... progress) {
+            super.onProgressUpdate();
         }
 
-        final ResponseHandler handler = new GalaxyZooPostResponseHandler(this);
-        final UriRequestTask requestTask = new UriRequestTask("" /* TODO */, this, post,
-                handler, getContext());
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
 
-        //mRequestsInProgress.put(requestTag, requestTask);
-        return requestTask;
+            onUploadTaskFinished(result);
+        }
     }
 
-    UriRequestTask newPostLoginTask(final String url, final String username, final String password) {
-        final HttpPost post = new HttpPost(url);
-
-        final List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new BasicNameValuePair("username", username));
-        nameValuePairs.add(new BasicNameValuePair("password", password));
-
-        try {
-            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        } catch (final UnsupportedEncodingException e) {
-            Log.error("Exception from UrlEncodedFormEntity: ", e);
-            return null;
-        }
-
-        final ResponseHandler handler = new GalaxyZooPostLoginResponseHandler(this);
-        final UriRequestTask requestTask = new UriRequestTask("" /* TODO */, this, post,
-                handler, getContext());
-
-        //mRequestsInProgress.put(requestTag, requestTask);
-        return requestTask;
+    private void onUploadTaskFinished(final Boolean result) {
     }
+
 }

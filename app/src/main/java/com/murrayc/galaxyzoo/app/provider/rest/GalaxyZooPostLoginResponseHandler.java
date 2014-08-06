@@ -100,6 +100,5 @@ public class GalaxyZooPostLoginResponseHandler implements ResponseHandler<String
         } catch (final JSONException e) {
             e.printStackTrace();
         }
-
     }
 }
