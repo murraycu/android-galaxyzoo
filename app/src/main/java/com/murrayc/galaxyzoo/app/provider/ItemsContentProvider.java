@@ -566,11 +566,6 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         @Override
-        protected void onProgressUpdate(final Integer... progress) {
-            super.onProgressUpdate();
-        }
-
-        @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
 
@@ -1204,11 +1199,6 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         @Override
-        protected void onProgressUpdate(final Integer... progress) {
-            super.onProgressUpdate();
-        }
-
-        @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
 
@@ -1252,11 +1242,6 @@ public class ItemsContentProvider extends ContentProvider {
             }
 
             return executeLoginHttpRequest(post);
-        }
-
-        @Override
-        protected void onProgressUpdate(final Integer... progress) {
-            super.onProgressUpdate();
         }
 
         @Override
@@ -1383,11 +1368,6 @@ public class ItemsContentProvider extends ContentProvider {
 
             final ResponseHandler handler = new GalaxyZooPostResponseHandler(ItemsContentProvider.this);
             return executeHttpRequest(post, handler);
-        }
-
-        @Override
-        protected void onProgressUpdate(final Integer... progress) {
-            super.onProgressUpdate();
         }
 
         @Override
