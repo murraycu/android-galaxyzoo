@@ -106,4 +106,13 @@ public class ClassifyActivity extends ItemActivity implements ClassifyFragment.C
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onClassificationFinished() {
+        //Start another one:
+        setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
+        final ClassifyFragment fragmentClassify = (ClassifyFragment)getFragmentManager().findFragmentById(R.id.table_data_container);
+        fragmentClassify.setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
+        fragmentClassify.update();
+    }
+
 }

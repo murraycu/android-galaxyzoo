@@ -164,7 +164,8 @@ public class QuestionFragment extends ItemFragment
      * nothing. Used only when this fragment is not attached to an activity.
      */
     private static final Callbacks sDummyCallbacks = new Callbacks() {
-
+        public void onClassificationFinished() {
+        }
     };
 
     /**
@@ -185,6 +186,9 @@ public class QuestionFragment extends ItemFragment
      */
     static interface Callbacks {
 
+        /** We call this when the classification has been finished and saved.
+         */
+        public void onClassificationFinished();
     }
 
     private View mRootView;
@@ -427,7 +431,7 @@ public class QuestionFragment extends ItemFragment
             setQuestionId(null);
 
             //TODO: Do something else for tablet UIs that share the activity.
-            activity.finish();
+            mCallbacks.onClassificationFinished();
         }
     }
 
