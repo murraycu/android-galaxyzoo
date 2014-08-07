@@ -20,7 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
@@ -118,25 +118,44 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         return mRootView;
     }
 
-    private void addChildFragments() {
+    private void addOrUpdateChildFragments() {
         final Bundle arguments = new Bundle();
         //TODO? arguments.putString(ARG_USER_ID,
         //        getUserId()); //Obtained in the super class.
         arguments.putString(ItemFragment.ARG_ITEM_ID,
                 getItemId());
 
-        //Add the nested child fragments.
+        //Add, or update, the nested child fragments.
         //This can only be done programmatically, not in the layout XML.
         //See http://developer.android.com/about/versions/android-4.2.html#NestedFragments
-        final Fragment fragmentSubject = new SubjectFragment();
-        fragmentSubject.setArguments(arguments);
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.child_fragment_subject, fragmentSubject).commit();
 
-        final Fragment fragmentQuestion = new QuestionFragment();
-        fragmentQuestion.setArguments(arguments);
-        transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.child_fragment_question, fragmentQuestion).commit();
+        final FragmentManager fragmentManager = getChildFragmentManager();
+        SubjectFragment fragmentSubject = (SubjectFragment)fragmentManager.findFragmentById(R.id.child_fragment_subject);
+        if (fragmentSubject == null) {
+            fragmentSubject = new SubjectFragment();
+            fragmentSubject.setArguments(arguments);
+            final FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.child_fragment_subject, fragmentSubject).commit();
+        } else {
+            //TODO: Is there some more standard method to do this,
+            //to trigger the Fragments' onCreate()?
+            fragmentSubject.setItemId(getItemId());
+            fragmentSubject.update();
+        }
+
+
+        QuestionFragment fragmentQuestion = (QuestionFragment)fragmentManager.findFragmentById(R.id.child_fragment_question);
+        if (fragmentQuestion == null) {
+            fragmentQuestion = new QuestionFragment();
+            fragmentQuestion.setArguments(arguments);
+            final FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.child_fragment_question, fragmentQuestion).commit();
+        } else {
+            //TODO: Is there some more standard method to do this,
+            //to trigger the Fragments' onCreate()?
+            fragmentQuestion.setItemId(getItemId());
+            fragmentQuestion.update();
+        }
     }
 
     @Override
@@ -183,8 +202,8 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
              */
             getLoaderManager().restartLoader(URL_LOADER, null, this);
         } else {
-            //Add the child fragments already, because we know the Item IDs:
-            addChildFragments();
+            //Add, or update, the child fragments already, because we know the Item IDs:
+            addOrUpdateChildFragments();
         }
     }
 
@@ -216,7 +235,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         }
 
         //TODO: Just update them.
-        addChildFragments();
+        addOrUpdateChildFragments();
     }
 
     //We only bother using this when we have asked for the "next" item,
