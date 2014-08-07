@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.provider.rest.FileResponseHandler;
@@ -1308,7 +1309,9 @@ public class ItemsContentProvider extends ContentProvider {
             final HttpPost post = new HttpPost(Config.POST_URI);
 
             //Add the authentication details to the headers;
-            post.setHeader("Authentication", generateAuthenticationHeader(authName, authApiKey));
+            // TODO: When we add this header, we get a ClientProtocolException, caused by a CircularRedirectException,
+            // when we call HttpClient.execute().
+            post.setHeader("Authorization", generateAuthorizatinHeader(authName, authApiKey));
 
             final String PARAM_PART_CLASSIFICATION = "classification";
 
@@ -1393,8 +1396,11 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    private String generateAuthenticationHeader(final String authName, final String authApiKey) {
-        return "Basic " + "murrayc_test_should_fail";
+    private String generateAuthorizatinHeader(final String authName, final String authApiKey) {
+        //See the similar code in Zooniverse's user.coffee source code:
+        //https://github.com/zooniverse/Zooniverse/blob/master/src/models/user.coffee#L49
+        final String str = authName + ":" + authApiKey;
+        return "Basic " + Base64.encodeToString(str.getBytes(), Base64.DEFAULT);
     }
 
     private void onUploadTaskFinished(boolean result, final String itemId) {

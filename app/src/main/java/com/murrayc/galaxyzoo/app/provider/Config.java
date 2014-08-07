@@ -13,11 +13,11 @@ public class Config {
 
 
     static final String POST_URI =
-            SERVER + "/workflows/50251c3b516bcb6ecb000002/classifications";
+            SERVER + "workflows/50251c3b516bcb6ecb000002/classifications";
 
     static final String LOGIN_URI =
             //"http://www.murrayc.com/galaxyzootestlogin"; //Avoid bothering the zooniverse server until we are more sure that this works.
-            SERVER + "/login";
+            SERVER + "login";
 
     //TODO: This is used in the app, not in the content provider.
     //Maybe this whole class should be in the app, not the content provider.
