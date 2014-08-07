@@ -52,7 +52,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.params.ClientPNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -680,7 +679,7 @@ public class ItemsContentProvider extends ContentProvider {
             final String itemId = c.getString(0);
             final String subjectId = c.getString(1);
 
-            final PostAsyncTask task = new PostAsyncTask();
+            final UploadAsyncTask task = new UploadAsyncTask();
             task.execute(itemId, subjectId, authName, authApiKey);
         }
     }
@@ -1272,14 +1271,14 @@ public class ItemsContentProvider extends ContentProvider {
         return getContext().getSharedPreferences("android-galaxyzoo", Context.MODE_PRIVATE);
     }
 
-    private class PostAsyncTask extends AsyncTask<String, Integer, Boolean> {
+    private class UploadAsyncTask extends AsyncTask<String, Integer, Boolean> {
 
         private String mItemId = null;
 
         @Override
         protected Boolean doInBackground(final String... params) {
             if (params.length < 4) {
-                Log.error("PostAsyncTask: not enough params.");
+                Log.error("UploadAsyncTask: not enough params.");
                 return false;
             }
 
