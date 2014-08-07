@@ -508,6 +508,12 @@ public class QuestionFragment extends ItemFragment
 
         if (mCursor.getCount() <= 0) { //In case the query returned no rows.
             Log.error("The ContentProvider query returned no rows.");
+            return;
+        }
+
+        if (mCursor.getColumnCount() <= 0) { //In case the query returned no columns.
+            Log.error("The ContentProvider query returned no columns.");
+            return;
         }
 
         mCursor.moveToFirst(); //There should only be one anyway.
