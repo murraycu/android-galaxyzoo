@@ -177,8 +177,11 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             /*
              * Initializes the CursorLoader. The URL_LOADER value is eventually passed
              * to onCreateLoader().
+             * We use restartLoader(), instead of initLoader(),
+             * so we can refresh this fragment to show a different subject,
+             * even when using the same query ("next") to do that.
              */
-            getLoaderManager().initLoader(URL_LOADER, null, this);
+            getLoaderManager().restartLoader(URL_LOADER, null, this);
         } else {
             //Add the child fragments already, because we know the Item IDs:
             addChildFragments();
