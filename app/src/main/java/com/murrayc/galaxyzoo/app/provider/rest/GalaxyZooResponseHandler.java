@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
 /**
  * Created by murrayc on 7/2/14.
  */
-public class GalaxyZooResponseHandler implements ResponseHandler<String> {
+public class GalaxyZooResponseHandler implements ResponseHandler<Boolean> {
 
     private final ItemsContentProvider mContentProvider;
 
@@ -33,25 +33,22 @@ public class GalaxyZooResponseHandler implements ResponseHandler<String> {
     * Handles the response from the RESTful server.
     */
     @Override
-    public String handleResponse(HttpResponse response) {
+    public Boolean handleResponse(HttpResponse response) {
         try {
             final int newCount = parseEntity(response.getEntity());
 
             // only flush old state now that new state has arrived
             if (newCount <= 0) {
-                return "Failed. No JSON entities parsed."; //TODO: Use some constant error code?
+                Log.error("Failed. No JSON entities parsed."); //TODO: Use some constant error code?
+                return false;
             }
 
         } catch (IOException e) {
-            // use the exception to avoid clearing old state, if we can not
-            // get new state.  This way we leave the application with some
-            // data to work with in absence of network connectivity.
-
-            // we could retry the request for data in the hope that the network
-            // might return.
+            Log.error("Exception from parseEntity", e);
+            return false;
         }
 
-        return null; //TODO?
+        return true;
     }
 
     private int parseEntity(HttpEntity entity) throws IOException {

@@ -1,5 +1,6 @@
 package com.murrayc.galaxyzoo.app.provider.rest;
 
+import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 import org.apache.http.HttpResponse;
@@ -10,7 +11,7 @@ import org.apache.http.client.ResponseHandler;
 /**
  * Created by murrayc on 7/2/14.
  */
-public class GalaxyZooPostResponseHandler implements ResponseHandler<String> {
+public class GalaxyZooPostResponseHandler implements ResponseHandler<Boolean> {
 
     private final ItemsContentProvider mContentProvider;
 
@@ -22,14 +23,15 @@ public class GalaxyZooPostResponseHandler implements ResponseHandler<String> {
     * Handles the response from the RESTful server.
     */
     @Override
-    public String handleResponse(final HttpResponse response) {
+    public Boolean handleResponse(final HttpResponse response) {
         if(response.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED) {
-            return "Did not receive the 201 Created status code: " + response.getStatusLine().toString();
+            Log.error("Did not receive the 201 Created status code: " + response.getStatusLine().toString());
+            return false;
         }
 
         //The JSON response seems to be just {},
         //so we don't need to parse it.
 
-        return null; //Means success by our convention.
+        return true; //Means success.
     }
 }

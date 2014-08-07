@@ -579,8 +579,8 @@ public class ItemsContentProvider extends ContentProvider {
     private void onFileCacheTaskFinished(final Boolean result) {
     }
 
-    private boolean executeHttpRequest(final HttpUriRequest request, ResponseHandler handler) {
-        Object handlerResult = null;
+    private boolean executeHttpRequest(final HttpUriRequest request, ResponseHandler<Boolean> handler) {
+        Boolean handlerResult = false;
         HttpResponse response = null;
         try {
             final HttpClient client = new DefaultHttpClient();
@@ -591,19 +591,7 @@ public class ItemsContentProvider extends ContentProvider {
             return false;
         }
 
-        // With our ResponseHandler classes, when this is a string,
-        // then it is null on success.
-        //  Otherwise it describes an error.
-        //  See our GalaxyZooResponseHandler.
-        if(handlerResult instanceof String) {
-            final String strResult = (String) handlerResult;
-            if (!TextUtils.isEmpty(strResult)) {
-                Log.error("Error processing async request: ", strResult);
-                return true;
-            }
-        }
-
-        return false;
+        return handlerResult;
     }
 
     private GalaxyZooPostLoginResponseHandler.LoginResult executeLoginHttpRequest(final HttpUriRequest request) {
@@ -1375,12 +1363,7 @@ public class ItemsContentProvider extends ContentProvider {
             }
 
             final ResponseHandler handler = new GalaxyZooPostResponseHandler(ItemsContentProvider.this);
-
-            if (executeHttpRequest(post, handler)) {
-                return false;
-            }
-
-            return true; //Login succeeded.
+            return executeHttpRequest(post, handler);
         }
 
         @Override
