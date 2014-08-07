@@ -55,8 +55,8 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  * Activities containing this fragment MUST implement the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks}
  * interface.
  */
-public class ListFragment extends Fragment
-    implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ListFragment extends ZooFragment
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private View mRootView;
 
@@ -74,39 +74,6 @@ public class ListFragment extends Fragment
     static final int COLUMN_INDEX_SUBJECT_ID = 1;
     static final int COLUMN_INDEX_LOCATION_THUMBNAIL_URI = 2;
     static final int COLUMN_INDEX_DONE = 3;
-
-    private void requestMoreItems() {
-        final Activity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
-
-        final ContentResolver contentResolver = activity.getContentResolver();
-        if (contentResolver == null) {
-            return;
-        }
-
-        contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_REQUEST_ITEMS, null, null);
-    }
-
-    private void requestUpload() {
-        final Activity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
-
-        final ContentResolver contentResolver = activity.getContentResolver();
-        if (contentResolver == null) {
-            return;
-        }
-
-        contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_UPLOAD_CLASSIFICATIONS, null, null);
-    }
-
-    private void requestLogin() {
-        final Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(intent);
-    }
 
     /**
      * The serialization (saved instance state) Bundle key representing the

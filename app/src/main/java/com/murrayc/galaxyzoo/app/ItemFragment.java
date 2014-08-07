@@ -6,7 +6,7 @@ import android.os.Bundle;
 /**
  * Created by murrayc on 7/31/14.
  */
-public class ItemFragment extends Fragment {
+public class ItemFragment extends ZooFragment {
     /**
      * The fragment argument representing the item that this fragment
      * represents.
