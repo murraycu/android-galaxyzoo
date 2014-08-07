@@ -117,4 +117,10 @@ public class ClassifyActivity extends ItemActivity implements ClassifyFragment.C
         fragmentClassify.update();
     }
 
+    @Override
+    public void navigateToList() {
+        final Intent intent = new Intent(this, ListActivity.class);
+        startActivity(intent);
+    }
+
 }

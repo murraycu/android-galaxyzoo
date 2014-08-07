@@ -32,6 +32,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -65,7 +66,9 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      * nothing. Used only when this fragment is not attached to an activity.
      */
     private static final Callbacks sDummyCallbacks = new Callbacks() {
+        public void navigateToList() {
 
+        }
     };
 
     /**
@@ -85,7 +88,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
      */
     static interface Callbacks {
-
+        public void navigateToList();
     }
 
     private View mRootView;
@@ -160,10 +163,28 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //final MenuItem menuItem = menu.add(Menu.NONE, R.id.option_menu_item_list, Menu.NONE, R.string.action_list);
-        //menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
         super.onCreateOptionsMenu(menu, inflater);
+
+        // Inflate the menu items for use in the action bar
+        inflater.inflate(R.menu.actionbar_menu_classify, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.option_menu_item_login:
+                requestLogin();
+                return true;
+            case R.id.option_menu_item_list:
+                mCallbacks.navigateToList();
+                return true;
+            case R.id.option_menu_item_upload:
+                requestUpload();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
