@@ -196,7 +196,7 @@ public class ItemsContentProvider extends ContentProvider {
         sItemsProjectionMap = new HashMap<>();
         sItemsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
         sItemsProjectionMap.put(Item.Columns.DONE, DatabaseHelper.ItemsDbColumns.DONE);
-        sItemsProjectionMap.put(Item.Columns.SKIPPED, DatabaseHelper.ItemsDbColumns.SKIPPED);
+        sItemsProjectionMap.put(Item.Columns.UPLOADED, DatabaseHelper.ItemsDbColumns.UPLOADED);
         sItemsProjectionMap.put(Item.Columns.SUBJECT_ID, DatabaseHelper.ItemsDbColumns.SUBJECT_ID);
         sItemsProjectionMap.put(Item.Columns.ZOONIVERSE_ID, DatabaseHelper.ItemsDbColumns.ZOONIVERSE_ID);
         sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI);
@@ -665,7 +665,6 @@ public class ItemsContentProvider extends ContentProvider {
         // query the database for any item whose classification is not yet uploaded.
         final String whereClause =
                 "(" + DatabaseHelper.ItemsDbColumns.DONE + " == 1) AND " +
-                "(" + DatabaseHelper.ItemsDbColumns.SKIPPED + " != 1) AND " +
                 "(" + DatabaseHelper.ItemsDbColumns.UPLOADED + " != 1)";
 
         final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -844,10 +843,9 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private Cursor queryItemNext(Uri uri, String[] projection, String selection, String[] selectionArgs, String orderBy) {
-        Cursor c;// query the database for a single  item that is not yet done or skipped:
+        Cursor c;// query the database for a single  item that is not yet done:
         final String whereClause =
-                "(" + DatabaseHelper.ItemsDbColumns.DONE + " != 1) AND " +
-                "(" + DatabaseHelper.ItemsDbColumns.SKIPPED + " != 1)";
+                DatabaseHelper.ItemsDbColumns.DONE + " != 1";
 
         //Prepend our ID=? argument to the selection arguments.
         //This lets us use the ? syntax to avoid SQL injection
@@ -1054,7 +1052,7 @@ public class ItemsContentProvider extends ContentProvider {
      */
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 13;
+        private static final int DATABASE_VERSION = 14;
         private static final String DATABASE_NAME = "items.db";
 
         private static final String TABLE_NAME_ITEMS = "items";
@@ -1062,7 +1060,6 @@ public class ItemsContentProvider extends ContentProvider {
             //Specific to our app:
             protected static final String DONE = "done"; //1 or 0. Whether the user has classified it already.
             protected static final String UPLOADED = "uploaded"; //1 or 0. Whether its classification has been submitted.
-            protected static final String SKIPPED = "skipped"; //1 or 0. Whether the user has skipped it already.
 
             //From the REST API:
             protected static final String SUBJECT_ID = "subjectId";
@@ -1132,7 +1129,6 @@ public class ItemsContentProvider extends ContentProvider {
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ItemsDbColumns.DONE + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.UPLOADED + " INTEGER DEFAULT 0, " +
-                    ItemsDbColumns.SKIPPED + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.SUBJECT_ID + " TEXT, " +
                     ItemsDbColumns.ZOONIVERSE_ID + " TEXT, " +
                     ItemsDbColumns.LOCATION_STANDARD_URI + " TEXT, " +
