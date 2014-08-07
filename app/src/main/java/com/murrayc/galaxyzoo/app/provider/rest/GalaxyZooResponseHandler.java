@@ -82,7 +82,9 @@ public class GalaxyZooResponseHandler implements ResponseHandler<Boolean> {
                 return inserted;
             }
 
-            parseJsonObjectSubject(obj);
+            if(parseJsonObjectSubject(obj)) {
+                inserted++;
+            }
         }
 
         //TODO: If this is 0 then something went wrong. Let the user know,
@@ -92,7 +94,7 @@ public class GalaxyZooResponseHandler implements ResponseHandler<Boolean> {
         return inserted;
     }
 
-    private void parseJsonObjectSubject(final JSONObject objSubject) {
+    private boolean parseJsonObjectSubject(final JSONObject objSubject) {
         try {
             final ItemsContentProvider.Subject subject = new ItemsContentProvider.Subject();
             subject.mId = objSubject.getString("id");
@@ -105,9 +107,12 @@ public class GalaxyZooResponseHandler implements ResponseHandler<Boolean> {
             }
 
             insertIntoContentProvider(subject);
+            return true;
         } catch (JSONException e) {
             Log.error("JSON parsing of object fields failed.", e);
         }
+
+        return false;
     }
 
     private void insertIntoContentProvider(final ItemsContentProvider.Subject subject) {
