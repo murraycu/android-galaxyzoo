@@ -348,7 +348,7 @@ public class QuestionFragment extends ItemFragment
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     // Perform action on click
-                    onAnswerButtonClicked(answer.getId());
+                    onAnswerButtonClicked(question.getId(), answer.getId());
                 }
             });
         }
@@ -368,13 +368,16 @@ public class QuestionFragment extends ItemFragment
         return question;
     }
 
-    private void onAnswerButtonClicked(final String answerId) {
+    private void onAnswerButtonClicked(final String questionId, final String answerId) {
+        if (questionId == null) {
+            Log.error("onAnswerButtonClicked: questionId was null.");
+        }
+
         //TODO: Move this logic to the parent ClassifyFragment?
         final Activity activity = getActivity();
         if (activity == null)
             return;
 
-        final String questionId = getQuestionId();
         if((TextUtils.equals(questionId, QUESTION_ID_DISCUSS)) &&
                 (TextUtils.equals(answerId, ANSWER_ID_DISCUSS_YES))) {
             //Open a link to the discussion page.
@@ -425,7 +428,9 @@ public class QuestionFragment extends ItemFragment
             update();
         } else {
             //The classification is finished.
-            //TODO: Save it to the ContentProvider, which will upload it.
+            //We save it to the ContentProvider, which will upload it.
+            //TODO: Prevent the user from being able to press the button again between now
+            //and the new subject being shown.
             saveClassification(mClassificationInProgress);
             mClassificationInProgress = new ClassificationInProgress();
             setQuestionId(null);

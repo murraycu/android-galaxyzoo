@@ -187,6 +187,11 @@ public class DecisionTree {
             return null;
         }
 
+        if (questionId == null) {
+            Log.error("getQuestion(): questionId was null.");
+            return null;
+        }
+
         return questionsMap.get(questionId);
     }
 
