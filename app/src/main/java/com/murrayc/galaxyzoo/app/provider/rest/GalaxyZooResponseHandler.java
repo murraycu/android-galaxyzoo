@@ -15,13 +15,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * Created by murrayc on 7/2/14.
  */
-public class GalaxyZooResponseHandler implements ResponseHandler<Boolean> {
+public class GalaxyZooResponseHandler implements ResponseHandler<List<ItemsContentProvider.Subject>> {
 
     private final ItemsContentProvider mContentProvider;
 
@@ -33,25 +34,17 @@ public class GalaxyZooResponseHandler implements ResponseHandler<Boolean> {
     * Handles the response from the RESTful server.
     */
     @Override
-    public Boolean handleResponse(HttpResponse response) {
+    public List<ItemsContentProvider.Subject> handleResponse(HttpResponse response) {
         try {
-            final int newCount = parseEntity(response.getEntity());
-
-            // only flush old state now that new state has arrived
-            if (newCount <= 0) {
-                Log.error("Failed. No JSON entities parsed."); //TODO: Use some constant error code?
-                return false;
-            }
+            return parseEntity(response.getEntity());
 
         } catch (IOException e) {
             Log.error("Exception from parseEntity", e);
-            return false;
+            return null;
         }
-
-        return true;
     }
 
-    private int parseEntity(HttpEntity entity) throws IOException {
+    private List<ItemsContentProvider.Subject> parseEntity(HttpEntity entity) throws IOException {
         final InputStream content = entity.getContent();
         final InputStreamReader inputReader = new InputStreamReader(content);
         final BufferedReader reader = new BufferedReader(inputReader);
@@ -64,13 +57,15 @@ public class GalaxyZooResponseHandler implements ResponseHandler<Boolean> {
             builder.append(line).append("\n");
         }
 
+        final List<ItemsContentProvider.Subject> result = new ArrayList<>();
+
         JSONTokener tokener = new JSONTokener(builder.toString());
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(tokener);
         } catch (JSONException e) {
             Log.error("JSON parsing failed.", e);
-            return inserted;
+            return result;
         }
 
         for(int i = 0; i < jsonArray.length(); ++i) {
@@ -79,22 +74,28 @@ public class GalaxyZooResponseHandler implements ResponseHandler<Boolean> {
                 obj = jsonArray.getJSONObject(i);
             } catch (JSONException e) {
                 Log.error("JSON parsing of object failed.", e);
-                return inserted;
+                return result;
             }
 
-            if(parseJsonObjectSubject(obj)) {
-                inserted++;
+            final ItemsContentProvider.Subject subject = parseJsonObjectSubject(obj);
+            if (subject != null) {
+                result.add(subject);
             }
         }
 
         //TODO: If this is 0 then something went wrong. Let the user know,
+        // only flush old state now that new state has arrived
+        if (result.size() == 0) {
+            Log.error("Failed. No JSON entities parsed."); //TODO: Use some constant error code?
+        }
+
         //maybe via the handleResponse() return string, which seems to be for whatever we want.
         //For instance, the Galaxy-Zoo server could be down for maintenance (this has happened before),
         //or there could be some other network problem.
-        return inserted;
+        return result;
     }
 
-    private boolean parseJsonObjectSubject(final JSONObject objSubject) {
+    private ItemsContentProvider.Subject parseJsonObjectSubject(final JSONObject objSubject) {
         try {
             final ItemsContentProvider.Subject subject = new ItemsContentProvider.Subject();
             subject.mId = objSubject.getString("id");
@@ -106,16 +107,11 @@ public class GalaxyZooResponseHandler implements ResponseHandler<Boolean> {
                 subject.mLocationInverted = objLocation.getString("inverted");
             }
 
-            insertIntoContentProvider(subject);
-            return true;
+            return subject;
         } catch (JSONException e) {
             Log.error("JSON parsing of object fields failed.", e);
         }
 
-        return false;
-    }
-
-    private void insertIntoContentProvider(final ItemsContentProvider.Subject subject) {
-        mContentProvider.addSubject(subject);
+        return null;
     }
 }

@@ -741,7 +741,8 @@ public class ItemsContentProvider extends ContentProvider {
                 c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
                 if(c.getCount() < 1) {
                     //Get some more from the REST server and then try again.
-                    requestMoreItemsSync();
+                    final List<Subject> subjects = requestMoreItemsSync();
+                    addSubjects(subjects);
 
                     c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
                 }
@@ -985,7 +986,7 @@ public class ItemsContentProvider extends ContentProvider {
 
     //TODO: Reimplement this, in GalaxyZooResponseHandler, as an insert(uri) call,
     //to avoid repetition, or would that be too inefficient?
-    public long addSubject(final Subject item) {
+    private long addSubject(final Subject item) {
         if(subjectIsInDatabase(item.mId)) {
             //It is already in the database.
             //TODO: Update the row?
@@ -1183,32 +1184,55 @@ public class ItemsContentProvider extends ContentProvider {
     }
     */
 
-    private class QueryAsyncTask extends AsyncTask<Void, Integer, Boolean> {
+    private class QueryAsyncTask extends AsyncTask<Void, Integer, List<Subject>> {
         @Override
-        protected Boolean doInBackground(final Void... params) {
-            if (requestMoreItemsSync()) {
-                return false;
-            }
-
-            return true; //Login succeeded.
+        protected List<Subject> doInBackground(final Void... params) {
+            return requestMoreItemsSync();
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(final List<Subject> result) {
             super.onPostExecute(result);
 
             onQueryTaskFinished(result);
         }
     }
 
-    private boolean requestMoreItemsSync() {
+    private List<Subject> requestMoreItemsSync() {
         final HttpGet get = new HttpGet(Config.QUERY_URI);
-        final ResponseHandler handler = new GalaxyZooResponseHandler(ItemsContentProvider.this);
-
-        return executeHttpRequest(get, handler);
+        return executeQueryHttpRequest(get);
     }
 
-    private void onQueryTaskFinished(final Boolean result) {
+    private void onQueryTaskFinished(final List<Subject> result) {
+        if (result == null) {
+            return;
+        }
+
+        addSubjects(result);
+    }
+
+    private void addSubjects(List<Subject> result) {
+        for (final Subject subject : result) {
+            addSubject(subject);
+        }
+    }
+
+    private List<Subject> executeQueryHttpRequest(final HttpUriRequest request) {
+        List<Subject> handlerResult = null;
+        HttpResponse response = null;
+        try {
+            final HttpClient client = new DefaultHttpClient();
+            //This just leads to an redirect limit exception: client.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
+            response = client.execute(request);
+
+            final GalaxyZooResponseHandler handler = new GalaxyZooResponseHandler(ItemsContentProvider.this);
+            handlerResult = handler.handleResponse(response);
+        } catch (IOException e) {
+            Log.error("exception processing async request", e);
+            return null;
+        }
+
+        return handlerResult;
     }
 
     private class LoginAsyncTask extends AsyncTask<String, Integer, GalaxyZooPostLoginResponseHandler.LoginResult> {
