@@ -219,6 +219,9 @@ public class ItemsContentProvider extends ContentProvider {
 
     }
 
+    private static final String PREF_KEY_AUTH_NAME = "auth_name";
+    private static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
+
     private DatabaseHelper mOpenDbHelper;
 
     public ItemsContentProvider() {
@@ -557,10 +560,7 @@ public class ItemsContentProvider extends ContentProvider {
 
             final HttpGet get = new HttpGet(uriFileToCache);
             final ResponseHandler handler = new FileResponseHandler(cacheFileUri);
-
-            if (executeHttpRequest(get, handler)) return false;
-
-            return true; //Login succeeded.
+            return executeHttpRequest(get, handler);
         }
 
         @Override
@@ -661,15 +661,15 @@ public class ItemsContentProvider extends ContentProvider {
     private void uploadOutstandingClassifications() {
         // TODO: Request re-authentication when the server says we have used the wrong name + api_key.
         // What does the server reply in that case?
+        final SharedPreferences prefs = getPreferences();
+        final String authName = prefs.getString(PREF_KEY_AUTH_NAME, null);
+        final String authApiKey = prefs.getString(PREF_KEY_AUTH_API_KEY, null);
 
         // query the database for any item whose classification is not yet uploaded.
         final String whereClause =
                 "(" + DatabaseHelper.ItemsDbColumns.DONE + " == 1) AND " +
                 "(" + DatabaseHelper.ItemsDbColumns.SKIPPED + " != 1) AND " +
                 "(" + DatabaseHelper.ItemsDbColumns.UPLOADED + " != 1)";
-
-        //Prepend our ID=? argument to the selection arguments.
-        //This lets us use the ? syntax to avoid SQL injection
 
         final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
@@ -683,15 +683,11 @@ public class ItemsContentProvider extends ContentProvider {
             final String subjectId = c.getString(1);
 
             final PostAsyncTask task = new PostAsyncTask();
-            task.execute(itemId, subjectId);
+            task.execute(itemId, subjectId, authName, authApiKey);
         }
     }
 
-    private void login() {
-    }
-
-
-        @Override
+    @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         //TODO: Avoid a direct implicit mapping between the Cursor column names in "selection" and the
@@ -1277,25 +1273,43 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private void saveAuthToPreferences(final String name, final String apiKey) {
-        final SharedPreferences prefs = getContext().getSharedPreferences("android-galaxyzoo", Context.MODE_PRIVATE);
+        final SharedPreferences prefs = getPreferences();
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("auth_name", name);
-        editor.putString("auth_api_key", apiKey);
+        editor.putString(PREF_KEY_AUTH_NAME, name);
+        editor.putString(PREF_KEY_AUTH_API_KEY, apiKey);
         editor.commit();
     }
 
+    private SharedPreferences getPreferences() {
+        return getContext().getSharedPreferences("android-galaxyzoo", Context.MODE_PRIVATE);
+    }
+
     private class PostAsyncTask extends AsyncTask<String, Integer, Boolean> {
+
+        private String mItemId = null;
+
         @Override
         protected Boolean doInBackground(final String... params) {
-            if (params.length < 2) {
-                Log.error("UploadAsyncTask: not enough params.");
+            if (params.length < 4) {
+                Log.error("PostAsyncTask: not enough params.");
                 return false;
             }
 
-            final String itemId = params[0];
+            //TODO: Why not just set these in the constructor?
+            //That seems to be allowed:
+            //See Memory observability here:
+            //http://developer.android.com/reference/android/os/AsyncTask.html
+            mItemId = params[0];
             final String subjectId = params[1];
 
+            final String authName = params[2];
+            final String authApiKey = params[3];
+
             final HttpPost post = new HttpPost(Config.POST_URI);
+
+            //Add the authentication details to the headers;
+            post.setHeader("Authentication", generateAuthenticationHeader(authName, authApiKey));
+
             final String PARAM_PART_CLASSIFICATION = "classification";
 
             //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
@@ -1309,7 +1323,7 @@ public class ItemsContentProvider extends ContentProvider {
                 SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
                 builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);
                 builder.appendWhere(DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?"); //We use ? to avoid SQL Injection.
-                final String[] selectionArgs = {itemId};
+                final String[] selectionArgs = {mItemId};
                 final String[] projection = {DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE,
                         DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID,
                         DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID};
@@ -1336,7 +1350,7 @@ public class ItemsContentProvider extends ContentProvider {
                 builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES);
                 builder.appendWhere("(" + DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID + " = ?) AND " +
                         "(" + DatabaseHelper.ClassificationCheckboxesDbColumns.QUESTION_ID + " == ?)"); //We use ? to avoid SQL Injection.
-                final String[] selectionArgs = {itemId, questionId};
+                final String[] selectionArgs = {mItemId, questionId};
 
                 //Add the question's answer's selected checkboxes, if any:
                 //The sequence will be the same for any selected checkbox for the same answer,
@@ -1375,11 +1389,37 @@ public class ItemsContentProvider extends ContentProvider {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
 
-            onUploadTaskFinished(result);
+            onUploadTaskFinished(result, mItemId);
         }
     }
 
-    private void onUploadTaskFinished(final Boolean result) {
+    private String generateAuthenticationHeader(final String authName, final String authApiKey) {
+        return "Basic " + "murrayc_test_should_fail";
+    }
+
+    private void onUploadTaskFinished(boolean result, final String itemId) {
+        if (result) {
+            markItemAsUploaded(itemId);
+        } else {
+            //TODO: Inform the user?
+        }
+    }
+
+    private void markItemAsUploaded(final String itemId) {
+        // insert the initialValues into a new database row
+        final SQLiteDatabase db = getDb();
+
+        final String whereClause = DatabaseHelper.ItemsDbColumns._ID + " = ?"; //We use ? to avoid SQL Injection.
+        final String[] selectionArgs = {itemId};
+
+        final ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.ItemsDbColumns.UPLOADED, 1);
+
+        final int affected = db.update(DatabaseHelper.TABLE_NAME_ITEMS, values,
+                whereClause, selectionArgs);
+        if (affected != 1) {
+            Log.error("markItemAsUploaded(): Unexpected affected rows: " + affected);
+        }
     }
 
 }

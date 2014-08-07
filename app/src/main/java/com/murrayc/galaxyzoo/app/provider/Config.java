@@ -13,8 +13,7 @@ public class Config {
 
 
     static final String POST_URI =
-            "http://www.murrayc.com/galaxyzootest"; //Avoid bothering the zooniverse server until we are more sure that this works.
-            //SERVER + "/workflows/50251c3b516bcb6ecb000002/classifications";
+            SERVER + "/workflows/50251c3b516bcb6ecb000002/classifications";
 
     static final String LOGIN_URI =
             //"http://www.murrayc.com/galaxyzootestlogin"; //Avoid bothering the zooniverse server until we are more sure that this works.
