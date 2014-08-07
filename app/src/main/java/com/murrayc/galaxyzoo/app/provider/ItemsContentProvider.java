@@ -52,6 +52,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -585,6 +586,7 @@ public class ItemsContentProvider extends ContentProvider {
         HttpResponse response = null;
         try {
             final HttpClient client = new DefaultHttpClient();
+            //This just leads to an redirect limit exception: client.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
             response = client.execute(request);
             handlerResult = handler.handleResponse(response);
         } catch (IOException e) {
