@@ -424,6 +424,7 @@ public class QuestionFragment extends ItemFragment
             //TODO: Save it to the ContentProvider, which will upload it.
             saveClassification(mClassificationInProgress);
             mClassificationInProgress = new ClassificationInProgress();
+            setQuestionId(null);
 
             //TODO: Do something else for tablet UIs that share the activity.
             activity.finish();
