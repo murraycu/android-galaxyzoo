@@ -50,7 +50,7 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  * A list fragment representing a list of Tables. This fragment
  * also supports tablet devices by allowing list items to be given an
  * 'activated' state upon selection. This helps indicate which item is
- * currently being viewed in a {@link DetailFragment}.
+ * currently being viewed in a {@link ClassifyFragment}.
  * <p/>
  * Activities containing this fragment MUST implement the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks}
  * interface.

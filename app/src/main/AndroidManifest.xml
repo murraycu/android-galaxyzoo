@@ -28,15 +28,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".DetailActivity"
-            android:label="@string/title_detail"
-            android:parentActivityName=".ListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.murrayc.galaxyzoo.app.TableListActivity" />
-        </activity>
-
         <provider
             android:name=".provider.ItemsContentProvider"
             android:authorities="com.murrayc.galaxyzoo.app"

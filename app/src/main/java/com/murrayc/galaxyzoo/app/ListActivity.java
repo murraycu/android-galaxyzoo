@@ -33,7 +33,7 @@ import android.os.Bundle;
  * <p/>
  * The activity makes heavy use of fragments. The list of items is a
  * {@link ListFragment} and the item details
- * (if present) is a {@link DetailFragment}.
+ * (if present) is a {@link ClassifyFragment}.
  * <p/>
  * This activity also implements the required
  * {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface
