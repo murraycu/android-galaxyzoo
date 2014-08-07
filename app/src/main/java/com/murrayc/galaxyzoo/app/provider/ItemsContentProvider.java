@@ -1297,7 +1297,7 @@ public class ItemsContentProvider extends ContentProvider {
             //Add the authentication details to the headers;
             // TODO: When we add this header, we get a ClientProtocolException, caused by a CircularRedirectException,
             // when we call HttpClient.execute().
-            post.setHeader("Authorization", generateAuthorizatinHeader(authName, authApiKey));
+            post.setHeader("Authorization", generateAuthorizationHeader(authName, authApiKey));
 
             final String PARAM_PART_CLASSIFICATION = "classification";
 
@@ -1377,7 +1377,7 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    private String generateAuthorizatinHeader(final String authName, final String authApiKey) {
+    private String generateAuthorizationHeader(final String authName, final String authApiKey) {
         //See the similar code in Zooniverse's user.coffee source code:
         //https://github.com/zooniverse/Zooniverse/blob/master/src/models/user.coffee#L49
         final String str = authName + ":" + authApiKey;
