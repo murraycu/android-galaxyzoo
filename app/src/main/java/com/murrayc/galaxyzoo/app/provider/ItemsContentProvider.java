@@ -741,7 +741,7 @@ public class ItemsContentProvider extends ContentProvider {
                 c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
                 if(c.getCount() < 1) {
                     //Get some more from the REST server and then try again.
-                    //TODO: Do AsyncQueryTask work, but not asynchronously.
+                    requestMoreItemsSync();
 
                     c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
                 }
