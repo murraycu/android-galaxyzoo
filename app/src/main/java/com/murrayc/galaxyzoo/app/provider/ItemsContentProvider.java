@@ -24,6 +24,7 @@ import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -56,7 +57,6 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -576,6 +576,9 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
+    private void onFileCacheTaskFinished(final Boolean result) {
+    }
+
     private boolean executeHttpRequest(final HttpUriRequest request, ResponseHandler handler) {
         Object handlerResult = null;
         HttpResponse response = null;
@@ -586,12 +589,6 @@ public class ItemsContentProvider extends ContentProvider {
         } catch (IOException e) {
             Log.error("exception processing async request", e);
             return false;
-        } finally {
-        /*
-        if (mSiteProvider != null) {
-            mSiteProvider.requestComplete(mRequestTag);
-        }
-        */
         }
 
         // With our ResponseHandler classes, when this is a string,
@@ -609,7 +606,25 @@ public class ItemsContentProvider extends ContentProvider {
         return false;
     }
 
-    private void onFileCacheTaskFinished(final Boolean result) {
+    private GalaxyZooPostLoginResponseHandler.LoginResult executeLoginHttpRequest(final HttpUriRequest request) {
+        final GalaxyZooPostLoginResponseHandler handler = new GalaxyZooPostLoginResponseHandler(ItemsContentProvider.this);
+        GalaxyZooPostLoginResponseHandler.LoginResult handlerResult = null;
+        HttpResponse response = null;
+        try {
+            final HttpClient client = new DefaultHttpClient();
+            response = client.execute(request);
+            handlerResult = handler.handleResponse(response);
+        } catch (IOException e) {
+            Log.error("exception processing async request", e);
+            return null;
+        }
+
+        // GalaxyZooPostLoginResponseHandler.handleResponse() returns a LoginResult.
+        if (handlerResult == null) {
+            Log.error("Error processing async request.");
+        }
+
+        return handlerResult;
     }
 
     /**
@@ -1224,12 +1239,12 @@ public class ItemsContentProvider extends ContentProvider {
     private void onQueryTaskFinished(final Boolean result) {
     }
 
-    private class LoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
+    private class LoginAsyncTask extends AsyncTask<String, Integer, GalaxyZooPostLoginResponseHandler.LoginResult> {
         @Override
-        protected Boolean doInBackground(final String... params) {
+        protected GalaxyZooPostLoginResponseHandler.LoginResult doInBackground(final String... params) {
             if (params.length < 2) {
                 Log.error("LoginTask: not enough params.");
-                return false;
+                return null;
             }
 
             final String username = params[0];
@@ -1249,13 +1264,7 @@ public class ItemsContentProvider extends ContentProvider {
                 return null;
             }
 
-            final ResponseHandler handler = new GalaxyZooPostLoginResponseHandler(ItemsContentProvider.this);
-
-            if (executeHttpRequest(post, handler)) {
-                return false;
-            }
-
-            return true; //Login succeeded.
+            return executeLoginHttpRequest(post);
         }
 
         @Override
@@ -1264,14 +1273,27 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(final GalaxyZooPostLoginResponseHandler.LoginResult result) {
             super.onPostExecute(result);
 
             onLoginTaskFinished(result);
         }
     }
 
-    private void onLoginTaskFinished(final Boolean result) {
+    private void onLoginTaskFinished(final GalaxyZooPostLoginResponseHandler.LoginResult result) {
+        if (result.getSuccess()) {
+            saveAuthToPreferences(result.getName(), result.getApiKey());
+        } else {
+            //TODO: Inform the user.
+        }
+    }
+
+    private void saveAuthToPreferences(final String name, final String apiKey) {
+        final SharedPreferences prefs = getContext().getSharedPreferences("android-galaxyzoo", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("auth_name", name);
+        editor.putString("auth_api_key", apiKey);
+        editor.commit();
     }
 
     private class PostAsyncTask extends AsyncTask<String, Integer, Boolean> {

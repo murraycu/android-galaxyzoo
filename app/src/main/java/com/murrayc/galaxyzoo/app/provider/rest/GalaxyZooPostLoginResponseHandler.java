@@ -1,5 +1,7 @@
 package com.murrayc.galaxyzoo.app.provider.rest;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
@@ -20,7 +22,7 @@ import java.io.IOException;
 /**
  * Created by murrayc on 7/2/14.
  */
-public class GalaxyZooPostLoginResponseHandler implements ResponseHandler<String> {
+public class GalaxyZooPostLoginResponseHandler implements ResponseHandler<GalaxyZooPostLoginResponseHandler.LoginResult> {
 
     private final ItemsContentProvider mContentProvider;
 
@@ -32,34 +34,34 @@ public class GalaxyZooPostLoginResponseHandler implements ResponseHandler<String
     * Handles the response from the RESTful server.
     */
     @Override
-    public String handleResponse(final HttpResponse response) {
+    public LoginResult handleResponse(final HttpResponse response) {
         if(response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            return "Did not receive the 200 OK status code: " + response.getStatusLine().toString();
+            Log.error("Did not receive the 200 OK status code: " + response.getStatusLine().toString());
         }
 
         final String responseString;
         try {
             responseString = new BasicResponseHandler().handleResponse(response);
             Log.info("Login response string", responseString);
-            parseJson(responseString);
+            return parseJson(responseString);
         } catch (final IOException e) {
             Log.error("Exception from BasicResponseHandler:", e);
         }
 
-
-        //TODO: Parse the response to get the api_key.
-
         return null; //Means success by our convention.
     }
 
-    private void parseJson(final String responseString) {
+    private LoginResult parseJson(final String responseString) {
+        //A failure by default.
+        LoginResult result = new LoginResult(false, null, null);
+
         JSONTokener tokener = new JSONTokener(responseString);
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(tokener);
         } catch (JSONException e) {
             Log.error("JSON parsing failed.", e);
-            return;
+            return result;
         }
 
         try {
@@ -75,6 +77,8 @@ public class GalaxyZooPostLoginResponseHandler implements ResponseHandler<String
                 //final long favoriteCount = jsonObject.getLong("favorite_count");
                 final String name = jsonObject.getString("name");
                 //final String zooniverseId = jsonObject.getString("zooniverse_id");
+
+                return new LoginResult(true, name, apiKey);
 
                 //Then there is an object called "project", like so:
                 /*
@@ -96,9 +100,35 @@ public class GalaxyZooPostLoginResponseHandler implements ResponseHandler<String
 
                 final String message = jsonObject.getString("message");
                 Log.info("Login failure message", message);
+                return result;
             }
         } catch (final JSONException e) {
             e.printStackTrace();
+            return result;
+        }
+    }
+
+    public static class LoginResult {
+        private final boolean success;
+        private final String name;
+        private final String apiKey;
+
+        public LoginResult(boolean success, final String name, final String apiKey) {
+            this.success = success;
+            this.name = name;
+            this.apiKey = apiKey;
+        }
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public boolean getSuccess() {
+            return success;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }
