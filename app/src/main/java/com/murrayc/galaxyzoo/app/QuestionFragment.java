@@ -57,7 +57,7 @@ import java.util.Map;
 /**
  * A fragment representing a single subject.
  * This fragment is either contained in a {@link com.murrayc.galaxyzoo.app.ListActivity}
- * in two-pane mode (on tablets) or a {@link com.murrayc.galaxyzoo.app.DetailActivity}
+ * in two-pane mode (on tablets) or a {@link com.murrayc.galaxyzoo.app.ClassifyActivity}
  * on handsets.
  */
 public class QuestionFragment extends ItemFragment
