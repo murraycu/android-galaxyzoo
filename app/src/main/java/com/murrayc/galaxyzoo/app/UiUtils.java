@@ -105,6 +105,11 @@ class UiUtils {
     }
 
     static void fillImageViewFromContentUri(final Context context, final String imageUriStr, final ImageView imageView) {
+        if (imageUriStr == null) {
+            Log.error("fillImageViewFromContentUri(): imageUriStr is null.");
+            return;
+        }
+
         final ContentResolver contentResolver = context.getContentResolver();
 
         Bitmap bMap = null;
