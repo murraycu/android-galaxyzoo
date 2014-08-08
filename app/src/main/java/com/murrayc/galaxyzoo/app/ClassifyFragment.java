@@ -116,6 +116,8 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
         setHasOptionsMenu(true);
 
+        //TODO: Show the progress spinner while we are waiting for the subject to load,
+        //particularly during first start when we are waiting to get the first data in our cache.
         update();
 
         return mRootView;

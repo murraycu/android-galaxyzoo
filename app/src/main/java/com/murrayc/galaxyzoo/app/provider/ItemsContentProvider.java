@@ -634,6 +634,8 @@ public class ItemsContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         mOpenDbHelper = new DatabaseHelper(getContext());
+        //This is useful to wipe the database when testing.
+        //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
         return true;
     }
 
@@ -752,6 +754,7 @@ public class ItemsContentProvider extends ContentProvider {
                 c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
                 if(c.getCount() < 1) {
                     //Get some more from the REST server and then try again.
+                    //TODO: Get one synchronously, return it, and get the rest asynchronously.
                     final List<Subject> subjects = requestMoreItemsSync();
                     addSubjects(subjects, false /* not async - we need it immediately. */);
 
