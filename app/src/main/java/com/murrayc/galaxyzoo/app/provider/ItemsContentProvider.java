@@ -222,6 +222,8 @@ public class ItemsContentProvider extends ContentProvider {
 
     private static final String PREF_KEY_AUTH_NAME = "auth_name";
     private static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
+    private static final int MIN_CACHE_COUNT = 5; //Don't let the count of undone items get this low.
+    public static final int QUERY_COUNT_LARGE = 10;
 
     private DatabaseHelper mOpenDbHelper;
 
@@ -579,6 +581,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private void onFileCacheTaskFinished(final Boolean result) {
+        //TODO: notify the client that this item has changed, so the ListView can show it.
     }
 
     private boolean executeHttpRequest(final HttpUriRequest request, ResponseHandler<Boolean> handler) {
@@ -645,9 +648,7 @@ public class ItemsContentProvider extends ContentProvider {
             /** Check with the remote REST API asynchronously,
              * informing the calling client later via notification.
              */
-            //TODO: Only do this if there are no unclassified items:
-            final QueryAsyncTask task = new QueryAsyncTask();
-            task.execute();
+            requestMoreItemsAsync();
         } else if (METHOD_UPLOAD_CLASSIFICATIONS.equals(method)) {
             /** Upload any classifications that have not yet been uploaded.
              */
@@ -666,6 +667,11 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         return null;
+    }
+
+    private void requestMoreItemsAsync() {
+        final QueryAsyncTask task = new QueryAsyncTask();
+        task.execute();
     }
 
     private void uploadOutstandingClassifications() {
@@ -752,13 +758,20 @@ public class ItemsContentProvider extends ContentProvider {
 
             case MATCHER_ID_ITEM_NEXT: {
                 c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
-                if(c.getCount() < 1) {
-                    //Get some more from the REST server and then try again.
-                    //TODO: Get one synchronously, return it, and get the rest asynchronously.
-                    final List<Subject> subjects = requestMoreItemsSync();
+                final int count = c.getCount();
+                if(count < 1) {
+                    //Immediately get some more from the REST server and then try again.
+                    //Get one synchronously, for now.
+                    final List<Subject> subjects = requestMoreItemsSync(1);
                     addSubjects(subjects, false /* not async - we need it immediately. */);
 
                     c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
+                }
+
+                // Make sure we have enough soon enough,
+                // so get the rest asynchronously.
+                if(count <= MIN_CACHE_COUNT) {
+                    requestMoreItemsAsync();
                 }
 
                 c.setNotificationUri(getContext().getContentResolver(),
@@ -869,9 +882,11 @@ public class ItemsContentProvider extends ContentProvider {
         builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
         builder.setProjectionMap(sItemsProjectionMap);
         builder.appendWhere(whereClause);
+        // We set the limit to MIN_CACHE_COUNT + 1, instead of 1, so we know when to do the work to get
+        // some more in the background, ready for the next time that we need a next one.
         c = builder.query(getDb(), projection,
                 selection, selectionArgs,
-                null, null, orderBy, "1");
+                null, null, orderBy, Integer.toString(MIN_CACHE_COUNT + 1)); //TODO: Is Integer.toString locale-dependent?
         return c;
     }
 
@@ -1205,7 +1220,7 @@ public class ItemsContentProvider extends ContentProvider {
     private class QueryAsyncTask extends AsyncTask<Void, Integer, List<Subject>> {
         @Override
         protected List<Subject> doInBackground(final Void... params) {
-            return requestMoreItemsSync();
+            return requestMoreItemsSync(QUERY_COUNT_LARGE);
         }
 
         @Override
@@ -1216,9 +1231,13 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    private List<Subject> requestMoreItemsSync() {
-        final HttpGet get = new HttpGet(Config.QUERY_URI);
+    private List<Subject> requestMoreItemsSync(int count) {
+        final HttpGet get = new HttpGet(getQueryUri(count));
         return executeQueryHttpRequest(get);
+    }
+
+    private String getQueryUri(final int count) {
+        return Config.QUERY_URI + Integer.toString(count); //TODO: Is Integer.toString() locale-dependent?
     }
 
     private void onQueryTaskFinished(final List<Subject> result) {
