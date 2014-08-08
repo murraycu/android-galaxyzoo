@@ -282,7 +282,7 @@ public class QuestionFragment extends ItemFragment
             return;
         }
 
-        DecisionTree.Question question = getQuestion(activity);
+        final DecisionTree.Question question = getQuestion(activity);
 
         //Show the title:
         final TextView textViewTitle = (TextView)mRootView.findViewById(R.id.textViewTitle);
