@@ -616,7 +616,7 @@ public class ItemsContentProvider extends ContentProvider {
      * Spawns a thread to download bytes from a url and store them in a file.
      */
     private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri) {
-        final LoginAsyncTask task = new LoginAsyncTask();
+        final FileCacheAsyncTask task = new FileCacheAsyncTask();
         task.execute(uriFileToCache, cacheFileUri);
     }
 

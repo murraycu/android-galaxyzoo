@@ -18,7 +18,7 @@ public class FileResponseHandler implements ResponseHandler {
         mCacheFileUri = cacheFileUri;
     }
 
-    public String handleResponse(HttpResponse response)  throws IOException {
+    public Boolean handleResponse(HttpResponse response)  throws IOException {
         //Write the content to the file:
         final InputStream urlStream = response.getEntity().getContent();
         final FileOutputStream fout =
@@ -35,6 +35,6 @@ public class FileResponseHandler implements ResponseHandler {
         urlStream.close();
         fout.close();
 
-        return null; //TODO?
+        return true; //TODO?
     }
 }
