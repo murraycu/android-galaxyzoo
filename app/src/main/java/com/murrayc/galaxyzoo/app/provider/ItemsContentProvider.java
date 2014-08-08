@@ -373,17 +373,17 @@ public class ItemsContentProvider extends ContentProvider {
                 // it in the table row for later use.
                 final ContentValues valuesComplete = new ContentValues(values);
 
-                Uri fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_STANDARD_URI));
+                Uri fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_STANDARD_URI), true /* async download */);
                 if (fileUri != null) {
                     valuesComplete.put(Item.Columns.LOCATION_STANDARD_URI, fileUri.toString());
                 }
 
-                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_THUMBNAIL_URI));
+                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_THUMBNAIL_URI), true /* async download */);
                 if (fileUri != null) {
                     valuesComplete.put(Item.Columns.LOCATION_THUMBNAIL_URI, fileUri.toString());
                 }
 
-                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_INVERTED_URI));
+                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_INVERTED_URI), true /* async */);
                 if (fileUri != null) {
                     valuesComplete.put(Item.Columns.LOCATION_INVERTED_URI, fileUri.toString());
                 }
@@ -491,8 +491,9 @@ public class ItemsContentProvider extends ContentProvider {
 
     /**
      * @param uriOfFileToCache This may be null if the new file should be empty.
+     * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private Uri createFileUri(final String uriOfFileToCache) {
+    private Uri createFileUri(final String uriOfFileToCache, boolean asyncFileDownloads) {
         final SQLiteDatabase db = getDb();
         final long fileId = db.insertOrThrow(DatabaseHelper.TABLE_NAME_FILES,
                 DatabaseHelper.FilesDbColumns.FILE_DATA, null);
@@ -540,7 +541,7 @@ public class ItemsContentProvider extends ContentProvider {
 
         //Actually cache the URI's data in the local file:
         if (uriOfFileToCache != null) {
-            cacheUriToFile(uriOfFileToCache, realFileUri);
+            cacheUriToFile(uriOfFileToCache, realFileUri, asyncFileDownloads);
         }
 
 
@@ -556,12 +557,11 @@ public class ItemsContentProvider extends ContentProvider {
                 return false;
             }
 
+            //TODO: Just set these in the constructor?
             final String uriFileToCache = params[0];
             final String cacheFileUri = params[1];
 
-            final HttpGet get = new HttpGet(uriFileToCache);
-            final ResponseHandler handler = new FileResponseHandler(cacheFileUri);
-            return executeHttpRequest(get, handler);
+            return cacheUriToFileSync(uriFileToCache, cacheFileUri);
         }
 
         @Override
@@ -570,6 +570,12 @@ public class ItemsContentProvider extends ContentProvider {
 
             onFileCacheTaskFinished(result);
         }
+    }
+
+    private boolean cacheUriToFileSync(final String uriFileToCache, final String cacheFileUri) {
+        final HttpGet get = new HttpGet(uriFileToCache);
+        final ResponseHandler handler = new FileResponseHandler(cacheFileUri);
+        return executeHttpRequest(get, handler);
     }
 
     private void onFileCacheTaskFinished(final Boolean result) {
@@ -613,11 +619,16 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     /**
-     * Spawns a thread to download bytes from a url and store them in a file.
+     * Download bytes from a url and store them in a file, optionally asynchronously in spawned thread.
+     * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri) {
-        final FileCacheAsyncTask task = new FileCacheAsyncTask();
-        task.execute(uriFileToCache, cacheFileUri);
+    private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri, boolean asyncFileDownloads) {
+        if (asyncFileDownloads) {
+            final FileCacheAsyncTask task = new FileCacheAsyncTask();
+            task.execute(uriFileToCache, cacheFileUri);
+        } else {
+            cacheUriToFileSync(uriFileToCache, cacheFileUri);
+        }
     }
 
     @Override
@@ -742,7 +753,7 @@ public class ItemsContentProvider extends ContentProvider {
                 if(c.getCount() < 1) {
                     //Get some more from the REST server and then try again.
                     final List<Subject> subjects = requestMoreItemsSync();
-                    addSubjects(subjects);
+                    addSubjects(subjects, false /* not async - we need it immediately. */);
 
                     c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
                 }
@@ -986,7 +997,11 @@ public class ItemsContentProvider extends ContentProvider {
 
     //TODO: Reimplement this, in GalaxyZooResponseHandler, as an insert(uri) call,
     //to avoid repetition, or would that be too inefficient?
-    private long addSubject(final Subject item) {
+    /**
+     * @param item
+     * @param asyncFileDownloads Get the image data asynchronously if this is true.
+     */
+    private long addSubject(final Subject item, boolean asyncFileDownloads) {
         if(subjectIsInDatabase(item.mId)) {
             //It is already in the database.
             //TODO: Update the row?
@@ -1000,17 +1015,17 @@ public class ItemsContentProvider extends ContentProvider {
         values.put(DatabaseHelper.ItemsDbColumns.ZOONIVERSE_ID, item.mZooniverseId);
 
         //Get (our) local content URIs of cache files instead of the remote URIs for the images:
-        Uri fileUri = createFileUri(item.mLocationStandard);
+        Uri fileUri = createFileUri(item.mLocationStandard, asyncFileDownloads);
         if (fileUri != null) {
             values.put(DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI, fileUri.toString());
         }
 
-        fileUri = createFileUri(item.mLocationThumbnail);
+        fileUri = createFileUri(item.mLocationThumbnail, asyncFileDownloads);
         if (fileUri != null) {
             values.put(DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI, fileUri.toString());
         }
 
-        fileUri = createFileUri(item.mLocationInverted);
+        fileUri = createFileUri(item.mLocationInverted, asyncFileDownloads);
         if (fileUri != null) {
             values.put(DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI, fileUri.toString());
         }
@@ -1208,12 +1223,18 @@ public class ItemsContentProvider extends ContentProvider {
             return;
         }
 
-        addSubjects(result);
+        addSubjects(result, true /* async */);
     }
 
-    private void addSubjects(List<Subject> result) {
-        for (final Subject subject : result) {
-            addSubject(subject);
+
+    /**
+     * @param subjects
+     * @param asyncFileDownloads Get the image data asynchronously if this is true.
+     *
+     */
+    private void addSubjects(final List<Subject> subjects, boolean asyncFileDownloads) {
+        for (final Subject subject : subjects) {
+            addSubject(subject, asyncFileDownloads);
         }
     }
 
