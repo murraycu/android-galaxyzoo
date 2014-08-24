@@ -294,6 +294,13 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         mCursor = cursor;
         updateFromCursor();
+
+        // Avoid this being called twice, which seems to be an Android bug,
+        // and which could cause us to get a different item ID if our virtual "next" item changes to
+        // another item:
+        // See http://stackoverflow.com/questions/14719814/onloadfinished-called-twice
+        // and https://code.google.com/p/android/issues/detail?id=63179
+        getLoaderManager().destroyLoader(URL_LOADER);
     }
 
     @Override
