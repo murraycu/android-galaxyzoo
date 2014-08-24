@@ -1127,7 +1127,7 @@ public class ItemsContentProvider extends ContentProvider {
             private static final String CHECKBOX_ID = "checkboxId";
         }
 
-        private static final String DEFAULT_SORT_ORDER = Item.Columns._ID + " DESC";
+        private static final String DEFAULT_SORT_ORDER = Item.Columns._ID + " ASC";
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
