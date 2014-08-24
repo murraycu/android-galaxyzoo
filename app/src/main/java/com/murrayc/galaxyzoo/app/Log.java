@@ -26,7 +26,7 @@ package com.murrayc.galaxyzoo.app;
  */
 public class Log {
 
-    private static final String LOG_TAG = "glom";
+    private static final String LOG_TAG = "android-galaxyzoo"; //TODO: Get this from the build files somehow.
 
     /* A replacement for StringUtils.defaultString(),
                  * because Android's TextUtils doesn't have it.
