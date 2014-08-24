@@ -76,6 +76,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      * clicks.
      */
     private Callbacks mCallbacks = sDummyCallbacks;
+    private View mLoadingView;
 
     /**
      * A callback interface that all activities containing some fragments must
@@ -113,6 +114,9 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_classify, container, false);
         assert mRootView != null;
+
+        mLoadingView = mRootView.findViewById(R.id.loading_spinner);
+        mLoadingView.setVisibility(View.GONE);
 
         setHasOptionsMenu(true);
 
@@ -280,6 +284,8 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
         builder.appendPath(itemId);
 
+        mLoadingView.setVisibility(View.VISIBLE);
+
         return new CursorLoader(
                 activity,
                 builder.build(),
@@ -293,6 +299,9 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         mCursor = cursor;
+
+        mLoadingView.setVisibility(View.GONE);
+
         updateFromCursor();
 
         // Avoid this being called twice, which seems to be an Android bug,
