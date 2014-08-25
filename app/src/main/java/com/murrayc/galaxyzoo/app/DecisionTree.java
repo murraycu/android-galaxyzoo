@@ -46,13 +46,12 @@ public class DecisionTree {
     private static final String NODE_CHECKBOX = "checkbox";
     private static final String NODE_ANSWER = "answer";
 
-    //These are multiple-selection.
-    static class Checkbox {
+    static class BaseButton {
         private String id;
         private String text;
-        public String icon;
+        private String icon;
 
-        Checkbox(final String id, final String text, final String icon) {
+        BaseButton(final String id, final String text, final String icon) {
             this.id = id;
             this.text = text;
             this.icon = icon;
@@ -64,30 +63,28 @@ public class DecisionTree {
 
         public String getText() {
             return text;
+        }
+
+        public String getIcon() {
+            return icon;
+        }
+    };
+
+    //These are multiple-selection.
+    static class Checkbox extends BaseButton {
+        Checkbox(final String id, final String text, final String icon) {
+            super(id, text, icon);
         }
     }
 
     //These are single selection.
     //Sometimes it's just "Done" to accept the checkbox selections.
-    static class Answer {
-        private String id;
-        private String text;
-        public String icon;
+    static class Answer extends BaseButton {
         private String leadsToQuestionId;
 
         Answer(final String id, final String text, final String icon, final String leadsToQuestionId) {
-            this.id = id;
-            this.text = text;
-            this.icon = icon;
+            super(id, text, icon);
             this.leadsToQuestionId = leadsToQuestionId;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getText() {
-            return text;
         }
     }
 
