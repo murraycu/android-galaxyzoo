@@ -550,55 +550,11 @@ public class ItemsContentProvider extends ContentProvider {
         return fileUri;
     }
 
-
-    private class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
-        @Override
-        protected Boolean doInBackground(final String... params) {
-            if (params.length < 2) {
-                Log.error("LoginTask: not enough params.");
-                return false;
-            }
-
-            //TODO: Just set these in the constructor?
-            final String uriFileToCache = params[0];
-            final String cacheFileUri = params[1];
-
-            return cacheUriToFileSync(uriFileToCache, cacheFileUri);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
-            onFileCacheTaskFinished(result);
-        }
-    }
-
-    private boolean cacheUriToFileSync(final String uriFileToCache, final String cacheFileUri) {
-        final HttpGet get = new HttpGet(uriFileToCache);
-        final ResponseHandler handler = new FileResponseHandler(cacheFileUri);
-        return executeHttpRequest(get, handler);
-    }
-
+    /*
     private void onFileCacheTaskFinished(final Boolean result) {
         //TODO: notify the client that this item has changed, so the ListView can show it.
     }
-
-    private boolean executeHttpRequest(final HttpUriRequest request, ResponseHandler<Boolean> handler) {
-        Boolean handlerResult = false;
-        HttpResponse response = null;
-        try {
-            final HttpClient client = new DefaultHttpClient();
-            //This just leads to an redirect limit exception: client.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
-            response = client.execute(request);
-            handlerResult = handler.handleResponse(response);
-        } catch (IOException e) {
-            Log.error("exception processing async request", e);
-            return false;
-        }
-
-        return handlerResult;
-    }
+    */
 
     private GalaxyZooPostLoginResponseHandler.LoginResult executeLoginHttpRequest(final HttpUriRequest request) {
         final GalaxyZooPostLoginResponseHandler handler = new GalaxyZooPostLoginResponseHandler(ItemsContentProvider.this);
@@ -627,10 +583,10 @@ public class ItemsContentProvider extends ContentProvider {
      */
     private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri, boolean asyncFileDownloads) {
         if (asyncFileDownloads) {
-            final FileCacheAsyncTask task = new FileCacheAsyncTask();
+            final HttpUtils.FileCacheAsyncTask task = new HttpUtils.FileCacheAsyncTask();
             task.execute(uriFileToCache, cacheFileUri);
         } else {
-            cacheUriToFileSync(uriFileToCache, cacheFileUri);
+            HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri);
         }
     }
 
@@ -1429,7 +1385,7 @@ public class ItemsContentProvider extends ContentProvider {
             }
 
             final ResponseHandler handler = new GalaxyZooPostResponseHandler(ItemsContentProvider.this);
-            return executeHttpRequest(post, handler);
+            return HttpUtils.executeHttpRequest(post, handler);
         }
 
         @Override
