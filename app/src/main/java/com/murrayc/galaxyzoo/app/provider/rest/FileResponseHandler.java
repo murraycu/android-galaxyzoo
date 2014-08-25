@@ -20,19 +20,9 @@ public class FileResponseHandler implements ResponseHandler {
 
     public Boolean handleResponse(HttpResponse response)  throws IOException {
         //Write the content to the file:
-        final InputStream urlStream = response.getEntity().getContent();
         final FileOutputStream fout =
                 new FileOutputStream(mCacheFileUri);
-        byte[] bytes = new byte[256];
-        int r;
-        do {
-            r = urlStream.read(bytes);
-            if (r >= 0) {
-                fout.write(bytes, 0, r);
-            }
-        } while (r >= 0);
-
-        urlStream.close();
+        response.getEntity().writeTo(fout);
         fout.close();
 
         return true; //TODO?
