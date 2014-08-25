@@ -8,28 +8,17 @@
     android:textIsSelectable="true"
     tools:context="com.murrayc.galaxyzoo.app.SubjectFragment">
 
-    <ScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/scrollView">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="Standard Image"
+            android:id="@+id/imageView" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="Standard Image"
-                android:id="@+id/imageView" />
-
-        </LinearLayout>
-    </ScrollView>
-
-
+    </LinearLayout>
 
 </RelativeLayout>

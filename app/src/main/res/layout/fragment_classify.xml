@@ -9,18 +9,32 @@
     android:textIsSelectable="true"
     tools:context="com.murrayc.galaxyzoo.app.ClassifyFragment">
 
-    <FrameLayout
-        android:id="@+id/child_fragment_subject"
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="200dp" />
-
-    <FrameLayout
-        android:id="@+id/child_fragment_question"
-        android:layout_width="fill_parent"
-        android:layout_height="200dip"
-        android:layout_alignParentBottom="true"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/child_fragment_subject" />
+        android:layout_alignParentBottom="true"
+        android:id="@+id/scrollView">
+
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <FrameLayout
+                    android:id="@+id/child_fragment_subject"
+                    android:layout_width="fill_parent"
+                    android:layout_height="200dp" />
+
+                <FrameLayout
+                    android:id="@+id/child_fragment_question"
+                    android:layout_width="fill_parent"
+                    android:layout_height="200dip"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/child_fragment_subject" />
+            </LinearLayout>
+    </ScrollView>
 
     <ProgressBar android:id="@+id/loading_spinner"
         style="?android:progressBarStyleLarge"
