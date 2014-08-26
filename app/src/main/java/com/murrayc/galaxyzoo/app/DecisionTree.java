@@ -81,10 +81,16 @@ public class DecisionTree {
     //Sometimes it's just "Done" to accept the checkbox selections.
     static class Answer extends BaseButton {
         private final String leadsToQuestionId;
+        private final int examplesCount;
 
-        Answer(final String id, final String text, final String icon, final String leadsToQuestionId) {
+        Answer(final String id, final String text, final String icon, final String leadsToQuestionId, int examplesCount) {
             super(id, text, icon);
             this.leadsToQuestionId = leadsToQuestionId;
+            this.examplesCount = examplesCount;
+        }
+
+        int getExamplesCount() {
+            return examplesCount;
         }
     }
 
@@ -331,7 +337,8 @@ public class DecisionTree {
                 answerNode.getAttribute("id"),
                 getTextOfChildNode(answerNode, "text"),
                 answerNode.getAttribute("icon"),
-                answerNode.getAttribute("leadsTo"));
+                answerNode.getAttribute("leadsTo"),
+                Integer.parseInt(answerNode.getAttribute("examplesCount")));
         return result;
     }
 }
