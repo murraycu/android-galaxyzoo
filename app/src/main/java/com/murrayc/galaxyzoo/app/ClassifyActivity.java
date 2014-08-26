@@ -42,7 +42,6 @@ public class ClassifyActivity extends ItemActivity implements ClassifyFragment.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //TODO: Update the child fragments with the actual ID when we know it:
         if(TextUtils.isEmpty(getItemId())) {
             setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
         }
