@@ -80,7 +80,7 @@ public class DecisionTree {
     //These are single selection.
     //Sometimes it's just "Done" to accept the checkbox selections.
     static class Answer extends BaseButton {
-        private String leadsToQuestionId;
+        private final String leadsToQuestionId;
 
         Answer(final String id, final String text, final String icon, final String leadsToQuestionId) {
             super(id, text, icon);
@@ -89,10 +89,10 @@ public class DecisionTree {
     }
 
     public static class Question {
-        public String id;
-        public String title;
-        public String text;
-        public String help;
+        private final String id;
+        private final String title;
+        private final String text;
+        private final String help;
 
         public final List<Checkbox> checkboxes = new ArrayList<>();
         public final List<Answer> answers = new ArrayList<>();
@@ -114,6 +114,10 @@ public class DecisionTree {
 
         public String getText() {
             return text;
+        }
+
+        public String getHelp() {
+            return help;
         }
 
         public boolean hasCheckboxes() {
