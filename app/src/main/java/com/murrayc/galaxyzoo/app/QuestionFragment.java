@@ -70,6 +70,8 @@ public class QuestionFragment extends ItemFragment
 
     private final String[] mColumns = { Item.Columns._ID, Item.Columns.ZOONIVERSE_ID };
 
+    private Singleton mSingleton = null;
+
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
     // from our ContentProvider) only knows about the underlying SQLite database column names,
@@ -90,6 +92,7 @@ public class QuestionFragment extends ItemFragment
 
     // A map of checkbox IDs to buttons.
     private Map<String, ToggleButton> mCheckboxButtons = new HashMap<>();
+    private boolean mLoaderFinished = false;
 
     private void setZooniverseId(final String zooniverseId) {
         mZooniverseId = zooniverseId;
@@ -97,6 +100,10 @@ public class QuestionFragment extends ItemFragment
 
     private String getZooniverseId() {
         return mZooniverseId;
+    }
+
+    public Singleton getSingleton() {
+        return mSingleton;
     }
 
 
@@ -228,6 +235,15 @@ public class QuestionFragment extends ItemFragment
 
         setHasOptionsMenu(true);
 
+        Singleton.init(getActivity(), new Singleton.Callbacks() {
+            @Override
+            public void onInitialized() {
+                QuestionFragment.this.mSingleton = Singleton.getInstance();
+
+                updateIfReady();
+            }
+        });
+
         /*
          * Initializes the CursorLoader. The URL_LOADER value is eventually passed
          * to onCreateLoader().
@@ -238,7 +254,7 @@ public class QuestionFragment extends ItemFragment
          */
         getLoaderManager().restartLoader(URL_LOADER, null, this);
 
-        update();
+        //This will be called later by updateIfReady(): update();
 
         return mRootView;
     }
@@ -282,7 +298,7 @@ public class QuestionFragment extends ItemFragment
             return;
         }
 
-        final DecisionTree.Question question = getQuestion(activity);
+        final DecisionTree.Question question = getQuestion();
 
         //Show the title:
         final TextView textViewTitle = (TextView)mRootView.findViewById(R.id.textViewTitle);
@@ -354,8 +370,8 @@ public class QuestionFragment extends ItemFragment
         }
     }
 
-    private DecisionTree.Question getQuestion(Activity activity) {
-        final Singleton singleton = Singleton.getInstance(activity);
+    private DecisionTree.Question getQuestion() {
+        final Singleton singleton = getSingleton();
         final DecisionTree tree = singleton.getDecisionTree();
 
         DecisionTree.Question question = null;
@@ -401,7 +417,7 @@ public class QuestionFragment extends ItemFragment
             List<String> checkboxes = null;
 
             //Get the selected checkboxes too:
-            final Singleton singleton = Singleton.getInstance(activity);
+            final Singleton singleton = getSingleton();
             final DecisionTree tree = singleton.getDecisionTree();
             final DecisionTree.Question question = tree.getQuestion(questionId);
             if (question.hasCheckboxes()) {
@@ -419,7 +435,7 @@ public class QuestionFragment extends ItemFragment
             mClassificationInProgress.add(questionId, answerId, checkboxes);
         }
 
-        final Singleton singleton = Singleton.getInstance(activity);
+        final Singleton singleton = getSingleton();
         final DecisionTree tree = singleton.getDecisionTree();
 
         final DecisionTree.Question question = tree.getNextQuestionForAnswer(questionId, answerId);
@@ -571,6 +587,15 @@ public class QuestionFragment extends ItemFragment
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         mCursor = cursor;
         updateFromCursor();
+
+        mLoaderFinished = true;
+        updateIfReady();
+    }
+
+    private void updateIfReady() {
+        if (mLoaderFinished && (mSingleton != null)) {
+            update();
+        }
     }
 
     @Override

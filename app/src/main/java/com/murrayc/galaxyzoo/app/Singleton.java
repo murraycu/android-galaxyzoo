@@ -32,8 +32,18 @@ import java.io.InputStream;
  */
 public class Singleton {
 
-    private static Singleton ourInstance = null;
+    public static interface Callbacks {
+        /**
+         * This is called when the Singleton has been initialized.
+         * This will be called immediately if the Singleton has
+         * already been initialized.
+         * When this has been called, getInstance() will return
+         * a non-null value.
+         */
+        public void onInitialized();
+    }
 
+    private static Singleton ourInstance = null;
     private DecisionTree mDecisionTree = null;
 
     private Singleton(final Context context) {
@@ -47,13 +57,17 @@ public class Singleton {
         mDecisionTree = new DecisionTree(inputStream);
     }
 
-    public static Singleton getInstance(final Context context) {
+    public static void init(final Context context, final Callbacks callbacks) {
         if (ourInstance == null) {
             ourInstance = new Singleton(context);
         }
 
-        return ourInstance;
+        callbacks.onInitialized();
 
+    }
+
+    public static Singleton getInstance() {
+        return ourInstance;
     }
 
     public DecisionTree getDecisionTree() {
