@@ -25,11 +25,14 @@ import android.content.ActivityNotFoundException;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -40,6 +43,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -325,10 +329,14 @@ public class QuestionFragment extends ItemFragment
             //Use just the highlighting (line, color, etc) to show that it's selected,
             //instead of On/Off, so we don't need a separate label.
             //TODO: Use the icon. See http://stackoverflow.com/questions/18598255/android-create-a-toggle-button-with-image-and-no-text
+            //TODO: Avoid the highlight bar thing at the bottom being drawn over the text.
             button.setText(checkbox.getText());
             button.setTextOn(checkbox.getText());
             button.setTextOff(checkbox.getText());
             layoutCheckboxes.addView(button);
+
+            final BitmapDrawable icon = getIcon(activity, checkbox);
+            button.setCompoundDrawables(null, icon, null, null);
 
             mCheckboxButtons.put(checkbox.getId(), button);
 
@@ -353,6 +361,11 @@ public class QuestionFragment extends ItemFragment
         for(final DecisionTree.Answer answer : question.answers) {
             final Button button = new Button(activity);
             button.setText(answer.getText());
+            //TODO: button.setTextSize();
+
+            final BitmapDrawable icon = getIcon(activity, answer);
+            button.setCompoundDrawables(null, icon, null, null);
+
             layoutAnswers.addView(button);
 
             button.setOnClickListener(new View.OnClickListener() {
@@ -376,6 +389,18 @@ public class QuestionFragment extends ItemFragment
             question = tree.getQuestion(getQuestionId());
         }
         return question;
+    }
+
+    private BitmapDrawable getIcon(final Context context, final DecisionTree.BaseButton answer) {
+        final Singleton singleton = getSingleton();
+        final Bitmap bitmap = singleton.getIcon(answer.getIcon());
+        if (bitmap == null) {
+            return null;
+        }
+
+        final BitmapDrawable drawable = new BitmapDrawable(context.getResources(), bitmap);
+        drawable.setBounds(0, 0, 100, 100); //TODO: Avoid hardcoding.
+        return drawable;
     }
 
     private void onAnswerButtonClicked(final String questionId, final String answerId) {

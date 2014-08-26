@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import java.io.IOException;
@@ -47,6 +48,7 @@ public class Singleton {
     }
 
     private static Singleton ourInstance = null;
+    private IconsCache mIconsCache = null;
     private DecisionTree mDecisionTree = null;
 
     private static class InitAsyncTask extends AsyncTask<Context, Void, Void> {
@@ -86,6 +88,8 @@ public class Singleton {
         }
 
         mDecisionTree = new DecisionTree(inputStream);
+
+        mIconsCache = new IconsCache(context, mDecisionTree);
     }
 
     public static void init(final Context context, final Callbacks callbacks) {
@@ -107,6 +111,10 @@ public class Singleton {
 
     public DecisionTree getDecisionTree() {
         return mDecisionTree;
+    }
+
+    public Bitmap getIcon(final String iconName) {
+        return mIconsCache.getIcon(iconName);
     }
 
 }

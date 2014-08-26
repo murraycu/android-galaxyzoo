@@ -22,4 +22,13 @@ public class Config {
     //TODO: This is used in the app, not in the content provider.
     //Maybe this whole class should be in the app, not the content provider.
     public static final String TALK_URI = "http://talk.galaxyzoo.org/#/subjects/";
+
+    //TODO: This is used in the app, not in the content provider.
+    //Maybe this whole class should be in the app, not the content provider.
+    //TODO: Is there a stable URI for this?
+    public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2014-08-18_21-36-52.css";
+
+    //This is one big image file containing many icons,
+    //for use with the CSS Sprites technique.
+    public static final String ICONS_URI = "http://static.zooniverse.org/www.galaxyzoo.org/images/workflow.png";
 }
