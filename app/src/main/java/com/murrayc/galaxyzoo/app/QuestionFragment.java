@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ActivityNotFoundException;
 import android.content.ContentProviderOperation;
@@ -242,6 +243,14 @@ public class QuestionFragment extends ItemFragment
             }
         });
 
+        final Button buttonHelp = (Button)mRootView.findViewById(R.id.buttonHelp);
+        buttonHelp.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                onHelpButtonClicked();
+            }
+        });
+
         /*
          * Initializes the CursorLoader. The URL_LOADER value is eventually passed
          * to onCreateLoader().
@@ -255,6 +264,18 @@ public class QuestionFragment extends ItemFragment
         //This will be called later by updateIfReady(): update();
 
         return mRootView;
+    }
+
+    private void onHelpButtonClicked() {
+        final DecisionTree.Question question = getQuestion();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                getActivity());
+        builder.setTitle("Help");
+        builder.setMessage(question.getHelp());
+        builder.setPositiveButton("Close", null);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
