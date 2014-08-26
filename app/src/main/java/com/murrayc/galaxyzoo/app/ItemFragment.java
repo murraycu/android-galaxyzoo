@@ -13,6 +13,7 @@ public class ItemFragment extends ZooFragment {
      */
     public static final String ARG_ITEM_ID = "item-id";
     protected String mItemId;
+    protected Singleton mSingleton = null;
     private long mUserId = -1;
 
     private long getUserId() {
@@ -27,6 +28,10 @@ public class ItemFragment extends ZooFragment {
         mItemId = itemId;
     }
 
+    public Singleton getSingleton() {
+        return mSingleton;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,5 +40,9 @@ public class ItemFragment extends ZooFragment {
         if (bundle != null) {
             setItemId(bundle.getString(ARG_ITEM_ID));
         }
+    }
+
+    protected void onSingletonInitialized() {
+        this.mSingleton = Singleton.getInstance();
     }
 }

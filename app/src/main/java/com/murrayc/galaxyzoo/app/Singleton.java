@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +32,8 @@ import java.io.InputStream;
  * http://developer.android.com/guide/faq/framework.html#3
  */
 public class Singleton {
+
+    private static Callbacks mCallbacks;
 
     public static interface Callbacks {
         /**
@@ -46,6 +49,34 @@ public class Singleton {
     private static Singleton ourInstance = null;
     private DecisionTree mDecisionTree = null;
 
+    private static class InitAsyncTask extends AsyncTask<Context, Void, Void> {
+        @Override
+        protected Void doInBackground(final Context... params) {
+            if (params.length < 1) {
+                Log.error("InitAsyncTask: not enough params.");
+                return null;
+            }
+
+            final Context context = params[0];
+            Singleton.ourInstance = new Singleton(context);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final Void result) {
+            super.onPostExecute(result);
+
+            onLoginTaskFinished();
+        }
+    }
+
+    private static void onLoginTaskFinished() {
+        if (mCallbacks != null) {
+            mCallbacks.onInitialized();
+        }
+    }
+
     private Singleton(final Context context) {
         InputStream inputStream = null;
         try {
@@ -58,12 +89,16 @@ public class Singleton {
     }
 
     public static void init(final Context context, final Callbacks callbacks) {
-        if (ourInstance == null) {
-            ourInstance = new Singleton(context);
+        //Just notify the caller if it has already been initialized.
+        if (ourInstance != null) {
+            callbacks.onInitialized();
+            return;
         }
 
-        callbacks.onInitialized();
-
+        // Instantiate the Singleton and call our callback later:
+        mCallbacks = callbacks;
+        final InitAsyncTask task = new InitAsyncTask();
+        task.execute(context);
     }
 
     public static Singleton getInstance() {

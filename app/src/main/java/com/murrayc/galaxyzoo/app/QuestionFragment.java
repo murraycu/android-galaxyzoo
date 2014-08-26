@@ -70,8 +70,6 @@ public class QuestionFragment extends ItemFragment
 
     private final String[] mColumns = { Item.Columns._ID, Item.Columns.ZOONIVERSE_ID };
 
-    private Singleton mSingleton = null;
-
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
     // from our ContentProvider) only knows about the underlying SQLite database column names,
@@ -100,10 +98,6 @@ public class QuestionFragment extends ItemFragment
 
     private String getZooniverseId() {
         return mZooniverseId;
-    }
-
-    public Singleton getSingleton() {
-        return mSingleton;
     }
 
 
@@ -593,7 +587,7 @@ public class QuestionFragment extends ItemFragment
     }
 
     private void updateIfReady() {
-        if (mLoaderFinished && (mSingleton != null)) {
+        if (mLoaderFinished && (getSingleton() != null)) {
             update();
         }
     }

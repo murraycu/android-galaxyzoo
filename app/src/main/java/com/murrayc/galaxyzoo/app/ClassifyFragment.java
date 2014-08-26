@@ -115,15 +115,28 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         mRootView = inflater.inflate(R.layout.fragment_classify, container, false);
         assert mRootView != null;
 
-        showLoadingView(false);
+        //Show the progress spinner while we are waiting for the subject to load,
+        //particularly during first start when we are waiting to get the first data in our cache.
+        showLoadingView(true);
+
+        Singleton.init(getActivity(), new Singleton.Callbacks() {
+            @Override
+            public void onInitialized() {
+                onSingletonInitialized();
+            }
+        });
 
         setHasOptionsMenu(true);
 
-        //TODO: Show the progress spinner while we are waiting for the subject to load,
-        //particularly during first start when we are waiting to get the first data in our cache.
-        update();
-
         return mRootView;
+    }
+
+    @Override
+    protected void onSingletonInitialized() {
+        super.onSingletonInitialized();
+
+        //Now we are ready to do more:
+        update();
     }
 
     private void showLoadingView(boolean show) {
@@ -135,6 +148,8 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     }
 
     private void addOrUpdateChildFragments() {
+        showLoadingView(false);
+
         final Bundle arguments = new Bundle();
         //TODO? arguments.putString(ARG_USER_ID,
         //        getUserId()); //Obtained in the super class.
