@@ -42,7 +42,7 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 /**
  * A fragment representing a single subject.
  * This fragment is either contained in a {@link com.murrayc.galaxyzoo.app.ListActivity}
- * in two-pane mode (on tablets) or a {@link com.murrayc.galaxyzoo.app.DetailActivity}
+ * in two-pane mode (on tablets) or a {@link com.murrayc.galaxyzoo.app.ClassifyActivity}
  * on handsets.
  */
 public class ClassifyFragment extends ItemFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -284,7 +284,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             return null;
         }
 
-        //Asychronously get the actual ID,
+        //Asynchronously get the actual ID,
         //because we have just asked for the "next" item.
         final Activity activity = getActivity();
 
