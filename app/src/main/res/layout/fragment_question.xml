@@ -23,7 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/textViewText" />
+            android:id="@+id/textViewText"
+            android:paddingBottom="16dp" />
 
         <LinearLayout
             android:orientation="horizontal"
