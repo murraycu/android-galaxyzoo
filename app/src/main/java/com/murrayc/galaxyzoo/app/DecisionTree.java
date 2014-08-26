@@ -50,11 +50,13 @@ public class DecisionTree {
         private String id;
         private String text;
         private String icon;
+        private final int examplesCount;
 
-        BaseButton(final String id, final String text, final String icon) {
+        BaseButton(final String id, final String text, final String icon, int examplesCount) {
             this.id = id;
             this.text = text;
             this.icon = icon;
+            this.examplesCount = examplesCount;
         }
 
         public String getId() {
@@ -68,12 +70,20 @@ public class DecisionTree {
         public String getIcon() {
             return icon;
         }
+
+        int getExamplesCount() {
+            return examplesCount;
+        }
+
+        public String getExampleIconName(String questionId, int exampleIndex) {
+            return questionId + "_" + getId() + "_" + exampleIndex;
+        }
     };
 
     //These are multiple-selection.
     static class Checkbox extends BaseButton {
-        Checkbox(final String id, final String text, final String icon) {
-            super(id, text, icon);
+        Checkbox(final String id, final String text, final String icon, int examplesCount) {
+            super(id, text, icon, examplesCount);
         }
     }
 
@@ -81,16 +91,10 @@ public class DecisionTree {
     //Sometimes it's just "Done" to accept the checkbox selections.
     static class Answer extends BaseButton {
         private final String leadsToQuestionId;
-        private final int examplesCount;
 
         Answer(final String id, final String text, final String icon, final String leadsToQuestionId, int examplesCount) {
-            super(id, text, icon);
+            super(id, text, icon, examplesCount);
             this.leadsToQuestionId = leadsToQuestionId;
-            this.examplesCount = examplesCount;
-        }
-
-        int getExamplesCount() {
-            return examplesCount;
         }
     }
 
@@ -187,6 +191,14 @@ public class DecisionTree {
         }
 
         return getQuestion("sloan-0"); //TODO: Awful hack. Use an ordered collection?
+    }
+
+    public Question getQuestionOrFirst(final String questionId) {
+        if (TextUtils.isEmpty(questionId)) {
+            return getFirstQuestion();
+        } else {
+            return getQuestion(questionId);
+        }
     }
 
     public Question getQuestion(final String questionId) {
@@ -328,7 +340,8 @@ public class DecisionTree {
         final Checkbox result = new Checkbox(
                 checkboxNode.getAttribute("id"),
                 getTextOfChildNode(checkboxNode, "text"),
-                checkboxNode.getAttribute("icon"));
+                checkboxNode.getAttribute("icon"),
+                Integer.parseInt(checkboxNode.getAttribute("examplesCount")));
         return result;
     }
 

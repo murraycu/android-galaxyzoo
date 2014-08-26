@@ -21,13 +21,17 @@ import java.util.regex.PatternSyntaxException;
 
 public class IconsCache {
     //TODO: Generate these automatically, making sure they are unique:
-    public static final String CACHE_FILE_WORKFLOWICONS = "workflowicons";
+    public static final String CACHE_FILE_WORKFLOW_ICONS = "workflowicons";
+    public static final String CACHE_FILE_EXAMPLE_ICONS = "exampleicons";
     public static final String CACHE_FILE_CSS = "css";
 
     private final DecisionTree mDecisionTree;
     private final File mCacheDir;
+
+    //TODO: Don't put both kinds of icons in the same map:
     private final Hashtable<String, Bitmap> mIcons = new Hashtable<String, Bitmap>();
-    private Bitmap mBmapIcons = null;
+    private Bitmap mBmapWorkflowIcons = null;
+    private Bitmap mBmapExampleIcons = null;
 
     /**
      * This does network IO so it should not be used in the UI's main thread.
@@ -40,9 +44,12 @@ public class IconsCache {
         this.mDecisionTree = decisionTree;
         
         mCacheDir = context.getExternalCacheDir();
-        readIconsFileSync(Config.ICONS_URI, CACHE_FILE_WORKFLOWICONS);
+        readIconsFileSync(Config.ICONS_URI, CACHE_FILE_WORKFLOW_ICONS);
+        readIconsFileSync(Config.EXAMPLES_URI, CACHE_FILE_EXAMPLE_ICONS);
         readCssFileSync(Config.ICONS_CSS_URI, CACHE_FILE_CSS);
-        mBmapIcons = null;
+
+        mBmapWorkflowIcons = null;
+        mBmapExampleIcons = null;
     }
 
     private void readIconsFileSync(final String uriStr, final String cacheId) {
@@ -59,14 +66,23 @@ public class IconsCache {
     private void cacheIconsForQuestion(final DecisionTree.Question question, final String css) {
         final String cacheFileUri = getCacheFileUri(CACHE_FILE_CSS); //Avoid repeated calls to this.
 
-        if (mBmapIcons == null) {
-            final String cacheFileIcons = getCacheFileUri(CACHE_FILE_WORKFLOWICONS); //Avoid repeated calls to this.
-            mBmapIcons = BitmapFactory.decodeFile(cacheFileIcons);
+        if (mBmapWorkflowIcons == null) {
+            final String cacheFileIcons = getCacheFileUri(CACHE_FILE_WORKFLOW_ICONS);
+            mBmapWorkflowIcons = BitmapFactory.decodeFile(cacheFileIcons);
         }
 
+        if (mBmapExampleIcons == null) {
+            final String cacheFileIcons = getCacheFileUri(CACHE_FILE_EXAMPLE_ICONS);
+            mBmapExampleIcons = BitmapFactory.decodeFile(cacheFileIcons);
+        }
+
+
         for (final DecisionTree.Answer answer : question.answers) {
+            //Get the icon for the answer:
             final String iconName = answer.getIcon();
-            getIconPositionFromCss(mBmapIcons, css, iconName);
+            getIconPositionFromCss(mBmapWorkflowIcons, css, iconName, false);
+            getExampleImages(question, css, answer);
+
 
             //Recurse:
             final DecisionTree.Question nextQuestion = mDecisionTree.getNextQuestionForAnswer(question.getId(), answer.getId());
@@ -77,7 +93,16 @@ public class IconsCache {
 
         for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
             final String iconName = checkbox.getIcon();
-            getIconPositionFromCss(mBmapIcons, css, iconName);
+            getIconPositionFromCss(mBmapWorkflowIcons, css, iconName, false);
+            getExampleImages(question, css, checkbox);
+        }
+    }
+
+    private void getExampleImages(DecisionTree.Question question, String css, DecisionTree.BaseButton answer) {
+        //Get the example images for the answer or checkbox:
+        for (int i = 0; i < answer.getExamplesCount(); i++) {
+            final String exampleIconName = answer.getExampleIconName(question.getId(), i);
+            getIconPositionFromCss(mBmapExampleIcons, css, exampleIconName, true);
         }
     }
 
@@ -133,7 +158,7 @@ public class IconsCache {
     // in the absence of an easy choice of CSS parser.
     // http://sourceforge.net/projects/cssparser/ doesn't seem to be usable on Android because
     // Android's org.w3c.dom doesn't have the css package, with classes such as CSSStyleSheet.
-    void getIconPositionFromCss(final Bitmap icons, final String css, final String cssName) {
+    void getIconPositionFromCss(final Bitmap icons, final String css, final String cssName, boolean isExampleIcon) {
         if (mIcons.containsKey(cssName)) {
             //Avoid getting it again.
             return;
@@ -141,7 +166,14 @@ public class IconsCache {
 
         Pattern p = null;
         try {
-            p = Pattern.compile("a.workflow-" + cssName + "\\{background-position:(-?[0-9]+)(px)? (-?[0-9]+)(px)?\\}");
+            String prefix;
+            if (isExampleIcon) {
+                prefix = "\\.example-thumbnail\\.";
+            } else {
+                prefix = "a\\.workflow-";
+            }
+
+            p = Pattern.compile(prefix + cssName + "\\{background-position:(-?[0-9]+)(px)? (-?[0-9]+)(px)?\\}");
             //p = Pattern.compile("a.workflow-" + cssName);
         } catch (PatternSyntaxException e) {
             Log.error("Regex error", e);
@@ -156,13 +188,18 @@ public class IconsCache {
                 final String xStr = m.group(1);
                 final String yStr = m.group(3);
 
-                final int x = Integer.parseInt(xStr);
+                final int x = -(Integer.parseInt(xStr)); //Change negative (CSS) to positive (Bitmap).
                 final int y = -(Integer.parseInt(yStr)); //Change negative (CSS) to positive (Bitmap).
-                Log.info("debugMatch: x=" + x + ", y=" + y);
 
                 //TODO: Avoid hard-coding the 100px, 100px here:
-                final Bitmap bmapIcon = Bitmap.createBitmap(icons, x, y, 100, 100);
-                mIcons.put(cssName, bmapIcon);
+                //We catch the IllegalArgumentException to avoid letting the CSS crash our app
+                //just by having a wrong value.
+                try {
+                    final Bitmap bmapIcon = Bitmap.createBitmap(icons, x, y, 100, 100);
+                    mIcons.put(cssName, bmapIcon);
+                } catch (final IllegalArgumentException ex) {
+                    Log.error("IllegalArgumentException from createBitmap() for iconName=" + cssName + ", x=" + x + ", y=" + y + ", icons.width=" + icons.getWidth() + ", icons.height=" + icons.getHeight());
+                }
             }
         }
     }

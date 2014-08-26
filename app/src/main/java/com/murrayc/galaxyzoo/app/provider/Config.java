@@ -6,6 +6,7 @@ package com.murrayc.galaxyzoo.app.provider;
 public class Config {
 
     static private final String SERVER = "https://api.zooniverse.org/projects/galaxy_zoo/";
+
     /** REST uri for querying items.
      * Like, the Galaxy-Zoo website's code, this hard-codes the Group ID for the Sloan survey: */
     static final String QUERY_URI =
@@ -28,7 +29,17 @@ public class Config {
     //TODO: Is there a stable URI for this?
     public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2014-08-18_21-36-52.css";
 
+    static private final String STATIC_IMAGES_SERVER = "http://static.zooniverse.org/www.galaxyzoo.org/images/";
+
     //This is one big image file containing many icons,
     //for use with the CSS Sprites technique.
-    public static final String ICONS_URI = "http://static.zooniverse.org/www.galaxyzoo.org/images/workflow.png";
+    public static final String ICONS_URI = STATIC_IMAGES_SERVER + "workflow.png";
+
+    //This is one big image file containing many icons,
+    //for use with the CSS Sprites technique.
+    //Note: Do not use the examples.png which is also there - it seems to be outdated and unused.
+    public static final String EXAMPLES_URI = STATIC_IMAGES_SERVER + "examples.jpg";
+
+    //Add the example ID and .jpg to this:
+    public static final String FULL_EXAMPLE_URI = STATIC_IMAGES_SERVER + "examples/";
 }

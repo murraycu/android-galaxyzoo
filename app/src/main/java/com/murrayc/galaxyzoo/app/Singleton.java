@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 
 import java.io.IOException;
@@ -113,8 +114,23 @@ public class Singleton {
         return mDecisionTree;
     }
 
-    public Bitmap getIcon(final String iconName) {
+    private Bitmap getIcon(final String iconName) {
         return mIconsCache.getIcon(iconName);
+    }
+
+    public BitmapDrawable getIconDrawable(final Context context, final String iconName) {
+        final Bitmap bitmap = getIcon(iconName);
+        if (bitmap == null) {
+            return null;
+        }
+
+        final BitmapDrawable drawable = new BitmapDrawable(context.getResources(), bitmap);
+        drawable.setBounds(0, 0, 100, 100); //TODO: Avoid hardcoding.
+        return drawable;
+    }
+
+    public BitmapDrawable getIconDrawable(final Context context, final DecisionTree.BaseButton answer) {
+        return getIconDrawable(context, answer.getIcon());
     }
 
 }

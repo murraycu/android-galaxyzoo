@@ -20,7 +20,9 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.ActivityNotFoundException;
 import android.content.ContentProviderOperation;
@@ -32,7 +34,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,7 +45,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -71,6 +71,7 @@ public class QuestionFragment extends ItemFragment
     public static final String ARG_QUESTION_ID = "question-id";
 
     private static final int URL_LOADER = 0;
+    public static final String DIALOG_TAG = "dialog";
     private Cursor mCursor;
 
     private final String[] mColumns = { Item.Columns._ID, Item.Columns.ZOONIVERSE_ID };
@@ -267,15 +268,18 @@ public class QuestionFragment extends ItemFragment
     }
 
     private void onHelpButtonClicked() {
-        final DecisionTree.Question question = getQuestion();
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        final Fragment prev = getFragmentManager().findFragmentByTag(DIALOG_TAG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                getActivity());
-        builder.setTitle("Help");
-        builder.setMessage(question.getHelp());
-        builder.setPositiveButton("Close", null);
-        final AlertDialog dialog = builder.create();
-        dialog.show();
+        final DialogFragment fragment = QuestionHelpDialogFragment.newInstance(getQuestionId());
+        fragment.show(ft, DIALOG_TAG);
     }
 
     @Override
@@ -402,26 +406,14 @@ public class QuestionFragment extends ItemFragment
         final Singleton singleton = getSingleton();
         final DecisionTree tree = singleton.getDecisionTree();
 
-        DecisionTree.Question question = null;
-        if (TextUtils.isEmpty(getQuestionId())) {
-            question = tree.getFirstQuestion();
-            setQuestionId(question.getId());
-        } else {
-            question = tree.getQuestion(getQuestionId());
-        }
+        DecisionTree.Question question = tree.getQuestionOrFirst(getQuestionId());
+        setQuestionId(question.getId());
         return question;
     }
 
     private BitmapDrawable getIcon(final Context context, final DecisionTree.BaseButton answer) {
         final Singleton singleton = getSingleton();
-        final Bitmap bitmap = singleton.getIcon(answer.getIcon());
-        if (bitmap == null) {
-            return null;
-        }
-
-        final BitmapDrawable drawable = new BitmapDrawable(context.getResources(), bitmap);
-        drawable.setBounds(0, 0, 100, 100); //TODO: Avoid hardcoding.
-        return drawable;
+        return singleton.getIconDrawable(context, answer);
     }
 
     private void onAnswerButtonClicked(final String questionId, final String answerId) {

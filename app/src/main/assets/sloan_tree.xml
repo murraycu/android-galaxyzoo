@@ -118,25 +118,25 @@
     <answer id="a-0" icon="yes" examplesCount="0" leadsTo="sloan-11">
       <text>Done</text>
     </answer>
-    <checkbox id="x-0" icon="ring">
+    <checkbox id="x-0" icon="ring" examplesCount="2">
       <text>Ring</text>
     </checkbox>
-    <checkbox id="x-1" icon="lens">
+    <checkbox id="x-1" icon="lens" examplesCount="1">
       <text>Lens or arc</text>
     </checkbox>
-    <checkbox id="x-2" icon="disturbed">
+    <checkbox id="x-2" icon="disturbed" examplesCount="3">
       <text>Disturbed</text>
     </checkbox>
-    <checkbox id="x-3" icon="irregular">
+    <checkbox id="x-3" icon="irregular" examplesCount="2">
       <text>Irregular</text>
     </checkbox>
-    <checkbox id="x-4" icon="other">
+    <checkbox id="x-4" icon="other" examplesCount="3">
       <text>Other</text>
     </checkbox>
-    <checkbox id="x-5" icon="merger">
+    <checkbox id="x-5" icon="merger" examplesCount="6">
       <text>Merger</text>
     </checkbox>
-    <checkbox id="x-6" icon="dustlane">
+    <checkbox id="x-6" icon="dustlane" examplesCount="2">
       <text>Dust lane</text>
     </checkbox>
   </question>
