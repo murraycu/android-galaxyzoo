@@ -33,13 +33,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ToggleButton;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 /**
  * A fragment representing a single subject.
  * This fragment is either contained in a {@link ListActivity}
- * in two-pane mode (on tablets) or a {@link DetailActivity}
+ * in two-pane mode (on tablets) or a {@link ClassifyActivity}
  * on handsets.
  */
 public class SubjectFragment extends ItemFragment
@@ -50,6 +51,8 @@ public class SubjectFragment extends ItemFragment
     private Cursor mCursor;
 
     private View mRootView;
+    private ImageView mImageView;
+    private ToggleButton mButtonInvert;
 
     private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
 
@@ -62,6 +65,7 @@ public class SubjectFragment extends ItemFragment
     static final int COLUMN_INDEX_SUBJECT_ID = 1;
     static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 2;
     static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 3;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -83,11 +87,27 @@ public class SubjectFragment extends ItemFragment
         mRootView = inflater.inflate(R.layout.fragment_subject, container, false);
         assert mRootView != null;
 
+        mImageView = (ImageView)mRootView.findViewById(R.id.imageView);
+        if (mImageView == null) {
+            Log.error("mImageView is null.");
+        }
+
+        mButtonInvert = (ToggleButton)mRootView.findViewById(R.id.toggleInvert);
+        mButtonInvert.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                onInvertButtonClicked();
+            }
+        });
+
         setHasOptionsMenu(true);
 
         update();
 
         return mRootView;
+    }
+
+    private void onInvertButtonClicked() {
+        showImage(mButtonInvert.isChecked());
     }
 
     @Override
@@ -129,10 +149,6 @@ public class SubjectFragment extends ItemFragment
             return;
         }
 
-        final Activity activity = getActivity();
-        if (activity == null)
-            return;
-
         if (mCursor.getCount() <= 0) { //In case the query returned no rows.
             Log.error("The ContentProvider query returned no rows.");
             return;
@@ -146,14 +162,23 @@ public class SubjectFragment extends ItemFragment
             return;
         }
 
-        final ImageView imageView = (ImageView)mRootView.findViewById(R.id.imageView);
-        if (imageView == null) {
-            Log.error("imageView is null.");
+        showImage(false);
+    }
+
+    private void showImage(boolean inverted) {
+        final Activity activity = getActivity();
+        if (activity == null)
             return;
+
+        String imageUriStr;
+        if (inverted) {
+            imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_INVERTED_URI);
+        } else {
+            imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI);
         }
 
-        final String imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI);
-        UiUtils.fillImageViewFromContentUri(activity, imageUriStr, imageView);
+        UiUtils.fillImageViewFromContentUri(activity, imageUriStr, mImageView);
+        mButtonInvert.setChecked(inverted);
     }
 
     @Override

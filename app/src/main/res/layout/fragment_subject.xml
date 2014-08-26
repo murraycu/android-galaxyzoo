@@ -19,6 +19,15 @@
             android:contentDescription="Standard Image"
             android:id="@+id/imageView" />
 
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_title_invert"
+            android:id="@+id/toggleInvert"
+            android:layout_gravity="right"
+            android:textOff="Invert"
+            android:textOn="Invert" />
+
     </LinearLayout>
 
 </RelativeLayout>

@@ -9,5 +9,6 @@
     <string name="action_more">More</string>
     <string name="action_next">Next</string>
     <string name="action_upload">Upload</string>
+    <string name="button_title_invert">Invert</string>
 
 </resources>
