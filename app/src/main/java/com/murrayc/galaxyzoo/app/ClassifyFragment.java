@@ -115,8 +115,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         mRootView = inflater.inflate(R.layout.fragment_classify, container, false);
         assert mRootView != null;
 
-        mLoadingView = mRootView.findViewById(R.id.loading_spinner);
-        mLoadingView.setVisibility(View.GONE);
+        showLoadingView(false);
 
         setHasOptionsMenu(true);
 
@@ -125,6 +124,14 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         update();
 
         return mRootView;
+    }
+
+    private void showLoadingView(boolean show) {
+        if(mLoadingView == null) {
+            mLoadingView = mRootView.findViewById(R.id.loading_spinner);
+        }
+
+        mLoadingView.setVisibility(show ? View.VISIBLE: View.GONE);
     }
 
     private void addOrUpdateChildFragments() {
@@ -284,7 +291,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
         builder.appendPath(itemId);
 
-        mLoadingView.setVisibility(View.VISIBLE);
+        showLoadingView(true);
 
         return new CursorLoader(
                 activity,
@@ -300,7 +307,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         mCursor = cursor;
 
-        mLoadingView.setVisibility(View.GONE);
+        showLoadingView(false);
 
         updateFromCursor();
 
