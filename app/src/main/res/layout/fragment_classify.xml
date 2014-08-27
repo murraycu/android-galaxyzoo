@@ -29,10 +29,7 @@
                 <FrameLayout
                     android:id="@+id/child_fragment_question"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/child_fragment_subject" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
     </ScrollView>
 
