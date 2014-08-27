@@ -116,7 +116,6 @@ public class QuestionHelpDialogFragment extends DialogFragment {
             addRowForAnswer(activity, tableLayout, question, answer);
         }
 
-        tableLayout.removeAllViews();
         for(final DecisionTree.Checkbox checkbox : question.checkboxes) {
             addRowForAnswer(activity, tableLayout, question, checkbox);
         }
