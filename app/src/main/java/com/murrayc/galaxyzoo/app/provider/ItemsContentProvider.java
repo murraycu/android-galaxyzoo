@@ -67,6 +67,11 @@ import java.util.Map;
 
 public class ItemsContentProvider extends ContentProvider {
 
+    public static class NoNetworkException  extends RuntimeException {
+        public NoNetworkException() {
+        }
+    }
+
     //TODO: Remove these explicit method calls, or keep them just for debugging,
     //when we make them happen automatically.
     public static final String METHOD_REQUEST_ITEMS = "request-items";
@@ -602,15 +607,21 @@ public class ItemsContentProvider extends ContentProvider {
     @Override
     public Bundle call(String method, String arg, Bundle extras) {
         if (METHOD_REQUEST_ITEMS.equals(method)) {
+            throwIfNoNetwork();
+
             /** Check with the remote REST API asynchronously,
              * informing the calling client later via notification.
              */
             requestMoreItemsAsync();
         } else if (METHOD_UPLOAD_CLASSIFICATIONS.equals(method)) {
+            throwIfNoNetwork();
+
             /** Upload any classifications that have not yet been uploaded.
              */
             uploadOutstandingClassifications();
         } else if (METHOD_LOGIN.equals(method)) {
+            throwIfNoNetwork();
+
             final String username = extras.getString(METHOD_LOGIN_ARG_USERNAME);
             final String password = extras.getString(METHOD_LOGIN_ARG_PASSWORD);
             if((username == null) || (password == null)) {
@@ -715,8 +726,9 @@ public class ItemsContentProvider extends ContentProvider {
 
             case MATCHER_ID_ITEM_NEXT: {
                 c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
+
                 final int count = c.getCount();
-                if(count < 1) {
+                if (count < 1) {
                     //Immediately get some more from the REST server and then try again.
                     //Get one synchronously, for now.
                     final List<Subject> subjects = requestMoreItemsSync(1);
@@ -727,7 +739,7 @@ public class ItemsContentProvider extends ContentProvider {
 
                 // Make sure we have enough soon enough,
                 // so get the rest asynchronously.
-                if(count <= MIN_CACHE_COUNT) {
+                if (count <= MIN_CACHE_COUNT) {
                     requestMoreItemsAsync();
                 }
 
@@ -1189,8 +1201,17 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private List<Subject> requestMoreItemsSync(int count) {
+        throwIfNoNetwork();
+
         final HttpGet get = new HttpGet(getQueryUri(count));
         return executeQueryHttpRequest(get);
+    }
+
+    private void throwIfNoNetwork() {
+        if(!Utils.getNetworkIsConnected(getContext())) {
+            //Throw an exception so the caller knows.
+            throw new NoNetworkException();
+        }
     }
 
     private String getQueryUri(final int count) {
@@ -1212,6 +1233,10 @@ public class ItemsContentProvider extends ContentProvider {
      *
      */
     private void addSubjects(final List<Subject> subjects, boolean asyncFileDownloads) {
+        if (subjects == null) {
+            return;
+        }
+
         for (final Subject subject : subjects) {
             addSubject(subject, asyncFileDownloads);
         }

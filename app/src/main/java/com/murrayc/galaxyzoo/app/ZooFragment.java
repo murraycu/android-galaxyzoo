@@ -23,7 +23,11 @@ public class ZooFragment extends Fragment {
             return;
         }
 
-        contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_REQUEST_ITEMS, null, null);
+        try {
+            contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_REQUEST_ITEMS, null, null);
+        } catch (final ItemsContentProvider.NoNetworkException e) {
+            UiUtils.warnAboutNoNetworkConnection(activity);
+        }
     }
 
     protected void requestUpload() {
@@ -37,7 +41,11 @@ public class ZooFragment extends Fragment {
             return;
         }
 
-        contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_UPLOAD_CLASSIFICATIONS, null, null);
+        try {
+            contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_UPLOAD_CLASSIFICATIONS, null, null);
+        } catch (final ItemsContentProvider.NoNetworkException e) {
+            UiUtils.warnAboutNoNetworkConnection(activity);
+        }
     }
 
     protected void requestLogin() {

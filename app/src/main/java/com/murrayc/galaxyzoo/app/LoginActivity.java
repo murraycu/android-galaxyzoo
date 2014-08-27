@@ -188,7 +188,9 @@ public class LoginActivity extends Activity {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: handle the response.
-            requestLogin();
+            if(!requestLogin()) {
+                return false;
+            }
 
             // TODO: register the new account here.
             return true;
@@ -202,6 +204,11 @@ public class LoginActivity extends Activity {
             if (success) {
                 finish();
             } else {
+                if(!Utils.getNetworkIsConnected(LoginActivity.this)) {
+                    UiUtils.warnAboutNoNetworkConnection(LoginActivity.this);
+                    return;
+                }
+
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
@@ -213,10 +220,10 @@ public class LoginActivity extends Activity {
             showProgress(false);
         }
 
-        private void requestLogin() {
+        private boolean requestLogin() {
             final ContentResolver contentResolver = getContentResolver();
             if (contentResolver == null) {
-                return;
+                return false;
             }
 
             final Bundle arguments = new Bundle();
@@ -225,7 +232,15 @@ public class LoginActivity extends Activity {
             arguments.putString(ItemsContentProvider.METHOD_LOGIN_ARG_PASSWORD,
                     mPassword);
 
-            contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_LOGIN, null, arguments);
+            try {
+                contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_LOGIN, null, arguments);
+            } catch (final ItemsContentProvider.NoNetworkException e) {
+                Log.error("requestLogin(): No network connection.", e);
+                //UiUtils.warnAboutNoNetworkConnection(g);
+                return false;
+            }
+
+            return true;
         }
 
     }

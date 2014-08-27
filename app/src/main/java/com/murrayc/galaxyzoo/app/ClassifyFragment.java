@@ -268,6 +268,15 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
         if (mCursor.getCount() <= 0) { //In case the query returned no rows.
             Log.error("The ContentProvider query returned no rows.");
+
+            //Check for this possible cause.
+            // TODO: Is there any simpler way to just catch the
+            // ItemsContentProvider.NoNetworkConnection exception in the CursorLoader?
+            // This doesn't seem to work: http://stackoverflow.com/questions/13551219/handle-cursorloader-exceptions/13753313#13753313
+            if (!Utils.getNetworkIsConnected(activity)) {
+                UiUtils.warnAboutNoNetworkConnection(activity);
+                return;
+            }
         }
 
         mCursor.moveToFirst(); //There should only be one anyway.

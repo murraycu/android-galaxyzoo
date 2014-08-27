@@ -106,7 +106,7 @@ public class Utils {
         return context.getSharedPreferences("android-galaxyzoo", Context.MODE_PRIVATE);
     }
 
-    static boolean getNetworkIsConnected(final Context context) {
+    public static boolean getNetworkIsConnected(final Context context) {
         boolean connected = false;
         ConnectivityManager connMgr = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);

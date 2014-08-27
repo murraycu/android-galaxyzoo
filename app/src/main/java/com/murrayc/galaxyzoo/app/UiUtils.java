@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -30,6 +31,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -123,5 +125,10 @@ class UiUtils {
         }
 
         imageView.setImageBitmap(bMap);
+    }
+
+    static void warnAboutNoNetworkConnection(final Activity activity) {
+        final Toast toast = Toast.makeText(activity, "No Network Connection", Toast.LENGTH_LONG);
+        toast.show();
     }
 }
