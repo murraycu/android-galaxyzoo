@@ -117,6 +117,31 @@ public class QuestionFragment extends ItemFragment
      * in the content provider.
      */
     static private class ClassificationInProgress implements Parcelable {
+        public static final Parcelable.Creator<ClassificationInProgress> CREATOR
+                = new Parcelable.Creator<ClassificationInProgress>() {
+            public ClassificationInProgress createFromParcel(Parcel in) {
+                return new ClassificationInProgress(in);
+            }
+
+            public ClassificationInProgress[] newArray(int size) {
+                return new ClassificationInProgress[size];
+            }
+        };
+
+        public ClassificationInProgress() {
+
+        }
+
+        public ClassificationInProgress(final Parcel in) {
+            final Object[] array = in.readArray(String.class.getClassLoader());
+            if ((array != null) && (array.length != 0)) {
+                for (final Object object : array) {
+                    final QuestionAnswer str = (QuestionAnswer)object;
+                    this.answers.add(str);
+                }
+            }
+        }
+
         public void add(final String questionId, final String answerId) {
             answers.add(new QuestionAnswer(questionId, answerId));
         }
