@@ -219,9 +219,19 @@ public class QuestionFragment extends ItemFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Bundle bundle = getArguments();
-        if (bundle != null) {
-            setQuestionId(bundle.getString(ARG_QUESTION_ID));
+        //The item ID in savedInstanceState (from onSaveInstanceState())
+        //overrules the item ID in the intent's arguments,
+        //because the fragment may have been created with the virtual "next" ID,
+        //but we replace that with the actual ID,
+        //and we don't want to lost that actual ID when the fragment is recreated after
+        //rotation.
+        if (savedInstanceState != null) {
+            setQuestionId(savedInstanceState.getString(ARG_QUESTION_ID));
+        } else {
+            final Bundle bundle = getArguments();
+            if (bundle != null) {
+                setQuestionId(bundle.getString(ARG_QUESTION_ID));
+            }
         }
 
         setHasOptionsMenu(true);
@@ -265,6 +275,19 @@ public class QuestionFragment extends ItemFragment
         //This will be called later by updateIfReady(): update();
 
         return mRootView;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        //Save state to be used later by onCreate().
+        //If we don't do this then we we will lose the current question ID that we are using.
+        //This way we can get the current question ID back again in onCreate().
+        //Otherwise, on rotation, onCreateView() will just get the first question ID, if any, that was first used
+        //to create the fragment.
+        outState.putString(ARG_QUESTION_ID, getQuestionId());
+
+        super.onSaveInstanceState(outState);
     }
 
     private void onHelpButtonClicked() {
