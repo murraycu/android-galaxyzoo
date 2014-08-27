@@ -109,54 +109,62 @@ public class QuestionHelpDialogFragment extends DialogFragment {
 
         tableLayout.removeAllViews();
         for(final DecisionTree.Answer answer : question.answers) {
-            final TableRow row = new TableRow(activity);
-            row.setLayoutParams(
-                    new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
-                        TableRow.LayoutParams.WRAP_CONTENT));
-            tableLayout.addView(row,
-                    new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
-                            TableLayout.LayoutParams.WRAP_CONTENT));
-            //TODO: Add padding between the rows.
-
-            final LinearLayout layoutVertical = new LinearLayout(activity);
-            layoutVertical.setOrientation(LinearLayout.VERTICAL);
-
-            final TextView textViewAnswer = new TextView(activity);
-            textViewAnswer.setText(answer.getText());
-            layoutVertical.addView(textViewAnswer);
-
-            final LinearLayout layoutHorizontal = new LinearLayout(activity);
-            layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
-            layoutVertical.addView(layoutHorizontal);
-
-            final BitmapDrawable icon = getIcon(activity, answer);
-            final ImageView imageIcon = new ImageView(activity);
-            imageIcon.setImageDrawable(icon);
-            layoutHorizontal.addView(imageIcon);
-
-            final Singleton singleton = getSingleton();
-            for (int i = 0; i < answer.getExamplesCount(); i++) {
-
-                final String iconName = answer.getExampleIconName(question.getId(), i);
-                final BitmapDrawable iconExample = singleton.getIconDrawable(activity, iconName);
-                final ImageButton imageExample = new ImageButton(activity);
-                imageExample.setImageDrawable(iconExample);
-
-                imageExample.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        // Perform action on click
-                        onExampleImageClicked(iconName);
-                    }
-                });
-
-                layoutHorizontal.addView(imageExample);
-
-                //TODO: Show the full image on click.
-            }
-
-            row.addView(layoutVertical);
-
+            addRowForAnswer(activity, tableLayout, question, answer);
         }
+
+        tableLayout.removeAllViews();
+        for(final DecisionTree.Checkbox checkbox : question.checkboxes) {
+            addRowForAnswer(activity, tableLayout, question, checkbox);
+        }
+    }
+
+    private void addRowForAnswer(Activity activity, TableLayout tableLayout, DecisionTree.Question question, DecisionTree.BaseButton answer) {
+        final TableRow row = new TableRow(activity);
+        row.setLayoutParams(
+                new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.WRAP_CONTENT));
+        tableLayout.addView(row,
+                new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
+                        TableLayout.LayoutParams.WRAP_CONTENT));
+        //TODO: Add padding between the rows.
+
+        final LinearLayout layoutVertical = new LinearLayout(activity);
+        layoutVertical.setOrientation(LinearLayout.VERTICAL);
+
+        final TextView textViewAnswer = new TextView(activity);
+        textViewAnswer.setText(answer.getText());
+        layoutVertical.addView(textViewAnswer);
+
+        final LinearLayout layoutHorizontal = new LinearLayout(activity);
+        layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
+        layoutVertical.addView(layoutHorizontal);
+
+        final BitmapDrawable icon = getIcon(activity, answer);
+        final ImageView imageIcon = new ImageView(activity);
+        imageIcon.setImageDrawable(icon);
+        layoutHorizontal.addView(imageIcon);
+
+        final Singleton singleton = getSingleton();
+        for (int i = 0; i < answer.getExamplesCount(); i++) {
+
+            final String iconName = answer.getExampleIconName(question.getId(), i);
+            final BitmapDrawable iconExample = singleton.getIconDrawable(activity, iconName);
+            final ImageButton imageExample = new ImageButton(activity);
+            imageExample.setImageDrawable(iconExample);
+
+            imageExample.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    // Perform action on click
+                    onExampleImageClicked(iconName);
+                }
+            });
+
+            layoutHorizontal.addView(imageExample);
+
+            //TODO: Show the full image on click.
+        }
+
+        row.addView(layoutVertical);
     }
 
     private void onExampleImageClicked(final String iconName) {
