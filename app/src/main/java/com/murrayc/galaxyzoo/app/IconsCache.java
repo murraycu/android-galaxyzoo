@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.LruCache;
 
 import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
@@ -34,7 +35,9 @@ public class IconsCache {
     private final File mCacheDir;
 
     //TODO: Don't put both kinds of icons in the same map:
-    private final Hashtable<String, Bitmap> mIcons = new Hashtable<String, Bitmap>();
+    //See this about the use of the LruCache:
+    //http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html#memory-cache
+    private final LruCache<String, Bitmap> mIcons = new LruCache<String, Bitmap>(30);
     private Bitmap mBmapWorkflowIcons = null;
     private Bitmap mBmapExampleIcons = null;
 
@@ -79,7 +82,7 @@ public class IconsCache {
     }
 
     private void reloadCachedIcons() {
-        mIcons.clear();
+        mIcons.evictAll();
         final DecisionTree.Question question = mDecisionTree.getFirstQuestion();
         reloadIconsForQuestion(question);
     }
@@ -115,7 +118,7 @@ public class IconsCache {
 
     private void reloadIcon(final String cssName) {
         //Avoid loading and adding it again:
-        if(mIcons.containsKey(cssName)) {
+        if(mIcons.get(cssName) != null) {
             return;
         }
 
@@ -184,7 +187,7 @@ public class IconsCache {
         final String css = getFileContents(cacheFileUri);
 
         // Recurse through the questions, looking at each icon:
-        mIcons.clear();
+        mIcons.evictAll();
         final DecisionTree.Question question = mDecisionTree.getFirstQuestion();
         cacheIconsForQuestion(question, css);
     }
@@ -237,7 +240,7 @@ public class IconsCache {
     // http://sourceforge.net/projects/cssparser/ doesn't seem to be usable on Android because
     // Android's org.w3c.dom doesn't have the css package, with classes such as CSSStyleSheet.
     void getIconPositionFromCss(final Bitmap icons, final String css, final String cssName, boolean isExampleIcon) {
-        if (mIcons.containsKey(cssName)) {
+        if (mIcons.get(cssName) != null) {
             //Avoid getting it again.
             return;
         }
@@ -305,6 +308,14 @@ public class IconsCache {
     }
 
     public Bitmap getIcon(final String iconName) {
-        return mIcons.get(iconName);
+        Bitmap result = mIcons.get(iconName);
+
+        //Reload it if it is no longer in the cache:
+        if (result == null) {
+            reloadIcon(iconName);
+            result = mIcons.get(iconName);
+        }
+
+        return result;
     }
 }
