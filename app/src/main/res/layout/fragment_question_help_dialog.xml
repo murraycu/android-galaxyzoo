@@ -24,16 +24,12 @@
         android:layout_below="@+id/textView"
         android:layout_marginTop="16dp" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/textViewExamples">
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/textViewExamples"
             android:id="@+id/tableLayout" />
-    </ScrollView>
 
 </RelativeLayout>
 </ScrollView>
