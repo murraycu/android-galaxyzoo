@@ -1,5 +1,6 @@
 package com.murrayc.galaxyzoo.app;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,10 +8,12 @@ import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -30,6 +33,7 @@ import com.murrayc.galaxyzoo.app.provider.Config;
  *
  */
 public class QuestionHelpDialogFragment extends DialogFragment {
+    public static final int MARGIN_SMALL_DP = 4;
     private Singleton mSingleton;
     private String mQuestionId;
     private View mRootView;
@@ -123,10 +127,11 @@ public class QuestionHelpDialogFragment extends DialogFragment {
         row.setLayoutParams(
                 new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
-        tableLayout.addView(row,
-                new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
-                        TableLayout.LayoutParams.WRAP_CONTENT));
-        //TODO: Add padding between the rows.
+        final TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
+                TableLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, getPxForDp(activity, MARGIN_SMALL_DP), 0, 0);
+        tableLayout.addView(row, params);
+
 
         final LinearLayout layoutVertical = new LinearLayout(activity);
         layoutVertical.setOrientation(LinearLayout.VERTICAL);
@@ -137,6 +142,10 @@ public class QuestionHelpDialogFragment extends DialogFragment {
 
         final LinearLayout layoutHorizontal = new LinearLayout(activity);
         layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
+        final LinearLayout.LayoutParams paramsHorizontal = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        paramsHorizontal.setMargins(0, getPxForDp(activity, MARGIN_SMALL_DP), 0, 0);
+        layoutHorizontal.setLayoutParams(paramsHorizontal);
         layoutVertical.addView(layoutHorizontal);
 
         final BitmapDrawable icon = getIcon(activity, answer);
@@ -150,7 +159,15 @@ public class QuestionHelpDialogFragment extends DialogFragment {
             final String iconName = answer.getExampleIconName(question.getId(), i);
             final BitmapDrawable iconExample = singleton.getIconDrawable(activity, iconName);
             final ImageButton imageExample = new ImageButton(activity);
+            //Remove the space between the image and the outside of the button:
+            imageExample.setPadding(0, 0, 0, 0);
             imageExample.setImageDrawable(iconExample);
+
+            final LinearLayout.LayoutParams paramsImage = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            paramsImage.setMarginStart(getPxForDp(activity, MARGIN_SMALL_DP));
+            imageExample.setLayoutParams(paramsImage);
+
 
             imageExample.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -165,6 +182,15 @@ public class QuestionHelpDialogFragment extends DialogFragment {
         }
 
         row.addView(layoutVertical);
+    }
+
+    private int getPxForDp(final Context context, int dp) {
+        final Resources r = context.getResources();
+        return (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp,
+                r.getDisplayMetrics()
+        );
     }
 
     private void onExampleImageClicked(final String iconName) {
