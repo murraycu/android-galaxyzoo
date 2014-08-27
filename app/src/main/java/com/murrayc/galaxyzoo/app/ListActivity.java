@@ -51,22 +51,6 @@ public class ListActivity extends BaseActivity
         //though we have it via the shared base class.
         //TODO: ActionBar actionBar = getActionBar();
         //actionBar.hide();
-
-        if (findViewById(R.id.table_data_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-large and
-            // res/values-sw600dp). If this view is present, then the
-            // activity should be in two-pane mode.
-            setTwoPane();
-
-            // In two-pane mode, list items should be given the
-            // 'activated' state when touched.
-            final FragmentManager fragmentManager = getFragmentManager();
-            ListFragment fragment = ((ListFragment) fragmentManager.findFragmentById(R.id.table_nav));
-            if (fragment != null) {
-                fragment.setActivateOnItemClick(true);
-            }
-        }
     }
 
     /**

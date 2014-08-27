@@ -35,21 +35,7 @@ public class BaseActivity extends Activity {
 
     //TODO: Avoid duplcation with the ARGs in the fragments:
     protected static final String ARG_USER_ID = "user-id";
-
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane = false; //Set by derived constructors sometimes.
     private String mUserId;
-
-    /**
-     * Whether this activity uses two panes by using fragments.
-     */
-    public void setTwoPane() {
-        this.mTwoPane = true;
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,36 +52,17 @@ public class BaseActivity extends Activity {
      *
      */
     protected void navigate(final String itemId) {
-        if (mTwoPane) {
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            final Bundle arguments = new Bundle();
-            arguments.putString(ARG_USER_ID, getUserId());
+        //Start the detail activity
+        // for the selected item ID.
+        // TODO: Just view it with DetailActivity if it has already been classified.
+        final Intent intent = new Intent(this, ClassifyActivity.class);
+        intent.putExtra(ARG_USER_ID, getUserId());
 
-            if (!TextUtils.isEmpty(itemId)) {
-                arguments.putString(ItemFragment.ARG_ITEM_ID, itemId);
-            }
-
-            // TODO: Just view it with DetailFragment if it has already been classified.
-            final Fragment fragment = new ClassifyFragment();
-            fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.table_data_container, fragment)
-                    .commit();
-        } else {
-            // In single-pane mode, simply start the detail activity
-            // for the selected item ID.
-            // TODO: Just view it with DetailActivity if it has already been classified.
-            final Intent intent = new Intent(this, ClassifyActivity.class);
-            intent.putExtra(ARG_USER_ID, getUserId());
-
-            if (!TextUtils.isEmpty(itemId)) {
-                intent.putExtra(ItemFragment.ARG_ITEM_ID, itemId);
-            }
-
-            startActivity(intent);
+        if (!TextUtils.isEmpty(itemId)) {
+            intent.putExtra(ItemFragment.ARG_ITEM_ID, itemId);
         }
+
+        startActivity(intent);
     }
 
     @Override
