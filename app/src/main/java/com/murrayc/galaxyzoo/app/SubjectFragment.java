@@ -48,6 +48,7 @@ public class SubjectFragment extends ItemFragment
 
 
     private static final int URL_LOADER = 0;
+    private static final String ARG_INVERTED = "inverted";
     private Cursor mCursor;
 
     private View mRootView;
@@ -65,6 +66,7 @@ public class SubjectFragment extends ItemFragment
     static final int COLUMN_INDEX_SUBJECT_ID = 1;
     static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 2;
     static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 3;
+    private boolean mInverted = false;
 
 
     /**
@@ -78,7 +80,14 @@ public class SubjectFragment extends ItemFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            setInverted(savedInstanceState.getBoolean(ARG_INVERTED));
+        }
         setHasOptionsMenu(true);
+    }
+
+    private void setInverted(boolean inverted) {
+        mInverted = inverted;
     }
 
     @Override
@@ -106,8 +115,21 @@ public class SubjectFragment extends ItemFragment
         return mRootView;
     }
 
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        //Save extra state to be used later by onCreate().
+        outState.putBoolean(ARG_INVERTED, getInverted());
+
+        //TODO: Allow use of ARG_INVERTED in the intent's arguments too?
+        //For instance, see QuestionFragment.onSaveInstanceState().
+
+        super.onSaveInstanceState(outState);
+    }
+
+
     private void onInvertButtonClicked() {
-        showImage(mButtonInvert.isChecked());
+        setInverted(mButtonInvert.isChecked());
+        showImage();
     }
 
     @Override
@@ -171,14 +193,15 @@ public class SubjectFragment extends ItemFragment
             return;
         }
 
-        showImage(false);
+        showImage();
     }
 
-    private void showImage(boolean inverted) {
+    private void showImage() {
         final Activity activity = getActivity();
         if (activity == null)
             return;
 
+        final boolean inverted = getInverted();
         String imageUriStr;
         if (inverted) {
             imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_INVERTED_URI);
@@ -188,6 +211,10 @@ public class SubjectFragment extends ItemFragment
 
         UiUtils.fillImageViewFromContentUri(activity, imageUriStr, mImageView);
         mButtonInvert.setChecked(inverted);
+    }
+
+    private boolean getInverted() {
+        return mInverted;
     }
 
     @Override
