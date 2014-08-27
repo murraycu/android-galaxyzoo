@@ -78,7 +78,7 @@ public class DecisionTree {
         public String getExampleIconName(String questionId, int exampleIndex) {
             return questionId + "_" + getId() + "_" + exampleIndex;
         }
-    };
+    }
 
     //These are multiple-selection.
     static class Checkbox extends BaseButton {
@@ -337,21 +337,19 @@ public class DecisionTree {
     }
 
     private Checkbox loadCheckbox(final Element checkboxNode) {
-        final Checkbox result = new Checkbox(
+        return new Checkbox(
                 checkboxNode.getAttribute("id"),
                 getTextOfChildNode(checkboxNode, "text"),
                 checkboxNode.getAttribute("icon"),
                 Integer.parseInt(checkboxNode.getAttribute("examplesCount")));
-        return result;
     }
 
     private Answer loadAnswer(final Element answerNode) {
-        final Answer result = new Answer(
+        return new Answer(
                 answerNode.getAttribute("id"),
                 getTextOfChildNode(answerNode, "text"),
                 answerNode.getAttribute("icon"),
                 answerNode.getAttribute("leadsTo"),
                 Integer.parseInt(answerNode.getAttribute("examplesCount")));
-        return result;
     }
 }

@@ -28,7 +28,7 @@ public class HttpUtils {
 
         public static interface Callbacks {
             public void onFinished();
-        };
+        }
 
         public FileCacheAsyncTask() {
 
