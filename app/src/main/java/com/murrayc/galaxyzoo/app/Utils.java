@@ -20,6 +20,8 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -96,5 +98,9 @@ public class Utils {
         final String str = cursor.getString(index);
         cursor.close(); //TODO: Should we do this?
         return Uri.parse(str);
+    }
+
+    public static SharedPreferences getPreferences(final Context context) {
+        return context.getSharedPreferences("android-galaxyzoo", Context.MODE_PRIVATE);
     }
 }

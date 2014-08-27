@@ -39,6 +39,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.rest.FileResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostLoginResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostResponseHandler;
@@ -633,7 +634,7 @@ public class ItemsContentProvider extends ContentProvider {
     private void uploadOutstandingClassifications() {
         // TODO: Request re-authentication when the server says we have used the wrong name + api_key.
         // What does the server reply in that case?
-        final SharedPreferences prefs = getPreferences();
+        final SharedPreferences prefs = Utils.getPreferences(getContext());
         final String authName = prefs.getString(PREF_KEY_AUTH_NAME, null);
         final String authApiKey = prefs.getString(PREF_KEY_AUTH_API_KEY, null);
 
@@ -1279,15 +1280,11 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private void saveAuthToPreferences(final String name, final String apiKey) {
-        final SharedPreferences prefs = getPreferences();
+        final SharedPreferences prefs = Utils.getPreferences(getContext());
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PREF_KEY_AUTH_NAME, name);
         editor.putString(PREF_KEY_AUTH_API_KEY, apiKey);
         editor.commit();
-    }
-
-    private SharedPreferences getPreferences() {
-        return getContext().getSharedPreferences("android-galaxyzoo", Context.MODE_PRIVATE);
     }
 
     private class UploadAsyncTask extends AsyncTask<String, Integer, Boolean> {

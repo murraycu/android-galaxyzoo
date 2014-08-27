@@ -1,16 +1,20 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -24,6 +28,7 @@ public class IconsCache {
     public static final String CACHE_FILE_WORKFLOW_ICONS = "workflowicons";
     public static final String CACHE_FILE_EXAMPLE_ICONS = "exampleicons";
     public static final String CACHE_FILE_CSS = "css";
+    public static final String PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD = "icons-cache-last-mod";
 
     private final DecisionTree mDecisionTree;
     private final File mCacheDir;
@@ -44,12 +49,79 @@ public class IconsCache {
         this.mDecisionTree = decisionTree;
         
         mCacheDir = context.getExternalCacheDir();
-        readIconsFileSync(Config.ICONS_URI, CACHE_FILE_WORKFLOW_ICONS);
-        readIconsFileSync(Config.EXAMPLES_URI, CACHE_FILE_EXAMPLE_ICONS);
-        readCssFileSync(Config.ICONS_CSS_URI, CACHE_FILE_CSS);
+
+        //Check if the files on the server have changed since we last cached them:
+        final String[] uris = {Config.ICONS_URI, Config.EXAMPLES_URI, Config.ICONS_CSS_URI};
+        final long lastModified = HttpUtils.getLatestLastModified(uris);
+        final SharedPreferences prefs = Utils.getPreferences(context);
+
+        //TODO: Handle no-connection differently to not getting the date for some other reason.
+        final long prevLastModified = prefs.getLong(PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD, 0);
+        if ((lastModified == 0) /* Always update if we can't get the last-modified from the server */
+                || (lastModified > prevLastModified)) {
+            //Get the updated files from the server and re-process them:
+            readIconsFileSync(Config.ICONS_URI, CACHE_FILE_WORKFLOW_ICONS);
+            readIconsFileSync(Config.EXAMPLES_URI, CACHE_FILE_EXAMPLE_ICONS);
+            readCssFileSync(Config.ICONS_CSS_URI, CACHE_FILE_CSS);
+
+            //Remember the dates of the files from the server,
+            //so we can check again next time.
+            final SharedPreferences.Editor editor = prefs.edit();
+            editor.putLong(PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD, lastModified);
+            editor.commit();
+        } else {
+            //Just get the cached icons:
+            reloadCachedIcons();
+        }
 
         mBmapWorkflowIcons = null;
         mBmapExampleIcons = null;
+    }
+
+    private void reloadCachedIcons() {
+        mIcons.clear();
+        final DecisionTree.Question question = mDecisionTree.getFirstQuestion();
+        reloadIconsForQuestion(question);
+    }
+
+    private void reloadIconsForQuestion(final DecisionTree.Question question) {
+        for (final DecisionTree.Answer answer : question.answers) {
+            //Get the icon for the answer:
+            reloadIcon(answer.getIcon());
+
+            reloadExampleImages(question, answer);
+
+            //Recurse:
+            final DecisionTree.Question nextQuestion = mDecisionTree.getNextQuestionForAnswer(question.getId(), answer.getId());
+            if (nextQuestion != null) {
+                reloadIconsForQuestion(nextQuestion);
+            }
+        }
+
+        for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
+            reloadIcon(checkbox.getIcon());
+
+            reloadExampleImages(question, checkbox);
+        }
+    }
+
+    private void reloadExampleImages(final DecisionTree.Question question, final DecisionTree.BaseButton answer) {
+        //Get the example images for the answer or checkbox:
+        for (int i = 0; i < answer.getExamplesCount(); i++) {
+            final String exampleIconName = answer.getExampleIconName(question.getId(), i);
+            reloadIcon(exampleIconName);
+        }
+    }
+
+    private void reloadIcon(final String cssName) {
+        //Avoid loading and adding it again:
+        if(mIcons.containsKey(cssName)) {
+            return;
+        }
+
+        final String cacheFileUri = getCacheIconFileUri(cssName);
+        final Bitmap bitmap = BitmapFactory.decodeFile(cacheFileUri);
+        mIcons.put(cssName, bitmap);
     }
 
     private void readIconsFileSync(final String uriStr, final String cacheId) {
@@ -64,7 +136,7 @@ public class IconsCache {
     }
 
     private void cacheIconsForQuestion(final DecisionTree.Question question, final String css) {
-        final String cacheFileUri = getCacheFileUri(CACHE_FILE_CSS); //Avoid repeated calls to this.
+        final String cacheFileCss = getCacheFileUri(CACHE_FILE_CSS); //Avoid repeated calls to this.
 
         if (mBmapWorkflowIcons == null) {
             final String cacheFileIcons = getCacheFileUri(CACHE_FILE_WORKFLOW_ICONS);
@@ -98,6 +170,7 @@ public class IconsCache {
         }
     }
 
+
     private void getExampleImages(DecisionTree.Question question, String css, DecisionTree.BaseButton answer) {
         //Get the example images for the answer or checkbox:
         for (int i = 0; i < answer.getExamplesCount(); i++) {
@@ -111,8 +184,13 @@ public class IconsCache {
         final String css = getFileContents(cacheFileUri);
 
         // Recurse through the questions, looking at each icon:
+        mIcons.clear();
         final DecisionTree.Question question = mDecisionTree.getFirstQuestion();
         cacheIconsForQuestion(question, css);
+    }
+
+    private String getCacheIconFileUri(final String cssName) {
+        return getCacheFileUri("icon_" + cssName);
     }
 
     private String getCacheFileUri(final String cacheId) {
@@ -196,11 +274,33 @@ public class IconsCache {
                 //just by having a wrong value.
                 try {
                     final Bitmap bmapIcon = Bitmap.createBitmap(icons, x, y, 100, 100);
+
+                    //Cache the file locally so we don't need to get it over the network next time:
+                    //TODO: Use the cache from the volley library?
+                    //See http://blog.wittchen.biz.pl/asynchronous-loading-and-caching-bitmaps-with-volley/
+                    final String cacheFileUri = getCacheIconFileUri(cssName);
+                    cacheBitmapToFile(bmapIcon, cacheFileUri);
+
                     mIcons.put(cssName, bmapIcon);
                 } catch (final IllegalArgumentException ex) {
                     Log.error("IllegalArgumentException from createBitmap() for iconName=" + cssName + ", x=" + x + ", y=" + y + ", icons.width=" + icons.getWidth() + ", icons.height=" + icons.getHeight());
                 }
             }
+        }
+    }
+
+    private void cacheBitmapToFile(final Bitmap bmapIcon, final String cacheFileUri) {
+        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmapIcon.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        final byte[] byteArray = stream.toByteArray();
+
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream(cacheFileUri);
+            fout.write(byteArray);
+            fout.close();
+        } catch (final IOException e) {
+            Log.error("Exception while caching icon bitmap.", e);
         }
     }
 
