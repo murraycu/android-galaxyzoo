@@ -562,7 +562,7 @@ public class ItemsContentProvider extends ContentProvider {
     */
 
     private GalaxyZooPostLoginResponseHandler.LoginResult executeLoginHttpRequest(final HttpUriRequest request) {
-        final GalaxyZooPostLoginResponseHandler handler = new GalaxyZooPostLoginResponseHandler(ItemsContentProvider.this);
+        final GalaxyZooPostLoginResponseHandler handler = new GalaxyZooPostLoginResponseHandler();
         GalaxyZooPostLoginResponseHandler.LoginResult handlerResult = null;
         HttpResponse response = null;
         try {
@@ -1262,7 +1262,7 @@ public class ItemsContentProvider extends ContentProvider {
             //This just leads to an redirect limit exception: client.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
             response = client.execute(request);
 
-            final GalaxyZooResponseHandler handler = new GalaxyZooResponseHandler(ItemsContentProvider.this);
+            final GalaxyZooResponseHandler handler = new GalaxyZooResponseHandler();
             handlerResult = handler.handleResponse(response);
         } catch (IOException e) {
             Log.error("executeQueryHttpRequest(): exception processing async request", e);
@@ -1418,7 +1418,7 @@ public class ItemsContentProvider extends ContentProvider {
                 return null;
             }
 
-            final ResponseHandler handler = new GalaxyZooPostResponseHandler(ItemsContentProvider.this);
+            final ResponseHandler handler = new GalaxyZooPostResponseHandler();
             return HttpUtils.executeHttpRequest(post, handler);
         }
 

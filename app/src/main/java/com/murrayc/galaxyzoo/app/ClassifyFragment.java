@@ -58,7 +58,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     // not our ContentProvider's column names. That seems like a design error in the Android API.
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
-    static final int COLUMN_INDEX_SUBJECT_ID = 1;
+    private static final int COLUMN_INDEX_SUBJECT_ID = 1;
 
 
     /**

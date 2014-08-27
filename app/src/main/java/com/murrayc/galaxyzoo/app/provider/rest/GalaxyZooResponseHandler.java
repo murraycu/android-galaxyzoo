@@ -24,10 +24,7 @@ import java.util.List;
  */
 public class GalaxyZooResponseHandler implements ResponseHandler<List<ItemsContentProvider.Subject>> {
 
-    private final ItemsContentProvider mContentProvider;
-
-    public GalaxyZooResponseHandler(ItemsContentProvider contentProvider) {
-        this.mContentProvider = contentProvider;
+    public GalaxyZooResponseHandler() {
     }
 
     /*

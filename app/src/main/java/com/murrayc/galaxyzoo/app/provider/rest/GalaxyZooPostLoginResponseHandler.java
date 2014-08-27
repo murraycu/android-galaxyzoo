@@ -21,10 +21,7 @@ import java.io.IOException;
  */
 public class GalaxyZooPostLoginResponseHandler implements ResponseHandler<GalaxyZooPostLoginResponseHandler.LoginResult> {
 
-    private final ItemsContentProvider mContentProvider;
-
-    public GalaxyZooPostLoginResponseHandler(ItemsContentProvider contentProvider) {
-        this.mContentProvider = contentProvider;
+    public GalaxyZooPostLoginResponseHandler() {
     }
 
     /*

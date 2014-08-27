@@ -13,10 +13,7 @@ import org.apache.http.client.ResponseHandler;
  */
 public class GalaxyZooPostResponseHandler implements ResponseHandler<Boolean> {
 
-    private final ItemsContentProvider mContentProvider;
-
-    public GalaxyZooPostResponseHandler(ItemsContentProvider contentProvider) {
-        this.mContentProvider = contentProvider;
+    public GalaxyZooPostResponseHandler() {
     }
 
     /*
