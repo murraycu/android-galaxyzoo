@@ -37,6 +37,8 @@ import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -69,6 +71,7 @@ public class QuestionFragment extends ItemFragment
         implements LoaderManager.LoaderCallbacks<Cursor>{
 
     public static final String ARG_QUESTION_ID = "question-id";
+    private static final String ARG_QUESTION_CLASSIFICATION_IN_PROGRESS = "classification-in-progress";
 
     private static final int URL_LOADER = 0;
     public static final String DIALOG_TAG = "dialog";
@@ -113,7 +116,7 @@ public class QuestionFragment extends ItemFragment
      * way, but this lets us avoid having half-complete classifications
      * in the content provider.
      */
-    static private class ClassificationInProgress {
+    static private class ClassificationInProgress implements Parcelable {
         public void add(final String questionId, final String answerId) {
             answers.add(new QuestionAnswer(questionId, answerId));
         }
@@ -122,7 +125,28 @@ public class QuestionFragment extends ItemFragment
             answers.add(new QuestionAnswer(questionId, answerId, checkboxIds));
         }
 
-        static private class QuestionAnswer {
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(final Parcel dest, int flags) {
+            dest.writeArray(answers.toArray());
+        }
+
+        static private class QuestionAnswer implements Parcelable {
+            public static final Parcelable.Creator<QuestionAnswer> CREATOR
+                    = new Parcelable.Creator<QuestionAnswer>() {
+                public QuestionAnswer createFromParcel(Parcel in) {
+                    return new QuestionAnswer(in);
+                }
+
+                public QuestionAnswer[] newArray(int size) {
+                    return new QuestionAnswer[size];
+                }
+            };
+
             // The question that was answered.
             private final String questionId;
 
@@ -143,6 +167,21 @@ public class QuestionFragment extends ItemFragment
                 this.checkboxIds = checkboxIds;
             }
 
+            private QuestionAnswer(final Parcel in) {
+                //Keep this in sync with writeToParcel().
+                this.questionId = in.readString();
+                this.answerId = in.readString();
+
+                final Object[] array = in.readArray(String.class.getClassLoader());
+                if ((array != null) && (array.length != 0)) {
+                    this.checkboxIds = new ArrayList<>();
+                    for (final Object object : array) {
+                        final String str = (String)object;
+                        this.checkboxIds.add(str);
+                    }
+                }
+            }
+
             public String getQuestionId() {
                 return questionId;
             }
@@ -153,6 +192,21 @@ public class QuestionFragment extends ItemFragment
 
             public List<String> getCheckboxIds() {
                 return checkboxIds;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(final Parcel dest, int flags) {
+                dest.writeString(getQuestionId());
+                dest.writeString(getAnswerId());
+
+                if (checkboxIds != null) {
+                    dest.writeArray(checkboxIds.toArray());
+                }
             }
         }
 
@@ -227,6 +281,10 @@ public class QuestionFragment extends ItemFragment
         //rotation.
         if (savedInstanceState != null) {
             setQuestionId(savedInstanceState.getString(ARG_QUESTION_ID));
+
+            //Get the classification in progress too,
+            //instead of losing it when we rotate:
+            mClassificationInProgress = savedInstanceState.getParcelable(ARG_QUESTION_CLASSIFICATION_IN_PROGRESS);
         } else {
             final Bundle bundle = getArguments();
             if (bundle != null) {
@@ -286,6 +344,7 @@ public class QuestionFragment extends ItemFragment
         //Otherwise, on rotation, onCreateView() will just get the first question ID, if any, that was first used
         //to create the fragment.
         outState.putString(ARG_QUESTION_ID, getQuestionId());
+        outState.putParcelable(ARG_QUESTION_CLASSIFICATION_IN_PROGRESS, mClassificationInProgress);
 
         super.onSaveInstanceState(outState);
     }
