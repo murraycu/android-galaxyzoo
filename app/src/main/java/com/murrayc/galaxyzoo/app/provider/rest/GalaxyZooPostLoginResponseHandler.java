@@ -1,7 +1,5 @@
 package com.murrayc.galaxyzoo.app.provider.rest;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
@@ -11,7 +9,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;

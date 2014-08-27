@@ -1,6 +1,5 @@
 package com.murrayc.galaxyzoo.app;
 
-import android.app.Fragment;
 import android.os.Bundle;
 
 /**

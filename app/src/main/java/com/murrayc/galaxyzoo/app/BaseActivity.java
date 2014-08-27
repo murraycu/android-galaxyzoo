@@ -21,7 +21,6 @@ package com.murrayc.galaxyzoo.app;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;

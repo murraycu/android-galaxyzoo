@@ -40,7 +40,6 @@ import android.util.Base64;
 
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
-import com.murrayc.galaxyzoo.app.provider.rest.FileResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostLoginResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooResponseHandler;
