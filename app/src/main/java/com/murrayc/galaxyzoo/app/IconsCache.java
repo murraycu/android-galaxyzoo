@@ -35,7 +35,7 @@ public class IconsCache {
     //TODO: Don't put both kinds of icons in the same map:
     //See this about the use of the LruCache:
     //http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html#memory-cache
-    private final LruCache<String, Bitmap> mIcons = new LruCache<String, Bitmap>(30);
+    private final LruCache<String, Bitmap> mIcons = new LruCache<>(30);
     private Bitmap mBmapWorkflowIcons = null;
     private Bitmap mBmapExampleIcons = null;
 

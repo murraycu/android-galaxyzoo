@@ -605,32 +605,36 @@ public class ItemsContentProvider extends ContentProvider {
 
     @Override
     public Bundle call(String method, String arg, Bundle extras) {
-        if (METHOD_REQUEST_ITEMS.equals(method)) {
-            throwIfNoNetwork();
+        switch (method) {
+            case METHOD_REQUEST_ITEMS:
+                throwIfNoNetwork();
 
-            /** Check with the remote REST API asynchronously,
-             * informing the calling client later via notification.
-             */
-            requestMoreItemsAsync();
-        } else if (METHOD_UPLOAD_CLASSIFICATIONS.equals(method)) {
-            throwIfNoNetwork();
+                /** Check with the remote REST API asynchronously,
+                 * informing the calling client later via notification.
+                 */
+                requestMoreItemsAsync();
+                break;
+            case METHOD_UPLOAD_CLASSIFICATIONS:
+                throwIfNoNetwork();
 
-            /** Upload any classifications that have not yet been uploaded.
-             */
-            uploadOutstandingClassifications();
-        } else if (METHOD_LOGIN.equals(method)) {
-            throwIfNoNetwork();
+                /** Upload any classifications that have not yet been uploaded.
+                 */
+                uploadOutstandingClassifications();
+                break;
+            case METHOD_LOGIN:
+                throwIfNoNetwork();
 
-            final String username = extras.getString(METHOD_LOGIN_ARG_USERNAME);
-            final String password = extras.getString(METHOD_LOGIN_ARG_PASSWORD);
-            if((username == null) || (password == null)) {
-                return null;
-            }
+                final String username = extras.getString(METHOD_LOGIN_ARG_USERNAME);
+                final String password = extras.getString(METHOD_LOGIN_ARG_PASSWORD);
+                if ((username == null) || (password == null)) {
+                    return null;
+                }
 
-            /** Attempt to login to the server.
-             */
-            final LoginAsyncTask task = new LoginAsyncTask();
-            task.execute(username, password);
+                /** Attempt to login to the server.
+                 */
+                final LoginAsyncTask task = new LoginAsyncTask();
+                task.execute(username, password);
+                break;
         }
 
         return null;
