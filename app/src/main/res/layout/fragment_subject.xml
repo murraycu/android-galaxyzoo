@@ -26,7 +26,8 @@
             android:id="@+id/toggleInvert"
             android:layout_gravity="right"
             android:textOff="Invert"
-            android:textOn="Invert" />
+            android:textOn="Invert"
+            android:textAppearance="@android:style/TextAppearance.Small" />
 
     </LinearLayout>
 

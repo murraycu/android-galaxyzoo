@@ -350,6 +350,7 @@ public class QuestionFragment extends ItemFragment
         mCheckboxButtons.clear();
         for(final DecisionTree.Checkbox checkbox : question.checkboxes) {
             final ToggleButton button = new ToggleButton(activity);
+            makeButtonTextSmall(activity, button);
 
             //Use just the highlighting (line, color, etc) to show that it's selected,
             //instead of On/Off, so we don't need a separate label.
@@ -384,12 +385,7 @@ public class QuestionFragment extends ItemFragment
 
         layoutAnswers.removeAllViews();
         for(final DecisionTree.Answer answer : question.answers) {
-            final Button button = new Button(activity);
-            button.setText(answer.getText());
-            //TODO: button.setTextSize();
-
-            final BitmapDrawable icon = getIcon(activity, answer);
-            button.setCompoundDrawables(null, icon, null, null);
+            final Button button = createAnswerButton(activity, answer);
 
             layoutAnswers.addView(button);
 
@@ -400,6 +396,20 @@ public class QuestionFragment extends ItemFragment
                 }
             });
         }
+    }
+
+    private void makeButtonTextSmall(final Activity activity, final Button button) {
+        button.setTextAppearance(activity, android.R.style.TextAppearance_Small);
+    }
+
+    private Button createAnswerButton(Activity activity, DecisionTree.Answer answer) {
+        final Button button = new Button(activity);
+        button.setText(answer.getText());
+        makeButtonTextSmall(activity, button);
+
+        final BitmapDrawable icon = getIcon(activity, answer);
+        button.setCompoundDrawables(null, icon, null, null);
+        return button;
     }
 
     private DecisionTree.Question getQuestion() {
@@ -456,7 +466,7 @@ public class QuestionFragment extends ItemFragment
                 checkboxes = new ArrayList<>();
                 for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
                     final String checkboxId = checkbox.getId();
-                    ToggleButton button = mCheckboxButtons.get(checkboxId);
+                    final ToggleButton button = mCheckboxButtons.get(checkboxId);
                     if ((button != null) && button.isChecked()) {
                         checkboxes.add(checkboxId);
                     }
