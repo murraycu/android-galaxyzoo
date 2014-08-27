@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.util.LruCache;
 
 import com.murrayc.galaxyzoo.app.provider.Config;
@@ -53,15 +52,23 @@ public class IconsCache {
         
         mCacheDir = context.getExternalCacheDir();
 
-        //Check if the files on the server have changed since we last cached them:
-        final String[] uris = {Config.ICONS_URI, Config.EXAMPLES_URI, Config.ICONS_CSS_URI};
-        final long lastModified = HttpUtils.getLatestLastModified(uris);
-        final SharedPreferences prefs = Utils.getPreferences(context);
+        long lastModified = 0;
 
-        //TODO: Handle no-connection differently to not getting the date for some other reason.
-        final long prevLastModified = prefs.getLong(PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD, 0);
-        if ((lastModified == 0) /* Always update if we can't get the last-modified from the server */
-                || (lastModified > prevLastModified)) {
+        boolean loadFromNetwork = false;
+        if (Utils.getNetworkIsConnected(context)) {
+            //Check if the files on the server have changed since we last cached them:
+            final String[] uris = {Config.ICONS_URI, Config.EXAMPLES_URI, Config.ICONS_CSS_URI};
+            lastModified = HttpUtils.getLatestLastModified(uris);
+            final SharedPreferences prefs = Utils.getPreferences(context);
+
+            final long prevLastModified = prefs.getLong(PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD, 0);
+            if ((lastModified == 0) /* Always update if we can't get the last-modified from the server */
+                    || (lastModified > prevLastModified)) {
+                loadFromNetwork = true;
+            }
+        }
+
+        if (loadFromNetwork) {
             //Get the updated files from the server and re-process them:
             readIconsFileSync(Config.ICONS_URI, CACHE_FILE_WORKFLOW_ICONS);
             readIconsFileSync(Config.EXAMPLES_URI, CACHE_FILE_EXAMPLE_ICONS);
@@ -69,6 +76,7 @@ public class IconsCache {
 
             //Remember the dates of the files from the server,
             //so we can check again next time.
+            final SharedPreferences prefs = Utils.getPreferences(context);
             final SharedPreferences.Editor editor = prefs.edit();
             editor.putLong(PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD, lastModified);
             editor.commit();

@@ -94,6 +94,9 @@ public class HttpUtils {
         HttpURLConnection.setFollowRedirects(false);
         HttpURLConnection con = null;
         try {
+            //Note: This seems to succeed even if there is no internet connection,
+            //for instance if the device is in airplane mode.
+            //getLastModified() then returns 0;
             con = (HttpURLConnection) url.openConnection();
         } catch (final IOException e) {
             Log.error("getUriLastModified(): can't openConnection", e);

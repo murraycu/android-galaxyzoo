@@ -23,6 +23,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
@@ -102,5 +104,17 @@ public class Utils {
 
     public static SharedPreferences getPreferences(final Context context) {
         return context.getSharedPreferences("android-galaxyzoo", Context.MODE_PRIVATE);
+    }
+
+    static boolean getNetworkIsConnected(final Context context) {
+        boolean connected = false;
+        ConnectivityManager connMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            connected = true;
+        }
+
+        return connected;
     }
 }
