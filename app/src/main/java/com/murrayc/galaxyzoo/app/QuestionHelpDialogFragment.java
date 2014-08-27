@@ -69,6 +69,9 @@ public class QuestionHelpDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 getActivity());
+        //TODO: android-lint doesn't like the null parent,
+        //but what else could we pass?
+        //This says we should use null: http://developer.android.com/guide/topics/ui/dialogs.html
         mRootView = inflater.inflate(R.layout.fragment_question_help_dialog, null);
         builder.setView(mRootView);
 
