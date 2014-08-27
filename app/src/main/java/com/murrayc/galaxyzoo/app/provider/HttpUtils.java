@@ -24,18 +24,8 @@ public class HttpUtils {
 
     public static class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
 
-        private Callbacks mCallbacks = null;
-
-        public static interface Callbacks {
-            public void onFinished();
-        }
-
         public FileCacheAsyncTask() {
 
-        }
-
-        public FileCacheAsyncTask(final Callbacks callbacks) {
-            mCallbacks = callbacks;
         }
 
         @Override
@@ -55,10 +45,6 @@ public class HttpUtils {
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-
-            if (mCallbacks != null) {
-                mCallbacks.onFinished();
-            }
         }
     }
 
