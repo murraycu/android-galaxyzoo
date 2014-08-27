@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:text="@string/button_title_invert"
             android:id="@+id/toggleInvert"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:textOff="Invert"
             android:textOn="Invert"
             android:textAppearance="@android:style/TextAppearance.Small" />
