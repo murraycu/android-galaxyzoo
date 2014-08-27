@@ -79,7 +79,7 @@ public class IconsCache {
             final SharedPreferences prefs = Utils.getPreferences(context);
             final SharedPreferences.Editor editor = prefs.edit();
             editor.putLong(PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD, lastModified);
-            editor.commit();
+            editor.apply();
         } else {
             //Just get the cached icons:
             reloadCachedIcons();

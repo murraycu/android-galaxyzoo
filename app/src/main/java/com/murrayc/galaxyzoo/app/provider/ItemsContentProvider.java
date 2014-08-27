@@ -1318,7 +1318,7 @@ public class ItemsContentProvider extends ContentProvider {
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PREF_KEY_AUTH_NAME, name);
         editor.putString(PREF_KEY_AUTH_API_KEY, apiKey);
-        editor.commit();
+        editor.apply();
     }
 
     private class UploadAsyncTask extends AsyncTask<String, Integer, Boolean> {
