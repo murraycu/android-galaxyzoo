@@ -112,7 +112,7 @@ public class HttpUtils {
             response = client.execute(request);
             handlerResult = handler.handleResponse(response);
         } catch (IOException e) {
-            Log.error("exception processing async request", e);
+            Log.error("executeHttpRequest(): exception processing async request", e);
             return false;
         }
 
