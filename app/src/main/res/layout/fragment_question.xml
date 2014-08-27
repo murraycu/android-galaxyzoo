@@ -28,7 +28,7 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Help"
+                android:text="@string/button_help"
                 android:id="@+id/buttonHelp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true" />

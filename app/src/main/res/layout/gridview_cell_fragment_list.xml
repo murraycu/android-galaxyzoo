@@ -14,7 +14,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:paddingEnd="5sp"
-            android:contentDescription="Thumbnail"
+            android:contentDescription="@string/description_thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

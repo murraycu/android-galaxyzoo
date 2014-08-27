@@ -8,6 +8,9 @@
     <string name="action_next">Next</string>
     <string name="action_upload">Upload</string>
     <string name="button_title_invert">Invert</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="description_thumbnail">Thumbnail</string>
+    <string name="description_standard_image">Standard Image</string>
+    <string name="button_title_examples">Examples</string>
+    <string name="button_help">Help</string>
 
 </resources>
