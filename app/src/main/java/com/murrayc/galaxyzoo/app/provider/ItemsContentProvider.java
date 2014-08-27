@@ -731,8 +731,17 @@ public class ItemsContentProvider extends ContentProvider {
                 if (count < 1) {
                     //Immediately get some more from the REST server and then try again.
                     //Get one synchronously, for now.
-                    final List<Subject> subjects = requestMoreItemsSync(1);
-                    addSubjects(subjects, false /* not async - we need it immediately. */);
+                    try {
+                        final List<Subject> subjects = requestMoreItemsSync(1);
+                        addSubjects(subjects, false /* not async - we need it immediately. */);
+                    } catch (final NoNetworkException e) {
+                        //Return the empty cursor,
+                        //and let the caller guess at the cause.
+                        //If we let the exception be thrown by this query() method then
+                        //it will causes an app crash in AsyncTask.done(), as used by CursorLoader.
+                        //TODO: Find a better way to respond to errors when using CursorLoader?
+                        return c;
+                    }
 
                     c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
                 }
