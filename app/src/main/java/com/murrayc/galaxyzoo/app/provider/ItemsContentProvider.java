@@ -566,13 +566,13 @@ public class ItemsContentProvider extends ContentProvider {
             response = client.execute(request);
             handlerResult = handler.handleResponse(response);
         } catch (IOException e) {
-            Log.error("exception processing async request", e);
+            Log.error("executeLoginHttpRequest(): exception processing async request", e);
             return null;
         }
 
         // GalaxyZooPostLoginResponseHandler.handleResponse() returns a LoginResult.
         if (handlerResult == null) {
-            Log.error("Error processing async request.");
+            Log.error("executeLoginHttpRequest(): Error processing async request.");
         }
 
         return handlerResult;
@@ -1228,7 +1228,7 @@ public class ItemsContentProvider extends ContentProvider {
             final GalaxyZooResponseHandler handler = new GalaxyZooResponseHandler(ItemsContentProvider.this);
             handlerResult = handler.handleResponse(response);
         } catch (IOException e) {
-            Log.error("exception processing async request", e);
+            Log.error("executeQueryHttpRequest(): exception processing async request", e);
             return null;
         }
 
