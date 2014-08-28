@@ -66,6 +66,9 @@ import java.util.Map;
 
 public class ItemsContentProvider extends ContentProvider {
 
+    //Whether the call to METHOD_LOGIN was successful.
+    public static final String LOGIN_METHOD_RESULT = "result";
+
     public static class NoNetworkException  extends RuntimeException {
         public NoNetworkException() {
         }
@@ -631,10 +634,17 @@ public class ItemsContentProvider extends ContentProvider {
                 }
 
                 /** Attempt to login to the server.
+                 * We do this synchronously, waiting for the result,
+                 * so we can return the result to the caller.
                  */
-                final LoginAsyncTask task = new LoginAsyncTask();
-                task.execute(username, password);
-                break;
+                final GalaxyZooPostLoginResponseHandler.LoginResult result = loginSync(username, password);
+                if (result.getSuccess()) {
+                    saveAuthToPreferences(result.getName(), result.getApiKey());
+                }
+
+                final Bundle bundle = new Bundle();
+                bundle.putBoolean(LOGIN_METHOD_RESULT, result.getSuccess());
+                return bundle;
         }
 
         return null;
@@ -1284,20 +1294,7 @@ public class ItemsContentProvider extends ContentProvider {
             final String password = params[1];
 
 
-            final HttpPost post = new HttpPost(Config.LOGIN_URI);
-
-            final List<NameValuePair> nameValuePairs = new ArrayList<>();
-            nameValuePairs.add(new BasicNameValuePair("username", username));
-            nameValuePairs.add(new BasicNameValuePair("password", password));
-
-            try {
-                post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            } catch (final UnsupportedEncodingException e) {
-                Log.error("Exception from UrlEncodedFormEntity: ", e);
-                return null;
-            }
-
-            return executeLoginHttpRequest(post);
+            return loginSync(username, password);
         }
 
         @Override
@@ -1306,6 +1303,23 @@ public class ItemsContentProvider extends ContentProvider {
 
             onLoginTaskFinished(result);
         }
+    }
+
+    private GalaxyZooPostLoginResponseHandler.LoginResult loginSync(final String username, final String password) {
+        final HttpPost post = new HttpPost(Config.LOGIN_URI);
+
+        final List<NameValuePair> nameValuePairs = new ArrayList<>();
+        nameValuePairs.add(new BasicNameValuePair("username", username));
+        nameValuePairs.add(new BasicNameValuePair("password", password));
+
+        try {
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        } catch (final UnsupportedEncodingException e) {
+            Log.error("Exception from UrlEncodedFormEntity: ", e);
+            return null;
+        }
+
+        return executeLoginHttpRequest(post);
     }
 
     private void onLoginTaskFinished(final GalaxyZooPostLoginResponseHandler.LoginResult result) {
