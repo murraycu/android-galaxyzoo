@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
@@ -205,6 +206,8 @@ public class LoginActivity extends Activity {
             showProgress(false);
 
             if (success) {
+                final Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
                 finish();
             } else {
                 if(!Utils.getNetworkIsConnected(LoginActivity.this)) {
@@ -236,16 +239,25 @@ public class LoginActivity extends Activity {
                     mPassword);
 
             try {
-                contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_LOGIN, null, arguments);
+                final Bundle result = contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_LOGIN, null, arguments);
+                return result.getBoolean(ItemsContentProvider.LOGIN_METHOD_RESULT);
             } catch (final ItemsContentProvider.NoNetworkException e) {
                 Log.error("requestLogin(): No network connection.", e);
                 //UiUtils.warnAboutNoNetworkConnection(g);
                 return false;
             }
-
-            return true;
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        // super.onBackPressed();
+
+        //Let callers (via startActivityForResult() know that this was cancelled.
+        final Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
+        finish();
     }
 }
 
