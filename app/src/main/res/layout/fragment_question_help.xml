@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     style="?android:attr/textAppearanceLarge"
     android:padding="16dp"
-    tools:context="com.murrayc.galaxyzoo.app.QuestionHelpDialogFragment">
+    tools:context="com.murrayc.galaxyzoo.app.QuestionHelpFragment">
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">

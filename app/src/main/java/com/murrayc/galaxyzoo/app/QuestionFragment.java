@@ -67,10 +67,9 @@ import java.util.Map;
  * in two-pane mode (on tablets) or a {@link com.murrayc.galaxyzoo.app.ClassifyActivity}
  * on handsets.
  */
-public class QuestionFragment extends ItemFragment
+public class QuestionFragment extends BaseQuestionFragment
         implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    public static final String ARG_QUESTION_ID = "question-id";
     private static final String ARG_QUESTION_CLASSIFICATION_IN_PROGRESS = "classification-in-progress";
 
     private static final int URL_LOADER = 0;
@@ -94,7 +93,6 @@ public class QuestionFragment extends ItemFragment
     //and then always ask the question at the end via Java code.
     private static final CharSequence QUESTION_ID_DISCUSS = "sloan-11";
     private static final CharSequence ANSWER_ID_DISCUSS_YES = "a-0";
-    private String mQuestionId;
     private String mZooniverseId; //Only used for the talk URI so far.
 
     // A map of checkbox IDs to buttons.
@@ -286,14 +284,6 @@ public class QuestionFragment extends ItemFragment
     public QuestionFragment() {
     }
 
-    public String getQuestionId() {
-        return mQuestionId;
-    }
-
-    public void setQuestionId(final String questionId) {
-        mQuestionId = questionId;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -375,18 +365,9 @@ public class QuestionFragment extends ItemFragment
     }
 
     private void onHelpButtonClicked() {
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-        final FragmentTransaction ft = getFragmentManager().beginTransaction();
-        final Fragment prev = getFragmentManager().findFragmentByTag(DIALOG_TAG);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        final DialogFragment fragment = QuestionHelpDialogFragment.newInstance(getQuestionId());
-        fragment.show(ft, DIALOG_TAG);
+        final Intent intent = new Intent(getActivity(), QuestionHelpActivity.class);
+        intent.putExtra(ARG_QUESTION_ID, getQuestionId());
+        startActivity(intent);
     }
 
     @Override
@@ -517,20 +498,6 @@ public class QuestionFragment extends ItemFragment
         final BitmapDrawable icon = getIcon(activity, answer);
         button.setCompoundDrawables(null, icon, null, null);
         return button;
-    }
-
-    private DecisionTree.Question getQuestion() {
-        final Singleton singleton = getSingleton();
-        final DecisionTree tree = singleton.getDecisionTree();
-
-        DecisionTree.Question question = tree.getQuestionOrFirst(getQuestionId());
-        setQuestionId(question.getId());
-        return question;
-    }
-
-    private BitmapDrawable getIcon(final Context context, final DecisionTree.BaseButton answer) {
-        final Singleton singleton = getSingleton();
-        return singleton.getIconDrawable(context, answer);
     }
 
     private void onAnswerButtonClicked(final String questionId, final String answerId) {

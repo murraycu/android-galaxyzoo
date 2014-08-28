@@ -2,8 +2,6 @@ package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +13,7 @@ import android.app.Fragment;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,14 +26,13 @@ import com.murrayc.galaxyzoo.app.provider.Config;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link QuestionHelpDialogFragment#newInstance} factory method to
+ * Use the {@link QuestionHelpFragment#newInstance} factory method to
  * create an instance of this fragment.
  *
  */
-public class QuestionHelpDialogFragment extends DialogFragment {
+public class QuestionHelpFragment extends BaseQuestionFragment {
     public static final int MARGIN_SMALL_DP = 4;
     private Singleton mSingleton;
-    private String mQuestionId;
     private View mRootView;
 
     /**
@@ -44,53 +42,48 @@ public class QuestionHelpDialogFragment extends DialogFragment {
      * @param questionId The question ID
      * @return A new instance of fragment HelpDialogFragment.
      */
-    public static QuestionHelpDialogFragment newInstance(final String questionId) {
-        QuestionHelpDialogFragment fragment = new QuestionHelpDialogFragment();
+    public static QuestionHelpFragment newInstance(final String questionId) {
+        QuestionHelpFragment fragment = new QuestionHelpFragment();
         Bundle args = new Bundle();
         args.putString(QuestionFragment.ARG_QUESTION_ID, questionId);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public QuestionHelpDialogFragment() {
+    public QuestionHelpFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         final Bundle bundle = getArguments();
         if (bundle != null) {
             setQuestionId(bundle.getString(QuestionFragment.ARG_QUESTION_ID));
         }
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         final Activity activity = getActivity();
-
-        final LayoutInflater inflater = activity.getLayoutInflater();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 getActivity());
-        //TODO: android-lint doesn't like the null parent,
-        //but what else could we pass?
-        //This says we should use null: http://developer.android.com/guide/topics/ui/dialogs.html
-        mRootView = inflater.inflate(R.layout.fragment_question_help_dialog, null);
-        builder.setView(mRootView);
-
-        builder.setTitle("Help");
-        builder.setPositiveButton("Close", null);
+        mRootView = inflater.inflate(R.layout.fragment_question_help, null);
 
         //Do most of the UI building only after we know that our
         //Singleton has been initialized:
         Singleton.init(activity, new Singleton.Callbacks() {
             @Override
             public void onInitialized() {
-                QuestionHelpDialogFragment.this.mSingleton = Singleton.getInstance();
+                QuestionHelpFragment.this.mSingleton = Singleton.getInstance();
 
                 update();
             }
         });
 
-        // Create the AlertDialog object and return it
-        return builder.create();
+        return mRootView;
     }
 
     private void update() {
@@ -210,26 +203,4 @@ public class QuestionHelpDialogFragment extends DialogFragment {
         return mSingleton;
     }
 
-
-    private DecisionTree.Question getQuestion() {
-        final Singleton singleton = getSingleton();
-        final DecisionTree tree = singleton.getDecisionTree();
-
-        DecisionTree.Question question = tree.getQuestionOrFirst(getQuestionId());
-        setQuestionId(question.getId());
-        return question;
-    }
-
-    private void setQuestionId(final String questionId) {
-        mQuestionId = questionId;
-    }
-
-    private BitmapDrawable getIcon(final Context context, final DecisionTree.BaseButton answer) {
-        final Singleton singleton = getSingleton();
-        return singleton.getIconDrawable(context, answer);
-    }
-
-    public String getQuestionId() {
-        return mQuestionId;
-    }
 }
