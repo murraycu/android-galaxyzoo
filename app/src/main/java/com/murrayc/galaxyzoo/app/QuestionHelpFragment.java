@@ -188,6 +188,14 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
     }
 
     private void onExampleImageClicked(final String iconName) {
+        //These images are not cached,
+        //so we will need a network connection.
+        final Activity activity = getActivity();
+        if (!Utils.getNetworkIsConnected(activity)) {
+            UiUtils.warnAboutNoNetworkConnection(activity);
+            return;
+        }
+
         final String uri = Config.FULL_EXAMPLE_URI + iconName + ".jpg";
 
         try {
