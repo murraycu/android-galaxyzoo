@@ -5,10 +5,12 @@
         android:id="@+id/option_menu_item_login"
         android:showAsAction="ifRoom"
         android:title="@string/action_login" />
+    <!-- The More action is only useful for debugging:
     <item
         android:id="@+id/option_menu_item_more"
         android:showAsAction="ifRoom"
         android:title="@string/action_more" />
+    -->
     <item
         android:id="@+id/option_menu_item_next"
         android:showAsAction="ifRoom"
