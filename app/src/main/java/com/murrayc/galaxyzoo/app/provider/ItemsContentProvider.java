@@ -225,7 +225,7 @@ public class ItemsContentProvider extends ContentProvider {
 
     }
 
-    private static final String PREF_KEY_AUTH_NAME = "auth_name";
+    public static final String PREF_KEY_AUTH_NAME = "auth_name";
     private static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
     private static final int MIN_CACHE_COUNT = 5; //Don't let the count of undone items get this low.
     public static final int QUERY_COUNT_LARGE = 10;

@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import android.os.Build;
@@ -44,6 +45,11 @@ public class LoginActivity extends Activity {
 
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
+
+        //Get the name that was succeeded last time, if any:
+        final SharedPreferences prefs = Utils.getPreferences(this);
+        final String authName = prefs.getString(ItemsContentProvider.PREF_KEY_AUTH_NAME, null);
+        mUsernameView.setText(authName);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
