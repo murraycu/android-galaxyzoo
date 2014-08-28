@@ -26,17 +26,12 @@
             android:id="@+id/textViewText"
             android:paddingBottom="@dimen/standard_margin" />
 
-        <LinearLayout
+        <GridLayout
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/layoutCheckboxes" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/layoutAnswers" />
+            android:id="@+id/layoutAnswers"
+            android:columnCount="4" />
 
     </LinearLayout>
 

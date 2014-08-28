@@ -41,6 +41,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.RemoteException;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,6 +49,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -432,14 +434,16 @@ public class QuestionFragment extends BaseQuestionFragment
         }
         textViewText.setText(question.getText());
 
-        //Checkboxes:
-        final LinearLayout layoutCheckboxes = (LinearLayout)mRootView.findViewById(R.id.layoutCheckboxes);
-        if (layoutCheckboxes == null) {
-            Log.error("layoutCheckboxes is null.");
+
+        final GridLayout layoutAnswers = (GridLayout)mRootView.findViewById(R.id.layoutAnswers);
+        if (layoutAnswers == null) {
+            Log.error("layoutAnswers is null.");
             return;
         }
 
-        layoutCheckboxes.removeAllViews();
+        layoutAnswers.removeAllViews();
+
+        //Checkboxes:
         mCheckboxButtons.clear();
         for(final DecisionTree.Checkbox checkbox : question.checkboxes) {
             final ToggleButton button = new ToggleButton(activity);
@@ -452,7 +456,12 @@ public class QuestionFragment extends BaseQuestionFragment
             button.setText(checkbox.getText());
             button.setTextOn(checkbox.getText());
             button.setTextOff(checkbox.getText());
-            layoutCheckboxes.addView(button);
+
+            //We specify Gravity.FILL to make the buttons all be the same width and height.
+            //Note that just using button.setGravity() doesn't seem to work.
+            final GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.setGravity(Gravity.FILL);
+            layoutAnswers.addView(button, params);
 
             final BitmapDrawable icon = getIcon(activity, checkbox);
             button.setCompoundDrawables(null, icon, null, null);
@@ -470,17 +479,14 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         //Answers:
-        final LinearLayout layoutAnswers = (LinearLayout)mRootView.findViewById(R.id.layoutAnswers);
-        if (layoutAnswers == null) {
-            Log.error("layoutAnswers is null.");
-            return;
-        }
-
-        layoutAnswers.removeAllViews();
         for(final DecisionTree.Answer answer : question.answers) {
             final Button button = createAnswerButton(activity, answer);
 
-            layoutAnswers.addView(button);
+            //We specify Gravity.FILL to make the buttons all be the same width and height.
+            //Note that just using button.setGravity() doesn't seem to work.
+            final GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.setGravity(Gravity.FILL);
+            layoutAnswers.addView(button, params);
 
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
