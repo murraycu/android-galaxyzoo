@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/textViewText"
-            android:paddingBottom="16dp" />
+            android:paddingBottom="@dimen/standard_margin" />
 
         <LinearLayout
             android:orientation="horizontal"
