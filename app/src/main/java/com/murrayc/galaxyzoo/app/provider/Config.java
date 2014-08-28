@@ -42,4 +42,12 @@ public class Config {
 
     //Add the example ID and .jpg to this:
     public static final String FULL_EXAMPLE_URI = STATIC_IMAGES_SERVER + "examples/";
+
+    // galaxyzoo.org also has a register page, but it's only visible as part of the login page
+    // (not an actual page either) after clicking a button.
+    // Hopefully there is no disadvantage to using the general zooniverse pages instead.
+    //These are actually specified in strings.xml instead, because that's the only
+    //easy way to specify (clickable) HTML for a TextView.
+    //public static final String REGISTER_URI = "https://www.zooniverse.org/signup";
+    //public static final String FORGET_PASSWORD_URI = "https://www.zooniverse.org/password/reset";
 }

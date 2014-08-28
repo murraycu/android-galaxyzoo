@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,6 +63,13 @@ public class LoginActivity extends Activity {
                 return false;
             }
         });
+
+        //This voodoo makes the textviews' HTML links clickable:
+        //See http://stackoverflow.com/questions/2734270/how-do-i-make-links-in-a-textview-clickable/20647011#20647011
+        TextView textView = (TextView)findViewById(R.id.textViewForgot);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView = (TextView)findViewById(R.id.textViewRegister);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
 
         Button mUsernameSignInButton = (Button) findViewById(R.id.username_sign_in_button);
         mUsernameSignInButton.setOnClickListener(new OnClickListener() {

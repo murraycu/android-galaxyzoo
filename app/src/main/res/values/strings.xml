@@ -14,5 +14,7 @@
     <string name="description_standard_image">Standard Image</string>
     <string name="button_title_examples">Examples</string>
     <string name="title_activity_example_viewer">Example</string>
+    <string name="forgot_password_button_text"><a href="https://www.zooniverse.org/password/reset">Forgot password?</a></string>
+    <string name="register_button_text"><a href="https://www.zooniverse.org/signup">Register</a></string>
 
 </resources>
