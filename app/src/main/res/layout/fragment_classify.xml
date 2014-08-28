@@ -5,7 +5,6 @@
     style="?android:attr/textAppearanceLarge"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:textIsSelectable="true"
     tools:context="com.murrayc.galaxyzoo.app.ClassifyFragment">
 
@@ -14,11 +13,14 @@
         android:layout_height="fill_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:id="@+id/scrollView">
+        android:id="@+id/scrollView"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
 
             <LinearLayout android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin" >
 
                 <FrameLayout
                     android:id="@+id/child_fragment_subject"
