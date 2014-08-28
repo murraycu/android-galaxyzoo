@@ -20,6 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
@@ -206,9 +207,7 @@ public class LoginActivity extends Activity {
             showProgress(false);
 
             if (success) {
-                final Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                finish();
+                finishWithResult(true);
             } else {
                 if(!Utils.getNetworkIsConnected(LoginActivity.this)) {
                     UiUtils.warnAboutNoNetworkConnection(LoginActivity.this);
@@ -250,14 +249,23 @@ public class LoginActivity extends Activity {
 
     }
 
+    private void finishWithResult(boolean loggedIn) {
+        if (loggedIn) {
+            final Toast toast = Toast.makeText(this, "Logged In", Toast.LENGTH_LONG);
+            toast.show();
+        }
+
+        final Intent intent = new Intent();
+        setResult(loggedIn ? RESULT_OK : RESULT_CANCELED, intent);
+        finish();
+    }
+
     @Override
     public void onBackPressed() {
         // super.onBackPressed();
 
         //Let callers (via startActivityForResult() know that this was cancelled.
-        final Intent intent = new Intent();
-        setResult(RESULT_CANCELED, intent);
-        finish();
+        finishWithResult(false);
     }
 }
 
