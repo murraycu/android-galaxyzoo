@@ -35,9 +35,7 @@ public class ZooFragment extends Fragment {
 
     protected void requestUpload() {
         if(!getLoggedIn()) {
-            final Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivityForResult(intent, LOGIN_REQUEST_BEFORE_UPLOAD);
-            //onActivityResult() will then be called later.
+            requestLoginThenUpload();
             return;
         }
 
@@ -65,6 +63,19 @@ public class ZooFragment extends Fragment {
     }
 
     private static final int LOGIN_REQUEST_BEFORE_UPLOAD = 1;  // The request code
+
+    protected void requestLogin() {
+
+        final Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
+    }
+
+    protected void requestLoginThenUpload() {
+
+        final Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivityForResult(intent, LOGIN_REQUEST_BEFORE_UPLOAD);
+        //onActivityResult() will then be called later.
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
