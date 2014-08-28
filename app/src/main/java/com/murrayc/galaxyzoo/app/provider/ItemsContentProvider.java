@@ -33,6 +33,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
@@ -68,6 +69,7 @@ public class ItemsContentProvider extends ContentProvider {
 
     //Whether the call to METHOD_LOGIN was successful.
     public static final String LOGIN_METHOD_RESULT = "result";
+    private int mUploadsInProgress = 0;
 
     public static class NoNetworkException  extends RuntimeException {
         public NoNetworkException() {
@@ -236,6 +238,22 @@ public class ItemsContentProvider extends ContentProvider {
     private DatabaseHelper mOpenDbHelper;
 
     public ItemsContentProvider() {
+        startRegularUploads();
+    }
+
+    private void startRegularUploads() {
+        return; //TODO: Enable this when uploads work, without the circular redirect.
+        /*
+        final Handler handler = new Handler();
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                uploadOutstandingClassifications();
+                startRegularUploads();
+            }
+        };
+        handler.postDelayed(runnable, 10000); // 10 seconds
+        */
     }
 
     @Override
@@ -656,6 +674,16 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private void uploadOutstandingClassifications() {
+        //To keep things simple, don't do this while it is already happening.
+        //This only ever happens on this thread so there should be no need for a lock here.
+        if (mUploadsInProgress > 0)
+            return;
+
+        //Don't upload anonymously:
+        if (!getLoggedIn()) {
+            return;
+        }
+
         // TODO: Request re-authentication when the server says we have used the wrong name + api_key.
         // What does the server reply in that case?
         final SharedPreferences prefs = Utils.getPreferences(getContext());
@@ -678,9 +706,16 @@ public class ItemsContentProvider extends ContentProvider {
             final String itemId = c.getString(0);
             final String subjectId = c.getString(1);
 
+            mUploadsInProgress++;
             final UploadAsyncTask task = new UploadAsyncTask();
             task.execute(itemId, subjectId, authName, authApiKey);
         }
+    }
+
+    private boolean getLoggedIn() {
+        final SharedPreferences prefs = Utils.getPreferences(getContext());
+        final String apiKey = prefs.getString(PREF_KEY_AUTH_NAME, null);
+        return !(TextUtils.isEmpty(apiKey));
     }
 
     @Override
@@ -1457,6 +1492,8 @@ public class ItemsContentProvider extends ContentProvider {
         } else {
             //TODO: Inform the user?
         }
+
+        mUploadsInProgress--;
     }
 
     private void markItemAsUploaded(final String itemId) {
