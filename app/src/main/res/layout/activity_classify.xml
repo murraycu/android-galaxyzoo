@@ -3,6 +3,5 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
     tools:context="com.murrayc.galaxyzoo.app.DetailActivity"
     tools:ignore="MergeRootFrame" />
