@@ -2,4 +2,5 @@
 <resources>
     <item name="option_menu_item_list" type="id" />
     <item name="option_menu_item_more" type="id" />
+    <item name="option_menu_item_invert" type="id"/>
 </resources>

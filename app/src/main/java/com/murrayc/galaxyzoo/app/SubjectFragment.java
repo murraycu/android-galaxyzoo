@@ -30,6 +30,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -53,7 +54,6 @@ public class SubjectFragment extends ItemFragment
 
     private View mRootView;
     private ImageView mImageView;
-    private ToggleButton mButtonInvert;
 
     private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
 
@@ -101,13 +101,6 @@ public class SubjectFragment extends ItemFragment
             Log.error("mImageView is null.");
         }
 
-        mButtonInvert = (ToggleButton)mRootView.findViewById(R.id.toggleInvert);
-        mButtonInvert.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                onInvertButtonClicked();
-            }
-        });
-
         setHasOptionsMenu(true);
 
         update();
@@ -126,18 +119,30 @@ public class SubjectFragment extends ItemFragment
         super.onSaveInstanceState(outState);
     }
 
-
-    private void onInvertButtonClicked() {
-        setInverted(mButtonInvert.isChecked());
-        showImage();
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //final MenuItem menuItem = menu.add(Menu.NONE, R.id.option_menu_item_list, Menu.NONE, R.string.action_list);
-        //menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        final MenuItem menuItem = menu.add(Menu.NONE, R.id.option_menu_item_invert, Menu.NONE, R.string.action_invert);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.option_menu_item_invert:
+                doInvert();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void doInvert() {
+        setInverted(!getInverted());
+        showImage();
     }
 
     @Override
@@ -210,7 +215,6 @@ public class SubjectFragment extends ItemFragment
         }
 
         UiUtils.fillImageViewFromContentUri(activity, imageUriStr, mImageView);
-        mButtonInvert.setChecked(inverted);
     }
 
     private boolean getInverted() {

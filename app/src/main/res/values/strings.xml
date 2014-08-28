@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Android GalaxyZoo</string>
+    <string name="action_invert">Invert</string>
     <string name="action_login">Login</string>
     <string name="action_list">List</string>
     <string name="action_more">More</string>
