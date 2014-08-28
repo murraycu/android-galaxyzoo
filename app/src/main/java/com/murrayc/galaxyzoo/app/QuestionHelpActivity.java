@@ -69,7 +69,7 @@ public class QuestionHelpActivity extends BaseActivity {
             final QuestionHelpFragment fragment = new QuestionHelpFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()
-                    .add(R.id.table_data_container, fragment)
+                    .add(R.id.container, fragment)
                     .commit();
         }
 
