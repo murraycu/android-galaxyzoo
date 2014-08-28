@@ -190,9 +190,9 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
     private void onExampleImageClicked(final String iconName) {
         final String uri = Config.FULL_EXAMPLE_URI + iconName + ".jpg";
 
-        //TODO: Show the image within the app instead of in the browser:
         try {
-            final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            final Intent intent = new Intent(getActivity(), ExampleViewerActivity.class);
+            intent.putExtra(ExampleViewerFragment.ARG_EXAMPLE_URL, uri);
             startActivity(intent);
         } catch (final ActivityNotFoundException e) {
             Log.error("Could not open the example image URI.", e);

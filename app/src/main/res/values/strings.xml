@@ -12,5 +12,6 @@
     <string name="description_standard_image">Standard Image</string>
     <string name="button_title_examples">Examples</string>
     <string name="button_help">Help</string>
+    <string name="title_activity_example_viewer">Example</string>
 
 </resources>
