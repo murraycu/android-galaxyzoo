@@ -3,6 +3,7 @@
 
     <string name="app_name">Android GalaxyZoo</string>
     <string name="action_invert">Invert</string>
+    <string name="action_examples">Examples</string>
     <string name="action_login">Login</string>
     <string name="action_list">List</string>
     <string name="action_more">More</string>
@@ -12,7 +13,6 @@
     <string name="description_thumbnail">Thumbnail</string>
     <string name="description_standard_image">Standard Image</string>
     <string name="button_title_examples">Examples</string>
-    <string name="button_help">Help</string>
     <string name="title_activity_example_viewer">Example</string>
 
 </resources>

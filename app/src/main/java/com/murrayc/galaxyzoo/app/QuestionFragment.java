@@ -44,6 +44,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -327,14 +328,6 @@ public class QuestionFragment extends BaseQuestionFragment
             }
         });
 
-        final Button buttonHelp = (Button)mRootView.findViewById(R.id.buttonHelp);
-        buttonHelp.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                onHelpButtonClicked();
-            }
-        });
-
         /*
          * Initializes the CursorLoader. The URL_LOADER value is eventually passed
          * to onCreateLoader().
@@ -364,18 +357,30 @@ public class QuestionFragment extends BaseQuestionFragment
         super.onSaveInstanceState(outState);
     }
 
-    private void onHelpButtonClicked() {
-        final Intent intent = new Intent(getActivity(), QuestionHelpActivity.class);
-        intent.putExtra(ARG_QUESTION_ID, getQuestionId());
-        startActivity(intent);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        final MenuItem menuItem = menu.add(Menu.NONE, R.id.option_menu_item_examples, Menu.NONE, R.string.action_examples);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //final MenuItem menuItem = menu.add(Menu.NONE, R.id.option_menu_item_list, Menu.NONE, R.string.action_list);
-        //menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.option_menu_item_examples:
+                doExamples();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-        super.onCreateOptionsMenu(menu, inflater);
+    private void doExamples() {
+        final Intent intent = new Intent(getActivity(), QuestionHelpActivity.class);
+        intent.putExtra(ARG_QUESTION_ID, getQuestionId());
+        startActivity(intent);
     }
 
     @Override
