@@ -36,8 +36,7 @@
 
         <activity
             android:name=".QuestionHelpActivity"
-            android:label="@string/title_activity_question_help"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
+            android:label="@string/title_activity_question_help">
         </activity>
         <activity
             android:name=".LoginActivity"
