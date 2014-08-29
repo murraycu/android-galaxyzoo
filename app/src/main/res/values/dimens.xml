@@ -5,4 +5,5 @@
 
     <!-- See http://developer.android.com/design/style/metrics-grids.html -->
     <dimen name="standard_margin">4dp</dimen>
+    <dimen name="standard_large_margin">8dp</dimen>
 </resources>
