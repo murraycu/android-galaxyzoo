@@ -10,8 +10,6 @@
     <ImageView android:id="@+id/item_image"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
         android:contentDescription="@string/description_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

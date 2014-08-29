@@ -16,9 +16,11 @@
         android:clipToPadding="false"
         android:layout_centerHorizontal="true"
         android:numColumns="auto_fit"
-        android:verticalSpacing="16dp"
+        android:verticalSpacing="@dimen/standard_margin"
         android:stretchMode="columnWidth"
         android:columnWidth="100dp"
-        android:drawSelectorOnTop="true" />
+        android:drawSelectorOnTop="true"
+        android:horizontalSpacing="@dimen/standard_margin"
+        android:focusableInTouchMode="true" />
 
 </RelativeLayout>
