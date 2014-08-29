@@ -20,15 +20,11 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.ActivityNotFoundException;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;

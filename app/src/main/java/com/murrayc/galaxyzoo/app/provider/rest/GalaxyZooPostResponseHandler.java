@@ -1,7 +1,6 @@
 package com.murrayc.galaxyzoo.app.provider.rest;
 
 import com.murrayc.galaxyzoo.app.Log;
-import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;

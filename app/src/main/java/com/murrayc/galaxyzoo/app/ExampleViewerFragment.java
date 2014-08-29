@@ -3,34 +3,18 @@ package com.murrayc.galaxyzoo.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
-
-import com.murrayc.galaxyzoo.app.provider.Config;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
