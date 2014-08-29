@@ -11,6 +11,7 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.AbstractHttpMessage;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -21,6 +22,9 @@ import java.net.URL;
  * Created by murrayc on 8/25/14.
  */
 public class HttpUtils {
+
+    private static final String HTTP_REQUEST_HEADER_PARAM_USER_AGENT = "User-Agent";
+    private static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";
 
     public static class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
 
@@ -93,6 +97,8 @@ public class HttpUtils {
     }
 
     static boolean executeHttpRequest(final HttpUriRequest request, ResponseHandler<Boolean> handler) {
+        setRequestUserAgent(request);
+
         Boolean handlerResult = false;
         HttpResponse response = null;
         try {
@@ -106,5 +112,9 @@ public class HttpUtils {
         }
 
         return handlerResult;
+    }
+
+    public static void setRequestUserAgent(final HttpUriRequest get) {
+        get.setHeader(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
     }
 }

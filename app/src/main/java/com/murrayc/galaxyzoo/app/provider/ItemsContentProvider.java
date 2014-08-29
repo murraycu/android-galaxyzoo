@@ -1260,6 +1260,7 @@ public class ItemsContentProvider extends ContentProvider {
         throwIfNoNetwork();
 
         final HttpGet get = new HttpGet(getQueryUri(count));
+        HttpUtils.setRequestUserAgent(get);
         return executeQueryHttpRequest(get);
     }
 
@@ -1341,6 +1342,7 @@ public class ItemsContentProvider extends ContentProvider {
 
     private GalaxyZooPostLoginResponseHandler.LoginResult loginSync(final String username, final String password) {
         final HttpPost post = new HttpPost(Config.LOGIN_URI);
+        HttpUtils.setRequestUserAgent(post);
 
         final List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("username", username));
@@ -1394,6 +1396,7 @@ public class ItemsContentProvider extends ContentProvider {
             final String authApiKey = params[3];
 
             final HttpPost post = new HttpPost(Config.POST_URI);
+            HttpUtils.setRequestUserAgent(post);
 
             //Add the authentication details to the headers;
             // TODO: When we add this header, we get a ClientProtocolException, caused by a CircularRedirectException,
