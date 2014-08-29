@@ -14,6 +14,7 @@
         android:contentDescription="@string/description_standard_image"
         android:id="@+id/imageView"
         android:adjustViewBounds="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:clickable="true" />
 
 </RelativeLayout>
