@@ -58,7 +58,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/forgot_password_button_text"
                     android:id="@+id/textViewForgot"
-                    android:layout_gravity="end" />
+                    android:layout_gravity="right" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/register_button_text"
                     android:id="@+id/textViewRegister"
-                    android:layout_gravity="end" />
+                    android:layout_gravity="right" />
 
                 <Button
                     android:id="@+id/username_sign_in_button"
