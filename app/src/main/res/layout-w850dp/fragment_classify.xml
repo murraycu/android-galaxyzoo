@@ -8,36 +8,41 @@
     android:textIsSelectable="true"
     tools:context="com.murrayc.galaxyzoo.app.ClassifyFragment">
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:clipToPadding="false"
-        android:id="@+id/scrollView">
-
         <LinearLayout android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:layout_marginBottom="@dimen/activity_vertical_margin">
 
             <FrameLayout
                 android:id="@+id/child_fragment_subject"
-                android:layout_width="match_parent"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_gravity="left" />
 
-            <FrameLayout
-                android:id="@+id/child_fragment_question"
-                android:layout_width="match_parent"
+            <ScrollView
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_marginLeft="@dimen/standard_margin" />
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:clipToPadding="false"
+                android:id="@+id/scrollView"
+                android:layout_gravity="right"
+                android:layout_marginLeft="@dimen/standard_margin">
+
+                <FrameLayout
+                    android:id="@+id/child_fragment_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/standard_margin" />
+
+            </ScrollView>
+
         </LinearLayout>
-    </ScrollView>
+
 
     <ProgressBar android:id="@+id/loading_spinner"
         style="?android:progressBarStyleLarge"
