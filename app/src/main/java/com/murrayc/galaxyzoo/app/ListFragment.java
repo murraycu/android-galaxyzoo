@@ -57,7 +57,7 @@ public class ListFragment extends ZooFragment
 
     private static final int URL_LOADER = 0;
     private ListCursorAdapter mAdapter;
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID,
+    private final String[] mColumns = { Item.Columns._ID,
             Item.Columns.LOCATION_THUMBNAIL_URI, Item.Columns.DONE};
 
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
@@ -66,9 +66,8 @@ public class ListFragment extends ZooFragment
     // not our ContentProvider's column names. That seems like a design error in the Android API.
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
-    static final int COLUMN_INDEX_SUBJECT_ID = 1;
-    static final int COLUMN_INDEX_LOCATION_THUMBNAIL_URI = 2;
-    static final int COLUMN_INDEX_DONE = 3;
+    static final int COLUMN_INDEX_LOCATION_THUMBNAIL_URI = 1;
+    static final int COLUMN_INDEX_DONE = 2;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -266,22 +265,6 @@ public class ListFragment extends ZooFragment
             // Serialize and persist the activated item position.
             outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
         }
-    }
-
-    /**
-     * Turns on activate-on-click mode. When this mode is on, list items will be
-     * given the 'activated' state when touched.
-     */
-    public void setActivateOnItemClick(boolean activateOnItemClick) {
-        // When setting CHOICE_MODE_SINGLE, ListView will automatically
-        // give items the 'activated' state when touched.
-        final GridView gridView = getGridView();
-        if (gridView == null)
-            return;
-
-        gridView.setChoiceMode(activateOnItemClick
-                ? GridView.CHOICE_MODE_SINGLE
-                : GridView.CHOICE_MODE_NONE);
     }
 
     private void setActivatedPosition(int position) {

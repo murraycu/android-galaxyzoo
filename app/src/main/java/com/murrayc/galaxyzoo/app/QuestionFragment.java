@@ -72,7 +72,6 @@ public class QuestionFragment extends BaseQuestionFragment
     private static final String ARG_QUESTION_CLASSIFICATION_IN_PROGRESS = "classification-in-progress";
 
     private static final int URL_LOADER = 0;
-    public static final String DIALOG_TAG = "dialog";
     private Cursor mCursor;
 
     private final String[] mColumns = { Item.Columns._ID, Item.Columns.ZOONIVERSE_ID };

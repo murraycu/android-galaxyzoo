@@ -26,9 +26,7 @@ import java.net.URLConnection;
  *
  */
 public class ExampleViewerFragment extends Fragment {
-    public static final int MARGIN_SMALL_DP = 4;
     public static final String ARG_EXAMPLE_URL = "example-url";
-    private Singleton mSingleton;
 
     //See http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
     private static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
@@ -81,21 +79,6 @@ public class ExampleViewerFragment extends Fragment {
     private void loadBitmap(final String strUri, ImageView imageView) {
         final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
         task.execute(strUri);
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param questionId The question ID
-     * @return A new instance of fragment HelpDialogFragment.
-     */
-    public static ExampleViewerFragment newInstance(final String questionId) {
-        ExampleViewerFragment fragment = new ExampleViewerFragment();
-        Bundle args = new Bundle();
-        args.putString(QuestionFragment.ARG_QUESTION_ID, questionId);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     public ExampleViewerFragment() {

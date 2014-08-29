@@ -50,7 +50,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     private static final int URL_LOADER = 0;
     private Cursor mCursor;
 
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID };
+    private final String[] mColumns = { Item.Columns._ID };
 
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
@@ -58,7 +58,6 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     // not our ContentProvider's column names. That seems like a design error in the Android API.
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
-    private static final int COLUMN_INDEX_SUBJECT_ID = 1;
 
 
     /**

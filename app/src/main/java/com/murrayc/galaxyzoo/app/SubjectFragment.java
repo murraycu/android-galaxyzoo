@@ -54,7 +54,7 @@ public class SubjectFragment extends ItemFragment
     private View mRootView;
     private ImageView mImageView;
 
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.SUBJECT_ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
+    private final String[] mColumns = { Item.Columns._ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
 
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
@@ -62,9 +62,8 @@ public class SubjectFragment extends ItemFragment
     // not our ContentProvider's column names. That seems like a design error in the Android API.
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
-    static final int COLUMN_INDEX_SUBJECT_ID = 1;
-    static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 2;
-    static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 3;
+    static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 1;
+    static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 2;
     private boolean mInverted = false;
 
 
