@@ -31,7 +31,8 @@
                 <FrameLayout
                     android:id="@+id/child_fragment_question"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin" />
             </LinearLayout>
     </ScrollView>
 

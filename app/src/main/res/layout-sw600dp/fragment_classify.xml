@@ -34,7 +34,8 @@
                 android:id="@+id/child_fragment_question"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/standard_margin" />
         </LinearLayout>
     </ScrollView>
 
