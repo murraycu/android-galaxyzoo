@@ -34,7 +34,7 @@ import android.widget.TextView;
  */
 class ListCursorAdapter extends CursorAdapter {
 
-    private LayoutInflater mLayoutInflater;
+    private final LayoutInflater mLayoutInflater;
 
     public ListCursorAdapter(Context context, Cursor c) {
         super(context, c, 0 /* seems reasonable */);

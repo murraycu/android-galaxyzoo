@@ -47,9 +47,9 @@ public class DecisionTree {
     private static final String NODE_ANSWER = "answer";
 
     static class BaseButton {
-        private String id;
-        private String text;
-        private String icon;
+        private final String id;
+        private final String text;
+        private final String icon;
         private final int examplesCount;
 
         BaseButton(final String id, final String text, final String icon, int examplesCount) {

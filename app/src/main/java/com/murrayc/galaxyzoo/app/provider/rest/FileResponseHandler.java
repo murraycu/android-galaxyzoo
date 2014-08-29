@@ -14,7 +14,7 @@ import java.util.zip.GZIPInputStream;
  * database ID.
  */
 public class FileResponseHandler implements ResponseHandler {
-    private String mCacheFileUri;
+    private final String mCacheFileUri;
 
     public FileResponseHandler(final String cacheFileUri) {
         mCacheFileUri = cacheFileUri;
