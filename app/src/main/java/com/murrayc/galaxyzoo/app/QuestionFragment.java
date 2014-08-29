@@ -308,6 +308,22 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
+    protected void setItemId(String itemId) {
+        super.setItemId(itemId);
+
+        /*
+         * Initializes the CursorLoader. The URL_LOADER value is eventually passed
+         * to onCreateLoader().
+         * This lets us get the Zooniverse ID for the item, for use in the discussion page's URI.
+         * We use restartLoader(), instead of initLoader(),
+         * so we can refresh this fragment to show a different subject,
+         * even when using the same query ("next") to do that.
+         */
+        mLoaderFinished = false; //Don't update() until this is ready.
+        getLoaderManager().restartLoader(URL_LOADER, null, this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_question, container, false);
@@ -323,16 +339,6 @@ public class QuestionFragment extends BaseQuestionFragment
                 updateIfReady();
             }
         });
-
-        /*
-         * Initializes the CursorLoader. The URL_LOADER value is eventually passed
-         * to onCreateLoader().
-         * This lets us get the Zooniverse ID for the item, for use in the discussion page's URI.
-         * We use restartLoader(), instead of initLoader(),
-         * so we can refresh this fragment to show a different subject,
-         * even when using the same query ("next") to do that.
-         */
-        getLoaderManager().restartLoader(URL_LOADER, null, this);
 
         //This will be called later by updateIfReady(): update();
 
