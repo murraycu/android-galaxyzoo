@@ -45,7 +45,6 @@ public class ExampleViewerFragment extends Fragment {
     public static final int MARGIN_SMALL_DP = 4;
     public static final String ARG_EXAMPLE_URL = "example-url";
     private Singleton mSingleton;
-    private View mRootView;
 
     //See http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
     private static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
@@ -133,9 +132,9 @@ public class ExampleViewerFragment extends Fragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 getActivity());
-        mRootView = inflater.inflate(R.layout.fragment_example_viewer, null);
+        View mRootView = inflater.inflate(R.layout.fragment_example_viewer, null);
 
-        final ImageView imageView = (ImageView)mRootView.findViewById(R.id.imageView);
+        final ImageView imageView = (ImageView) mRootView.findViewById(R.id.imageView);
         if (imageView != null) {
             loadBitmap(uriStr, imageView);
         }
