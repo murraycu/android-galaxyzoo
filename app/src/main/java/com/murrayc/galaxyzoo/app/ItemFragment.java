@@ -13,11 +13,6 @@ public class ItemFragment extends ZooFragment {
     public static final String ARG_ITEM_ID = "item-id";
     protected String mItemId;
     protected Singleton mSingleton = null;
-    private long mUserId = -1;
-
-    private long getUserId() {
-        return mUserId;
-    }
 
     protected String getItemId() {
         return mItemId;

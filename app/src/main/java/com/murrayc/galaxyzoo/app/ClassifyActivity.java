@@ -60,8 +60,6 @@ public class ClassifyActivity extends ItemActivity implements ClassifyFragment.C
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             final Bundle arguments = new Bundle();
-            arguments.putString(ARG_USER_ID,
-                    getUserId()); //Obtained in the super class.
             arguments.putString(ItemFragment.ARG_ITEM_ID,
                     getItemId());
 
@@ -98,7 +96,6 @@ public class ClassifyActivity extends ItemActivity implements ClassifyFragment.C
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
             final Intent intent = new Intent(this, ListActivity.class);
-            intent.putExtra(ARG_USER_ID, getUserId());
             navigateUpTo(intent);
             return true;
         }

@@ -27,7 +27,6 @@ public class ItemActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         final Intent intent = getIntent();
-        setUserId(intent.getStringExtra(ARG_USER_ID));
 
         //Show a requested item, or just show the next available item:
         String itemId = intent.getStringExtra(ItemFragment.ARG_ITEM_ID);

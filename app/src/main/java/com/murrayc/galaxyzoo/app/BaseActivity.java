@@ -31,11 +31,6 @@ import android.view.MenuItem;
  */
 @SuppressLint("Registered") //This is a base class for other Activities.
 public class BaseActivity extends Activity {
-
-    //TODO: Avoid duplcation with the ARGs in the fragments:
-    protected static final String ARG_USER_ID = "user-id";
-    private String mUserId;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +50,6 @@ public class BaseActivity extends Activity {
         // for the selected item ID.
         // TODO: Just view it with DetailActivity if it has already been classified.
         final Intent intent = new Intent(this, ClassifyActivity.class);
-        intent.putExtra(ARG_USER_ID, getUserId());
-
         if (!TextUtils.isEmpty(itemId)) {
             intent.putExtra(ItemFragment.ARG_ITEM_ID, itemId);
         }
@@ -84,13 +77,5 @@ public class BaseActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public String getUserId() {
-        return mUserId;
-    }
-
-    public void setUserId(final String userId) {
-        mUserId = userId;
     }
 }
