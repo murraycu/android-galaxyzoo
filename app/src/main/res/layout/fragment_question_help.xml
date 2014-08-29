@@ -5,30 +5,30 @@
     style="?android:attr/textAppearanceLarge"
     android:padding="16dp"
     tools:context="com.murrayc.galaxyzoo.app.QuestionHelpFragment">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/button_title_examples"
-        android:id="@+id/textViewExamples"
-        android:layout_below="@+id/textView"
-        android:layout_marginTop="16dp" />
-
-        <TableLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/textViewExamples"
-            android:id="@+id/tableLayout" />
+            android:id="@+id/textView" />
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/button_title_examples"
+            android:id="@+id/textViewExamples"
+            android:layout_below="@+id/textView"
+            android:layout_marginTop="16dp" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/textViewExamples"
+                android:id="@+id/tableLayout" />
+
+    </RelativeLayout>
 </ScrollView>
