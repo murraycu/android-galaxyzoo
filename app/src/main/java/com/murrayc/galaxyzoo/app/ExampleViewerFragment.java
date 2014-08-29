@@ -132,7 +132,7 @@ public class ExampleViewerFragment extends Fragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 getActivity());
-        View mRootView = inflater.inflate(R.layout.fragment_example_viewer, null);
+        View mRootView = inflater.inflate(R.layout.fragment_example_viewer, container, false);
 
         final ImageView imageView = (ImageView) mRootView.findViewById(R.id.imageView);
         if (imageView != null) {

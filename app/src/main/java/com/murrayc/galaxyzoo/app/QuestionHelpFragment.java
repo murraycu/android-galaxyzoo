@@ -70,7 +70,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 getActivity());
-        mRootView = inflater.inflate(R.layout.fragment_question_help, null);
+        mRootView = inflater.inflate(R.layout.fragment_question_help, container, false);
 
         //Do most of the UI building only after we know that our
         //Singleton has been initialized:
