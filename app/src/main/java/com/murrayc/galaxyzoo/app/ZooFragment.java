@@ -1,7 +1,6 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
