@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/table_detail"
+    style="?android:attr/textAppearanceLarge"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textIsSelectable="true"
+    tools:context="com.murrayc.galaxyzoo.app.SubjectFragment"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/description_standard_image"
+        android:id="@+id/imageView"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:layout_gravity="left|top"
+        android:scaleType="fitStart" />
+
+</LinearLayout>
