@@ -58,7 +58,14 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1259,9 +1266,51 @@ public class ItemsContentProvider extends ContentProvider {
     private List<Subject> requestMoreItemsSync(int count) {
         throwIfNoNetwork();
 
-        final HttpGet get = new HttpGet(getQueryUri(count));
-        HttpUtils.setRequestUserAgent(get);
-        return executeQueryHttpRequest(get);
+        final HttpURLConnection conn = openConnection(getQueryUri(count));
+        if (conn == null) {
+            return null;
+        }
+
+        try
+        {
+            // This is the default: conn.setRequestMethod("GET");
+
+            //Calling getInputStream() causes the request to actually be sent.
+            InputStream in = conn.getInputStream();
+            if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                Log.error("requestMoreItemsSync(): response code: " + conn.getResponseCode());
+                return null;
+            }
+
+            return GalaxyZooResponseHandler.parseContent(in);
+        } catch (final IOException e) {
+            Log.error("requestMoreItemsSync(): exception during HTTP connection", e);
+
+            return null;
+        }
+    }
+
+    private HttpURLConnection openConnection(final String strURL) {
+        final URL url;
+        try {
+            url = new URL(strURL);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+        final HttpURLConnection conn;
+        try {
+            conn = (HttpURLConnection)url.openConnection();
+            HttpUtils.setConnectionUserAgent(conn);
+        } catch (final IOException e) {
+            Log.error("requestMoreItemsSync(): exception during HTTP connection", e);
+
+            return null;
+        }
+
+        return conn;
     }
 
     private void throwIfNoNetwork() {
@@ -1299,23 +1348,6 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    private List<Subject> executeQueryHttpRequest(final HttpUriRequest request) {
-        List<Subject> handlerResult = null;
-        HttpResponse response = null;
-        try {
-            final HttpClient client = new DefaultHttpClient();
-            //This just leads to an redirect limit exception: client.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
-            response = client.execute(request);
-
-            final GalaxyZooResponseHandler handler = new GalaxyZooResponseHandler();
-            handlerResult = handler.handleResponse(response);
-        } catch (IOException e) {
-            Log.error("executeQueryHttpRequest(): exception processing async request", e);
-            return null;
-        }
-
-        return handlerResult;
-    }
 
     private class LoginAsyncTask extends AsyncTask<String, Integer, GalaxyZooPostLoginResponseHandler.LoginResult> {
         @Override

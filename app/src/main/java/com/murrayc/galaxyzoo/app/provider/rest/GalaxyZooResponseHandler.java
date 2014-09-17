@@ -22,27 +22,9 @@ import java.util.List;
 /**
  * Created by murrayc on 7/2/14.
  */
-public class GalaxyZooResponseHandler implements ResponseHandler<List<ItemsContentProvider.Subject>> {
+public class GalaxyZooResponseHandler {
 
-    public GalaxyZooResponseHandler() {
-    }
-
-    /*
-    * Handles the response from the RESTful server.
-    */
-    @Override
-    public List<ItemsContentProvider.Subject> handleResponse(HttpResponse response) {
-        try {
-            return parseEntity(response.getEntity());
-
-        } catch (IOException e) {
-            Log.error("Exception from parseEntity", e);
-            return null;
-        }
-    }
-
-    private List<ItemsContentProvider.Subject> parseEntity(HttpEntity entity) throws IOException {
-        final InputStream content = entity.getContent();
+    public static List<ItemsContentProvider.Subject> parseContent(final InputStream content) throws IOException {
         final InputStreamReader inputReader = new InputStreamReader(content);
         final BufferedReader reader = new BufferedReader(inputReader);
 
@@ -92,7 +74,7 @@ public class GalaxyZooResponseHandler implements ResponseHandler<List<ItemsConte
         return result;
     }
 
-    private ItemsContentProvider.Subject parseJsonObjectSubject(final JSONObject objSubject) {
+    private static ItemsContentProvider.Subject parseJsonObjectSubject(final JSONObject objSubject) {
         try {
             final ItemsContentProvider.Subject subject = new ItemsContentProvider.Subject();
             subject.mId = objSubject.getString("id");

@@ -116,4 +116,8 @@ public class HttpUtils {
     public static void setRequestUserAgent(final HttpUriRequest get) {
         get.setHeader(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
     }
+
+    public static void setConnectionUserAgent(final HttpURLConnection connection) {
+        connection.setRequestProperty(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
+    }
 }
