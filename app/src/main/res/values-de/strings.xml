@@ -16,4 +16,5 @@
     <string name="action_more">Mehr</string>
     <string name="action_login">Anmelden</string>
     <string name="register_button_text"><![CDATA[<a href="https://www.zooniverse.org/signup">Registrieren</a>]]></string>
+    <string name="list_item_marker_done">Fertig</string>
 </resources>

@@ -35,11 +35,13 @@ import android.widget.TextView;
 class ListCursorAdapter extends CursorAdapter {
 
     private final LayoutInflater mLayoutInflater;
+    private final Context mContext;
 
     public ListCursorAdapter(Context context, Cursor c) {
         super(context, c, 0 /* seems reasonable */);
 
         mLayoutInflater = LayoutInflater.from(context);
+        mContext = context;
     }
 
     @Override
@@ -70,7 +72,7 @@ class ListCursorAdapter extends CursorAdapter {
             UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
 
             final TextView textView = (TextView) view.findViewById(R.id.item_text);
-            textView.setText(done ? "Done" : ""); //TODO: Replace this with a check icon.
+            textView.setText(done ? mContext.getString(R.string.list_item_marker_done) : ""); //TODO: Replace this with a check icon.
         }
     }
 
