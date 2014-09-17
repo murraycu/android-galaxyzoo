@@ -55,17 +55,20 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -587,27 +590,6 @@ public class ItemsContentProvider extends ContentProvider {
         //TODO: notify the client that this item has changed, so the ListView can show it.
     }
     */
-
-    private GalaxyZooPostLoginResponseHandler.LoginResult executeLoginHttpRequest(final HttpUriRequest request) {
-        final GalaxyZooPostLoginResponseHandler handler = new GalaxyZooPostLoginResponseHandler();
-        GalaxyZooPostLoginResponseHandler.LoginResult handlerResult = null;
-        HttpResponse response = null;
-        try {
-            final HttpClient client = new DefaultHttpClient();
-            response = client.execute(request);
-            handlerResult = handler.handleResponse(response);
-        } catch (IOException e) {
-            Log.error("executeLoginHttpRequest(): exception processing async request", e);
-            return null;
-        }
-
-        // GalaxyZooPostLoginResponseHandler.handleResponse() returns a LoginResult.
-        if (handlerResult == null) {
-            Log.error("executeLoginHttpRequest(): Error processing async request.");
-        }
-
-        return handlerResult;
-    }
 
     /**
      * Download bytes from a url and store them in a file, optionally asynchronously in spawned thread.
@@ -1373,21 +1355,68 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private GalaxyZooPostLoginResponseHandler.LoginResult loginSync(final String username, final String password) {
-        final HttpPost post = new HttpPost(Config.LOGIN_URI);
-        HttpUtils.setRequestUserAgent(post);
+        final HttpURLConnection conn = openConnection(Config.LOGIN_URI);
+        if (conn == null) {
+            return null;
+        }
 
         final List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("username", username));
         nameValuePairs.add(new BasicNameValuePair("password", password));
 
-        try {
-            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        } catch (final UnsupportedEncodingException e) {
-            Log.error("Exception from UrlEncodedFormEntity: ", e);
+        try
+        {
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+
+            final OutputStream out = conn.getOutputStream();
+
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(out, "UTF-8"));
+            writer.write(getPostDataBytes(nameValuePairs));
+            writer.flush();
+            writer.close();
+            out.close();
+
+            conn.connect();
+
+            //Get the response:
+            InputStream in = conn.getInputStream();
+            if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                Log.error("loginSync(): response code: " + conn.getResponseCode());
+                return null;
+            }
+
+            return GalaxyZooPostLoginResponseHandler.parseContent(in);
+        } catch (final IOException e) {
+            Log.error("requestMoreItemsSync(): exception during HTTP connection", e);
+
             return null;
         }
+    }
 
-        return executeLoginHttpRequest(post);
+    private String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
+        final StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (final NameValuePair pair : nameValuePairs) {
+            if (first) {
+                first = false;
+            } else {
+                result.append("&");
+            }
+
+            try {
+                result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result.toString();
     }
 
     private void onLoginTaskFinished(final GalaxyZooPostLoginResponseHandler.LoginResult result) {

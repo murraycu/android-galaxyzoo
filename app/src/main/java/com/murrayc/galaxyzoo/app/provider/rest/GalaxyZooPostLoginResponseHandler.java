@@ -3,52 +3,31 @@ package com.murrayc.galaxyzoo.app.provider.rest;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
  * Created by murrayc on 7/2/14.
  */
-public class GalaxyZooPostLoginResponseHandler implements ResponseHandler<GalaxyZooPostLoginResponseHandler.LoginResult> {
+public class GalaxyZooPostLoginResponseHandler {
 
-    public GalaxyZooPostLoginResponseHandler() {
-    }
+    public static LoginResult parseContent(final InputStream content) throws IOException {
+        final String str = HttpUtils.getStringFromInputStream(content);
 
-    /*
-    * Handles the response from the RESTful server.
-    */
-    @Override
-    public LoginResult handleResponse(final HttpResponse response) {
-        if(response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            Log.error("Did not receive the 200 OK status code: " + response.getStatusLine().toString());
-        }
-
-        final String responseString;
-        try {
-            responseString = new BasicResponseHandler().handleResponse(response);
-            Log.info("Login response string", responseString);
-            return parseJson(responseString);
-        } catch (final IOException e) {
-            Log.error("Exception from BasicResponseHandler:", e);
-        }
-
-        return null; //Means success by our convention.
-    }
-
-    private LoginResult parseJson(final String responseString) {
         //A failure by default.
         LoginResult result = new LoginResult(false, null, null);
 
-        JSONTokener tokener = new JSONTokener(responseString);
+        JSONTokener tokener = new JSONTokener(str);
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(tokener);

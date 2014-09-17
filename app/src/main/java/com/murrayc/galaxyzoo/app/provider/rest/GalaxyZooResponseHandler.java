@@ -1,20 +1,16 @@
 package com.murrayc.galaxyzoo.app.provider.rest;
 
+import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 import com.murrayc.galaxyzoo.app.Log;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,20 +21,11 @@ import java.util.List;
 public class GalaxyZooResponseHandler {
 
     public static List<ItemsContentProvider.Subject> parseContent(final InputStream content) throws IOException {
-        final InputStreamReader inputReader = new InputStreamReader(content);
-        final BufferedReader reader = new BufferedReader(inputReader);
-
-
-        int inserted = 0;
-
-        final StringBuilder builder = new StringBuilder();
-        for (String line = null; (line = reader.readLine()) != null;) {
-            builder.append(line).append("\n");
-        }
+        final String str = HttpUtils.getStringFromInputStream(content);
 
         final List<ItemsContentProvider.Subject> result = new ArrayList<>();
 
-        JSONTokener tokener = new JSONTokener(builder.toString());
+        JSONTokener tokener = new JSONTokener(str);
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(tokener);

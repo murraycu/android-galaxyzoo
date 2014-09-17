@@ -12,7 +12,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,6 +27,21 @@ public class HttpUtils {
 
     private static final String HTTP_REQUEST_HEADER_PARAM_USER_AGENT = "User-Agent";
     private static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";
+
+    public static String getStringFromInputStream(InputStream content) throws IOException {
+        final InputStreamReader inputReader = new InputStreamReader(content);
+        final BufferedReader reader = new BufferedReader(inputReader);
+
+
+        int inserted = 0;
+
+        final StringBuilder builder = new StringBuilder();
+        for (String line = null; (line = reader.readLine()) != null;) {
+            builder.append(line).append("\n");
+        }
+
+        return builder.toString();
+    }
 
     public static class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
 
