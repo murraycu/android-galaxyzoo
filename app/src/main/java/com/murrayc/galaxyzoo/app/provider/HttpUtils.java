@@ -11,7 +11,6 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.AbstractHttpMessage;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
