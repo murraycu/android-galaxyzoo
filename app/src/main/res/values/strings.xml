@@ -15,5 +15,6 @@
     <string name="title_activity_example_viewer">Example</string>
     <string name="forgot_password_button_text"><a href="https://www.zooniverse.org/password/reset">Forgot password?</a></string>
     <string name="register_button_text"><a href="https://www.zooniverse.org/signup">Register</a></string>
+    <string name="content_description_example_image">Example image.</string>
 
 </resources>
