@@ -93,7 +93,7 @@ public class QuestionFragment extends BaseQuestionFragment
     private String mZooniverseId; //Only used for the talk URI so far.
 
     // A map of checkbox IDs to buttons.
-    private Map<String, ToggleButton> mCheckboxButtons = new HashMap<>();
+    private final Map<String, ToggleButton> mCheckboxButtons = new HashMap<>();
     private boolean mLoaderFinished = false;
 
     private void setZooniverseId(final String zooniverseId) {
@@ -234,7 +234,7 @@ public class QuestionFragment extends BaseQuestionFragment
             return answers;
         }
 
-        private List<QuestionAnswer> answers = new ArrayList<>();
+        private final List<QuestionAnswer> answers = new ArrayList<>();
     }
 
     //TODO: Can this fragment be reused, meaning we'd need to reset this?
