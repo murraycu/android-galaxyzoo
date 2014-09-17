@@ -53,7 +53,7 @@ public class HttpUtils {
 
     public static boolean cacheUriToFileSync(final String uriFileToCache, final String cacheFileUri) {
         final HttpGet get = new HttpGet(uriFileToCache);
-        final ResponseHandler handler = new FileResponseHandler(cacheFileUri);
+        final ResponseHandler<Boolean> handler = new FileResponseHandler(cacheFileUri);
         return executeHttpRequest(get, handler);
     }
 

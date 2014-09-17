@@ -1469,7 +1469,7 @@ public class ItemsContentProvider extends ContentProvider {
                 return null;
             }
 
-            final ResponseHandler handler = new GalaxyZooPostResponseHandler();
+            final ResponseHandler<Boolean> handler = new GalaxyZooPostResponseHandler();
             return HttpUtils.executeHttpRequest(post, handler);
         }
 

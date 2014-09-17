@@ -13,7 +13,7 @@ import java.util.zip.GZIPInputStream;
  * Writes data from urls into a local file cache that can be referenced by a
  * database ID.
  */
-public class FileResponseHandler implements ResponseHandler {
+public class FileResponseHandler implements ResponseHandler<Boolean> {
     private final String mCacheFileUri;
 
     public FileResponseHandler(final String cacheFileUri) {
