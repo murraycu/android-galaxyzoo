@@ -22,12 +22,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class IconsCache {
+class IconsCache {
     //TODO: Generate these automatically, making sure they are unique:
-    public static final String CACHE_FILE_WORKFLOW_ICONS = "workflowicons";
-    public static final String CACHE_FILE_EXAMPLE_ICONS = "exampleicons";
-    public static final String CACHE_FILE_CSS = "css";
-    public static final String PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD = "icons-cache-last-mod";
+    private static final String CACHE_FILE_WORKFLOW_ICONS = "workflowicons";
+    private static final String CACHE_FILE_EXAMPLE_ICONS = "exampleicons";
+    private static final String CACHE_FILE_CSS = "css";
+    private static final String PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD = "icons-cache-last-mod";
 
     private final DecisionTree mDecisionTree;
     private final File mCacheDir;

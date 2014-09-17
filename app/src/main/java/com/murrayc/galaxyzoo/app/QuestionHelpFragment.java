@@ -30,7 +30,7 @@ import com.murrayc.galaxyzoo.app.provider.Config;
  *
  */
 public class QuestionHelpFragment extends BaseQuestionFragment {
-    public static final int MARGIN_SMALL_DP = 4;
+    private static final int MARGIN_SMALL_DP = 4;
     private Singleton mSingleton;
     private View mRootView;
 

@@ -86,7 +86,7 @@ public class ItemsContentProvider extends ContentProvider {
     public static final String URI_PART_ITEM = "item";
     public static final String URI_PART_ITEM_ID_NEXT = "next"; //Use in place of the item ID to get the next unclassified item.
     public static final String URI_PART_FILE = "file";
-    public static final String URI_PART_CLASSIFICATION = "classification";
+    private static final String URI_PART_CLASSIFICATION = "classification";
     public static final String URI_PART_CLASSIFICATION_ANSWER = "classification-answer";
     public static final String URI_PART_CLASSIFICATION_CHECKBOX = "classification-checkbox";
 
@@ -232,7 +232,7 @@ public class ItemsContentProvider extends ContentProvider {
     public static final String PREF_KEY_AUTH_NAME = "auth_name";
     private static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
     private static final int MIN_CACHE_COUNT = 5; //Don't let the count of undone items get this low.
-    public static final int QUERY_COUNT_LARGE = 10;
+    private static final int QUERY_COUNT_LARGE = 10;
 
     private DatabaseHelper mOpenDbHelper;
 
@@ -1117,15 +1117,15 @@ public class ItemsContentProvider extends ContentProvider {
         private static final String TABLE_NAME_ITEMS = "items";
         private static class ItemsDbColumns implements BaseColumns {
             //Specific to our app:
-            protected static final String DONE = "done"; //1 or 0. Whether the user has classified it already.
-            protected static final String UPLOADED = "uploaded"; //1 or 0. Whether its classification has been submitted.
+            static final String DONE = "done"; //1 or 0. Whether the user has classified it already.
+            static final String UPLOADED = "uploaded"; //1 or 0. Whether its classification has been submitted.
 
             //From the REST API:
-            protected static final String SUBJECT_ID = "subjectId";
-            protected static final String ZOONIVERSE_ID = "zooniverseId";
-            protected static final String LOCATION_STANDARD_URI = "locationStandardUri"; //The content URI for a file in the files table.
-            protected static final String LOCATION_THUMBNAIL_URI = "locationThumbnailUri"; //The content URI for a file in the files table.
-            protected static final String LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
+            static final String SUBJECT_ID = "subjectId";
+            static final String ZOONIVERSE_ID = "zooniverseId";
+            static final String LOCATION_STANDARD_URI = "locationStandardUri"; //The content URI for a file in the files table.
+            static final String LOCATION_THUMBNAIL_URI = "locationThumbnailUri"; //The content URI for a file in the files table.
+            static final String LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
         }
 
         private static final String TABLE_NAME_FILES = "files";

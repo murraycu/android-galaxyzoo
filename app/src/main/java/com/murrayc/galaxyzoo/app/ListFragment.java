@@ -204,7 +204,7 @@ public class ListFragment extends ZooFragment
         }
     }
 
-    public void update() {
+    void update() {
         final Activity activity = getActivity();
         if (activity == null) {
             return;
@@ -311,7 +311,7 @@ public class ListFragment extends ZooFragment
         mCallbacks.onItemSelected(itemId);
     }
 
-    public GridView getGridView() {
+    GridView getGridView() {
         final GridView gridView = (GridView)mRootView.findViewById(R.id.gridView);
         if (gridView == null) {
             Log.error("gridView is null.");

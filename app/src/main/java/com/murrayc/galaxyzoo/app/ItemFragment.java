@@ -11,18 +11,18 @@ public class ItemFragment extends ZooFragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item-id";
-    protected String mItemId;
-    protected Singleton mSingleton = null;
+    private String mItemId;
+    Singleton mSingleton = null;
 
-    protected String getItemId() {
+    String getItemId() {
         return mItemId;
     } //TODO: Should this be a long?
 
-    protected void setItemId(final String itemId) {
+    void setItemId(final String itemId) {
         mItemId = itemId;
     }
 
-    public Singleton getSingleton() {
+    Singleton getSingleton() {
         return mSingleton;
     }
 
@@ -59,7 +59,7 @@ public class ItemFragment extends ZooFragment {
         super.onSaveInstanceState(outState);
     }
 
-    protected void onSingletonInitialized() {
+    void onSingletonInitialized() {
         this.mSingleton = Singleton.getInstance();
     }
 }

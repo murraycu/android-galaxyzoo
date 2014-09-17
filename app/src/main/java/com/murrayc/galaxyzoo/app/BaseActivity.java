@@ -30,7 +30,7 @@ import android.view.MenuItem;
  * Created by murrayc on 2/7/14.
  */
 @SuppressLint("Registered") //This is a base class for other Activities.
-public class BaseActivity extends Activity {
+class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +45,7 @@ public class BaseActivity extends Activity {
      * Navigate to the item,
      *
      */
-    protected void navigate(final String itemId) {
+    void navigate(final String itemId) {
         //Start the detail activity
         // for the selected item ID.
         // TODO: Just view it with DetailActivity if it has already been classified.

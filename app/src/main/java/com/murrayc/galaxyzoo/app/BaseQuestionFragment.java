@@ -10,15 +10,15 @@ public class BaseQuestionFragment extends ItemFragment {
     public static final String ARG_QUESTION_ID = "question-id";
     private String mQuestionId;
 
-    public String getQuestionId() {
+    String getQuestionId() {
         return mQuestionId;
     }
 
-    public void setQuestionId(final String questionId) {
+    void setQuestionId(final String questionId) {
         mQuestionId = questionId;
     }
 
-    protected DecisionTree.Question getQuestion() {
+    DecisionTree.Question getQuestion() {
         final Singleton singleton = getSingleton();
         final DecisionTree tree = singleton.getDecisionTree();
 
@@ -27,7 +27,7 @@ public class BaseQuestionFragment extends ItemFragment {
         return question;
     }
 
-    protected BitmapDrawable getIcon(final Context context, final DecisionTree.BaseButton answer) {
+    BitmapDrawable getIcon(final Context context, final DecisionTree.BaseButton answer) {
         final Singleton singleton = getSingleton();
         return singleton.getIconDrawable(context, answer);
     }

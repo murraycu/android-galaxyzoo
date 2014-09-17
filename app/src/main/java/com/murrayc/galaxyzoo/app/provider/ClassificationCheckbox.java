@@ -26,7 +26,7 @@ import android.provider.BaseColumns;
  * Created by murrayc on 5/28/14.
  */
 public class ClassificationCheckbox {
-    public static final String AUTHORITY =
+    private static final String AUTHORITY =
             Item.AUTHORITY;
 
     /**

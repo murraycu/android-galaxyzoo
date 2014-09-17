@@ -14,11 +14,11 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 public class ItemActivity extends BaseActivity {
     private String mItemId;
 
-    public String getItemId() {
+    String getItemId() {
         return mItemId;
     }
 
-    public void setItemId(final String itemId) {
+    void setItemId(final String itemId) {
         mItemId = itemId;
     }
 
