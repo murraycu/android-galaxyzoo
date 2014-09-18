@@ -60,5 +60,6 @@ public class Item {
         public static final String LOCATION_STANDARD_URI = "locationStandardUri";
         public static final String LOCATION_THUMBNAIL_URI = "locationThumbnailUri";
         public static final String LOCATION_INVERTED_URI = "locationInvertedUri";
+        public static final String FAVORITE = "favorite";
     }
 }

@@ -360,6 +360,7 @@ public class ItemsContentProvider extends ContentProvider {
         sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI);
         sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL_URI, DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI);
         sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_URI, DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI);
+        sItemsProjectionMap.put(Item.Columns.FAVORITE, DatabaseHelper.ItemsDbColumns.FAVORITE);
 
 
         sClassificationAnswersProjectionMap = new HashMap<>();
@@ -1235,7 +1236,7 @@ public class ItemsContentProvider extends ContentProvider {
      */
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        private static final int DATABASE_VERSION = 14;
+        private static final int DATABASE_VERSION = 16;
         private static final String DATABASE_NAME = "items.db";
 
         private static final String TABLE_NAME_ITEMS = "items";
@@ -1250,6 +1251,7 @@ public class ItemsContentProvider extends ContentProvider {
             static final String LOCATION_STANDARD_URI = "locationStandardUri"; //The content URI for a file in the files table.
             static final String LOCATION_THUMBNAIL_URI = "locationThumbnailUri"; //The content URI for a file in the files table.
             static final String LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
+            static final String FAVORITE = "favorite"; //1 or 0. Whether the user has marked this as a favorite.
         }
 
         private static final String TABLE_NAME_FILES = "files";
@@ -1316,7 +1318,8 @@ public class ItemsContentProvider extends ContentProvider {
                     ItemsDbColumns.ZOONIVERSE_ID + " TEXT, " +
                     ItemsDbColumns.LOCATION_STANDARD_URI + " TEXT, " +
                     ItemsDbColumns.LOCATION_THUMBNAIL_URI + " TEXT, " +
-                    ItemsDbColumns.LOCATION_INVERTED_URI + " TEXT)";
+                    ItemsDbColumns.LOCATION_INVERTED_URI + " TEXT, " +
+                    ItemsDbColumns.FAVORITE + " INTEGER DEFAULT 0)";
             sqLiteDatabase.execSQL(qs);
 
             qs = "CREATE TABLE " + TABLE_NAME_FILES + " (" +
@@ -1607,6 +1610,27 @@ public class ItemsContentProvider extends ContentProvider {
             final List<NameValuePair> nameValuePairs = new ArrayList<>();
             nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
                     subjectId));
+
+            //Mark it as a favorite if necessary:
+            {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
+                builder.appendWhere(DatabaseHelper.ItemsDbColumns._ID + " = ?"); //We use ? to avoid SQL Injection.
+                final String[] selectionArgs = {mItemId};
+                final String[] projection = {DatabaseHelper.ItemsDbColumns.FAVORITE};
+                final Cursor c = builder.query(getDb(), projection,
+                        null, selectionArgs,
+                        null, null, null);
+
+                if(c.moveToFirst()) {
+                    final int favorite = c.getInt(0);
+                    if(favorite == 1) {
+                        nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[favorite][]",
+                                "true"));
+                    }
+                }
+            }
+
 
             Cursor c = null;
             {
