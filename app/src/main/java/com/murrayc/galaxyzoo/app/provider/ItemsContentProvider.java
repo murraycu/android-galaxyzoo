@@ -57,8 +57,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1391,7 +1389,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private List<Subject> requestMoreItemsSync(int count) {
-        final InputStream in = httpGetRequest(getQueryUri(count));
+        final InputStream in = HttpUtils.httpGetRequest(getContext(), getQueryUri(count));
         final List<Subject> result = parseQueryResponseContent(in);
         try {
             in.close();
@@ -1402,61 +1400,8 @@ public class ItemsContentProvider extends ContentProvider {
         return result;
     }
 
-    private InputStream httpGetRequest(final String strUri) {
-        throwIfNoNetwork();
-
-        final HttpURLConnection conn = openConnection(strUri);
-        if (conn == null) {
-            return null;
-        }
-
-        try
-        {
-            // This is the default: conn.setRequestMethod("GET");
-
-            //Calling getInputStream() causes the request to actually be sent.
-            final InputStream in = conn.getInputStream();
-            if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.error("httpGetRequest(): response code: " + conn.getResponseCode());
-                return null;
-            }
-
-            return in;
-        } catch (final IOException e) {
-            Log.error("httpGetRequest(): exception during HTTP connection", e);
-
-            return null;
-        }
-    }
-
-    private HttpURLConnection openConnection(final String strURL) {
-        final URL url;
-        try {
-            url = new URL(strURL);
-        } catch (MalformedURLException e) {
-            Log.error("openConnection(): exception while parsing URL", e);
-            return null;
-        }
-
-
-        final HttpURLConnection conn;
-        try {
-            conn = (HttpURLConnection)url.openConnection();
-            HttpUtils.setConnectionUserAgent(conn);
-        } catch (final IOException e) {
-            Log.error("openConnection(): exception during HTTP connection", e);
-
-            return null;
-        }
-
-        return conn;
-    }
-
     private void throwIfNoNetwork() {
-        if(!Utils.getNetworkIsConnected(getContext())) {
-            //Throw an exception so the caller knows.
-            throw new NoNetworkException();
-        }
+        HttpUtils.throwIfNoNetwork(getContext());
     }
 
     private String getQueryUri(final int count) {
@@ -1512,7 +1457,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private LoginResult loginSync(final String username, final String password) {
-        final HttpURLConnection conn = openConnection(Config.LOGIN_URI);
+        final HttpURLConnection conn = HttpUtils.openConnection(Config.LOGIN_URI);
         if (conn == null) {
             return null;
         }
@@ -1612,7 +1557,7 @@ public class ItemsContentProvider extends ContentProvider {
             final String authApiKey = params[3];
 
 
-            final HttpURLConnection conn = openConnection(Config.POST_URI);
+            final HttpURLConnection conn = HttpUtils.openConnection(Config.POST_URI);
             if (conn == null) {
                 return false;
             }

@@ -1,8 +1,10 @@
 package com.murrayc.galaxyzoo.app.provider;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.rest.FileResponseHandler;
 
 import org.apache.http.HttpResponse;
@@ -41,6 +43,63 @@ public class HttpUtils {
         }
 
         return builder.toString();
+    }
+
+    static InputStream httpGetRequest(final Context context, final String strUri) {
+        throwIfNoNetwork(context);
+
+        final HttpURLConnection conn = openConnection(strUri);
+        if (conn == null) {
+            return null;
+        }
+
+        try
+        {
+            // This is the default: conn.setRequestMethod("GET");
+
+            //Calling getInputStream() causes the request to actually be sent.
+            final InputStream in = conn.getInputStream();
+            if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                Log.error("httpGetRequest(): response code: " + conn.getResponseCode());
+                return null;
+            }
+
+            return in;
+        } catch (final IOException e) {
+            Log.error("httpGetRequest(): exception during HTTP connection", e);
+
+            return null;
+        }
+    }
+
+    static void throwIfNoNetwork(final Context context) {
+        if(!Utils.getNetworkIsConnected(context)) {
+            //Throw an exception so the caller knows.
+            throw new ItemsContentProvider.NoNetworkException();
+        }
+    }
+
+    static HttpURLConnection openConnection(final String strURL) {
+        final URL url;
+        try {
+            url = new URL(strURL);
+        } catch (MalformedURLException e) {
+            Log.error("openConnection(): exception while parsing URL", e);
+            return null;
+        }
+
+
+        final HttpURLConnection conn;
+        try {
+            conn = (HttpURLConnection)url.openConnection();
+            setConnectionUserAgent(conn);
+        } catch (final IOException e) {
+            Log.error("openConnection(): exception during HTTP connection", e);
+
+            return null;
+        }
+
+        return conn;
     }
 
     public static class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
