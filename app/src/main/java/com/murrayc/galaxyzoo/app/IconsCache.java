@@ -300,15 +300,14 @@ class IconsCache {
     }
 
     private void cacheBitmapToFile(final Bitmap bmapIcon, final String cacheFileUri) {
-        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmapIcon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        final byte[] byteArray = stream.toByteArray();
 
-        FileOutputStream fout = null;
-        try {
-            fout = new FileOutputStream(cacheFileUri);
+        try (
+            final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            final FileOutputStream fout = new FileOutputStream(cacheFileUri)
+        ) {
+            bmapIcon.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            final byte[] byteArray = stream.toByteArray();
             fout.write(byteArray);
-            fout.close();
         } catch (final IOException e) {
             Log.error("Exception while caching icon bitmap.", e);
         }
