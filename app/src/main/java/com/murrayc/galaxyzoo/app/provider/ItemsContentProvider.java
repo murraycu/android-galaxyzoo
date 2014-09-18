@@ -41,18 +41,9 @@ import android.util.Base64;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostLoginResponseHandler;
-import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostResponseHandler;
 import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooResponseHandler;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.BufferedWriter;
@@ -1457,13 +1448,26 @@ public class ItemsContentProvider extends ContentProvider {
             final String authName = params[2];
             final String authApiKey = params[3];
 
-            final HttpPost post = new HttpPost(Config.POST_URI);
-            HttpUtils.setRequestUserAgent(post);
+
+            final HttpURLConnection conn = openConnection(Config.POST_URI);
+            if (conn == null) {
+                return false;
+            }
+
+            try
+            {
+                conn.setRequestMethod("POST");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+            } catch (final IOException e) {
+                Log.error("UploadAsyncTask.doInBackground(): exception during HTTP connection", e);
+
+                return false;
+            }
+
 
             //Add the authentication details to the headers;
-            // TODO: When we add this header, we get a ClientProtocolException, caused by a CircularRedirectException,
-            // when we call HttpClient.execute().
-            post.setHeader("Authorization", generateAuthorizationHeader(authName, authApiKey));
+            conn.setRequestProperty("Authorization", generateAuthorizationHeader(authName, authApiKey));
 
             final String PARAM_PART_CLASSIFICATION = "classification";
 
@@ -1524,15 +1528,28 @@ public class ItemsContentProvider extends ContentProvider {
                 }
             }
 
-            try {
-                post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            } catch (final UnsupportedEncodingException e) {
-                Log.error("Exception from UrlEncodedFormEntity: ", e);
-                return null;
+            if(!writeParamsToHttpPost(conn, nameValuePairs)) {
+                return false;
             }
 
-            final ResponseHandler<Boolean> handler = new GalaxyZooPostResponseHandler();
-            return HttpUtils.executeHttpRequest(post, handler);
+            try {
+                conn.connect();
+
+                //Get the response:
+                InputStream in = conn.getInputStream();
+                if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+                    Log.error("Did not receive the 201 Created status code: " + conn.getResponseCode());
+                    return false;
+                }
+
+
+
+                return true;
+            } catch (IOException e) {
+                Log.error("UploadAsyncTask.doInBackground(): exception during HTTP connection", e);
+
+                return false;
+            }
         }
 
         @Override
