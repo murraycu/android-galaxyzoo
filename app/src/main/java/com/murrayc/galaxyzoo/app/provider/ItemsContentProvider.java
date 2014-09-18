@@ -125,7 +125,7 @@ public class ItemsContentProvider extends ContentProvider {
                 return result;
             }
         } catch (final JSONException e) {
-            e.printStackTrace();
+            Log.error("parseLoginResponseContent(): Exception", e);
             return result;
         }
     }
@@ -165,7 +165,7 @@ public class ItemsContentProvider extends ContentProvider {
             Log.error("Failed. No JSON entities parsed."); //TODO: Use some constant error code?
         }
 
-        //maybe via the handleResponse() return string, which seems to be for whatever we want.
+        //maybe via the parseQueryJsonObjectSubject() return string..
         //For instance, the Galaxy-Zoo server could be down for maintenance (this has happened before),
         //or there could be some other network problem.
         return result;
@@ -1399,7 +1399,7 @@ public class ItemsContentProvider extends ContentProvider {
             //Calling getInputStream() causes the request to actually be sent.
             InputStream in = conn.getInputStream();
             if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.error("requestMoreItemsSync(): response code: " + conn.getResponseCode());
+                Log.error("httpRequest(): response code: " + conn.getResponseCode());
                 return null;
             }
 
@@ -1416,7 +1416,7 @@ public class ItemsContentProvider extends ContentProvider {
         try {
             url = new URL(strURL);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Log.error("openConnection(): exception while parsing URL", e);
             return null;
         }
 
@@ -1426,7 +1426,7 @@ public class ItemsContentProvider extends ContentProvider {
             conn = (HttpURLConnection)url.openConnection();
             HttpUtils.setConnectionUserAgent(conn);
         } catch (final IOException e) {
-            Log.error("requestMoreItemsSync(): exception during HTTP connection", e);
+            Log.error("openConnection(): exception during HTTP connection", e);
 
             return null;
         }
@@ -1548,7 +1548,8 @@ public class ItemsContentProvider extends ContentProvider {
                 result.append("=");
                 result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                Log.error("getPostDataBytes(): Exception", e);
+                return null;
             }
         }
 
