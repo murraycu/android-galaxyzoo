@@ -130,8 +130,14 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    public static List<Subject> parseQueryResponseContent(final InputStream content) throws IOException {
-        final String str = HttpUtils.getStringFromInputStream(content);
+    public static List<Subject> parseQueryResponseContent(final InputStream content) {
+        final String str;
+        try {
+            str = HttpUtils.getStringFromInputStream(content);
+        } catch (IOException e) {
+            Log.error("parseQueryResponseContent(): Exception while getting string from input stream", e);
+            return null;
+        }
 
         final List<Subject> result = new ArrayList<>();
 
@@ -1385,9 +1391,21 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private List<Subject> requestMoreItemsSync(int count) {
+        final InputStream in = httpGetRequest(getQueryUri(count));
+        final List<Subject> result = parseQueryResponseContent(in);
+        try {
+            in.close();
+        } catch (IOException e) {
+            Log.error("requestMoreItemsSync(): Can't close input stream", e);
+        }
+
+        return result;
+    }
+
+    private InputStream httpGetRequest(final String strUri) {
         throwIfNoNetwork();
 
-        final HttpURLConnection conn = openConnection(getQueryUri(count));
+        final HttpURLConnection conn = openConnection(strUri);
         if (conn == null) {
             return null;
         }
@@ -1397,15 +1415,15 @@ public class ItemsContentProvider extends ContentProvider {
             // This is the default: conn.setRequestMethod("GET");
 
             //Calling getInputStream() causes the request to actually be sent.
-            InputStream in = conn.getInputStream();
+            final InputStream in = conn.getInputStream();
             if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.error("httpRequest(): response code: " + conn.getResponseCode());
+                Log.error("httpGetRequest(): response code: " + conn.getResponseCode());
                 return null;
             }
 
-            return parseQueryResponseContent(in);
+            return in;
         } catch (final IOException e) {
-            Log.error("requestMoreItemsSync(): exception during HTTP connection", e);
+            Log.error("httpGetRequest(): exception during HTTP connection", e);
 
             return null;
         }
