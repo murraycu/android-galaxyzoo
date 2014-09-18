@@ -51,6 +51,7 @@ import org.json.JSONTokener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -193,6 +194,40 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         return null;
+    }
+
+    public static boolean parseQueryResponseContent(final InputStream in, final String cacheFileUr) {
+        //Write the content to the file:
+        final FileOutputStream fout;
+        try {
+            fout = new FileOutputStream(cacheFileUr);
+        } catch (final FileNotFoundException e) {
+            Log.error("parseQueryResponseContent(): Exception while creating FileOutputStream", e);
+            return false;
+        }
+
+        // TODO: Find a way to use writeTo(), instead of looping ourselves,
+        // while also having optional ungzipping?
+        //response.getEntity().writeTo(fout);
+
+        try {
+
+            byte[] bytes = new byte[256];
+            int r;
+            do {
+                r = in.read(bytes);
+                if (r >= 0) {
+                    fout.write(bytes, 0, r);
+                }
+            } while (r >= 0);
+
+            fout.close();
+        } catch (final IOException e) {
+            Log.error("parseQueryResponseContent(): Exception while writing to FileOutputStream", e);
+            return false;
+        }
+
+        return true; //TODO?
     }
 
     public static class NoNetworkException  extends RuntimeException {
@@ -711,6 +746,8 @@ public class ItemsContentProvider extends ContentProvider {
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
     private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri, boolean asyncFileDownloads) {
+        throwIfNoNetwork();
+
         if (asyncFileDownloads) {
             final HttpUtils.FileCacheAsyncTask task = new HttpUtils.FileCacheAsyncTask();
             task.execute(uriFileToCache, cacheFileUri);
@@ -1389,7 +1426,9 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private List<Subject> requestMoreItemsSync(int count) {
-        final InputStream in = HttpUtils.httpGetRequest(getContext(), getQueryUri(count));
+        throwIfNoNetwork();
+
+        final InputStream in = HttpUtils.httpGetRequest(getQueryUri(count));
         final List<Subject> result = parseQueryResponseContent(in);
         try {
             in.close();

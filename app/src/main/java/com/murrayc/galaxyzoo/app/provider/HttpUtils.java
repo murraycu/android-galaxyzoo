@@ -5,14 +5,6 @@ import android.os.AsyncTask;
 
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
-import com.murrayc.galaxyzoo.app.provider.rest.FileResponseHandler;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,9 +37,10 @@ public class HttpUtils {
         return builder.toString();
     }
 
-    static InputStream httpGetRequest(final Context context, final String strUri) {
-        throwIfNoNetwork(context);
-
+    /**
+     * Callers should use throwIfNoNetwork() before calling this.
+     */
+    static InputStream httpGetRequest(final String strUri) {
         final HttpURLConnection conn = openConnection(strUri);
         if (conn == null) {
             return null;
@@ -61,8 +54,20 @@ public class HttpUtils {
             final InputStream in = conn.getInputStream();
             if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 Log.error("httpGetRequest(): response code: " + conn.getResponseCode());
+                //TODO: Close in.
                 return null;
             }
+
+            //HTTPUrlConnection seems to (request and) handle gzip encoding automatically,
+            //so we don't need to do it here:
+            /*
+            //Ungzip it if necessary:
+            //For instance, HTML and CSS files may often be gzipped.
+            final Header contentEncoding = response.getFirstHeader("Content-Encoding");
+            if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
+                in = new GZIPInputStream(in);
+            }
+            */
 
             return in;
         } catch (final IOException e) {
@@ -129,9 +134,15 @@ public class HttpUtils {
     }
 
     public static boolean cacheUriToFileSync(final String uriFileToCache, final String cacheFileUri) {
-        final HttpGet get = new HttpGet(uriFileToCache);
-        final ResponseHandler<Boolean> handler = new FileResponseHandler(cacheFileUri);
-        return executeHttpRequest(get, handler);
+        final InputStream in = HttpUtils.httpGetRequest(uriFileToCache);
+        final boolean result = ItemsContentProvider.parseQueryResponseContent(in, cacheFileUri);
+        try {
+            in.close();
+        } catch (IOException e) {
+            Log.error("cacheUriToFileSync(): Can't close input stream", e);
+        }
+
+        return result;
     }
 
     public static long getLatestLastModified(final String[] urls) {
@@ -170,28 +181,6 @@ public class HttpUtils {
         }
 
         return con.getLastModified();
-    }
-
-    static boolean executeHttpRequest(final HttpUriRequest request, ResponseHandler<Boolean> handler) {
-        setRequestUserAgent(request);
-
-        Boolean handlerResult = false;
-        HttpResponse response = null;
-        try {
-            final HttpClient client = new DefaultHttpClient();
-            //This just leads to an redirect limit exception: client.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
-            response = client.execute(request);
-            handlerResult = handler.handleResponse(response);
-        } catch (IOException e) {
-            Log.error("executeHttpRequest(): exception processing async request", e);
-            return false;
-        }
-
-        return handlerResult;
-    }
-
-    public static void setRequestUserAgent(final HttpUriRequest get) {
-        get.setHeader(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
     }
 
     public static void setConnectionUserAgent(final HttpURLConnection connection) {
