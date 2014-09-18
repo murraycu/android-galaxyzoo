@@ -198,19 +198,10 @@ public class ItemsContentProvider extends ContentProvider {
 
     public static boolean parseQueryResponseContent(final InputStream in, final String cacheFileUr) {
         //Write the content to the file:
-        final FileOutputStream fout;
-        try {
-            fout = new FileOutputStream(cacheFileUr);
-        } catch (final FileNotFoundException e) {
-            Log.error("parseQueryResponseContent(): Exception while creating FileOutputStream", e);
-            return false;
-        }
-
-        // TODO: Find a way to use writeTo(), instead of looping ourselves,
-        // while also having optional ungzipping?
-        //response.getEntity().writeTo(fout);
-
-        try {
+        try (final FileOutputStream fout = new FileOutputStream(cacheFileUr)) {
+            // TODO: Find a way to use writeTo(), instead of looping ourselves,
+            // while also having optional ungzipping?
+            //response.getEntity().writeTo(fout);
 
             byte[] bytes = new byte[256];
             int r;
@@ -220,8 +211,6 @@ public class ItemsContentProvider extends ContentProvider {
                     fout.write(bytes, 0, r);
                 }
             } while (r >= 0);
-
-            fout.close();
         } catch (final IOException e) {
             Log.error("parseQueryResponseContent(): Exception while writing to FileOutputStream", e);
             return false;
@@ -1508,16 +1497,13 @@ public class ItemsContentProvider extends ContentProvider {
         nameValuePairs.add(new BasicNameValuePair("username", username));
         nameValuePairs.add(new BasicNameValuePair("password", password));
 
-        try
-        {
+        try {
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setDoInput(true);
 
-            final OutputStream out = conn.getOutputStream();
-
-            if (!writeParamsToHttpPost(conn, nameValuePairs)) {
-                return null;
+            if(!writeParamsToHttpPost(conn, nameValuePairs)) {
+              return null;
             }
 
             conn.connect();
@@ -1713,11 +1699,11 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
-        try {
+        try (
             final OutputStream out = conn.getOutputStream();
-
             final BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(out, "UTF-8"));
+                     new OutputStreamWriter(out, "UTF-8"));
+        ) {
             writer.write(getPostDataBytes(nameValuePairs));
             writer.flush();
             writer.close();

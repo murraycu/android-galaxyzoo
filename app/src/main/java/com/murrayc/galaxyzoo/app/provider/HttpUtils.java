@@ -22,7 +22,7 @@ public class HttpUtils {
     private static final String HTTP_REQUEST_HEADER_PARAM_USER_AGENT = "User-Agent";
     private static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";
 
-    public static String getStringFromInputStream(InputStream content) throws IOException {
+    public static String getStringFromInputStream(final InputStream content) throws IOException {
         final InputStreamReader inputReader = new InputStreamReader(content);
         final BufferedReader reader = new BufferedReader(inputReader);
 
