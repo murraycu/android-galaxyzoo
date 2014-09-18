@@ -1394,7 +1394,7 @@ public class ItemsContentProvider extends ContentProvider {
 
             return GalaxyZooPostLoginResponseHandler.parseContent(in);
         } catch (final IOException e) {
-            Log.error("requestMoreItemsSync(): exception during HTTP connection", e);
+            Log.error("loginSync(): exception during HTTP connection", e);
 
             return null;
         }
