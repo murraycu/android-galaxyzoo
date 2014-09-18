@@ -55,6 +55,8 @@ class ListCursorAdapter extends CursorAdapter {
         final String imageUriStr = cursor.getString(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_URI);
         final Boolean done = (cursor.getInt(ListFragment.COLUMN_INDEX_DONE) == 1);
         final Boolean uploaded = (cursor.getInt(ListFragment.COLUMN_INDEX_UPLOADED) == 1);
+        final Boolean favorite = (cursor.getInt(ListFragment.COLUMN_INDEX_FAVOURITE) == 1);
+
 
         /**
          * Next set the title of the entry.
@@ -70,6 +72,9 @@ class ListCursorAdapter extends CursorAdapter {
         if (!TextUtils.isEmpty(imageUriStr)) {
             final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);
             UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
+
+            final ImageView checkboxFavorite = (ImageView) view.findViewById(R.id.item_checkboxFavorite);
+            checkboxFavorite.setVisibility(favorite ? View.VISIBLE: View.GONE);
 
             final ImageView checkboxClassified = (ImageView) view.findViewById(R.id.item_checkboxClassified);
             checkboxClassified.setVisibility(done ? View.VISIBLE : View.GONE);

@@ -58,7 +58,7 @@ public class ListFragment extends ZooFragment
     private static final int URL_LOADER = 0;
     private ListCursorAdapter mAdapter;
     private final String[] mColumns = { Item.Columns._ID,
-            Item.Columns.LOCATION_THUMBNAIL_URI, Item.Columns.DONE, Item.Columns.UPLOADED};
+            Item.Columns.LOCATION_THUMBNAIL_URI, Item.Columns.DONE, Item.Columns.UPLOADED, Item.Columns.FAVORITE};
 
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
@@ -69,6 +69,7 @@ public class ListFragment extends ZooFragment
     static final int COLUMN_INDEX_LOCATION_THUMBNAIL_URI = 1;
     static final int COLUMN_INDEX_DONE = 2;
     static final int COLUMN_INDEX_UPLOADED = 3;
+    static final int COLUMN_INDEX_FAVOURITE = 4;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
