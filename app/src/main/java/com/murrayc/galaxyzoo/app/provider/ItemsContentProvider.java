@@ -644,6 +644,10 @@ public class ItemsContentProvider extends ContentProvider {
                  * so we can return the result to the caller.
                  */
                 final GalaxyZooPostLoginResponseHandler.LoginResult result = loginSync(username, password);
+                if (result == null) {
+                    return null;
+                }
+
                 if (result.getSuccess()) {
                     saveAuthToPreferences(result.getName(), result.getApiKey());
                 }

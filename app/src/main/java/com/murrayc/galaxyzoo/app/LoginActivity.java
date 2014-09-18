@@ -239,6 +239,10 @@ public class LoginActivity extends Activity {
 
             try {
                 final Bundle result = contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_LOGIN, null, arguments);
+                if (result == null) {
+                    return false;
+                }
+
                 return result.getBoolean(ItemsContentProvider.LOGIN_METHOD_RESULT);
             } catch (final ItemsContentProvider.NoNetworkException e) {
                 Log.error("requestLogin(): No network connection.", e);
