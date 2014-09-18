@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 /**
  * Created by murrayc on 5/16/14.
@@ -71,8 +70,8 @@ class ListCursorAdapter extends CursorAdapter {
             final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);
             UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
 
-            final TextView textView = (TextView) view.findViewById(R.id.item_text);
-            textView.setText(done ? mContext.getString(R.string.list_item_marker_done) : ""); //TODO: Replace this with a check icon.
+            final ImageView checkbox = (ImageView) view.findViewById(R.id.item_checkbox);
+            checkbox.setVisibility(done ? View.VISIBLE: View.GONE);
         }
     }
 
