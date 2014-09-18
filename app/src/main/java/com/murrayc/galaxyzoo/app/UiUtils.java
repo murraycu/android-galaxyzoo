@@ -59,11 +59,11 @@ class UiUtils {
         final ContentResolver contentResolver = context.getContentResolver();
 
         Bitmap bMap = null;
-        try {
-            final Uri uri = Uri.parse(imageUriStr);
-            final InputStream stream = contentResolver.openInputStream(uri);
+        final Uri uri = Uri.parse(imageUriStr);
+
+        try (final InputStream stream = contentResolver.openInputStream(uri)) {
             bMap = BitmapFactory.decodeStream(stream);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Log.error("BitmapFactory.decodeStream() failed.", e);
             return;
         }

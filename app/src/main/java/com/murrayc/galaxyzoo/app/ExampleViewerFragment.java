@@ -43,17 +43,21 @@ public class ExampleViewerFragment extends Fragment {
         protected Bitmap doInBackground(String... params) {
             strUri = params[0];
 
+            URLConnection connection = null;
             try {
                 final URL url = new URL(strUri);
-                final URLConnection connection = url.openConnection();
-                final InputStream stream = connection.getInputStream();
-                return BitmapFactory.decodeStream(stream);
-
+                connection = url.openConnection();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.error("ExampleViewerFragment.BitmapWorkerTask.doInBackground: exception while opening connection", e);
+                return null;
             }
 
-            return null;
+            try (final InputStream stream = connection.getInputStream()) {
+                return BitmapFactory.decodeStream(stream);
+            } catch (IOException e) {
+                Log.error("ExampleViewerFragment.BitmapWorkerTask.doInBackground: exception while using stream", e);
+                return null;
+            }
         }
 
         // Once complete, see if ImageView is still around and set bitmap.
