@@ -193,9 +193,6 @@ public class ListFragment extends ZooFragment
             case R.id.option_menu_item_more:
                 requestMoreItems();
                 return true;
-            case R.id.option_menu_item_upload:
-                requestUpload();
-                return true;
             case R.id.option_menu_item_next:
                 mCallbacks.navigateToNextAvailable();
                 return true;

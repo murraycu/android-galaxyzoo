@@ -9,7 +9,6 @@
     <string name="prompt_username">Benutzername</string>
     <string name="title_activity_example_viewer">Beispiel</string>
     <string name="title_activity_question_help">Hilfe</string>
-    <string name="action_upload">Hochladen</string>
     <string name="action_sign_in">Anmelden</string>
     <string name="action_sign_in_short">Anmelden</string>
     <string name="title_activity_login">Anmelden</string>

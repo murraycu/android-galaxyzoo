@@ -33,6 +33,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
@@ -227,7 +228,6 @@ public class ItemsContentProvider extends ContentProvider {
     //TODO: Remove these explicit method calls, or keep them just for debugging,
     //when we make them happen automatically.
     public static final String METHOD_REQUEST_ITEMS = "request-items";
-    public static final String METHOD_UPLOAD_CLASSIFICATIONS = "upload-classifications";
     public static final String METHOD_LOGIN = "login";
     public static final String METHOD_LOGIN_ARG_USERNAME= "username";
     public static final String METHOD_LOGIN_ARG_PASSWORD = "password";
@@ -390,8 +390,6 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private void startRegularUploads() {
-        return; //TODO: Enable this when uploads work, without the circular redirect.
-        /*
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             @Override
@@ -401,7 +399,6 @@ public class ItemsContentProvider extends ContentProvider {
             }
         };
         handler.postDelayed(runnable, 10000); // 10 seconds
-        */
     }
 
     @Override
@@ -763,13 +760,6 @@ public class ItemsContentProvider extends ContentProvider {
                  * informing the calling client later via notification.
                  */
                 requestMoreItemsAsync();
-                break;
-            case METHOD_UPLOAD_CLASSIFICATIONS:
-                throwIfNoNetwork();
-
-                /** Upload any classifications that have not yet been uploaded.
-                 */
-                uploadOutstandingClassifications();
                 break;
             case METHOD_LOGIN:
                 throwIfNoNetwork();

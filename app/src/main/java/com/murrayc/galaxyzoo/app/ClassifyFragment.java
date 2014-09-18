@@ -206,9 +206,6 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             case R.id.option_menu_item_list:
                 mCallbacks.navigateToList();
                 return true;
-            case R.id.option_menu_item_upload:
-                requestUpload();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
