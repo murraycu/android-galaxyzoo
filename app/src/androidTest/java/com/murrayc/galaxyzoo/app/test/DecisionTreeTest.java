@@ -23,6 +23,7 @@ import android.test.AndroidTestCase;
 
 import com.murrayc.galaxyzoo.app.DecisionTree;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -33,13 +34,16 @@ public class DecisionTreeTest extends AndroidTestCase {
 
 
     @Override
-    public void setUp() {
+    public void setUp() throws IOException {
         //For some reason DecisionTreeTest.class.getResourceAsStream() doesn't work,
         //so we use DecisionTreeTest.class.getClassLoader().getResourceAsStream(), which does.
         final InputStream inputStream = DecisionTreeTest.class.getClassLoader().getResourceAsStream("test_decision_tree.xml");
         assertNotNull(inputStream);
 
+        //TODO: Close the stream.
         decisionTree = new DecisionTree(inputStream);
+
+        inputStream.close();
     }
 
     @Override
