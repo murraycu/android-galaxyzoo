@@ -14,7 +14,24 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true" />
 
-    <ImageView android:id="@+id/item_checkbox"
+    <ImageView android:id="@+id/item_checkboxClassified"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="false"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text=""
+        android:layout_alignBottom="@+id/item_image"
+        android:layout_alignParentEnd="false"
+        android:layout_marginBottom="@dimen/standard_large_margin"
+        android:layout_marginEnd="@dimen/standard_large_margin"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="false"
+        android:src="@android:drawable/checkbox_on_background"
+        android:contentDescription="Whether the subject has been classified."
+        android:layout_toStartOf="@+id/item_checkboxUploaded" />
+
+    <ImageView android:id="@+id/item_checkboxUploaded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="false"
@@ -28,8 +45,7 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:clickable="false"
-        android:src="@android:drawable/checkbox_on_background"
+        android:src="@android:drawable/arrow_up_float"
         android:contentDescription="Whether the subject has been classified." />
-
 
 </RelativeLayout>
