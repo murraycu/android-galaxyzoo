@@ -1376,12 +1376,9 @@ public class ItemsContentProvider extends ContentProvider {
 
             final OutputStream out = conn.getOutputStream();
 
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(out, "UTF-8"));
-            writer.write(getPostDataBytes(nameValuePairs));
-            writer.flush();
-            writer.close();
-            out.close();
+            if (!writeParamsToHttpPost(conn, nameValuePairs)) {
+                return null;
+            }
 
             conn.connect();
 
@@ -1544,6 +1541,25 @@ public class ItemsContentProvider extends ContentProvider {
 
             onUploadTaskFinished(result, mItemId);
         }
+    }
+
+    private boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
+        try {
+            final OutputStream out = conn.getOutputStream();
+
+            final BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(out, "UTF-8"));
+            writer.write(getPostDataBytes(nameValuePairs));
+            writer.flush();
+            writer.close();
+            out.close();
+
+        } catch (final IOException e) {
+            Log.error("writeParamsToHttpPost(): Exception: ", e);
+            return false;
+        }
+
+        return true;
     }
 
     private String generateAuthorizationHeader(final String authName, final String authApiKey) {
