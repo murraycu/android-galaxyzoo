@@ -5,6 +5,7 @@
     <string name="action_invert">Invert</string>
     <string name="action_examples">Examples</string>
     <string name="action_login">Login</string>
+    <string name="action_favorite">Favorite</string>
     <string name="action_list">List</string>
     <string name="action_more">More</string>
     <string name="action_next">Next</string>

@@ -4,4 +4,5 @@
     <item name="option_menu_item_more" type="id" />
     <item name="option_menu_item_invert" type="id"/>
     <item name="option_menu_item_examples" type="id"/>
+    <item name="option_menu_item_favorite" type="id"/>
 </resources>

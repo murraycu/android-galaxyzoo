@@ -112,6 +112,9 @@ public class QuestionFragment extends BaseQuestionFragment
      * in the content provider.
      */
     static private class ClassificationInProgress implements Parcelable {
+        private final List<QuestionAnswer> answers = new ArrayList<>();
+        private boolean favorite = false;
+
         public static final Parcelable.Creator<ClassificationInProgress> CREATOR
                 = new Parcelable.Creator<ClassificationInProgress>() {
             public ClassificationInProgress createFromParcel(Parcel in) {
@@ -135,6 +138,8 @@ public class QuestionFragment extends BaseQuestionFragment
                     this.answers.add(str);
                 }
             }
+
+            favorite = (in.readInt() == 1);
         }
 
         public void add(final String questionId, final String answerId) {
@@ -145,6 +150,10 @@ public class QuestionFragment extends BaseQuestionFragment
             answers.add(new QuestionAnswer(questionId, answerId, checkboxIds));
         }
 
+        public void setFavorite(boolean favorite) {
+            this.favorite = favorite;
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -153,6 +162,7 @@ public class QuestionFragment extends BaseQuestionFragment
         @Override
         public void writeToParcel(final Parcel dest, int flags) {
             dest.writeArray(answers.toArray());
+            dest.writeInt(favorite ? 1 : 0);
         }
 
         static private class QuestionAnswer implements Parcelable {
@@ -234,7 +244,9 @@ public class QuestionFragment extends BaseQuestionFragment
             return answers;
         }
 
-        private final List<QuestionAnswer> answers = new ArrayList<>();
+        boolean isFavorite() {
+            return favorite;
+        }
     }
 
     //TODO: Can this fragment be reused, meaning we'd need to reset this?
@@ -361,8 +373,12 @@ public class QuestionFragment extends BaseQuestionFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        final MenuItem menuItem = menu.add(Menu.NONE, R.id.option_menu_item_examples, Menu.NONE, R.string.action_examples);
+        MenuItem menuItem = menu.add(Menu.NONE, R.id.option_menu_item_examples, Menu.NONE, R.string.action_examples);
         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        menuItem = menu.add(Menu.NONE, R.id.option_menu_item_favorite, Menu.NONE, R.string.action_favorite);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER); //Because the option menu cannot show a checked state.
+        menuItem.setCheckable(true);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -373,6 +389,28 @@ public class QuestionFragment extends BaseQuestionFragment
         switch (item.getItemId()) {
             case R.id.option_menu_item_examples:
                 doExamples();
+                return true;
+            case R.id.option_menu_item_favorite:
+                final boolean checked = !item.isChecked();
+
+                //Note:
+                //"Icon menu" (TODO: What is that?) items don't actually show a checked state,
+                //but it seems to work in the menu though not as an action in the action bar.
+                //See http://developer.android.com/guide/topics/ui/menus.html#checkable
+                item.setChecked(checked);
+
+                //TODO: Use pretty icons instead:
+                /*
+                //Show an icon to indicate checkedness instead:
+                //See http://developer.android.com/guide/topics/ui/menus.html#checkable
+                if (checked) {
+                    item.setIcon(android.R.drawable.ic_menu_save); //A silly example.
+                } else {
+                    item.setIcon(android.R.drawable.ic_menu_add); //A silly example.
+                }
+                */
+
+                mClassificationInProgress.setFavorite(checked);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -638,9 +676,10 @@ public class QuestionFragment extends BaseQuestionFragment
         uriBuilder.appendPath(getItemId());
         final ContentProviderOperation.Builder builder =
                 ContentProviderOperation.newUpdate(uriBuilder.build());
-        final ContentValues valuesDone = new ContentValues();
-        valuesDone.put(Item.Columns.DONE, true);
-        builder.withValues(valuesDone);
+        final ContentValues values = new ContentValues();
+        values.put(Item.Columns.DONE, true);
+        values.put(Item.Columns.FAVORITE, classificationInProgress.isFavorite());
+        builder.withValues(values);
         ops.add(builder.build());
 
         try {
