@@ -46,15 +46,19 @@ public class HttpUtils {
             return null;
         }
 
-        try
-        {
-            // This is the default: conn.setRequestMethod("GET");
+        // This is the default: conn.setRequestMethod("GET");
 
+        //We don't use Java 7's try-with-resources,
+        //because we want to return the InputStream, but try-with-resources would
+        //presumably close it as we returned it. TODO: Is this true?
+        InputStream in = null;
+        try  {
             //Calling getInputStream() causes the request to actually be sent.
-            final InputStream in = conn.getInputStream();
+            in = conn.getInputStream();
+
             if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 Log.error("httpGetRequest(): response code: " + conn.getResponseCode());
-                //TODO: Close in.
+                in.close();
                 return null;
             }
 
@@ -72,7 +76,11 @@ public class HttpUtils {
             return in;
         } catch (final IOException e) {
             Log.error("httpGetRequest(): exception during HTTP connection", e);
-
+            try {
+                in.close();
+            } catch (IOException e1) {
+                Log.error("httpGetRequest(): cannot close InputStream.", e);
+            }
             return null;
         }
     }

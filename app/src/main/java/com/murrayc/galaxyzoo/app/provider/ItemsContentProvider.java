@@ -1428,6 +1428,9 @@ public class ItemsContentProvider extends ContentProvider {
     private List<Subject> requestMoreItemsSync(int count) {
         throwIfNoNetwork();
 
+        //TODO: Can we use Java 7's try-with-resources to automatically close()
+        //the InputStream even though none of the code here should throw an
+        //exception?
         final InputStream in = HttpUtils.httpGetRequest(getQueryUri(count));
         final List<Subject> result = parseQueryResponseContent(in);
         try {
@@ -1518,9 +1521,14 @@ public class ItemsContentProvider extends ContentProvider {
             }
 
             conn.connect();
+        } catch (final IOException e) {
+            Log.error("loginSync(): exception during HTTP connection", e);
 
-            //Get the response:
-            InputStream in = conn.getInputStream();
+            return null;
+        }
+
+        //Get the response:
+        try (final InputStream in = conn.getInputStream()) {
             if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 Log.error("loginSync(): response code: " + conn.getResponseCode());
                 return null;
@@ -1679,17 +1687,14 @@ public class ItemsContentProvider extends ContentProvider {
                 return false;
             }
 
-            try {
-                conn.connect();
+            //TODO: Is this necessary? conn.connect();
 
-                //Get the response:
-                InputStream in = conn.getInputStream();
+            //Get the response:
+            try (final InputStream in = conn.getInputStream()) {
                 if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
                     Log.error("Did not receive the 201 Created status code: " + conn.getResponseCode());
                     return false;
                 }
-
-
 
                 return true;
             } catch (IOException e) {
