@@ -40,11 +40,13 @@ import android.util.Base64;
 
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
-import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooPostLoginResponseHandler;
-import com.murrayc.galaxyzoo.app.provider.rest.GalaxyZooResponseHandler;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -56,9 +58,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,6 +70,126 @@ public class ItemsContentProvider extends ContentProvider {
     //Whether the call to METHOD_LOGIN was successful.
     public static final String LOGIN_METHOD_RESULT = "result";
     private int mUploadsInProgress = 0;
+
+    public static LoginResult parseLoginResponseContent(final InputStream content) throws IOException {
+        final String str = HttpUtils.getStringFromInputStream(content);
+
+        //A failure by default.
+        LoginResult result = new LoginResult(false, null, null);
+
+        JSONTokener tokener = new JSONTokener(str);
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(tokener);
+        } catch (JSONException e) {
+            Log.error("JSON parsing failed.", e);
+            return result;
+        }
+
+        try {
+            if(TextUtils.equals(jsonObject.getString("success"), "true")) {
+                Log.info("Login succeeded.");
+
+                //TODO: Store the name and api_key for later use when uploading classifications.
+                //final String id = jsonObject.getString("id");
+                final String apiKey = jsonObject.getString("api_key");
+                //final String avatar = jsonObject.getString("avatar");
+                //final long classificationCount = jsonObject.getLong("classification_count");
+                //final String email = jsonObject.getString("email");
+                //final long favoriteCount = jsonObject.getLong("favorite_count");
+                final String name = jsonObject.getString("name");
+                //final String zooniverseId = jsonObject.getString("zooniverse_id");
+
+                return new LoginResult(true, name, apiKey);
+
+                //Then there is an object called "project", like so:
+                /*
+                "project":{
+                    "classification_count":66,
+                            "favorite_count":2,
+                            "groups":{
+                        "50251c3b516bcb6ecb000002":{
+                            "classification_count":66,
+                                    "name":"sloan"
+                        }
+                    },
+                    "splits":{
+                    }
+                }
+                */
+            } else {
+                Log.info("Login failed.");
+
+                final String message = jsonObject.getString("message");
+                Log.info("Login failure message", message);
+                return result;
+            }
+        } catch (final JSONException e) {
+            e.printStackTrace();
+            return result;
+        }
+    }
+
+    public static List<Subject> parseQueryResponseContent(final InputStream content) throws IOException {
+        final String str = HttpUtils.getStringFromInputStream(content);
+
+        final List<Subject> result = new ArrayList<>();
+
+        JSONTokener tokener = new JSONTokener(str);
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(tokener);
+        } catch (JSONException e) {
+            Log.error("JSON parsing failed.", e);
+            return result;
+        }
+
+        for(int i = 0; i < jsonArray.length(); ++i) {
+            JSONObject obj = null;
+            try {
+                obj = jsonArray.getJSONObject(i);
+            } catch (JSONException e) {
+                Log.error("JSON parsing of object failed.", e);
+                return result;
+            }
+
+            final Subject subject = parseQueryJsonObjectSubject(obj);
+            if (subject != null) {
+                result.add(subject);
+            }
+        }
+
+        //TODO: If this is 0 then something went wrong. Let the user know,
+        // only flush old state now that new state has arrived
+        if (result.size() == 0) {
+            Log.error("Failed. No JSON entities parsed."); //TODO: Use some constant error code?
+        }
+
+        //maybe via the handleResponse() return string, which seems to be for whatever we want.
+        //For instance, the Galaxy-Zoo server could be down for maintenance (this has happened before),
+        //or there could be some other network problem.
+        return result;
+    }
+
+    private static Subject parseQueryJsonObjectSubject(final JSONObject objSubject) {
+        try {
+            final Subject subject = new Subject();
+            subject.mId = objSubject.getString("id");
+            subject.mZooniverseId = objSubject.getString("zooniverse_id");
+            final JSONObject objLocation = objSubject.getJSONObject("location");
+            if (objLocation != null) {
+                subject.mLocationStandard = objLocation.getString("standard");
+                subject.mLocationThumbnail = objLocation.getString("thumbnail");
+                subject.mLocationInverted = objLocation.getString("inverted");
+            }
+
+            return subject;
+        } catch (JSONException e) {
+            Log.error("JSON parsing of object fields failed.", e);
+        }
+
+        return null;
+    }
 
     public static class NoNetworkException  extends RuntimeException {
         public NoNetworkException() {
@@ -634,7 +754,7 @@ public class ItemsContentProvider extends ContentProvider {
                  * We do this synchronously, waiting for the result,
                  * so we can return the result to the caller.
                  */
-                final GalaxyZooPostLoginResponseHandler.LoginResult result = loginSync(username, password);
+                final LoginResult result = loginSync(username, password);
                 if (result == null) {
                     return null;
                 }
@@ -1214,6 +1334,30 @@ public class ItemsContentProvider extends ContentProvider {
         public String mLocationInverted;
     }
 
+    public static class LoginResult {
+        private final boolean success;
+        private final String name;
+        private final String apiKey;
+
+        public LoginResult(boolean success, final String name, final String apiKey) {
+            this.success = success;
+            this.name = name;
+            this.apiKey = apiKey;
+        }
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public boolean getSuccess() {
+            return success;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
     private class UriParts {
         public String itemId;
     }
@@ -1259,7 +1403,7 @@ public class ItemsContentProvider extends ContentProvider {
                 return null;
             }
 
-            return GalaxyZooResponseHandler.parseContent(in);
+            return parseQueryResponseContent(in);
         } catch (final IOException e) {
             Log.error("requestMoreItemsSync(): exception during HTTP connection", e);
 
@@ -1326,9 +1470,9 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
 
-    private class LoginAsyncTask extends AsyncTask<String, Integer, GalaxyZooPostLoginResponseHandler.LoginResult> {
+    private class LoginAsyncTask extends AsyncTask<String, Integer, LoginResult> {
         @Override
-        protected GalaxyZooPostLoginResponseHandler.LoginResult doInBackground(final String... params) {
+        protected LoginResult doInBackground(final String... params) {
             if (params.length < 2) {
                 Log.error("LoginTask: not enough params.");
                 return null;
@@ -1342,14 +1486,14 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         @Override
-        protected void onPostExecute(final GalaxyZooPostLoginResponseHandler.LoginResult result) {
+        protected void onPostExecute(final LoginResult result) {
             super.onPostExecute(result);
 
             onLoginTaskFinished(result);
         }
     }
 
-    private GalaxyZooPostLoginResponseHandler.LoginResult loginSync(final String username, final String password) {
+    private LoginResult loginSync(final String username, final String password) {
         final HttpURLConnection conn = openConnection(Config.LOGIN_URI);
         if (conn == null) {
             return null;
@@ -1380,7 +1524,7 @@ public class ItemsContentProvider extends ContentProvider {
                 return null;
             }
 
-            return GalaxyZooPostLoginResponseHandler.parseContent(in);
+            return parseLoginResponseContent(in);
         } catch (final IOException e) {
             Log.error("loginSync(): exception during HTTP connection", e);
 
@@ -1411,7 +1555,7 @@ public class ItemsContentProvider extends ContentProvider {
         return result.toString();
     }
 
-    private void onLoginTaskFinished(final GalaxyZooPostLoginResponseHandler.LoginResult result) {
+    private void onLoginTaskFinished(final LoginResult result) {
         if (result.getSuccess()) {
             saveAuthToPreferences(result.getName(), result.getApiKey());
         } else {
