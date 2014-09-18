@@ -19,15 +19,10 @@
 
 package com.murrayc.galaxyzoo.app;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
-
-import com.murrayc.galaxyzoo.app.provider.Item;
 
 //import org.apache.http.client.utils.URIBuilder;
 
