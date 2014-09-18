@@ -217,17 +217,17 @@ class IconsCache {
 
     String getFileContents(final String fileUri) {
         File file = new File(fileUri);
-        try {
+        try (
             final FileInputStream fis = new FileInputStream(file);
             final InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
             final BufferedReader bufferedReader = new BufferedReader(isr);
+        ) {
             final StringBuilder sb = new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line).append("\n");
             }
 
-            fis.close();
             return sb.toString();
         } catch (FileNotFoundException e) {
             Log.error("readFile failed.", e);
