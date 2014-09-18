@@ -29,7 +29,7 @@
         android:focusableInTouchMode="false"
         android:clickable="false"
         android:src="@android:drawable/checkbox_on_background"
-        android:contentDescription="Whether the subject has been classified.">
+        android:contentDescription="Whether the subject has been classified." />
 
 
 </RelativeLayout>
