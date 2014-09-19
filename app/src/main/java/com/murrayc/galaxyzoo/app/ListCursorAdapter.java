@@ -34,13 +34,12 @@ import android.widget.ImageView;
 class ListCursorAdapter extends CursorAdapter {
 
     private final LayoutInflater mLayoutInflater;
-    private final Context mContext;
 
     public ListCursorAdapter(Context context, Cursor c) {
         super(context, c, 0 /* seems reasonable */);
 
         mLayoutInflater = LayoutInflater.from(context);
-        mContext = context;
+        Context mContext = context;
     }
 
     @Override
