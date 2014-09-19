@@ -1,9 +1,9 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import com.murrayc.galaxyzoo.app.provider.Item;

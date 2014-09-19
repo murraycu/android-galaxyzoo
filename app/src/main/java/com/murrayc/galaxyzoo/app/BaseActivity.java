@@ -20,9 +20,9 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
@@ -30,7 +30,7 @@ import android.view.MenuItem;
  * Created by murrayc on 2/7/14.
  */
 @SuppressLint("Registered") //This is a base class for other Activities.
-class BaseActivity extends Activity {
+class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

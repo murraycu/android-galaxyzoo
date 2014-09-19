@@ -20,13 +20,10 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.app.LoaderManager;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
@@ -35,6 +32,9 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.RemoteException;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;

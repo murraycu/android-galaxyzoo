@@ -1,11 +1,11 @@
 package com.murrayc.galaxyzoo.app;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 
-public class ExampleViewerActivity extends Activity {
+public class ExampleViewerActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class ExampleViewerActivity extends Activity {
         if (savedInstanceState == null) {
             final ExampleViewerFragment fragment = new ExampleViewerFragment();
             fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
         }

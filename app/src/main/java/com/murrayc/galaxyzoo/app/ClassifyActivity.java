@@ -67,7 +67,7 @@ public class ClassifyActivity extends ItemActivity implements ClassifyFragment.C
             // For instance, pass the intent.getExtras() as the bundle?.
             final ClassifyFragment fragment = new ClassifyFragment();
             fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
         }
@@ -107,7 +107,7 @@ public class ClassifyActivity extends ItemActivity implements ClassifyFragment.C
     public void onClassificationFinished() {
         //Start another one:
         setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
-        final ClassifyFragment fragmentClassify = (ClassifyFragment)getFragmentManager().findFragmentById(R.id.container);
+        final ClassifyFragment fragmentClassify = (ClassifyFragment)getSupportFragmentManager().findFragmentById(R.id.container);
         fragmentClassify.setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
         fragmentClassify.update();
     }

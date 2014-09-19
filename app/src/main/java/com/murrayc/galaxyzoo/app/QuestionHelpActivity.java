@@ -64,7 +64,7 @@ public class QuestionHelpActivity extends BaseActivity {
             // For instance, pass the intent.getExtras() as the bundle?.
             final QuestionHelpFragment fragment = new QuestionHelpFragment();
             fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
         }

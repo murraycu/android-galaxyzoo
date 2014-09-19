@@ -67,7 +67,7 @@ public class SubjectViewerActivity extends ItemActivity implements SubjectViewer
             // For instance, pass the intent.getExtras() as the bundle?.
             final SubjectViewerFragment fragment = new SubjectViewerFragment();
             fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
         }
