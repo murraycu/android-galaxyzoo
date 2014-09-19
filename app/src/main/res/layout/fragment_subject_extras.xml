@@ -25,29 +25,32 @@
             android:paddingEnd="@dimen/activity_horizontal_margin" />
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/textViewZooniverseId" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/textViewZooniverseId" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        style="?android:attr/buttonBarStyle" >
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_title_examine"
             android:id="@+id/buttonExamine"
+            style="?android:attr/buttonBarButtonStyle"
             android:paddingEnd="@dimen/activity_horizontal_margin" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_title_discuss"
-            android:id="@+id/buttonDiscuss" />
+            android:id="@+id/buttonDiscuss"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 
 
