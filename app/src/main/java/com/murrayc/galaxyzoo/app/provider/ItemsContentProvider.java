@@ -1720,7 +1720,7 @@ public class ItemsContentProvider extends ContentProvider {
         try (
             final OutputStream out = conn.getOutputStream();
             final BufferedWriter writer = new BufferedWriter(
-                     new OutputStreamWriter(out, "UTF-8"));
+                     new OutputStreamWriter(out, "UTF-8"))
         ) {
             writer.write(getPostDataBytes(nameValuePairs));
             writer.flush();
