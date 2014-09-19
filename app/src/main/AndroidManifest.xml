@@ -28,6 +28,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".SubjectViewerActivity"
+            android:label="@string/title_activity_subject_viewer" >
+        </activity>
+
         <provider
             android:name=".provider.ItemsContentProvider"
             android:authorities="com.murrayc.galaxyzoo.app"

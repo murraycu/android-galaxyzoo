@@ -45,11 +45,11 @@ class BaseActivity extends Activity {
      * Navigate to the item,
      *
      */
-    void navigate(final String itemId) {
-        //Start the detail activity
+    void navigate(final String itemId, final boolean done) {
+        // Start the detail activity
         // for the selected item ID.
-        // TODO: Just view it with DetailActivity if it has already been classified.
-        final Intent intent = new Intent(this, ClassifyActivity.class);
+        final Intent intent = new Intent(this,
+                done ? SubjectViewerActivity.class : ClassifyActivity.class);
         if (!TextUtils.isEmpty(itemId)) {
             intent.putExtra(ItemFragment.ARG_ITEM_ID, itemId);
         }

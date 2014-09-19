@@ -57,12 +57,12 @@ public class ListActivity extends BaseActivity
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(final String itemId) {
-        navigate(itemId);
+    public void onItemSelected(final String itemId, boolean done) {
+        navigate(itemId, done);
     }
 
     @Override
     public void navigateToNextAvailable() {
-        navigate(null); //null means next.
+        navigate(null, false /* not done */); //null means next.
     }
 }

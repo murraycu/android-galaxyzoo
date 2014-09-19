@@ -83,7 +83,7 @@ public class ListFragment extends ZooFragment
      */
     private static final Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(final String itemId) {
+        public void onItemSelected(final String itemId, boolean done) {
         }
 
         @Override
@@ -306,8 +306,9 @@ public class ListFragment extends ZooFragment
         }
 
         final String itemId = cursor.getString(COLUMN_INDEX_ID);
+        final boolean done = (cursor.getInt(COLUMN_INDEX_DONE) == 1);
 
-        mCallbacks.onItemSelected(itemId);
+        mCallbacks.onItemSelected(itemId, done);
     }
 
     GridView getGridView() {
@@ -333,7 +334,7 @@ public class ListFragment extends ZooFragment
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(final String itemId);
+        public void onItemSelected(final String itemId, boolean done);
 
         public void navigateToNextAvailable();
     }
