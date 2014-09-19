@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.LruCache;
 
 import com.murrayc.galaxyzoo.app.provider.Config;
@@ -247,6 +248,21 @@ class IconsCache {
     // http://sourceforge.net/projects/cssparser/ doesn't seem to be usable on Android because
     // Android's org.w3c.dom doesn't have the css package, with classes such as CSSStyleSheet.
     void getIconPositionFromCss(final Bitmap icons, final String css, final String cssName, boolean isExampleIcon) {
+        if (icons == null) {
+            Log.error("getIconPositionFromCss(): icons is null.");
+            return;
+        }
+
+        if (TextUtils.isEmpty(css)) {
+            Log.error("getIconPositionFromCss(): css is empty.");
+            return;
+        }
+
+        if (TextUtils.isEmpty(cssName)) {
+            Log.error("getIconPositionFromCss(): cssName is empty.");
+            return;
+        }
+
         if (mIcons.get(cssName) != null) {
             //Avoid getting it again.
             return;

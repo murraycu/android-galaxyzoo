@@ -77,7 +77,9 @@ public class HttpUtils {
         } catch (final IOException e) {
             Log.error("httpGetRequest(): exception during HTTP connection", e);
             try {
-                in.close();
+                if (in != null) {
+                    in.close();
+                }
             } catch (IOException e1) {
                 Log.error("httpGetRequest(): cannot close InputStream.", e);
             }
@@ -143,6 +145,10 @@ public class HttpUtils {
 
     public static boolean cacheUriToFileSync(final String uriFileToCache, final String cacheFileUri) {
         final InputStream in = HttpUtils.httpGetRequest(uriFileToCache);
+        if (in == null) {
+            return false;
+        }
+
         final boolean result = ItemsContentProvider.parseQueryResponseContent(in, cacheFileUri);
         try {
             in.close();

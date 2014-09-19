@@ -1414,6 +1414,10 @@ public class ItemsContentProvider extends ContentProvider {
         //the InputStream even though none of the code here should throw an
         //exception?
         final InputStream in = HttpUtils.httpGetRequest(getQueryUri(count));
+        if (in == null) {
+            return null;
+        }
+
         final List<Subject> result = parseQueryResponseContent(in);
         try {
             in.close();
