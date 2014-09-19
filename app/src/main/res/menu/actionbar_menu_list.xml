@@ -3,7 +3,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/option_menu_item_login"
-        android:showAsAction="ifRoom"
         android:title="@string/action_login" />
     <!-- The More action is only useful for debugging:
     <item
