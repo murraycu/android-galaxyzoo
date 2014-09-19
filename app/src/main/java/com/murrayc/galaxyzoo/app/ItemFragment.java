@@ -122,9 +122,6 @@ public class ItemFragment extends ZooFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
-            case R.id.option_menu_item_login:
-                requestLogin();
-                return true;
             case R.id.option_menu_item_list:
                 mCallbacks.navigateToList();
                 return true;

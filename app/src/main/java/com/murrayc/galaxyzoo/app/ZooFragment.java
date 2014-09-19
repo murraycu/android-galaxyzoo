@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.view.MenuItem;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
@@ -12,6 +13,19 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  * Created by murrayc on 8/7/14.
  */
 public class ZooFragment extends Fragment {
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.option_menu_item_login:
+                requestLogin();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     void requestMoreItems() {
         final Activity activity = getActivity();
         if (activity == null) {
