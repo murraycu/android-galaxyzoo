@@ -24,13 +24,12 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <!-- TODO: Extra details or links.
         <FrameLayout
-            android:id="@+id/child_fragment_question"
+            android:id="@+id/child_fragment_subject_extras"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_margin" />
-        -->
+
     </LinearLayout>
 
     <ProgressBar android:id="@+id/loading_spinner"

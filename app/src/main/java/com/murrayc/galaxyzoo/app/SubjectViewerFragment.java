@@ -174,20 +174,19 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
         }
 
 
-        /* TODO: Add extra details or links.
-        QuestionFragment fragmentQuestion = (QuestionFragment)fragmentManager.findFragmentById(R.id.child_fragment_question);
+        // Add extra details or links.
+        SubjectExtrasFragment fragmentQuestion = (SubjectExtrasFragment)fragmentManager.findFragmentById(R.id.child_fragment_subject_extras);
         if (fragmentQuestion == null) {
-            fragmentQuestion = new QuestionFragment();
+            fragmentQuestion = new SubjectExtrasFragment();
             fragmentQuestion.setArguments(arguments);
             final FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.add(R.id.child_fragment_question, fragmentQuestion).commit();
+            transaction.add(R.id.child_fragment_subject_extras, fragmentQuestion).commit();
         } else {
             //TODO: Is there some more standard method to do this,
             //to trigger the Fragments' onCreate()?
             fragmentQuestion.setItemId(getItemId());
             fragmentQuestion.update();
         }
-        */
     }
 
     @Override

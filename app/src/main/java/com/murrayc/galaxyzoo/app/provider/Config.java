@@ -26,6 +26,10 @@ public class Config {
 
     //TODO: This is used in the app, not in the content provider.
     //Maybe this whole class should be in the app, not the content provider.
+    public static final String EXAMINE_URI = "http://www.galaxyzoo.org/#/examine/";
+
+    //TODO: This is used in the app, not in the content provider.
+    //Maybe this whole class should be in the app, not the content provider.
     //TODO: Is there a stable URI for this?
     public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2014-08-18_21-36-52.css";
 

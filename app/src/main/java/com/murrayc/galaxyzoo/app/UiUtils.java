@@ -21,14 +21,18 @@ package com.murrayc.galaxyzoo.app;
 
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.murrayc.galaxyzoo.app.provider.Config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,5 +78,24 @@ class UiUtils {
     static void warnAboutNoNetworkConnection(final Activity activity) {
         final Toast toast = Toast.makeText(activity, "No Network Connection", Toast.LENGTH_LONG);
         toast.show();
+    }
+
+
+    static void openDiscussionPage(final Context context, final String zooniverseId) {
+        //Todo: Find a way to use Uri.Builder with a URI with # in it.
+        //Using Uri.parse() (with Uri.Builder) removes the #.
+        //Using Uri.Builder() leads to an ActivityNotFoundException.
+        //final String encodedHash = Uri.encode("#"); //This just puts %23 in the URL instead of #.
+        //final Uri.Builder uriBuilder = new Uri.Builder();
+        //uriBuilder.path("http://talk.galaxyzoo.org/#/subjects/");
+        //uriBuilder.appendPath(getZooniverseId());
+        final String uriTalk = Config.TALK_URI + zooniverseId;
+
+        try {
+            final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriTalk));
+            context.startActivity(intent);
+        } catch (final ActivityNotFoundException e) {
+            Log.error("Could not open the discussion URI.", e);
+        }
     }
 }

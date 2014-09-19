@@ -457,7 +457,7 @@ public class QuestionFragment extends BaseQuestionFragment
         final DecisionTree.Question question = getQuestion();
 
         //Show the title:
-        final TextView textViewTitle = (TextView)mRootView.findViewById(R.id.textViewTitle);
+        final TextView textViewTitle = (TextView)mRootView.findViewById(R.id.textViewZooniverseId);
         if (textViewTitle == null) {
             Log.error("textViewTitle is null.");
             return;
@@ -562,22 +562,7 @@ public class QuestionFragment extends BaseQuestionFragment
         if((TextUtils.equals(questionId, QUESTION_ID_DISCUSS)) &&
                 (TextUtils.equals(answerId, ANSWER_ID_DISCUSS_YES))) {
             //Open a link to the discussion page.
-
-            //Todo: Find a way to use Uri.Builder with a URI with # in it.
-            //Using Uri.parse() (with Uri.Builder) removes the #.
-            //Using Uri.Builder() leads to an ActivityNotFoundException.
-            //final String encodedHash = Uri.encode("#"); //This just puts %23 in the URL instead of #.
-            //final Uri.Builder uriBuilder = new Uri.Builder();
-            //uriBuilder.path("http://talk.galaxyzoo.org/#/subjects/");
-            //uriBuilder.appendPath(getZooniverseId());
-            final String uriTalk = Config.TALK_URI + getZooniverseId();
-
-            try {
-                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriTalk));
-                startActivity(intent);
-            } catch (final ActivityNotFoundException e) {
-                Log.error("Could not open the discussion URI.", e);
-            }
+            UiUtils.openDiscussionPage(activity, getZooniverseId());
         } else {
             List<String> checkboxes = null;
 
