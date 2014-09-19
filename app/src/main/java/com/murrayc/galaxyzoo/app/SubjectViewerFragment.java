@@ -194,7 +194,7 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
         super.onCreateOptionsMenu(menu, inflater);
 
         // Inflate the menu items for use in the action bar
-        inflater.inflate(R.menu.actionbar_menu_classify, menu);
+        inflater.inflate(R.menu.actionbar_menu_item_common, menu);
     }
 
     @Override

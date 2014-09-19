@@ -143,7 +143,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             mLoadingView = mRootView.findViewById(R.id.loading_spinner);
         }
 
-        mLoadingView.setVisibility(show ? View.VISIBLE: View.GONE);
+        mLoadingView.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void addOrUpdateChildFragments() {
@@ -193,7 +193,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         super.onCreateOptionsMenu(menu, inflater);
 
         // Inflate the menu items for use in the action bar
-        inflater.inflate(R.menu.actionbar_menu_classify, menu);
+        inflater.inflate(R.menu.actionbar_menu_item_common, menu);
     }
 
     @Override
