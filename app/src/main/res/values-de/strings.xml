@@ -15,7 +15,6 @@
     <string name="action_more">Mehr</string>
     <string name="action_login">Anmelden</string>
     <string name="register_button_text"><a href="https://www.zooniverse.org/signup">Registrieren</a></string>
-    <string name="list_item_marker_done">Fertig</string>
     <string name="forgot_password_button_text"><a href="https://www.zooniverse.org/password/reset">Passwort vergessen?</a></string>
     <string name="error_field_required">Dieses Feld ist erforderlich</string>
     <string name="error_incorrect_password">Dieses Passwort ist nicht korrekt</string>

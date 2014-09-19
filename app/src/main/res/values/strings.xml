@@ -26,8 +26,6 @@
 
     <string name="title_activity_question_help">Help</string>
 
-    <string name="list_item_marker_done">Done</string>
-
     <!-- Strings related to login -->
     <string name="title_activity_login">Sign in</string>
 
