@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/textViewZooniverseIdTitle"
-            android:text="Zooniverse ID:"
+            android:text="@string/title_zooniverse_id"
             android:singleLine="true"
             android:paddingEnd="@dimen/activity_horizontal_margin" />
 
@@ -39,14 +39,14 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Examine"
+            android:text="@string/button_title_examine"
             android:id="@+id/buttonExamine"
             android:paddingEnd="@dimen/activity_horizontal_margin" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Discuss"
+            android:text="@string/button_title_discuss"
             android:id="@+id/buttonDiscuss" />
     </LinearLayout>
 

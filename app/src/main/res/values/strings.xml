@@ -17,6 +17,12 @@
     <string name="forgot_password_button_text"><a href="https://www.zooniverse.org/password/reset">Forgot password?</a></string>
     <string name="register_button_text"><a href="https://www.zooniverse.org/signup">Register</a></string>
     <string name="content_description_example_image">Example image.</string>
+    <string name="title_zooniverse_id">Zooniverse ID:</string>
+    <string name="content_description_favorite">Whether the subject is a favorite.</string>
+    <string name="content_description_classified">Whether the subject has been classified.</string>
+    <string name="content_description_uploaded">Whether the subject has been uploaded.</string>
+    <string name="button_title_examine">Examine</string>
+    <string name="button_title_discuss">Discuss</string>
 
     <string name="title_activity_question_help">Help</string>
 

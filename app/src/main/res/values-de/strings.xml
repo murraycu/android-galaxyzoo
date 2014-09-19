@@ -24,4 +24,6 @@
     <string name="content_description_example_image">Beispielbild</string>
     <string name="description_standard_image">Standard Bild</string>
     <string name="action_invert">Invertieren</string>
+    <string name="title_zooniverse_id">Zooniverse ID:</string>
+    <string name="button_title_discuss">Diskutieren</string>
 </resources>

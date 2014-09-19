@@ -27,7 +27,7 @@
         android:focusableInTouchMode="false"
         android:clickable="false"
         android:src="@android:drawable/btn_star"
-        android:contentDescription="Whether the subject is a favourite."
+        android:contentDescription="@string/content_description_favorite"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true" />
 
@@ -45,7 +45,7 @@
         android:focusableInTouchMode="false"
         android:clickable="false"
         android:src="@android:drawable/checkbox_on_background"
-        android:contentDescription="Whether the subject has been classified."
+        android:contentDescription="@string/content_description_classified"
         android:layout_toStartOf="@+id/item_checkboxUploaded" />
 
     <ImageView android:id="@+id/item_checkboxUploaded"
@@ -63,6 +63,6 @@
         android:focusableInTouchMode="false"
         android:clickable="false"
         android:src="@android:drawable/arrow_up_float"
-        android:contentDescription="Whether the subject has been uploaded." />
+        android:contentDescription="@string/content_description_uploaded" />
 
 </RelativeLayout>
