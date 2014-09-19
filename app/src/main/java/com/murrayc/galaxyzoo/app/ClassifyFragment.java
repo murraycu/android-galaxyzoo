@@ -32,7 +32,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -59,37 +58,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
 
-
-    /**
-     * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
-     * nothing. Used only when this fragment is not attached to an activity.
-     */
-    private static final Callbacks sDummyCallbacks = new Callbacks() {
-        public void navigateToList() {
-
-        }
-    };
-
-    /**
-     * The fragment's current callback object, which is notified of list item
-     * clicks.
-     */
-    private Callbacks mCallbacks = sDummyCallbacks;
     private View mLoadingView;
-
-    /**
-     * A callback interface that all activities containing some fragments must
-     * implement. This mechanism allows activities to be notified of table
-     * navigation selections.
-     * <p/>
-     * This is the recommended way for activities and fragments to communicate,
-     * presumably because, unlike a direct function call, it still keeps the
-     * fragment and activity implementations separate.
-     * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
-     */
-    static interface Callbacks {
-        public void navigateToList();
-    }
 
     private View mRootView;
 
@@ -99,13 +68,6 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      * fragment (e.g. upon screen orientation changes).
      */
     public ClassifyFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -125,9 +87,13 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             }
         });
 
-        setHasOptionsMenu(true);
-
         return mRootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        createCommonOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -186,49 +152,6 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             fragmentQuestion.setItemId(getItemId());
             fragmentQuestion.update();
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        // Inflate the menu items for use in the action bar
-        inflater.inflate(R.menu.actionbar_menu_item_common, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        switch (item.getItemId()) {
-            case R.id.option_menu_item_login:
-                requestLogin();
-                return true;
-            case R.id.option_menu_item_list:
-                mCallbacks.navigateToList();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // Activities containing this fragment must implement its callbacks.
-        if (!(activity instanceof Callbacks)) {
-            throw new IllegalStateException("Activity must implement fragment's callbacks.");
-        }
-
-        mCallbacks = (Callbacks) activity;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks;
     }
 
     public void update() {

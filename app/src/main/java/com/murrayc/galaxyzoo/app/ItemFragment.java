@@ -1,6 +1,10 @@
 package com.murrayc.galaxyzoo.app;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 /**
  * Created by murrayc on 7/31/14.
@@ -13,6 +17,36 @@ public class ItemFragment extends ZooFragment {
     public static final String ARG_ITEM_ID = "item-id";
     private String mItemId;
     Singleton mSingleton = null;
+
+    /**
+     * A callback interface that all activities containing some fragments must
+     * implement. This mechanism allows activities to be notified of table
+     * navigation selections.
+     * <p/>
+     * This is the recommended way for activities and fragments to communicate,
+     * presumably because, unlike a direct function call, it still keeps the
+     * fragment and activity implementations separate.
+     * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
+     */
+    static interface Callbacks {
+        public void navigateToList();
+    }
+
+    /**
+     * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
+     * nothing. Used only when this fragment is not attached to an activity.
+     */
+    private static final Callbacks sDummyCallbacks = new Callbacks() {
+        public void navigateToList() {
+
+        }
+    };
+
+    /**
+     * The fragment's current callback object, which is notified of list item
+     * clicks.
+     */
+    private Callbacks mCallbacks = sDummyCallbacks;
 
     String getItemId() {
         return mItemId;
@@ -43,6 +77,59 @@ public class ItemFragment extends ZooFragment {
             if (bundle != null) {
                 setItemId(bundle.getString(ARG_ITEM_ID));
             }
+        }
+
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // Activities containing this fragment must implement its callbacks.
+        if (!(activity instanceof Callbacks)) {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+        }
+
+        mCallbacks = (Callbacks) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        // Reset the active callbacks interface to the dummy implementation.
+        mCallbacks = sDummyCallbacks;
+    }
+
+    /**
+     * Call this from a derived Fragment's onCreateOptionsMenu() override,
+     * if you want this fragment to provide the common menu.
+     *
+     * This menu isn't added by default because then we could have
+     * duplicate menu items if there are two ItemFragment-derived
+     * child fragments in an activity, or as child fragments.
+     *
+     * @param menu
+     * @param inflater
+     */
+    protected void createCommonOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu items for use in the action bar
+        inflater.inflate(R.menu.actionbar_menu_item_common, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.option_menu_item_login:
+                requestLogin();
+                return true;
+            case R.id.option_menu_item_list:
+                mCallbacks.navigateToList();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
