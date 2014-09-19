@@ -21,7 +21,6 @@ package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
 import android.app.LoaderManager;
-import android.content.ActivityNotFoundException;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -51,7 +50,6 @@ import android.widget.ToggleButton;
 
 import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
-import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 import java.util.ArrayList;
