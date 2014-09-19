@@ -30,9 +30,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -126,8 +123,6 @@ public class SubjectExtrasFragment extends ItemFragment
         mRootView = inflater.inflate(R.layout.fragment_subject_extras, container, false);
         assert mRootView != null;
 
-        setHasOptionsMenu(true);
-
         Singleton.init(getActivity(), new Singleton.Callbacks() {
             @Override
             public void onInitialized() {
@@ -140,50 +135,6 @@ public class SubjectExtrasFragment extends ItemFragment
         //This will be called later by updateIfReady(): update();
 
         return mRootView;
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem menuItem = menu.add(Menu.NONE, R.id.option_menu_item_examples, Menu.NONE, R.string.action_examples);
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-        menuItem = menu.add(Menu.NONE, R.id.option_menu_item_favorite, Menu.NONE, R.string.action_favorite);
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER); //Because the option menu cannot show a checked state.
-        menuItem.setCheckable(true);
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        switch (item.getItemId()) {
-            case R.id.option_menu_item_favorite:
-                final boolean checked = !item.isChecked();
-
-                //Note:
-                //"Icon menu" (TODO: What is that?) items don't actually show a checked state,
-                //but it seems to work in the menu though not as an action in the action bar.
-                //See http://developer.android.com/guide/topics/ui/menus.html#checkable
-                item.setChecked(checked);
-
-                //TODO: Use pretty icons instead:
-                /*
-                //Show an icon to indicate checkedness instead:
-                //See http://developer.android.com/guide/topics/ui/menus.html#checkable
-                if (checked) {
-                    item.setIcon(android.R.drawable.ic_menu_save); //A silly example.
-                } else {
-                    item.setIcon(android.R.drawable.ic_menu_add); //A silly example.
-                }
-                */
-
-                //TODO: mClassificationInProgress.setFavorite(checked);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     public void update() {
