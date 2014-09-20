@@ -35,7 +35,7 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link ClassifyFragment}.
  */
-public class SubjectViewerActivity extends ItemActivity implements SubjectViewerFragment.Callbacks {
+public class SubjectViewerActivity extends ItemActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,11 +102,4 @@ public class SubjectViewerActivity extends ItemActivity implements SubjectViewer
 
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void navigateToList() {
-        final Intent intent = new Intent(this, ListActivity.class);
-        startActivity(intent);
-    }
-
 }

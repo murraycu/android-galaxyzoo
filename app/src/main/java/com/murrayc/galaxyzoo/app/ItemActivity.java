@@ -11,7 +11,7 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  * Created by murrayc on 8/1/14.
  */
 @SuppressLint("Registered") //It is not an actual activity - it is just a base class.
-public class ItemActivity extends BaseActivity {
+public class ItemActivity extends BaseActivity implements ItemFragment.Callbacks {
     private String mItemId;
 
     String getItemId() {
@@ -34,5 +34,11 @@ public class ItemActivity extends BaseActivity {
             itemId = ItemsContentProvider.URI_PART_ITEM_ID_NEXT;
         }
         setItemId(itemId);
+    }
+
+    @Override
+    public void navigateToList() {
+        final Intent intent = new Intent(this, ListActivity.class);
+        startActivity(intent);
     }
 }

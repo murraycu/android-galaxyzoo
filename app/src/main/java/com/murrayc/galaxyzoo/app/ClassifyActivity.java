@@ -35,7 +35,7 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link com.murrayc.galaxyzoo.app.ClassifyFragment}.
  */
-public class ClassifyActivity extends ItemActivity implements ClassifyFragment.Callbacks, QuestionFragment.Callbacks {
+public class ClassifyActivity extends ItemActivity implements ItemFragment.Callbacks, QuestionFragment.Callbacks {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,11 +111,4 @@ public class ClassifyActivity extends ItemActivity implements ClassifyFragment.C
         fragmentClassify.setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
         fragmentClassify.update();
     }
-
-    @Override
-    public void navigateToList() {
-        final Intent intent = new Intent(this, ListActivity.class);
-        startActivity(intent);
-    }
-
 }
