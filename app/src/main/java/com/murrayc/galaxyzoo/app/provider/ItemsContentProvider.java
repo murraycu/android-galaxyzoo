@@ -71,7 +71,7 @@ public class ItemsContentProvider extends ContentProvider {
     public static final String LOGIN_METHOD_RESULT = "result";
     private int mUploadsInProgress = 0;
 
-    public static LoginResult parseLoginResponseContent(final InputStream content) throws IOException {
+    private static LoginResult parseLoginResponseContent(final InputStream content) throws IOException {
         final String str = HttpUtils.getStringFromInputStream(content);
 
         //A failure by default.
@@ -130,7 +130,7 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    public static List<Subject> parseQueryResponseContent(final InputStream content) {
+    private static List<Subject> parseQueryResponseContent(final InputStream content) {
         final String str;
         try {
             str = HttpUtils.getStringFromInputStream(content);

@@ -197,7 +197,7 @@ public class HttpUtils {
         return con.getLastModified();
     }
 
-    public static void setConnectionUserAgent(final HttpURLConnection connection) {
+    private static void setConnectionUserAgent(final HttpURLConnection connection) {
         connection.setRequestProperty(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
     }
 }
