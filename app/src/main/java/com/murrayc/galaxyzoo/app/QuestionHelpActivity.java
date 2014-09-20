@@ -31,7 +31,7 @@ import android.os.Bundle;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link ClassifyFragment}.
  */
-public class QuestionHelpActivity extends BaseActivity {
+public class QuestionHelpActivity extends BaseActivity implements ItemFragment.Callbacks {
 
     private String mQuestionId;
 
@@ -85,5 +85,13 @@ public class QuestionHelpActivity extends BaseActivity {
 
     private String getQuestionId() {
         return mQuestionId;
+    }
+
+    //We don't actually use this.
+    //We just need it because QuestionHelpFragment derives from ItemFragment.
+    @Override
+    public void navigateToList() {
+        final Intent intent = new Intent(this, ListActivity.class);
+        startActivity(intent);
     }
 }
