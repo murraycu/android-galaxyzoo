@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.view.MarginLayoutParamsCompat;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -158,9 +159,10 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
             final LinearLayout.LayoutParams paramsImage = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            paramsImage.setMarginStart(getPxForDp(activity, MARGIN_SMALL_DP));
-            imageExample.setLayoutParams(paramsImage);
 
+            //This requires API level 17: paramsImage.setMarginStart(getPxForDp(activity, MARGIN_SMALL_DP));
+            //imageExample.setLayoutParams(paramsImage);
+            MarginLayoutParamsCompat.setMarginStart(paramsImage, getPxForDp(activity, MARGIN_SMALL_DP));
 
             imageExample.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
