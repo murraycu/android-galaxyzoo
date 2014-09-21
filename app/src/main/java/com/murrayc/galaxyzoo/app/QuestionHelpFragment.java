@@ -34,21 +34,6 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
     private Singleton mSingleton;
     private View mRootView;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param questionId The question ID
-     * @return A new instance of fragment HelpDialogFragment.
-     */
-    public static QuestionHelpFragment newInstance(final String questionId) {
-        QuestionHelpFragment fragment = new QuestionHelpFragment();
-        Bundle args = new Bundle();
-        args.putString(QuestionFragment.ARG_QUESTION_ID, questionId);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public QuestionHelpFragment() {
         // Required empty public constructor
     }

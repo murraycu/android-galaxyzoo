@@ -54,7 +54,7 @@ public class SubjectFragment extends ItemFragment
     private View mRootView;
     private ImageView mImageView;
 
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI, Item.Columns.FAVORITE};
+    private final String[] mColumns = { Item.Columns._ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
 
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
@@ -64,7 +64,6 @@ public class SubjectFragment extends ItemFragment
     private static final int COLUMN_INDEX_ID = 0;
     private static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 1;
     private static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 2;
-    private static final int COLUMN_INDEX_FAVOURITE = 3;
     private boolean mInverted = false;
 
 

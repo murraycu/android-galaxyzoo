@@ -907,7 +907,7 @@ public class ItemsContentProvider extends ContentProvider {
             }
 
             case MATCHER_ID_ITEM_NEXT: {
-                c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
+                c = queryItemNext(projection, selection, selectionArgs, orderBy);
 
                 final int count = c.getCount();
                 if (count < 1) {
@@ -925,7 +925,7 @@ public class ItemsContentProvider extends ContentProvider {
                         return c;
                     }
 
-                    c = queryItemNext(uri, projection, selection, selectionArgs, orderBy);
+                    c = queryItemNext(projection, selection, selectionArgs, orderBy);
                 }
 
                 // Make sure we have enough soon enough,
@@ -1030,7 +1030,7 @@ public class ItemsContentProvider extends ContentProvider {
         return c;
     }
 
-    private Cursor queryItemNext(Uri uri, String[] projection, String selection, String[] selectionArgs, String orderBy) {
+    private Cursor queryItemNext(String[] projection, String selection, String[] selectionArgs, String orderBy) {
         Cursor c;// query the database for a single  item that is not yet done:
         final String whereClause =
                 DatabaseHelper.ItemsDbColumns.DONE + " != 1";
@@ -1470,30 +1470,6 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-
-    private class LoginAsyncTask extends AsyncTask<String, Integer, LoginResult> {
-        @Override
-        protected LoginResult doInBackground(final String... params) {
-            if (params.length < 2) {
-                Log.error("LoginTask: not enough params.");
-                return null;
-            }
-
-            final String username = params[0];
-            final String password = params[1];
-
-
-            return loginSync(username, password);
-        }
-
-        @Override
-        protected void onPostExecute(final LoginResult result) {
-            super.onPostExecute(result);
-
-            onLoginTaskFinished(result);
-        }
-    }
-
     private LoginResult loginSync(final String username, final String password) {
         final HttpURLConnection conn = HttpUtils.openConnection(Config.LOGIN_URI);
         if (conn == null) {
@@ -1567,14 +1543,6 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         return result.toString();
-    }
-
-    private void onLoginTaskFinished(final LoginResult result) {
-        if (result.getSuccess()) {
-            saveAuthToPreferences(result.getName(), result.getApiKey());
-        } else {
-            //TODO: Inform the user.
-        }
     }
 
     private void saveAuthToPreferences(final String name, final String apiKey) {

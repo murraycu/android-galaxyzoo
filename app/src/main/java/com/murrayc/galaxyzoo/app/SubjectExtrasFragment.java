@@ -34,13 +34,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.Item;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A fragment representing a single subject.
@@ -64,17 +60,9 @@ public class SubjectExtrasFragment extends ItemFragment
     private static final int COLUMN_INDEX_ID = 0;
     private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
 
-
-    //We hard-code this.
-    //Alternatively, we could hard-code the removal of this question from the XML
-    //when generating the XML file,
-    //and then always ask the question at the end via Java code.
-    private static final CharSequence QUESTION_ID_DISCUSS = "sloan-11";
-    private static final CharSequence ANSWER_ID_DISCUSS_YES = "a-0";
     private String mZooniverseId; //Only used for the talk URI so far.
 
     // A map of checkbox IDs to buttons.
-    private final Map<String, ToggleButton> mCheckboxButtons = new HashMap<>();
     private boolean mLoaderFinished = false;
 
     private void setZooniverseId(final String zooniverseId) {

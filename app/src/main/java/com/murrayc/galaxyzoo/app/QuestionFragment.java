@@ -140,10 +140,6 @@ public class QuestionFragment extends BaseQuestionFragment
             favorite = (in.readInt() == 1);
         }
 
-        public void add(final String questionId, final String answerId) {
-            answers.add(new QuestionAnswer(questionId, answerId));
-        }
-
         public void add(final String questionId, final String answerId, final List<String> checkboxIds) {
             answers.add(new QuestionAnswer(questionId, answerId, checkboxIds));
         }
@@ -183,11 +179,6 @@ public class QuestionFragment extends BaseQuestionFragment
 
             // Any checkboxes that were selected before the answer (usually "Done") was chosen.
             private List<String> checkboxIds;
-
-            public QuestionAnswer(final String questionId, final String answerId) {
-                this.questionId = questionId;
-                this.answerId = answerId;
-            }
 
             public QuestionAnswer(final String questionId, final String answerId, final List<String> checkboxIds) {
                 this.questionId = questionId;
