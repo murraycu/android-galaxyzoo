@@ -148,6 +148,12 @@ public class DecisionTree {
 
     public DecisionTree(final InputStream inputStream) {
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+        //Disable feature that we don't need and which just slow the parsing down:
+        //TODO: Confirm that this actually makes a difference.
+        dbf.setNamespaceAware(false);
+        dbf.setValidating(false);
+
         DocumentBuilder documentBuilder;
         try {
             documentBuilder = dbf.newDocumentBuilder();
