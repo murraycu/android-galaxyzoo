@@ -9,17 +9,14 @@ android {
         versionCode 1
         versionName '1.0'
     }
+
     buildTypes {
         release {
             runProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-    // This is to avoid the "Duplicate files copied in APK META-INF/LICENSE.txt" error
-    // which happens with jooq.
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
