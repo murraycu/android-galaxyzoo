@@ -199,7 +199,9 @@ public class ItemsContentProvider extends ContentProvider {
 
     public static boolean parseQueryResponseContent(final InputStream in, final String cacheFileUr) {
         //Write the content to the file:
-        try (final FileOutputStream fout = new FileOutputStream(cacheFileUr)) {
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream(cacheFileUr);
             // TODO: Find a way to use writeTo(), instead of looping ourselves,
             // while also having optional ungzipping?
             //response.getEntity().writeTo(fout);
@@ -215,6 +217,14 @@ public class ItemsContentProvider extends ContentProvider {
         } catch (final IOException e) {
             Log.error("parseQueryResponseContent(): Exception while writing to FileOutputStream", e);
             return false;
+        } finally {
+            if (fout != null) {
+                try {
+                    fout.close();
+                } catch (final IOException e) {
+                    Log.error("parseQueryResponseContent(): Exception while closing fout", e);
+                }
+            }
         }
 
         return true; //TODO?
@@ -1511,7 +1521,9 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         //Get the response:
-        try (final InputStream in = conn.getInputStream()) {
+        InputStream in = null;
+        try {
+            in = conn.getInputStream();
             if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 Log.error("loginSync(): response code: " + conn.getResponseCode());
                 return null;
@@ -1522,6 +1534,14 @@ public class ItemsContentProvider extends ContentProvider {
             Log.error("loginSync(): exception during HTTP connection", e);
 
             return null;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (final IOException e) {
+                    Log.error("loginSync(): exception while closing in", e);
+                }
+            }
         }
     }
 
@@ -1694,17 +1714,27 @@ public class ItemsContentProvider extends ContentProvider {
             //TODO: Is this necessary? conn.connect();
 
             //Get the response:
-            try (final InputStream in = conn.getInputStream()) {
+            InputStream in = null;
+            try {
+                in = conn.getInputStream();
                 if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-                    Log.error("Did not receive the 201 Created status code: " + conn.getResponseCode());
+                    Log.error("UploadAsyncTask.doInBackground(): Did not receive the 201 Created status code: " + conn.getResponseCode());
                     return false;
                 }
 
                 return true;
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 Log.error("UploadAsyncTask.doInBackground(): exception during HTTP connection", e);
 
                 return false;
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (final IOException e) {
+                        Log.error("UploadAsyncTask.doInBackground(): exception while closing in", e);
+                    }
+                }
             }
         }
 
@@ -1717,19 +1747,35 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
-        try (
-            final OutputStream out = conn.getOutputStream();
-            final BufferedWriter writer = new BufferedWriter(
-                     new OutputStreamWriter(out, "UTF-8"))
-        ) {
-            writer.write(getPostDataBytes(nameValuePairs));
-            writer.flush();
-            writer.close();
-            out.close();
+        OutputStream out = null;
+        try {
+            out = conn.getOutputStream();
 
+            BufferedWriter writer = null;
+            try {
+                writer = new BufferedWriter(
+                        new OutputStreamWriter(out, "UTF-8"));
+                writer.write(getPostDataBytes(nameValuePairs));
+                writer.flush();
+            } catch (final IOException e) {
+                Log.error("writeParamsToHttpPost(): Exception: ", e);
+                return false;
+            } finally {
+                if (writer != null) {
+                    writer.close();
+                }
+            }
         } catch (final IOException e) {
             Log.error("writeParamsToHttpPost(): Exception: ", e);
             return false;
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (final IOException e) {
+                    Log.error("writeParamsToHttpPost(): Exception while closing out", e);
+                }
+            }
         }
 
         return true;

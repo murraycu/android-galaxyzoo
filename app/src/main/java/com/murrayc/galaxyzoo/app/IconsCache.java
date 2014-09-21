@@ -18,7 +18,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -218,27 +217,63 @@ class IconsCache {
 
     String getFileContents(final String fileUri) {
         File file = new File(fileUri);
-        try (
-            final FileInputStream fis = new FileInputStream(file);
-            final InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-            final BufferedReader bufferedReader = new BufferedReader(isr)
-        ) {
-            final StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
 
-            return sb.toString();
-        } catch (FileNotFoundException e) {
-            Log.error("readFile failed.", e);
+            InputStreamReader isr = null;
+            try {
+                isr = new InputStreamReader(fis, "UTF-8");
+
+                BufferedReader bufferedReader = null;
+                try {
+                    bufferedReader = new BufferedReader(isr);
+
+                    final StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        sb.append(line).append("\n");
+                    }
+
+                    return sb.toString();
+                } catch (final IOException e) {
+                    Log.error("getFileContents(): IOException", e);
+                    return "";
+                } finally {
+                    if (bufferedReader != null) {
+                        try {
+                            bufferedReader.close();
+                        } catch (IOException e) {
+                            Log.error("getFileContents(): exception while closing bufferedReader", e);
+                        }
+                    }
+                }
+            } catch (final IOException e) {
+                Log.error("getFileContents(): IOException", e);
+                return "";
+            } finally {
+                if (isr != null) {
+                    try {
+                        isr.close();
+                    } catch (IOException e) {
+                        Log.error("getFileContents(): exception while closing isr", e);
+                    }
+                }
+            }
+        } catch (final FileNotFoundException e) {
+            Log.error("getFileContents(): FileNotFoundException", e);
             return "";
-        } catch (UnsupportedEncodingException e) {
-            Log.error("readFile failed.", e);
+        } catch (final IOException e) {
+            Log.error("getFileContents(): IOException", e);
             return "";
-        } catch (IOException e) {
-            Log.error("readFile failed.", e);
-            return "";
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    Log.error("getFileContents(): exception while closing fis", e);
+                }
+            }
         }
     }
 
@@ -316,16 +351,31 @@ class IconsCache {
     }
 
     private void cacheBitmapToFile(final Bitmap bmapIcon, final String cacheFileUri) {
-
-        try (
-            final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            final FileOutputStream fout = new FileOutputStream(cacheFileUri)
-        ) {
+        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream(cacheFileUri);
             bmapIcon.compress(Bitmap.CompressFormat.PNG, 100, stream);
             final byte[] byteArray = stream.toByteArray();
             fout.write(byteArray);
         } catch (final IOException e) {
-            Log.error("Exception while caching icon bitmap.", e);
+            Log.error("cacheBitmapToFile(): Exception while caching icon bitmap.", e);
+        } finally {
+            if (fout != null) {
+                try {
+                    fout.close();
+                } catch (IOException e) {
+                    Log.error("cacheBitmapToFile(): Exception while closing fout.", e);
+                }
+            }
+        }
+
+        if (stream != null) {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                Log.error("cacheBitmapToFile(): Exception while closing stream.", e);
+            }
         }
     }
 

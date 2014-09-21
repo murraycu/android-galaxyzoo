@@ -81,10 +81,20 @@ public class Singleton {
     }
 
     private Singleton(final Context context) {
-        try (final InputStream inputStream = context.getAssets().open("sloan_tree.xml")) {
+        InputStream inputStream = null;
+        try {
+            inputStream = context.getAssets().open("sloan_tree.xml");
             mDecisionTree = new DecisionTree(inputStream);
         } catch (final IOException e) {
             Log.error("Singleton: Error parsing decision tree.", e);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (final IOException e) {
+                    Log.error("Singleton: Exception while closing inputStream", e);
+                }
+            }
         }
 
         mIconsCache = new IconsCache(context, mDecisionTree);

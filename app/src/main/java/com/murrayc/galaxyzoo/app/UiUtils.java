@@ -65,11 +65,21 @@ class UiUtils {
         Bitmap bMap = null;
         final Uri uri = Uri.parse(imageUriStr);
 
-        try (final InputStream stream = contentResolver.openInputStream(uri)) {
+        InputStream stream = null;
+        try  {
+            stream = contentResolver.openInputStream(uri);
             bMap = BitmapFactory.decodeStream(stream);
         } catch (final IOException e) {
-            Log.error("BitmapFactory.decodeStream() failed.", e);
+            Log.error("fillImageViewFromContentUri(): BitmapFactory.decodeStream() failed.", e);
             return;
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (final IOException e) {
+                    Log.error("fillImageViewFromContentUri(): Exception while closing stream.", e);
+                }
+            }
         }
 
         imageView.setImageBitmap(bMap);

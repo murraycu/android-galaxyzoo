@@ -48,15 +48,25 @@ public class ExampleViewerFragment extends Fragment {
                 final URL url = new URL(strUri);
                 connection = url.openConnection();
             } catch (IOException e) {
-                Log.error("ExampleViewerFragment.BitmapWorkerTask.doInBackground: exception while opening connection", e);
+                Log.error("doInBackground(): ExampleViewerFragment.BitmapWorkerTask.doInBackground: exception while opening connection", e);
                 return null;
             }
 
-            try (final InputStream stream = connection.getInputStream()) {
+            InputStream stream = null;
+            try {
+                stream = connection.getInputStream();
                 return BitmapFactory.decodeStream(stream);
             } catch (IOException e) {
-                Log.error("ExampleViewerFragment.BitmapWorkerTask.doInBackground: exception while using stream", e);
+                Log.error("doInBackground(): ExampleViewerFragment.BitmapWorkerTask.doInBackground: exception while using stream", e);
                 return null;
+            } finally {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (final IOException e) {
+                        Log.error("doInBackground(): Exception while closing stream.");
+                    }
+                }
             }
         }
 
