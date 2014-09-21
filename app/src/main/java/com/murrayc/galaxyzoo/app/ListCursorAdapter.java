@@ -39,7 +39,6 @@ class ListCursorAdapter extends CursorAdapter {
         super(context, c, 0 /* seems reasonable */);
 
         mLayoutInflater = LayoutInflater.from(context);
-        Context mContext = context;
     }
 
     @Override
