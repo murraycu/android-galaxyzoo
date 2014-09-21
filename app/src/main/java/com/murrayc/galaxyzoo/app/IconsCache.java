@@ -18,6 +18,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -91,20 +93,31 @@ class IconsCache {
     private void reloadCachedIcons() {
         mIcons.evictAll();
         final DecisionTree.Question question = mDecisionTree.getFirstQuestion();
-        reloadIconsForQuestion(question);
+
+        final List<String> alreadyReloadedQuestionIds = new ArrayList<>(100);
+        reloadIconsForQuestion(question, alreadyReloadedQuestionIds);
     }
 
-    private void reloadIconsForQuestion(final DecisionTree.Question question) {
+    private void reloadIconsForQuestion(final DecisionTree.Question question, final List<String> alreadyReloadedQuestionIds) {
+        //Prevent an unnecessary repeat reload:
+        final String questionId = question.getId();
+        if (alreadyReloadedQuestionIds.contains(questionId)) {
+            return;
+        }
+
         for (final DecisionTree.Answer answer : question.answers) {
             //Get the icon for the answer:
             reloadIcon(answer.getIcon());
 
             reloadExampleImages(question, answer);
 
+            //Prevent an unnecessary repeat reload:
+            alreadyReloadedQuestionIds.add(question.getId());
+
             //Recurse:
             final DecisionTree.Question nextQuestion = mDecisionTree.getNextQuestionForAnswer(question.getId(), answer.getId());
             if (nextQuestion != null) {
-                reloadIconsForQuestion(nextQuestion);
+                reloadIconsForQuestion(nextQuestion, alreadyReloadedQuestionIds);
             }
         }
 
@@ -124,6 +137,8 @@ class IconsCache {
     }
 
     private void reloadIcon(final String cssName) {
+        Log.info("reloadIcon:" + cssName);
+
         //Avoid loading and adding it again:
         if(mIcons.get(cssName) != null) {
             return;
