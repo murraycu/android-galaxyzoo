@@ -26,11 +26,8 @@ public class HttpUtils {
         final InputStreamReader inputReader = new InputStreamReader(content);
         final BufferedReader reader = new BufferedReader(inputReader);
 
-
-        int inserted = 0;
-
         final StringBuilder builder = new StringBuilder();
-        for (String line = null; (line = reader.readLine()) != null;) {
+        for (String line; (line = reader.readLine()) != null;) {
             builder.append(line).append("\n");
         }
 
@@ -183,7 +180,7 @@ public class HttpUtils {
         }
 
         HttpURLConnection.setFollowRedirects(false);
-        HttpURLConnection con = null;
+        HttpURLConnection con;
         try {
             //Note: This seems to succeed even if there is no internet connection,
             //for instance if the device is in airplane mode.

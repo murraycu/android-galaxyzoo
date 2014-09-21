@@ -43,7 +43,7 @@ public class ExampleViewerFragment extends Fragment {
         protected Bitmap doInBackground(String... params) {
             strUri = params[0];
 
-            URLConnection connection = null;
+            URLConnection connection;
             try {
                 final URL url = new URL(strUri);
                 connection = url.openConnection();
@@ -109,10 +109,6 @@ public class ExampleViewerFragment extends Fragment {
             uriStr = bundle.getString(ARG_EXAMPLE_URL);
         }
 
-        final Activity activity = getActivity();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                getActivity());
         View mRootView = inflater.inflate(R.layout.fragment_example_viewer, container, false);
 
         final ImageView imageView = (ImageView) mRootView.findViewById(R.id.imageView);

@@ -67,9 +67,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         final Activity activity = getActivity();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                getActivity());
+;
         mRootView = inflater.inflate(R.layout.fragment_question_help, container, false);
 
         //Do most of the UI building only after we know that our

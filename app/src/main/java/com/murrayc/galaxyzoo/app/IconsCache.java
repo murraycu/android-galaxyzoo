@@ -146,8 +146,6 @@ class IconsCache {
     }
 
     private void cacheIconsForQuestion(final DecisionTree.Question question, final String css) {
-        final String cacheFileCss = getCacheFileUri(CACHE_FILE_CSS); //Avoid repeated calls to this.
-
         if (mBmapWorkflowIcons == null) {
             final String cacheFileIcons = getCacheFileUri(CACHE_FILE_WORKFLOW_ICONS);
             mBmapWorkflowIcons = BitmapFactory.decodeFile(cacheFileIcons);
@@ -303,7 +301,7 @@ class IconsCache {
             return;
         }
 
-        Pattern p = null;
+        Pattern p;
         try {
             String prefix;
             if (isExampleIcon) {

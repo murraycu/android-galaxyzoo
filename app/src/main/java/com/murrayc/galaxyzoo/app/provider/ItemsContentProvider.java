@@ -78,7 +78,7 @@ public class ItemsContentProvider extends ContentProvider {
         LoginResult result = new LoginResult(false, null, null);
 
         JSONTokener tokener = new JSONTokener(str);
-        JSONObject jsonObject = null;
+        JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(tokener);
         } catch (JSONException e) {
@@ -142,7 +142,7 @@ public class ItemsContentProvider extends ContentProvider {
         final List<Subject> result = new ArrayList<>();
 
         JSONTokener tokener = new JSONTokener(str);
-        JSONArray jsonArray = null;
+        JSONArray jsonArray;
         try {
             jsonArray = new JSONArray(tokener);
         } catch (JSONException e) {
@@ -151,7 +151,7 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         for(int i = 0; i < jsonArray.length(); ++i) {
-            JSONObject obj = null;
+            JSONObject obj;
             try {
                 obj = jsonArray.getJSONObject(i);
             } catch (JSONException e) {
@@ -545,7 +545,7 @@ public class ItemsContentProvider extends ContentProvider {
         // Maybe they don't do it because it's so awkward. murrayc.
         // But if we don't do this then we are leaking the internal database structure out as our API.
 
-        Uri uriInserted = null;
+        Uri uriInserted;
 
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_ITEMS:
@@ -1656,7 +1656,7 @@ public class ItemsContentProvider extends ContentProvider {
             }
 
 
-            Cursor c = null;
+            Cursor c;
             {
                 SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
                 builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);

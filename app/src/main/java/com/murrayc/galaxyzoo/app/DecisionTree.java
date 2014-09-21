@@ -277,8 +277,6 @@ public class DecisionTree {
      * @return
      */
     private Node getFirstChildByTagName(final Element parentNode, final String tagName) {
-        final List<Node> result = new ArrayList<>();
-
         final NodeList list = parentNode.getElementsByTagName(tagName);
         final int num = list.getLength();
         for (int i = 0; i < num; i++) {
