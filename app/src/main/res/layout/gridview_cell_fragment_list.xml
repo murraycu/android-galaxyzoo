@@ -61,7 +61,7 @@
             android:contentDescription="@string/content_description_classified"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:src="@android:drawable/checkbox_on_background"
+            android:src="@drawable/ic_action_accept"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_gravity="bottom|right" />
