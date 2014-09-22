@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Android GalaxyZoo</string>
+    <string name="app_name">Galaxy Zoo</string>
     <string name="action_invert">Invert</string>
     <string name="action_examples">Examples</string>
     <string name="action_login">Login</string>
