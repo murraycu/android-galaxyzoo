@@ -41,7 +41,7 @@
             android:contentDescription="@string/content_description_favorite"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:src="@android:drawable/btn_star"
+            android:src="@drawable/ic_action_favorite"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_gravity="bottom|left" />
