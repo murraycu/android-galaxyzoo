@@ -211,7 +211,7 @@ public class ItemsContentProvider extends ContentProvider {
 
     }
 
-    private static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
+    public static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
     private static final int MIN_CACHE_COUNT = 5; //Don't let the count of undone items get this low.
     private static final int QUERY_COUNT_LARGE = 10;
     private int mUploadsInProgress = 0;
@@ -796,7 +796,7 @@ public class ItemsContentProvider extends ContentProvider {
             return;
 
         //Don't upload anonymously:
-        if (!getLoggedIn()) {
+        if (!Utils.getLoggedIn(getContext())) {
             return;
         }
 
@@ -826,12 +826,6 @@ public class ItemsContentProvider extends ContentProvider {
             final UploadAsyncTask task = new UploadAsyncTask();
             task.execute(itemId, subjectId, authName, authApiKey);
         }
-    }
-
-    private boolean getLoggedIn() {
-        final SharedPreferences prefs = Utils.getPreferences(getContext());
-        final String apiKey = prefs.getString(PREF_KEY_AUTH_NAME, null);
-        return !(TextUtils.isEmpty(apiKey));
     }
 
     @Override
