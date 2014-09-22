@@ -4,6 +4,7 @@
     <string name="action_examples">Beispiele</string>
     <string name="action_list">Liste</string>
     <string name="action_next">Klassifizieren</string>
+    <string name="action_about">Info</string>
     <string name="button_title_examples">Beispiele</string>
     <string name="prompt_password">Passwort</string>
     <string name="prompt_username">Benutzername</string>

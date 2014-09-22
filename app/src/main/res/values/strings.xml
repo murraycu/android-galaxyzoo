@@ -9,6 +9,7 @@
     <string name="action_list">List</string>
     <string name="action_more">More</string>
     <string name="action_next">Classify</string>
+    <string name="action_about">About</string>
     <string name="description_thumbnail">Thumbnail</string>
     <string name="description_standard_image">Standard Image</string>
     <string name="button_title_examples">Examples</string>
@@ -37,5 +38,6 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="about_text">An android app for classifying <a href="http://www.galaxyzoo.org/">Galaxy Zoo</a> subjects. This is not an official Zooniverse or Galaxy Zoo app.\n\nThis android app was developed by <a href="http://murrayc.com/">Murray Cumming</a>.\n\nThe launcher Icon is based on the <a href="http://www.eso.org/public/images/eso1042e/">ESO/HAWK-I image of galaxy NGC 4030</a> and is used under the Attribution 3.0 Unported license.</string>
 
 </resources>
