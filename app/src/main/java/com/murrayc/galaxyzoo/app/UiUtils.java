@@ -108,4 +108,9 @@ class UiUtils {
             Log.error("Could not open the discussion URI.", e);
         }
     }
+
+    static void showLoggedInToast(final Context context) {
+        final Toast toast = Toast.makeText(context, "Logged In", Toast.LENGTH_LONG);
+        toast.show();
+    }
 }

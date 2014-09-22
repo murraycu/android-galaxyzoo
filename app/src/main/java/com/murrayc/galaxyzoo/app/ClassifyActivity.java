@@ -82,6 +82,15 @@ public class ClassifyActivity extends ItemActivity implements ItemFragment.Callb
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         */
+
+        if(Utils.getLoggedIn(this)) {
+            //Tell the user that we are logged in,
+            //reassuring them that their classifications will be part of their profile:
+            //TODO: Is there a better way to do this?
+            //Hiding the login option menu item would still leave some doubt,
+            //and graying it out would be against the Android design guidelines.
+            UiUtils.showLoggedInToast(this);
+        }
     }
 
     @Override

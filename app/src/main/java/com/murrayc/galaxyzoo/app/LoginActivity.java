@@ -175,8 +175,7 @@ public class LoginActivity extends Activity {
 
     private void finishWithResult(boolean loggedIn) {
         if (loggedIn) {
-            final Toast toast = Toast.makeText(this, "Logged In", Toast.LENGTH_LONG);
-            toast.show();
+            UiUtils.showLoggedInToast(this);
         }
 
         final Intent intent = new Intent();
