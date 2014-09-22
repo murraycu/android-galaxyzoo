@@ -8,47 +8,49 @@
     android:textIsSelectable="true"
     tools:context="com.murrayc.galaxyzoo.app.ClassifyFragment">
 
-        <LinearLayout android:orientation="horizontal"
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/child_fragment_subject"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:baselineAligned="false"
-            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            android:layout_gravity="left"
+            android:paddingTop="@dimen/activity_vertical_margin" />
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
             <FrameLayout
-                android:id="@+id/child_fragment_subject"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="left" />
+                android:id="@+id/child_fragment_question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/standard_margin" />
 
-            <ScrollView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:clipToPadding="false"
-                android:id="@+id/scrollView"
-                android:layout_gravity="right"
-                android:layout_marginLeft="@dimen/standard_margin">
+        </ScrollView>
 
-                <FrameLayout
-                    android:id="@+id/child_fragment_question"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/standard_margin" />
-
-            </ScrollView>
-
-        </LinearLayout>
+    </LinearLayout>
 
 
-    <ProgressBar android:id="@+id/loading_spinner"
+    <ProgressBar
+        android:id="@+id/loading_spinner"
         style="?android:progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_gravity="center"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:layout_gravity="center" />
 
 </RelativeLayout>

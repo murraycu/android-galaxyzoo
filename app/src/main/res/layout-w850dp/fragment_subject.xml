@@ -5,18 +5,18 @@
     style="?android:attr/textAppearanceLarge"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:textIsSelectable="true"
-    tools:context="com.murrayc.galaxyzoo.app.SubjectFragment"
-    android:orientation="vertical">
+    tools:context="com.murrayc.galaxyzoo.app.SubjectFragment">
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/description_standard_image"
-        android:id="@+id/imageView"
+        android:layout_gravity="left|top"
         android:adjustViewBounds="true"
         android:clickable="true"
-        android:layout_gravity="left|top"
+        android:contentDescription="@string/description_standard_image"
         android:scaleType="fitStart" />
 
 </LinearLayout>

@@ -79,12 +79,12 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
         */
     }
 
-    private void setQuestionId(final String questionId) {
-        mQuestionId = questionId;
-    }
-
     private String getQuestionId() {
         return mQuestionId;
+    }
+
+    private void setQuestionId(final String questionId) {
+        mQuestionId = questionId;
     }
 
     //We don't actually use this.

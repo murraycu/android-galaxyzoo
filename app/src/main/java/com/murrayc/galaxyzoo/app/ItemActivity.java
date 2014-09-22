@@ -30,7 +30,7 @@ public class ItemActivity extends BaseActivity implements ItemFragment.Callbacks
 
         //Show a requested item, or just show the next available item:
         String itemId = intent.getStringExtra(ItemFragment.ARG_ITEM_ID);
-        if(TextUtils.isEmpty(itemId)) {
+        if (TextUtils.isEmpty(itemId)) {
             itemId = ItemsContentProvider.URI_PART_ITEM_ID_NEXT;
         }
         setItemId(itemId);

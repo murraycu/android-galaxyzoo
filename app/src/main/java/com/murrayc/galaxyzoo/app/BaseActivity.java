@@ -29,7 +29,8 @@ import android.view.MenuItem;
 /**
  * Created by murrayc on 2/7/14.
  */
-@SuppressLint("Registered") //This is a base class for other Activities.
+@SuppressLint("Registered")
+        //This is a base class for other Activities.
 class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,6 @@ class BaseActivity extends FragmentActivity {
 
     /**
      * Navigate to the item,
-     *
      */
     void navigate(final String itemId, final boolean done) {
         // Start the detail activity

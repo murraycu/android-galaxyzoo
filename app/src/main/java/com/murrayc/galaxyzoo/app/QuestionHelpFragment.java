@@ -1,13 +1,13 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v4.view.MarginLayoutParamsCompat;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -27,7 +27,6 @@ import com.murrayc.galaxyzoo.app.provider.Config;
  * A simple {@link Fragment} subclass.
  * Use the {@link QuestionHelpFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class QuestionHelpFragment extends BaseQuestionFragment {
     private static final int MARGIN_SMALL_DP = 4;
@@ -49,9 +48,8 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         final Activity activity = getActivity();
-;
         mRootView = inflater.inflate(R.layout.fragment_question_help, container, false);
 
         //Do most of the UI building only after we know that our
@@ -74,7 +72,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         final DecisionTree.Question question = getQuestion();
 
         //Show the Help text:
-        final TextView textView = (TextView)mRootView.findViewById(R.id.textView);
+        final TextView textView = (TextView) mRootView.findViewById(R.id.textView);
         if (textView == null) {
             Log.error("textView is null.");
             return;
@@ -82,18 +80,18 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         textView.setText(question.getHelp());
 
         //Show the example images:
-        final TableLayout tableLayout = (TableLayout)mRootView.findViewById(R.id.tableLayout);
+        final TableLayout tableLayout = (TableLayout) mRootView.findViewById(R.id.tableLayout);
         if (tableLayout == null) {
             Log.error("tableLayout is null.");
             return;
         }
 
         tableLayout.removeAllViews();
-        for(final DecisionTree.Answer answer : question.answers) {
+        for (final DecisionTree.Answer answer : question.answers) {
             addRowForAnswer(activity, tableLayout, question, answer);
         }
 
-        for(final DecisionTree.Checkbox checkbox : question.checkboxes) {
+        for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
             addRowForAnswer(activity, tableLayout, question, checkbox);
         }
     }
@@ -102,7 +100,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         final TableRow row = new TableRow(activity);
         row.setLayoutParams(
                 new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.WRAP_CONTENT));
+                        TableRow.LayoutParams.WRAP_CONTENT));
         final TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
                 TableLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, getPxForDp(activity, MARGIN_SMALL_DP), 0, 0);

@@ -20,10 +20,10 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.support.v4.app.LoaderManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
@@ -49,13 +49,6 @@ public class SubjectFragment extends ItemFragment
 
     private static final int URL_LOADER = 0;
     private static final String ARG_INVERTED = "inverted";
-    private Cursor mCursor;
-
-    private View mRootView;
-    private ImageView mImageView;
-
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
-
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
     // from our ContentProvider) only knows about the underlying SQLite database column names,
@@ -64,6 +57,10 @@ public class SubjectFragment extends ItemFragment
     private static final int COLUMN_INDEX_ID = 0;
     private static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 1;
     private static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 2;
+    private final String[] mColumns = {Item.Columns._ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
+    private Cursor mCursor;
+    private View mRootView;
+    private ImageView mImageView;
     private boolean mInverted = false;
 
 
@@ -84,17 +81,13 @@ public class SubjectFragment extends ItemFragment
         setHasOptionsMenu(true);
     }
 
-    private void setInverted(boolean inverted) {
-        mInverted = inverted;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_subject, container, false);
         assert mRootView != null;
 
-        mImageView = (ImageView)mRootView.findViewById(R.id.imageView);
+        mImageView = (ImageView) mRootView.findViewById(R.id.imageView);
         if (mImageView == null) {
             Log.error("mImageView is null.");
         }
@@ -133,7 +126,6 @@ public class SubjectFragment extends ItemFragment
 
         super.onCreateOptionsMenu(menu, inflater);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -226,6 +218,10 @@ public class SubjectFragment extends ItemFragment
 
     private boolean getInverted() {
         return mInverted;
+    }
+
+    private void setInverted(boolean inverted) {
+        mInverted = inverted;
     }
 
     @Override

@@ -45,104 +45,6 @@ public class DecisionTree {
     private static final String NODE_QUESTION = "question";
     private static final String NODE_CHECKBOX = "checkbox";
     private static final String NODE_ANSWER = "answer";
-
-    static class BaseButton {
-        private final String id;
-        private final String text;
-        private final String icon;
-        private final int examplesCount;
-
-        BaseButton(final String id, final String text, final String icon, int examplesCount) {
-            this.id = id;
-            this.text = text;
-            this.icon = icon;
-            this.examplesCount = examplesCount;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public String getIcon() {
-            return icon;
-        }
-
-        int getExamplesCount() {
-            return examplesCount;
-        }
-
-        public String getExampleIconName(String questionId, int exampleIndex) {
-            return questionId + "_" + getId() + "_" + exampleIndex;
-        }
-    }
-
-    //These are multiple-selection.
-    static class Checkbox extends BaseButton {
-        Checkbox(final String id, final String text, final String icon, int examplesCount) {
-            super(id, text, icon, examplesCount);
-        }
-    }
-
-    //These are single selection.
-    //Sometimes it's just "Done" to accept the checkbox selections.
-    static class Answer extends BaseButton {
-        private final String leadsToQuestionId;
-
-        Answer(final String id, final String text, final String icon, final String leadsToQuestionId, int examplesCount) {
-            super(id, text, icon, examplesCount);
-            this.leadsToQuestionId = leadsToQuestionId;
-        }
-    }
-
-    public static class Question {
-        private final String id;
-        private final String title;
-        private final String text;
-        private final String help;
-
-        public final List<Checkbox> checkboxes = new ArrayList<>();
-        public final List<Answer> answers = new ArrayList<>();
-
-        Question(final String id, final String title, final String text, final String help) {
-            this.id = id;
-            this.title = title;
-            this.text = text;
-            this.help = help;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public String getHelp() {
-            return help;
-        }
-
-        public boolean hasCheckboxes() {
-            if (checkboxes == null) {
-                return false;
-            }
-
-            if (checkboxes.size() == 0) {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
     //TODO: Make this private and add accessors.
     public final Hashtable<String, Question> questionsMap = new Hashtable<>();
 
@@ -219,7 +121,6 @@ public class DecisionTree {
 
         return questionsMap.get(questionId);
     }
-
 
     public Question getNextQuestionForAnswer(final String questionId, final String answerId) {
         final Question question = getQuestion(questionId);
@@ -355,5 +256,101 @@ public class DecisionTree {
                 answerNode.getAttribute("icon"),
                 answerNode.getAttribute("leadsTo"),
                 Integer.parseInt(answerNode.getAttribute("examplesCount")));
+    }
+
+    static class BaseButton {
+        private final String id;
+        private final String text;
+        private final String icon;
+        private final int examplesCount;
+
+        BaseButton(final String id, final String text, final String icon, int examplesCount) {
+            this.id = id;
+            this.text = text;
+            this.icon = icon;
+            this.examplesCount = examplesCount;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public String getIcon() {
+            return icon;
+        }
+
+        int getExamplesCount() {
+            return examplesCount;
+        }
+
+        public String getExampleIconName(String questionId, int exampleIndex) {
+            return questionId + "_" + getId() + "_" + exampleIndex;
+        }
+    }
+
+    //These are multiple-selection.
+    static class Checkbox extends BaseButton {
+        Checkbox(final String id, final String text, final String icon, int examplesCount) {
+            super(id, text, icon, examplesCount);
+        }
+    }
+
+    //These are single selection.
+    //Sometimes it's just "Done" to accept the checkbox selections.
+    static class Answer extends BaseButton {
+        private final String leadsToQuestionId;
+
+        Answer(final String id, final String text, final String icon, final String leadsToQuestionId, int examplesCount) {
+            super(id, text, icon, examplesCount);
+            this.leadsToQuestionId = leadsToQuestionId;
+        }
+    }
+
+    public static class Question {
+        public final List<Checkbox> checkboxes = new ArrayList<>();
+        public final List<Answer> answers = new ArrayList<>();
+        private final String id;
+        private final String title;
+        private final String text;
+        private final String help;
+
+        Question(final String id, final String title, final String text, final String help) {
+            this.id = id;
+            this.title = title;
+            this.text = text;
+            this.help = help;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public String getHelp() {
+            return help;
+        }
+
+        public boolean hasCheckboxes() {
+            if (checkboxes == null) {
+                return false;
+            }
+
+            if (checkboxes.size() == 0) {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

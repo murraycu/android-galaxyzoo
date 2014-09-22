@@ -8,7 +8,6 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -27,7 +26,6 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 /**
  * A login screen that offers login via username/password.
-
  */
 public class LoginActivity extends Activity {
     /**
@@ -68,9 +66,9 @@ public class LoginActivity extends Activity {
 
         //This voodoo makes the textviews' HTML links clickable:
         //See http://stackoverflow.com/questions/2734270/how-do-i-make-links-in-a-textview-clickable/20647011#20647011
-        TextView textView = (TextView)findViewById(R.id.textViewForgot);
+        TextView textView = (TextView) findViewById(R.id.textViewForgot);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-        textView = (TextView)findViewById(R.id.textViewRegister);
+        textView = (TextView) findViewById(R.id.textViewRegister);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
 
         Button mUsernameSignInButton = (Button) findViewById(R.id.username_sign_in_button);
@@ -175,6 +173,24 @@ public class LoginActivity extends Activity {
         }
     }
 
+    private void finishWithResult(boolean loggedIn) {
+        if (loggedIn) {
+            final Toast toast = Toast.makeText(this, "Logged In", Toast.LENGTH_LONG);
+            toast.show();
+        }
+
+        final Intent intent = new Intent();
+        setResult(loggedIn ? RESULT_OK : RESULT_CANCELED, intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // super.onBackPressed();
+
+        //Let callers (via startActivityForResult() know that this was cancelled.
+        finishWithResult(false);
+    }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
@@ -193,7 +209,7 @@ public class LoginActivity extends Activity {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: handle the response.
-            if(!requestLogin()) {
+            if (!requestLogin()) {
                 return false;
             }
 
@@ -209,7 +225,7 @@ public class LoginActivity extends Activity {
             if (success) {
                 finishWithResult(true);
             } else {
-                if(!Utils.getNetworkIsConnected(LoginActivity.this)) {
+                if (!Utils.getNetworkIsConnected(LoginActivity.this)) {
                     UiUtils.warnAboutNoNetworkConnection(LoginActivity.this);
                     return;
                 }
@@ -251,25 +267,6 @@ public class LoginActivity extends Activity {
             }
         }
 
-    }
-
-    private void finishWithResult(boolean loggedIn) {
-        if (loggedIn) {
-            final Toast toast = Toast.makeText(this, "Logged In", Toast.LENGTH_LONG);
-            toast.show();
-        }
-
-        final Intent intent = new Intent();
-        setResult(loggedIn ? RESULT_OK : RESULT_CANCELED, intent);
-        finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        // super.onBackPressed();
-
-        //Let callers (via startActivityForResult() know that this was cancelled.
-        finishWithResult(false);
     }
 }
 

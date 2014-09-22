@@ -41,7 +41,7 @@ public class SubjectViewerActivity extends ItemActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(TextUtils.isEmpty(getItemId())) {
+        if (TextUtils.isEmpty(getItemId())) {
             setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
         }
 

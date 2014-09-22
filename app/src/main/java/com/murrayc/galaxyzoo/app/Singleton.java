@@ -36,50 +36,9 @@ import java.io.InputStream;
 public class Singleton {
 
     private static Callbacks mCallbacks;
-
-    public static interface Callbacks {
-        /**
-         * This is called when the Singleton has been initialized.
-         * This will be called immediately if the Singleton has
-         * already been initialized.
-         * When this has been called, getInstance() will return
-         * a non-null value.
-         */
-        public void onInitialized();
-    }
-
     private static Singleton ourInstance = null;
     private IconsCache mIconsCache = null;
     private DecisionTree mDecisionTree = null;
-
-    private static class InitAsyncTask extends AsyncTask<Context, Void, Void> {
-        @Override
-        protected Void doInBackground(final Context... params) {
-            if (params.length < 1) {
-                Log.error("InitAsyncTask: not enough params.");
-                return null;
-            }
-
-            final Context context = params[0];
-            Singleton.ourInstance = new Singleton(context);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(final Void result) {
-            super.onPostExecute(result);
-
-            onLoginTaskFinished();
-        }
-    }
-
-    private static void onLoginTaskFinished() {
-        if (mCallbacks != null) {
-            mCallbacks.onInitialized();
-        }
-    }
-
     private Singleton(final Context context) {
         InputStream inputStream = null;
         try {
@@ -98,6 +57,12 @@ public class Singleton {
         }
 
         mIconsCache = new IconsCache(context, mDecisionTree);
+    }
+
+    private static void onLoginTaskFinished() {
+        if (mCallbacks != null) {
+            mCallbacks.onInitialized();
+        }
     }
 
     public static void init(final Context context, final Callbacks callbacks) {
@@ -138,6 +103,39 @@ public class Singleton {
 
     public BitmapDrawable getIconDrawable(final Context context, final DecisionTree.BaseButton answer) {
         return getIconDrawable(context, answer.getIcon());
+    }
+
+    public static interface Callbacks {
+        /**
+         * This is called when the Singleton has been initialized.
+         * This will be called immediately if the Singleton has
+         * already been initialized.
+         * When this has been called, getInstance() will return
+         * a non-null value.
+         */
+        public void onInitialized();
+    }
+
+    private static class InitAsyncTask extends AsyncTask<Context, Void, Void> {
+        @Override
+        protected Void doInBackground(final Context... params) {
+            if (params.length < 1) {
+                Log.error("InitAsyncTask: not enough params.");
+                return null;
+            }
+
+            final Context context = params[0];
+            Singleton.ourInstance = new Singleton(context);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final Void result) {
+            super.onPostExecute(result);
+
+            onLoginTaskFinished();
+        }
     }
 
 }

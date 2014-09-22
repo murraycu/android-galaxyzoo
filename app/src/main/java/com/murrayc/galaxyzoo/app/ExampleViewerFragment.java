@@ -21,10 +21,46 @@ import java.net.URLConnection;
  * A simple {@link android.app.Fragment} subclass.
  * Use the {@link com.murrayc.galaxyzoo.app.ExampleViewerFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class ExampleViewerFragment extends Fragment {
     public static final String ARG_EXAMPLE_URL = "example-url";
+
+    public ExampleViewerFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * We need to load the bitmap for the imageview in an async task.
+     * This is tedious. It would be far easier if ImageView had a setFromUrl(url) method that did
+     * the work asynchronously itself.
+     *
+     * @param strUri
+     * @param imageView
+     */
+    private void loadBitmap(final String strUri, ImageView imageView) {
+        final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        task.execute(strUri);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        String uriStr = null;
+        final Bundle bundle = getArguments();
+        if (bundle != null) {
+            uriStr = bundle.getString(ARG_EXAMPLE_URL);
+        }
+
+        View mRootView = inflater.inflate(R.layout.fragment_example_viewer, container, false);
+
+        final ImageView imageView = (ImageView) mRootView.findViewById(R.id.imageView);
+        if (imageView != null) {
+            loadBitmap(uriStr, imageView);
+        }
+
+        return mRootView;
+    }
 
     //See http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
     private static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
@@ -79,42 +115,6 @@ public class ExampleViewerFragment extends Fragment {
                 }
             }
         }
-    }
-
-    /** We need to load the bitmap for the imageview in an async task.
-     * This is tedious. It would be far easier if ImageView had a setFromUrl(url) method that did
-     * the work asynchronously itself.
-     * 
-     * @param strUri
-     * @param imageView
-     */
-    private void loadBitmap(final String strUri, ImageView imageView) {
-        final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-        task.execute(strUri);
-    }
-
-    public ExampleViewerFragment() {
-        // Required empty public constructor
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-
-        String uriStr = null;
-        final Bundle bundle = getArguments();
-        if (bundle != null) {
-            uriStr = bundle.getString(ARG_EXAMPLE_URL);
-        }
-
-        View mRootView = inflater.inflate(R.layout.fragment_example_viewer, container, false);
-
-        final ImageView imageView = (ImageView) mRootView.findViewById(R.id.imageView);
-        if (imageView != null) {
-            loadBitmap(uriStr, imageView);
-        }
-
-        return mRootView;
     }
 
 

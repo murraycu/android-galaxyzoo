@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="?android:attr/textAppearanceLarge"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="?android:attr/textAppearanceLarge"
     android:padding="16dp"
     tools:context="com.murrayc.galaxyzoo.app.QuestionHelpFragment">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView" />
+            android:layout_height="wrap_content" />
 
         <TextView
+            android:id="@+id/textViewExamples"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/button_title_examples"
-            android:id="@+id/textViewExamples"
             android:layout_below="@+id/textView"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:text="@string/button_title_examples"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/textViewExamples"
-                android:id="@+id/tableLayout" />
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textViewExamples" />
 
     </RelativeLayout>
 </ScrollView>

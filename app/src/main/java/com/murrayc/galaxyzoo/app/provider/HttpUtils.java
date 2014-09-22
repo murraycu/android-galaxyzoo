@@ -27,7 +27,7 @@ public class HttpUtils {
         final BufferedReader reader = new BufferedReader(inputReader);
 
         final StringBuilder builder = new StringBuilder();
-        for (String line; (line = reader.readLine()) != null;) {
+        for (String line; (line = reader.readLine()) != null; ) {
             builder.append(line).append("\n");
         }
 
@@ -49,11 +49,11 @@ public class HttpUtils {
         //because we want to return the InputStream, but try-with-resources would
         //presumably close it as we returned it. TODO: Is this true?
         InputStream in = null;
-        try  {
+        try {
             //Calling getInputStream() causes the request to actually be sent.
             in = conn.getInputStream();
 
-            if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 Log.error("httpGetRequest(): response code: " + conn.getResponseCode());
                 in.close();
                 return null;
@@ -85,7 +85,7 @@ public class HttpUtils {
     }
 
     static void throwIfNoNetwork(final Context context) {
-        if(!Utils.getNetworkIsConnected(context)) {
+        if (!Utils.getNetworkIsConnected(context)) {
             //Throw an exception so the caller knows.
             throw new ItemsContentProvider.NoNetworkException();
         }
@@ -103,7 +103,7 @@ public class HttpUtils {
 
         final HttpURLConnection conn;
         try {
-            conn = (HttpURLConnection)url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             setConnectionUserAgent(conn);
         } catch (final IOException e) {
             Log.error("openConnection(): exception during HTTP connection", e);
@@ -112,32 +112,6 @@ public class HttpUtils {
         }
 
         return conn;
-    }
-
-    public static class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
-
-        public FileCacheAsyncTask() {
-
-        }
-
-        @Override
-        protected Boolean doInBackground(final String... params) {
-            if (params.length < 2) {
-                Log.error("LoginTask: not enough params.");
-                return false;
-            }
-
-            //TODO: Just set these in the constructor?
-            final String uriFileToCache = params[0];
-            final String cacheFileUri = params[1];
-
-            return HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-        }
     }
 
     public static boolean cacheUriToFileSync(final String uriFileToCache, final String cacheFileUri) {
@@ -168,9 +142,7 @@ public class HttpUtils {
         return latest;
     }
 
-
-    private static long getUriLastModified(final String strUrl)
-    {
+    private static long getUriLastModified(final String strUrl) {
         final URL url;
         try {
             url = new URL(strUrl);
@@ -196,5 +168,31 @@ public class HttpUtils {
 
     private static void setConnectionUserAgent(final HttpURLConnection connection) {
         connection.setRequestProperty(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
+    }
+
+    public static class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
+
+        public FileCacheAsyncTask() {
+
+        }
+
+        @Override
+        protected Boolean doInBackground(final String... params) {
+            if (params.length < 2) {
+                Log.error("LoginTask: not enough params.");
+                return false;
+            }
+
+            //TODO: Just set these in the constructor?
+            final String uriFileToCache = params[0];
+            final String cacheFileUri = params[1];
+
+            return HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+        }
     }
 }

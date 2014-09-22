@@ -69,7 +69,157 @@ public class ItemsContentProvider extends ContentProvider {
 
     //Whether the call to METHOD_LOGIN was successful.
     public static final String LOGIN_METHOD_RESULT = "result";
+    //TODO: Remove these explicit method calls, or keep them just for debugging,
+    //when we make them happen automatically.
+    public static final String METHOD_REQUEST_ITEMS = "request-items";
+    public static final String METHOD_LOGIN = "login";
+    public static final String METHOD_LOGIN_ARG_USERNAME = "username";
+    public static final String METHOD_LOGIN_ARG_PASSWORD = "password";
+    public static final String URI_PART_ITEM = "item";
+    public static final String URI_PART_ITEM_ID_NEXT = "next"; //Use in place of the item ID to get the next unclassified item.
+    public static final String URI_PART_FILE = "file";
+    public static final String URI_PART_CLASSIFICATION_ANSWER = "classification-answer";
+    public static final String URI_PART_CLASSIFICATION_CHECKBOX = "classification-checkbox";
+    public static final String PREF_KEY_AUTH_NAME = "auth_name";
+    private static final String URI_PART_CLASSIFICATION = "classification";
+    /**
+     * The MIME type of {@link Item#CONTENT_URI} providing a directory of items.
+     */
+    private static final String CONTENT_TYPE_ITEMS =
+            "vnd.android.cursor.dir/vnd.android-galaxyzoo.item";
+    /**
+     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
+     * item.
+     */
+    private static final String CONTENT_TYPE_ITEM =
+            "vnd.android.cursor.item/vnd.android-galaxyzoo.item";
+    /**
+     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATIONS =
+            "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification";
+    /**
+     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
+     * classification.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATION =
+            "vnd.android.cursor.item/vnd.android-galaxyzoo.classification";
+    /**
+     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATION_ANSWERS =
+            "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification-answer";
+    /**
+     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
+     * classification answer.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATION_ANSWER =
+            "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-answer";
+    /**
+     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOXES =
+            "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification-checkboxes";
+    /**
+     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
+     * classification checkbox.
+     */
+    private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOX =
+            "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-checkbox";
+    //TODO: Use an enum?
+    private static final int MATCHER_ID_ITEMS = 1;
+    private static final int MATCHER_ID_ITEM = 2;
+    private static final int MATCHER_ID_ITEM_NEXT = 3;
+    private static final int MATCHER_ID_FILE = 4;
+    private static final int MATCHER_ID_CLASSIFICATIONS = 5;
+    private static final int MATCHER_ID_CLASSIFICATION = 6;
+    private static final int MATCHER_ID_CLASSIFICATION_ANSWERS = 7;
+    private static final int MATCHER_ID_CLASSIFICATION_ANSWER = 8;
+    private static final int MATCHER_ID_CLASSIFICATION_CHECKBOXES = 9;
+    private static final int MATCHER_ID_CLASSIFICATION_CHECKBOX = 10;
+    private static final UriMatcher sUriMatcher;
+
+    static {
+        sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+        // A URI for the list of all items:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_ITEM, MATCHER_ID_ITEMS);
+
+        // A URI for a single item:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_ITEM + "/" + URI_PART_ITEM_ID_NEXT, MATCHER_ID_ITEM_NEXT);
+
+        // A URI for a single item:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_ITEM + "/#", MATCHER_ID_ITEM);
+
+        // A URI for a single file:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_FILE + "/#", MATCHER_ID_FILE);
+
+        // A URI for the list of all classifications:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION, MATCHER_ID_CLASSIFICATIONS);
+
+        // A URI for a single classification:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION + "/#", MATCHER_ID_CLASSIFICATION);
+
+        // A URI for the list of all classifications:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_ANSWER, MATCHER_ID_CLASSIFICATION_ANSWERS);
+
+        // A URI for a single classification:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_ANSWER + "/#", MATCHER_ID_CLASSIFICATION_ANSWER);
+
+        // A URI for the list of all classifications:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_CHECKBOX, MATCHER_ID_CLASSIFICATION_CHECKBOXES);
+
+        // A URI for a single classification:
+        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_CHECKBOX + "/#", MATCHER_ID_CLASSIFICATION_CHECKBOX);
+    }
+
+    private static final String[] FILE_MIME_TYPES = new String[]{"application/x-glom"};
+    /**
+     * A map of GlomContentProvider projection column names to underlying Sqlite column names
+     * for /item/ URIs, mapping to the items tables.
+     */
+    private static final Map<String, String> sItemsProjectionMap;
+    private static final Map<String, String> sClassificationAnswersProjectionMap;
+    private static final Map<String, String> sClassificationCheckboxesProjectionMap;
+
+    static {
+        sItemsProjectionMap = new HashMap<>();
+        sItemsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+        sItemsProjectionMap.put(Item.Columns.DONE, DatabaseHelper.ItemsDbColumns.DONE);
+        sItemsProjectionMap.put(Item.Columns.UPLOADED, DatabaseHelper.ItemsDbColumns.UPLOADED);
+        sItemsProjectionMap.put(Item.Columns.SUBJECT_ID, DatabaseHelper.ItemsDbColumns.SUBJECT_ID);
+        sItemsProjectionMap.put(Item.Columns.ZOONIVERSE_ID, DatabaseHelper.ItemsDbColumns.ZOONIVERSE_ID);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL_URI, DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_URI, DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI);
+        sItemsProjectionMap.put(Item.Columns.FAVORITE, DatabaseHelper.ItemsDbColumns.FAVORITE);
+
+
+        sClassificationAnswersProjectionMap = new HashMap<>();
+        sClassificationAnswersProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.ITEM_ID, DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID);
+        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.SEQUENCE, DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE);
+        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.QUESTION_ID, DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID);
+        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.ANSWER_ID, DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID);
+
+        sClassificationCheckboxesProjectionMap = new HashMap<>();
+        sClassificationCheckboxesProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.ITEM_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID);
+        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.SEQUENCE, DatabaseHelper.ClassificationCheckboxesDbColumns.SEQUENCE);
+        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.QUESTION_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.QUESTION_ID);
+        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.CHECKBOX_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID);
+
+    }
+
+    private static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
+    private static final int MIN_CACHE_COUNT = 5; //Don't let the count of undone items get this low.
+    private static final int QUERY_COUNT_LARGE = 10;
     private int mUploadsInProgress = 0;
+    private DatabaseHelper mOpenDbHelper;
+
+    public ItemsContentProvider() {
+        startRegularUploads();
+    }
 
     private static LoginResult parseLoginResponseContent(final InputStream content) throws IOException {
         final String str = HttpUtils.getStringFromInputStream(content);
@@ -87,7 +237,7 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         try {
-            if(TextUtils.equals(jsonObject.getString("success"), "true")) {
+            if (TextUtils.equals(jsonObject.getString("success"), "true")) {
                 Log.info("Login succeeded.");
 
                 //TODO: Store the name and api_key for later use when uploading classifications.
@@ -150,7 +300,7 @@ public class ItemsContentProvider extends ContentProvider {
             return result;
         }
 
-        for(int i = 0; i < jsonArray.length(); ++i) {
+        for (int i = 0; i < jsonArray.length(); ++i) {
             JSONObject obj;
             try {
                 obj = jsonArray.getJSONObject(i);
@@ -230,174 +380,42 @@ public class ItemsContentProvider extends ContentProvider {
         return true; //TODO?
     }
 
-    public static class NoNetworkException  extends RuntimeException {
-        public NoNetworkException() {
+    private static ContentValues getMappedContentValues(final ContentValues values, final Map<String, String> projectionMap) {
+        final ContentValues result = new ContentValues();
+
+        for (final String keyExternal : values.keySet()) {
+            final String keyInternal = projectionMap.get(keyExternal);
+            if (!TextUtils.isEmpty(keyInternal)) {
+                final Object value = values.get(keyExternal);
+                putValueinContentValues(result, keyInternal, value);
+            }
         }
+
+        return result;
     }
 
-    //TODO: Remove these explicit method calls, or keep them just for debugging,
-    //when we make them happen automatically.
-    public static final String METHOD_REQUEST_ITEMS = "request-items";
-    public static final String METHOD_LOGIN = "login";
-    public static final String METHOD_LOGIN_ARG_USERNAME= "username";
-    public static final String METHOD_LOGIN_ARG_PASSWORD = "password";
-
-    public static final String URI_PART_ITEM = "item";
-    public static final String URI_PART_ITEM_ID_NEXT = "next"; //Use in place of the item ID to get the next unclassified item.
-    public static final String URI_PART_FILE = "file";
-    private static final String URI_PART_CLASSIFICATION = "classification";
-    public static final String URI_PART_CLASSIFICATION_ANSWER = "classification-answer";
-    public static final String URI_PART_CLASSIFICATION_CHECKBOX = "classification-checkbox";
-
     /**
-     * The MIME type of {@link Item#CONTENT_URI} providing a directory of items.
+     * There is no ContentValues.put(key, object),
+     * only put(key, String), put(key, Boolean), etc.
+     * so we use this tedious implementation instead,
+     * so our code can be more generic.
+     *
+     * @param values
+     * @param key
+     * @param value
      */
-    private static final String CONTENT_TYPE_ITEMS =
-            "vnd.android.cursor.dir/vnd.android-galaxyzoo.item";
-
-    /**
-     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
-     * item.
-     */
-    private static final String CONTENT_TYPE_ITEM =
-            "vnd.android.cursor.item/vnd.android-galaxyzoo.item";
-
-    /**
-     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
-     */
-    private static final String CONTENT_TYPE_CLASSIFICATIONS =
-            "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification";
-
-    /**
-     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
-     * classification.
-     */
-    private static final String CONTENT_TYPE_CLASSIFICATION =
-            "vnd.android.cursor.item/vnd.android-galaxyzoo.classification";
-
-    /**
-     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
-     */
-    private static final String CONTENT_TYPE_CLASSIFICATION_ANSWERS =
-            "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification-answer";
-
-    /**
-     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
-     * classification answer.
-     */
-    private static final String CONTENT_TYPE_CLASSIFICATION_ANSWER =
-            "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-answer";
-
-    /**
-     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
-     */
-    private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOXES =
-            "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification-checkboxes";
-
-    /**
-     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
-     * classification checkbox.
-     */
-    private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOX =
-            "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-checkbox";
-
-
-    //TODO: Use an enum?
-    private static final int MATCHER_ID_ITEMS = 1;
-    private static final int MATCHER_ID_ITEM = 2;
-    private static final int MATCHER_ID_ITEM_NEXT= 3;
-    private static final int MATCHER_ID_FILE = 4;
-    private static final int MATCHER_ID_CLASSIFICATIONS = 5;
-    private static final int MATCHER_ID_CLASSIFICATION = 6;
-    private static final int MATCHER_ID_CLASSIFICATION_ANSWERS = 7;
-    private static final int MATCHER_ID_CLASSIFICATION_ANSWER = 8;
-    private static final int MATCHER_ID_CLASSIFICATION_CHECKBOXES = 9;
-    private static final int MATCHER_ID_CLASSIFICATION_CHECKBOX = 10;
-    private static final UriMatcher sUriMatcher;
-
-    static {
-        sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
-        // A URI for the list of all items:
-        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_ITEM, MATCHER_ID_ITEMS);
-
-        // A URI for a single item:
-        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_ITEM + "/" + URI_PART_ITEM_ID_NEXT, MATCHER_ID_ITEM_NEXT);
-
-        // A URI for a single item:
-        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_ITEM + "/#", MATCHER_ID_ITEM);
-
-        // A URI for a single file:
-        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_FILE + "/#", MATCHER_ID_FILE);
-
-        // A URI for the list of all classifications:
-        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION, MATCHER_ID_CLASSIFICATIONS);
-
-        // A URI for a single classification:
-        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION + "/#", MATCHER_ID_CLASSIFICATION);
-
-        // A URI for the list of all classifications:
-        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_ANSWER, MATCHER_ID_CLASSIFICATION_ANSWERS);
-
-        // A URI for a single classification:
-        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_ANSWER + "/#", MATCHER_ID_CLASSIFICATION_ANSWER);
-
-        // A URI for the list of all classifications:
-        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_CHECKBOX, MATCHER_ID_CLASSIFICATION_CHECKBOXES);
-
-        // A URI for a single classification:
-        sUriMatcher.addURI(Item.AUTHORITY, URI_PART_CLASSIFICATION_CHECKBOX + "/#", MATCHER_ID_CLASSIFICATION_CHECKBOX);
-    }
-
-    private static final String[] FILE_MIME_TYPES = new String[]{"application/x-glom"};
-
-
-    /**
-     * A map of GlomContentProvider projection column names to underlying Sqlite column names
-     * for /item/ URIs, mapping to the items tables.
-     */
-    private static final Map<String, String> sItemsProjectionMap;
-    private static final Map<String, String> sClassificationAnswersProjectionMap;
-    private static final Map<String, String> sClassificationCheckboxesProjectionMap;
-
-    static {
-        sItemsProjectionMap = new HashMap<>();
-        sItemsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-        sItemsProjectionMap.put(Item.Columns.DONE, DatabaseHelper.ItemsDbColumns.DONE);
-        sItemsProjectionMap.put(Item.Columns.UPLOADED, DatabaseHelper.ItemsDbColumns.UPLOADED);
-        sItemsProjectionMap.put(Item.Columns.SUBJECT_ID, DatabaseHelper.ItemsDbColumns.SUBJECT_ID);
-        sItemsProjectionMap.put(Item.Columns.ZOONIVERSE_ID, DatabaseHelper.ItemsDbColumns.ZOONIVERSE_ID);
-        sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI);
-        sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL_URI, DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI);
-        sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_URI, DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI);
-        sItemsProjectionMap.put(Item.Columns.FAVORITE, DatabaseHelper.ItemsDbColumns.FAVORITE);
-
-
-        sClassificationAnswersProjectionMap = new HashMap<>();
-        sClassificationAnswersProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.ITEM_ID, DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID);
-        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.SEQUENCE, DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE);
-        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.QUESTION_ID, DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID);
-        sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.ANSWER_ID, DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID);
-
-        sClassificationCheckboxesProjectionMap = new HashMap<>();
-        sClassificationCheckboxesProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.ITEM_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID);
-        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.SEQUENCE, DatabaseHelper.ClassificationCheckboxesDbColumns.SEQUENCE);
-        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.QUESTION_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.QUESTION_ID);
-        sClassificationCheckboxesProjectionMap.put(ClassificationCheckbox.Columns.CHECKBOX_ID, DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID);
-
-    }
-
-    public static final String PREF_KEY_AUTH_NAME = "auth_name";
-    private static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
-    private static final int MIN_CACHE_COUNT = 5; //Don't let the count of undone items get this low.
-    private static final int QUERY_COUNT_LARGE = 10;
-
-    private DatabaseHelper mOpenDbHelper;
-
-    public ItemsContentProvider() {
-        startRegularUploads();
+    private static void putValueinContentValues(final ContentValues values, final String key, final Object value) {
+        if (value instanceof String) {
+            values.put(key, (String) value);
+        } else if (value instanceof Boolean) {
+            values.put(key, (Boolean) value);
+        } else if (value instanceof Integer) {
+            values.put(key, (Integer) value);
+        } else if (value instanceof Long) {
+            values.put(key, (Long) value);
+        } else if (value instanceof Double) {
+            values.put(key, (Double) value);
+        }
     }
 
     private void startRegularUploads() {
@@ -441,8 +459,8 @@ public class ItemsContentProvider extends ContentProvider {
             //TODO: Do not support this because it would delete everything in one go?
             case MATCHER_ID_CLASSIFICATION_ANSWERS: {
                 affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
-                                (!TextUtils.isEmpty(selection) ?
-                                        " AND (" + selection + ')' : ""),
+                        (!TextUtils.isEmpty(selection) ?
+                                " AND (" + selection + ')' : ""),
                         selectionArgs
                 );
                 //TODO: Delete all associated files too.
@@ -610,7 +628,6 @@ public class ItemsContentProvider extends ContentProvider {
                 selection, selectionArgs);
     }
 
-
     private Uri insertMappedValues(final String tableName, final ContentValues values, final Map<String, String> projectionMap, final Uri uriPrefix) {
         final ContentValues valuesToUse = getMappedContentValues(values, projectionMap);
 
@@ -637,44 +654,8 @@ public class ItemsContentProvider extends ContentProvider {
         return null;
     }
 
-    private static ContentValues getMappedContentValues(final ContentValues values, final Map<String, String> projectionMap) {
-        final ContentValues result = new ContentValues();
-
-        for (final String keyExternal : values.keySet()) {
-            final String keyInternal = projectionMap.get(keyExternal);
-            if (!TextUtils.isEmpty(keyInternal)) {
-                final Object value = values.get(keyExternal);
-                putValueinContentValues(result, keyInternal, value);
-            }
-        }
-
-        return result;
-    }
-
-    /** There is no ContentValues.put(key, object),
-     * only put(key, String), put(key, Boolean), etc.
-     *  so we use this tedious implementation instead,
-     *  so our code can be more generic.
-     * @param values
-     * @param key
-     * @param value
-     */
-    private static void putValueinContentValues(final ContentValues values, final String key, final Object value) {
-        if (value instanceof String) {
-            values.put(key, (String) value);
-        } else if (value instanceof Boolean) {
-            values.put(key, (Boolean) value);
-        } else if (value instanceof Integer) {
-            values.put(key, (Integer) value);
-        } else if (value instanceof Long) {
-            values.put(key, (Long) value);
-        } else if (value instanceof Double) {
-            values.put(key, (Double) value);
-        }
-    }
-
     /**
-     * @param uriOfFileToCache This may be null if the new file should be empty.
+     * @param uriOfFileToCache   This may be null if the new file should be empty.
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
     private Uri createFileUri(final String uriOfFileToCache, boolean asyncFileDownloads) {
@@ -732,14 +713,9 @@ public class ItemsContentProvider extends ContentProvider {
         return fileUri;
     }
 
-    /*
-    private void onFileCacheTaskFinished(final Boolean result) {
-        //TODO: notify the client that this item has changed, so the ListView can show it.
-    }
-    */
-
     /**
      * Download bytes from a url and store them in a file, optionally asynchronously in spawned thread.
+     *
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
     private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri, boolean asyncFileDownloads) {
@@ -752,6 +728,12 @@ public class ItemsContentProvider extends ContentProvider {
             HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri);
         }
     }
+
+    /*
+    private void onFileCacheTaskFinished(final Boolean result) {
+        //TODO: notify the client that this item has changed, so the ListView can show it.
+    }
+    */
 
     @Override
     public boolean onCreate() {
@@ -827,7 +809,7 @@ public class ItemsContentProvider extends ContentProvider {
         // query the database for any item whose classification is not yet uploaded.
         final String whereClause =
                 "(" + DatabaseHelper.ItemsDbColumns.DONE + " == 1) AND " +
-                "(" + DatabaseHelper.ItemsDbColumns.UPLOADED + " != 1)";
+                        "(" + DatabaseHelper.ItemsDbColumns.UPLOADED + " != 1)";
 
         final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
@@ -836,7 +818,7 @@ public class ItemsContentProvider extends ContentProvider {
         final Cursor c = builder.query(getDb(), projection,
                 null, null,
                 null, null, null); //TODO: Order by?
-        while(c.moveToNext()) {
+        while (c.moveToNext()) {
             final String itemId = c.getString(0);
             final String subjectId = c.getString(1);
 
@@ -1173,14 +1155,12 @@ public class ItemsContentProvider extends ContentProvider {
         return mOpenDbHelper.getWritableDatabase();
     }
 
-    //TODO: Reimplement this, in GalaxyZooResponseHandler, as an insert(uri) call,
-    //to avoid repetition, or would that be too inefficient?
     /**
      * @param item
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
     private long addSubject(final Subject item, boolean asyncFileDownloads) {
-        if(subjectIsInDatabase(item.mId)) {
+        if (subjectIsInDatabase(item.mId)) {
             //It is already in the database.
             //TODO: Update the row?
             return 0;
@@ -1222,6 +1202,9 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
+    //TODO: Reimplement this, in GalaxyZooResponseHandler, as an insert(uri) call,
+    //to avoid repetition, or would that be too inefficient?
+
     private boolean subjectIsInDatabase(final String subjectId) {
         final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
@@ -1233,6 +1216,222 @@ public class ItemsContentProvider extends ContentProvider {
                 null, selectionArgs,
                 null, null, null);
         return c.getCount() > 0;
+    }
+
+    private List<Subject> requestMoreItemsSync(int count) {
+        throwIfNoNetwork();
+
+        //TODO: Can we use Java 7's try-with-resources to automatically close()
+        //the InputStream even though none of the code here should throw an
+        //exception?
+        final InputStream in = HttpUtils.httpGetRequest(getQueryUri(count));
+        if (in == null) {
+            return null;
+        }
+
+        final List<Subject> result = parseQueryResponseContent(in);
+        try {
+            in.close();
+        } catch (IOException e) {
+            Log.error("requestMoreItemsSync(): Can't close input stream", e);
+        }
+
+        return result;
+    }
+
+    private void throwIfNoNetwork() {
+        HttpUtils.throwIfNoNetwork(getContext());
+    }
+
+    private String getQueryUri(final int count) {
+        return Config.QUERY_URI + Integer.toString(count); //TODO: Is Integer.toString() locale-dependent?
+    }
+
+    private void onQueryTaskFinished(final List<Subject> result) {
+        if (result == null) {
+            return;
+        }
+
+        addSubjects(result, true /* async */);
+    }
+
+    /**
+     * @param subjects
+     * @param asyncFileDownloads Get the image data asynchronously if this is true.
+     */
+    private void addSubjects(final List<Subject> subjects, boolean asyncFileDownloads) {
+        if (subjects == null) {
+            return;
+        }
+
+        for (final Subject subject : subjects) {
+            addSubject(subject, asyncFileDownloads);
+        }
+    }
+
+    /*
+    private File getFile(long id) {
+        return new File(getContext().getExternalFilesDir(null), Long
+                .toString(id)
+                + ".glom");
+    }
+    */
+
+    private LoginResult loginSync(final String username, final String password) {
+        final HttpURLConnection conn = HttpUtils.openConnection(Config.LOGIN_URI);
+        if (conn == null) {
+            return null;
+        }
+
+        final List<NameValuePair> nameValuePairs = new ArrayList<>();
+        nameValuePairs.add(new BasicNameValuePair("username", username));
+        nameValuePairs.add(new BasicNameValuePair("password", password));
+
+        try {
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+
+            if (!writeParamsToHttpPost(conn, nameValuePairs)) {
+                return null;
+            }
+
+            conn.connect();
+        } catch (final IOException e) {
+            Log.error("loginSync(): exception during HTTP connection", e);
+
+            return null;
+        }
+
+        //Get the response:
+        InputStream in = null;
+        try {
+            in = conn.getInputStream();
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                Log.error("loginSync(): response code: " + conn.getResponseCode());
+                return null;
+            }
+
+            return parseLoginResponseContent(in);
+        } catch (final IOException e) {
+            Log.error("loginSync(): exception during HTTP connection", e);
+
+            return null;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (final IOException e) {
+                    Log.error("loginSync(): exception while closing in", e);
+                }
+            }
+        }
+    }
+
+    private String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
+        final StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (final NameValuePair pair : nameValuePairs) {
+            if (first) {
+                first = false;
+            } else {
+                result.append("&");
+            }
+
+            try {
+                result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                Log.error("getPostDataBytes(): Exception", e);
+                return null;
+            }
+        }
+
+        return result.toString();
+    }
+
+    private void saveAuthToPreferences(final String name, final String apiKey) {
+        final SharedPreferences prefs = Utils.getPreferences(getContext());
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PREF_KEY_AUTH_NAME, name);
+        editor.putString(PREF_KEY_AUTH_API_KEY, apiKey);
+        editor.apply();
+    }
+
+    private boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
+        OutputStream out = null;
+        try {
+            out = conn.getOutputStream();
+
+            BufferedWriter writer = null;
+            try {
+                writer = new BufferedWriter(
+                        new OutputStreamWriter(out, "UTF-8"));
+                writer.write(getPostDataBytes(nameValuePairs));
+                writer.flush();
+            } catch (final IOException e) {
+                Log.error("writeParamsToHttpPost(): Exception: ", e);
+                return false;
+            } finally {
+                if (writer != null) {
+                    writer.close();
+                }
+            }
+        } catch (final IOException e) {
+            Log.error("writeParamsToHttpPost(): Exception: ", e);
+            return false;
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (final IOException e) {
+                    Log.error("writeParamsToHttpPost(): Exception while closing out", e);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private String generateAuthorizationHeader(final String authName, final String authApiKey) {
+        //See the similar code in Zooniverse's user.coffee source code:
+        //https://github.com/zooniverse/Zooniverse/blob/master/src/models/user.coffee#L49
+        final String str = authName + ":" + authApiKey;
+        return "Basic " + Base64.encodeToString(str.getBytes(), Base64.DEFAULT);
+    }
+
+    private void onUploadTaskFinished(boolean result, final String itemId) {
+        if (result) {
+            markItemAsUploaded(itemId);
+        } else {
+            //TODO: Inform the user?
+        }
+
+        mUploadsInProgress--;
+    }
+
+    private void markItemAsUploaded(final String itemId) {
+        // insert the initialValues into a new database row
+        final SQLiteDatabase db = getDb();
+
+        final String whereClause = DatabaseHelper.ItemsDbColumns._ID + " = ?"; //We use ? to avoid SQL Injection.
+        final String[] selectionArgs = {itemId};
+
+        final ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.ItemsDbColumns.UPLOADED, 1);
+
+        final int affected = db.update(DatabaseHelper.TABLE_NAME_ITEMS, values,
+                whereClause, selectionArgs);
+        if (affected != 1) {
+            Log.error("markItemAsUploaded(): Unexpected affected rows: " + affected);
+        }
+    }
+
+    public static class NoNetworkException extends RuntimeException {
+        public NoNetworkException() {
+        }
     }
 
     /**
@@ -1250,44 +1449,11 @@ public class ItemsContentProvider extends ContentProvider {
         private static final String DATABASE_NAME = "items.db";
 
         private static final String TABLE_NAME_ITEMS = "items";
-        private static class ItemsDbColumns implements BaseColumns {
-            //Specific to our app:
-            static final String DONE = "done"; //1 or 0. Whether the user has classified it already.
-            static final String UPLOADED = "uploaded"; //1 or 0. Whether its classification has been submitted.
-
-            //From the REST API:
-            static final String SUBJECT_ID = "subjectId";
-            static final String ZOONIVERSE_ID = "zooniverseId";
-            static final String LOCATION_STANDARD_URI = "locationStandardUri"; //The content URI for a file in the files table.
-            static final String LOCATION_THUMBNAIL_URI = "locationThumbnailUri"; //The content URI for a file in the files table.
-            static final String LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
-            static final String FAVORITE = "favorite"; //1 or 0. Whether the user has marked this as a favorite.
-        }
-
         private static final String TABLE_NAME_FILES = "files";
-        private static class FilesDbColumns implements BaseColumns {
-            private static final String FILE_DATA = "_data"; //The real URI
-        }
-
         //Each item row has many classification_answers rows.
         private static final String TABLE_NAME_CLASSIFICATION_ANSWERS = "classification_answers";
-        private static class ClassificationAnswersDbColumns implements BaseColumns  {
-            private static final String ITEM_ID = "itemId";
-            private static final String SEQUENCE = "sequence";
-            private static final String QUESTION_ID = "questionId";
-            private static final String ANSWER_ID = "answerId";
-        }
-
         //Each item row has some classification_checkboxes rows.
         private static final String TABLE_NAME_CLASSIFICATION_CHECKBOXES = "classification_checkboxes";
-        private static class ClassificationCheckboxesDbColumns implements BaseColumns  {
-
-            private static final String ITEM_ID = "classificationId";
-            private static final String SEQUENCE = "sequence";
-            private static final String QUESTION_ID = "questionId";
-            private static final String CHECKBOX_ID = "checkboxId";
-        }
-
         private static final String DEFAULT_SORT_ORDER = Item.Columns._ID + " ASC";
 
         DatabaseHelper(Context context) {
@@ -1357,6 +1523,39 @@ public class ItemsContentProvider extends ContentProvider {
                     ClassificationCheckboxesDbColumns.CHECKBOX_ID + " TEXT)";
             sqLiteDatabase.execSQL(qs);
         }
+
+        private static class ItemsDbColumns implements BaseColumns {
+            //Specific to our app:
+            static final String DONE = "done"; //1 or 0. Whether the user has classified it already.
+            static final String UPLOADED = "uploaded"; //1 or 0. Whether its classification has been submitted.
+
+            //From the REST API:
+            static final String SUBJECT_ID = "subjectId";
+            static final String ZOONIVERSE_ID = "zooniverseId";
+            static final String LOCATION_STANDARD_URI = "locationStandardUri"; //The content URI for a file in the files table.
+            static final String LOCATION_THUMBNAIL_URI = "locationThumbnailUri"; //The content URI for a file in the files table.
+            static final String LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
+            static final String FAVORITE = "favorite"; //1 or 0. Whether the user has marked this as a favorite.
+        }
+
+        private static class FilesDbColumns implements BaseColumns {
+            private static final String FILE_DATA = "_data"; //The real URI
+        }
+
+        private static class ClassificationAnswersDbColumns implements BaseColumns {
+            private static final String ITEM_ID = "itemId";
+            private static final String SEQUENCE = "sequence";
+            private static final String QUESTION_ID = "questionId";
+            private static final String ANSWER_ID = "answerId";
+        }
+
+        private static class ClassificationCheckboxesDbColumns implements BaseColumns {
+
+            private static final String ITEM_ID = "classificationId";
+            private static final String SEQUENCE = "sequence";
+            private static final String QUESTION_ID = "questionId";
+            private static final String CHECKBOX_ID = "checkboxId";
+        }
     }
 
     public static class Subject {
@@ -1395,14 +1594,6 @@ public class ItemsContentProvider extends ContentProvider {
         public String itemId;
     }
 
-    /*
-    private File getFile(long id) {
-        return new File(getContext().getExternalFilesDir(null), Long
-                .toString(id)
-                + ".glom");
-    }
-    */
-
     private class QueryAsyncTask extends AsyncTask<Void, Integer, List<Subject>> {
         @Override
         protected List<Subject> doInBackground(final Void... params) {
@@ -1415,142 +1606,6 @@ public class ItemsContentProvider extends ContentProvider {
 
             onQueryTaskFinished(result);
         }
-    }
-
-    private List<Subject> requestMoreItemsSync(int count) {
-        throwIfNoNetwork();
-
-        //TODO: Can we use Java 7's try-with-resources to automatically close()
-        //the InputStream even though none of the code here should throw an
-        //exception?
-        final InputStream in = HttpUtils.httpGetRequest(getQueryUri(count));
-        if (in == null) {
-            return null;
-        }
-
-        final List<Subject> result = parseQueryResponseContent(in);
-        try {
-            in.close();
-        } catch (IOException e) {
-            Log.error("requestMoreItemsSync(): Can't close input stream", e);
-        }
-
-        return result;
-    }
-
-    private void throwIfNoNetwork() {
-        HttpUtils.throwIfNoNetwork(getContext());
-    }
-
-    private String getQueryUri(final int count) {
-        return Config.QUERY_URI + Integer.toString(count); //TODO: Is Integer.toString() locale-dependent?
-    }
-
-    private void onQueryTaskFinished(final List<Subject> result) {
-        if (result == null) {
-            return;
-        }
-
-        addSubjects(result, true /* async */);
-    }
-
-
-    /**
-     * @param subjects
-     * @param asyncFileDownloads Get the image data asynchronously if this is true.
-     *
-     */
-    private void addSubjects(final List<Subject> subjects, boolean asyncFileDownloads) {
-        if (subjects == null) {
-            return;
-        }
-
-        for (final Subject subject : subjects) {
-            addSubject(subject, asyncFileDownloads);
-        }
-    }
-
-    private LoginResult loginSync(final String username, final String password) {
-        final HttpURLConnection conn = HttpUtils.openConnection(Config.LOGIN_URI);
-        if (conn == null) {
-            return null;
-        }
-
-        final List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new BasicNameValuePair("username", username));
-        nameValuePairs.add(new BasicNameValuePair("password", password));
-
-        try {
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-
-            if(!writeParamsToHttpPost(conn, nameValuePairs)) {
-              return null;
-            }
-
-            conn.connect();
-        } catch (final IOException e) {
-            Log.error("loginSync(): exception during HTTP connection", e);
-
-            return null;
-        }
-
-        //Get the response:
-        InputStream in = null;
-        try {
-            in = conn.getInputStream();
-            if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.error("loginSync(): response code: " + conn.getResponseCode());
-                return null;
-            }
-
-            return parseLoginResponseContent(in);
-        } catch (final IOException e) {
-            Log.error("loginSync(): exception during HTTP connection", e);
-
-            return null;
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (final IOException e) {
-                    Log.error("loginSync(): exception while closing in", e);
-                }
-            }
-        }
-    }
-
-    private String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
-        final StringBuilder result = new StringBuilder();
-        boolean first = true;
-
-        for (final NameValuePair pair : nameValuePairs) {
-            if (first) {
-                first = false;
-            } else {
-                result.append("&");
-            }
-
-            try {
-                result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
-                result.append("=");
-                result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                Log.error("getPostDataBytes(): Exception", e);
-                return null;
-            }
-        }
-
-        return result.toString();
-    }
-
-    private void saveAuthToPreferences(final String name, final String apiKey) {
-        final SharedPreferences prefs = Utils.getPreferences(getContext());
-        final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PREF_KEY_AUTH_NAME, name);
-        editor.putString(PREF_KEY_AUTH_API_KEY, apiKey);
-        editor.apply();
     }
 
     private class UploadAsyncTask extends AsyncTask<String, Integer, Boolean> {
@@ -1580,8 +1635,7 @@ public class ItemsContentProvider extends ContentProvider {
                 return false;
             }
 
-            try
-            {
+            try {
                 conn.setRequestMethod("POST");
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
@@ -1614,9 +1668,9 @@ public class ItemsContentProvider extends ContentProvider {
                         null, selectionArgs,
                         null, null, null);
 
-                if(c.moveToFirst()) {
+                if (c.moveToFirst()) {
                     final int favorite = c.getInt(0);
-                    if(favorite == 1) {
+                    if (favorite == 1) {
                         nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[favorite][]",
                                 "true"));
                     }
@@ -1641,7 +1695,7 @@ public class ItemsContentProvider extends ContentProvider {
 
 
             //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            while(c.moveToNext()) {
+            while (c.moveToNext()) {
                 final int sequence = c.getInt(0);
                 final String questionId = c.getString(1);
                 final String answerId = c.getString(2);
@@ -1675,7 +1729,7 @@ public class ItemsContentProvider extends ContentProvider {
                 }
             }
 
-            if(!writeParamsToHttpPost(conn, nameValuePairs)) {
+            if (!writeParamsToHttpPost(conn, nameValuePairs)) {
                 return false;
             }
 
@@ -1711,75 +1765,6 @@ public class ItemsContentProvider extends ContentProvider {
             super.onPostExecute(result);
 
             onUploadTaskFinished(result, mItemId);
-        }
-    }
-
-    private boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
-        OutputStream out = null;
-        try {
-            out = conn.getOutputStream();
-
-            BufferedWriter writer = null;
-            try {
-                writer = new BufferedWriter(
-                        new OutputStreamWriter(out, "UTF-8"));
-                writer.write(getPostDataBytes(nameValuePairs));
-                writer.flush();
-            } catch (final IOException e) {
-                Log.error("writeParamsToHttpPost(): Exception: ", e);
-                return false;
-            } finally {
-                if (writer != null) {
-                    writer.close();
-                }
-            }
-        } catch (final IOException e) {
-            Log.error("writeParamsToHttpPost(): Exception: ", e);
-            return false;
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (final IOException e) {
-                    Log.error("writeParamsToHttpPost(): Exception while closing out", e);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    private String generateAuthorizationHeader(final String authName, final String authApiKey) {
-        //See the similar code in Zooniverse's user.coffee source code:
-        //https://github.com/zooniverse/Zooniverse/blob/master/src/models/user.coffee#L49
-        final String str = authName + ":" + authApiKey;
-        return "Basic " + Base64.encodeToString(str.getBytes(), Base64.DEFAULT);
-    }
-
-    private void onUploadTaskFinished(boolean result, final String itemId) {
-        if (result) {
-            markItemAsUploaded(itemId);
-        } else {
-            //TODO: Inform the user?
-        }
-
-        mUploadsInProgress--;
-    }
-
-    private void markItemAsUploaded(final String itemId) {
-        // insert the initialValues into a new database row
-        final SQLiteDatabase db = getDb();
-
-        final String whereClause = DatabaseHelper.ItemsDbColumns._ID + " = ?"; //We use ? to avoid SQL Injection.
-        final String[] selectionArgs = {itemId};
-
-        final ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.ItemsDbColumns.UPLOADED, 1);
-
-        final int affected = db.update(DatabaseHelper.TABLE_NAME_ITEMS, values,
-                whereClause, selectionArgs);
-        if (affected != 1) {
-            Log.error("markItemAsUploaded(): Unexpected affected rows: " + affected);
         }
     }
 

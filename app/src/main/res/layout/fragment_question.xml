@@ -5,30 +5,29 @@
     style="?android:attr/textAppearanceLarge"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:textIsSelectable="true"
-    tools:context="com.murrayc.galaxyzoo.app.QuestionFragment"
-    android:orientation="vertical">
+    tools:context="com.murrayc.galaxyzoo.app.QuestionFragment">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/textViewZooniverseId" />
+    <TextView
+        android:id="@+id/textViewZooniverseId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/textViewText"
-            android:paddingBottom="@dimen/standard_margin" />
+    <TextView
+        android:id="@+id/textViewText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/standard_margin"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <GridLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/layoutAnswers"
-            android:columnCount="4" />
-
+    <GridLayout
+        android:id="@+id/layoutAnswers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:orientation="horizontal" />
 
 
 </LinearLayout>

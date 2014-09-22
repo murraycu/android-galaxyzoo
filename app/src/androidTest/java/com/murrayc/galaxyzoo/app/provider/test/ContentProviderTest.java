@@ -26,8 +26,8 @@ import android.net.Uri;
 import android.test.ProviderTestCase2;
 import android.test.mock.MockContentResolver;
 
-import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 import com.murrayc.galaxyzoo.app.provider.Item;
+import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 import java.io.IOException;
 

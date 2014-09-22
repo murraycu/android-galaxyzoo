@@ -50,7 +50,7 @@ class IconsCache {
      */
     public IconsCache(final Context context, final DecisionTree decisionTree) {
         this.mDecisionTree = decisionTree;
-        
+
         mCacheDir = context.getExternalCacheDir();
 
         long lastModified = 0;
@@ -140,7 +140,7 @@ class IconsCache {
         Log.info("reloadIcon:" + cssName);
 
         //Avoid loading and adding it again:
-        if(mIcons.get(cssName) != null) {
+        if (mIcons.get(cssName) != null) {
             return;
         }
 

@@ -47,17 +47,14 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 public class ClassifyFragment extends ItemFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int URL_LOADER = 0;
-    private Cursor mCursor;
-
-    private final String[] mColumns = { Item.Columns._ID };
-
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
     // from our ContentProvider) only knows about the underlying SQLite database column names,
     // not our ContentProvider's column names. That seems like a design error in the Android API.
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
-
+    private final String[] mColumns = {Item.Columns._ID};
+    private Cursor mCursor;
     private View mLoadingView;
 
     private View mRootView;
@@ -105,7 +102,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     }
 
     private void showLoadingView(boolean show) {
-        if(mLoadingView == null) {
+        if (mLoadingView == null) {
             mLoadingView = mRootView.findViewById(R.id.loading_spinner);
         }
 
@@ -126,7 +123,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         //See http://developer.android.com/about/versions/android-4.2.html#NestedFragments
 
         final FragmentManager fragmentManager = getChildFragmentManager();
-        SubjectFragment fragmentSubject = (SubjectFragment)fragmentManager.findFragmentById(R.id.child_fragment_subject);
+        SubjectFragment fragmentSubject = (SubjectFragment) fragmentManager.findFragmentById(R.id.child_fragment_subject);
         if (fragmentSubject == null) {
             fragmentSubject = new SubjectFragment();
             fragmentSubject.setArguments(arguments);
@@ -140,7 +137,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         }
 
 
-        QuestionFragment fragmentQuestion = (QuestionFragment)fragmentManager.findFragmentById(R.id.child_fragment_question);
+        QuestionFragment fragmentQuestion = (QuestionFragment) fragmentManager.findFragmentById(R.id.child_fragment_question);
         if (fragmentQuestion == null) {
             fragmentQuestion = new QuestionFragment();
             fragmentQuestion.setArguments(arguments);
@@ -206,7 +203,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         }
 
         //This will return the actual ID if we asked for the NEXT id.
-        if(mCursor.getCount() > 0) {
+        if (mCursor.getCount() > 0) {
             final String itemId = mCursor.getString(COLUMN_INDEX_ID);
             setItemId(itemId);
         }

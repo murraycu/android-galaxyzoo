@@ -41,7 +41,7 @@ public class ClassifyActivity extends ItemActivity implements ItemFragment.Callb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(TextUtils.isEmpty(getItemId())) {
+        if (TextUtils.isEmpty(getItemId())) {
             setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
         }
 
@@ -107,7 +107,7 @@ public class ClassifyActivity extends ItemActivity implements ItemFragment.Callb
     public void onClassificationFinished() {
         //Start another one:
         setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
-        final ClassifyFragment fragmentClassify = (ClassifyFragment)getSupportFragmentManager().findFragmentById(R.id.container);
+        final ClassifyFragment fragmentClassify = (ClassifyFragment) getSupportFragmentManager().findFragmentById(R.id.container);
         fragmentClassify.setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
         fragmentClassify.update();
     }

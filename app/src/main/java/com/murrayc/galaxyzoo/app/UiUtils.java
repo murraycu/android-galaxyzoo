@@ -66,7 +66,7 @@ class UiUtils {
         final Uri uri = Uri.parse(imageUriStr);
 
         InputStream stream = null;
-        try  {
+        try {
             stream = contentResolver.openInputStream(uri);
             bMap = BitmapFactory.decodeStream(stream);
         } catch (final IOException e) {

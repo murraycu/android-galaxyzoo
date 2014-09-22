@@ -15,23 +15,6 @@ public class ItemFragment extends ZooFragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item-id";
-    private String mItemId;
-    Singleton mSingleton = null;
-
-    /**
-     * A callback interface that all activities containing some fragments must
-     * implement. This mechanism allows activities to be notified of table
-     * navigation selections.
-     * <p/>
-     * This is the recommended way for activities and fragments to communicate,
-     * presumably because, unlike a direct function call, it still keeps the
-     * fragment and activity implementations separate.
-     * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
-     */
-    static interface Callbacks {
-        public void navigateToList();
-    }
-
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
@@ -41,12 +24,13 @@ public class ItemFragment extends ZooFragment {
 
         }
     };
-
     /**
      * The fragment's current callback object, which is notified of list item
      * clicks.
      */
     private Callbacks mCallbacks = sDummyCallbacks;
+    Singleton mSingleton = null;
+    private String mItemId;
 
     String getItemId() {
         return mItemId;
@@ -105,7 +89,7 @@ public class ItemFragment extends ZooFragment {
     /**
      * Call this from a derived Fragment's onCreateOptionsMenu() override,
      * if you want this fragment to provide the common menu.
-     *
+     * <p/>
      * This menu isn't added by default because then we could have
      * duplicate menu items if there are two ItemFragment-derived
      * child fragments in an activity, or as child fragments.
@@ -130,7 +114,6 @@ public class ItemFragment extends ZooFragment {
         }
     }
 
-
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         //Save state to be used later by onCreate().
@@ -145,5 +128,19 @@ public class ItemFragment extends ZooFragment {
 
     void onSingletonInitialized() {
         this.mSingleton = Singleton.getInstance();
+    }
+
+    /**
+     * A callback interface that all activities containing some fragments must
+     * implement. This mechanism allows activities to be notified of table
+     * navigation selections.
+     * <p/>
+     * This is the recommended way for activities and fragments to communicate,
+     * presumably because, unlike a direct function call, it still keeps the
+     * fragment and activity implementations separate.
+     * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
+     */
+    static interface Callbacks {
+        public void navigateToList();
     }
 }

@@ -45,13 +45,9 @@ import com.murrayc.galaxyzoo.app.provider.Item;
  * on handsets.
  */
 public class SubjectExtrasFragment extends ItemFragment
-        implements LoaderManager.LoaderCallbacks<Cursor>{
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int URL_LOADER = 0;
-    private Cursor mCursor;
-
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.ZOONIVERSE_ID };
-
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
     // from our ContentProvider) only knows about the underlying SQLite database column names,
@@ -59,20 +55,12 @@ public class SubjectExtrasFragment extends ItemFragment
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
     private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
-
+    private final String[] mColumns = {Item.Columns._ID, Item.Columns.ZOONIVERSE_ID};
+    private Cursor mCursor;
     private String mZooniverseId; //Only used for the talk URI so far.
 
     // A map of checkbox IDs to buttons.
     private boolean mLoaderFinished = false;
-
-    private void setZooniverseId(final String zooniverseId) {
-        mZooniverseId = zooniverseId;
-    }
-
-    private String getZooniverseId() {
-        return mZooniverseId;
-    }
-
     private View mRootView;
 
     /**
@@ -80,6 +68,14 @@ public class SubjectExtrasFragment extends ItemFragment
      * fragment (e.g. upon screen orientation changes).
      */
     public SubjectExtrasFragment() {
+    }
+
+    private String getZooniverseId() {
+        return mZooniverseId;
+    }
+
+    private void setZooniverseId(final String zooniverseId) {
+        mZooniverseId = zooniverseId;
     }
 
     @Override
@@ -137,7 +133,7 @@ public class SubjectExtrasFragment extends ItemFragment
         }
 
         //Show the title:
-        final TextView textViewTitle = (TextView)mRootView.findViewById(R.id.textViewZooniverseId);
+        final TextView textViewTitle = (TextView) mRootView.findViewById(R.id.textViewZooniverseId);
         if (textViewTitle == null) {
             Log.error("textViewTitle is null.");
             return;
@@ -145,7 +141,7 @@ public class SubjectExtrasFragment extends ItemFragment
         textViewTitle.setText(getZooniverseId());
 
         //Connect the buttons:
-        final Button buttonExamine = (Button)mRootView.findViewById(R.id.buttonExamine);
+        final Button buttonExamine = (Button) mRootView.findViewById(R.id.buttonExamine);
         if (buttonExamine == null) {
             Log.error("buttonExamine is null.");
             return;
@@ -157,7 +153,7 @@ public class SubjectExtrasFragment extends ItemFragment
             }
         });
 
-        final Button buttonDiscuss = (Button)mRootView.findViewById(R.id.buttonDiscuss);
+        final Button buttonDiscuss = (Button) mRootView.findViewById(R.id.buttonDiscuss);
         if (buttonDiscuss == null) {
             Log.error("buttonDiscuss is null.");
             return;

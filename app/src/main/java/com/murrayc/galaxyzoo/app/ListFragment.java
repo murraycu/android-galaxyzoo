@@ -53,30 +53,22 @@ import com.murrayc.galaxyzoo.app.provider.Item;
 public class ListFragment extends ZooFragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private View mRootView;
-
+    static final int COLUMN_INDEX_LOCATION_THUMBNAIL_URI = 1;
+    static final int COLUMN_INDEX_DONE = 2;
+    static final int COLUMN_INDEX_UPLOADED = 3;
+    static final int COLUMN_INDEX_FAVOURITE = 4;
     private static final int URL_LOADER = 0;
-    private ListCursorAdapter mAdapter;
-    private final String[] mColumns = { Item.Columns._ID,
-            Item.Columns.LOCATION_THUMBNAIL_URI, Item.Columns.DONE, Item.Columns.UPLOADED, Item.Columns.FAVORITE};
-
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
     // from our ContentProvider) only knows about the underlying SQLite database column names,
     // not our ContentProvider's column names. That seems like a design error in the Android API.
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
-    static final int COLUMN_INDEX_LOCATION_THUMBNAIL_URI = 1;
-    static final int COLUMN_INDEX_DONE = 2;
-    static final int COLUMN_INDEX_UPLOADED = 3;
-    static final int COLUMN_INDEX_FAVOURITE = 4;
-
     /**
      * The serialization (saved instance state) Bundle key representing the
      * activated item position. Only used on tablets.
      */
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
-
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
@@ -90,12 +82,15 @@ public class ListFragment extends ZooFragment
         public void navigateToNextAvailable() {
         }
     };
-
     /**
      * The fragment's current callback object, which is notified of list item
      * clicks.
      */
     private Callbacks mCallbacks = sDummyCallbacks;
+    private final String[] mColumns = {Item.Columns._ID,
+            Item.Columns.LOCATION_THUMBNAIL_URI, Item.Columns.DONE, Item.Columns.UPLOADED, Item.Columns.FAVORITE};
+    private View mRootView;
+    private ListCursorAdapter mAdapter;
     /**
      * The current activated item position. Only used on tablets.
      */
@@ -164,7 +159,7 @@ public class ListFragment extends ZooFragment
 
         getGridView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                final GridView gridView = (GridView)parent;
+                final GridView gridView = (GridView) parent;
                 onGridItemClicked(gridView, position);
             }
         });
@@ -309,7 +304,7 @@ public class ListFragment extends ZooFragment
     }
 
     GridView getGridView() {
-        final GridView gridView = (GridView)mRootView.findViewById(R.id.gridView);
+        final GridView gridView = (GridView) mRootView.findViewById(R.id.gridView);
         if (gridView == null) {
             Log.error("gridView is null.");
         }

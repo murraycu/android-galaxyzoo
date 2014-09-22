@@ -64,15 +64,11 @@ import java.util.Map;
  * on handsets.
  */
 public class QuestionFragment extends BaseQuestionFragment
-        implements LoaderManager.LoaderCallbacks<Cursor>{
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String ARG_QUESTION_CLASSIFICATION_IN_PROGRESS = "classification-in-progress";
 
     private static final int URL_LOADER = 0;
-    private Cursor mCursor;
-
-    private final String[] mColumns = { Item.Columns._ID, Item.Columns.ZOONIVERSE_ID };
-
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
     // from our ContentProvider) only knows about the underlying SQLite database column names,
@@ -80,167 +76,12 @@ public class QuestionFragment extends BaseQuestionFragment
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
     private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
-
-
     //We hard-code this.
     //Alternatively, we could hard-code the removal of this question from the XML
     //when generating the XML file,
     //and then always ask the question at the end via Java code.
     private static final CharSequence QUESTION_ID_DISCUSS = "sloan-11";
     private static final CharSequence ANSWER_ID_DISCUSS_YES = "a-0";
-    private String mZooniverseId; //Only used for the talk URI so far.
-
-    // A map of checkbox IDs to buttons.
-    private final Map<String, ToggleButton> mCheckboxButtons = new HashMap<>();
-    private boolean mLoaderFinished = false;
-
-    private void setZooniverseId(final String zooniverseId) {
-        mZooniverseId = zooniverseId;
-    }
-
-    private String getZooniverseId() {
-        return mZooniverseId;
-    }
-
-
-    /** This lets us store the classification's answers
-     * during the classification. Alternatively,
-     * we could insert the answers into the ContentProvider along the
-     * way, but this lets us avoid having half-complete classifications
-     * in the content provider.
-     */
-    static private class ClassificationInProgress implements Parcelable {
-        private final List<QuestionAnswer> answers = new ArrayList<>();
-        private boolean favorite = false;
-
-        public static final Parcelable.Creator<ClassificationInProgress> CREATOR
-                = new Parcelable.Creator<ClassificationInProgress>() {
-            public ClassificationInProgress createFromParcel(Parcel in) {
-                return new ClassificationInProgress(in);
-            }
-
-            public ClassificationInProgress[] newArray(int size) {
-                return new ClassificationInProgress[size];
-            }
-        };
-
-        public ClassificationInProgress() {
-
-        }
-
-        public ClassificationInProgress(final Parcel in) {
-            final Object[] array = in.readArray(String.class.getClassLoader());
-            if ((array != null) && (array.length != 0)) {
-                for (final Object object : array) {
-                    final QuestionAnswer str = (QuestionAnswer)object;
-                    this.answers.add(str);
-                }
-            }
-
-            favorite = (in.readInt() == 1);
-        }
-
-        public void add(final String questionId, final String answerId, final List<String> checkboxIds) {
-            answers.add(new QuestionAnswer(questionId, answerId, checkboxIds));
-        }
-
-        public void setFavorite(boolean favorite) {
-            this.favorite = favorite;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(final Parcel dest, int flags) {
-            dest.writeArray(answers.toArray());
-            dest.writeInt(favorite ? 1 : 0);
-        }
-
-        static private class QuestionAnswer implements Parcelable {
-            public static final Parcelable.Creator<QuestionAnswer> CREATOR
-                    = new Parcelable.Creator<QuestionAnswer>() {
-                public QuestionAnswer createFromParcel(Parcel in) {
-                    return new QuestionAnswer(in);
-                }
-
-                public QuestionAnswer[] newArray(int size) {
-                    return new QuestionAnswer[size];
-                }
-            };
-
-            // The question that was answered.
-            private final String questionId;
-
-            // The Answer that was chosen.
-            private final String answerId;
-
-            // Any checkboxes that were selected before the answer (usually "Done") was chosen.
-            private List<String> checkboxIds;
-
-            public QuestionAnswer(final String questionId, final String answerId, final List<String> checkboxIds) {
-                this.questionId = questionId;
-                this.answerId = answerId;
-                this.checkboxIds = checkboxIds;
-            }
-
-            private QuestionAnswer(final Parcel in) {
-                //Keep this in sync with writeToParcel().
-                this.questionId = in.readString();
-                this.answerId = in.readString();
-
-                final Object[] array = in.readArray(String.class.getClassLoader());
-                if ((array != null) && (array.length != 0)) {
-                    this.checkboxIds = new ArrayList<>();
-                    for (final Object object : array) {
-                        final String str = (String)object;
-                        this.checkboxIds.add(str);
-                    }
-                }
-            }
-
-            public String getQuestionId() {
-                return questionId;
-            }
-
-            public String getAnswerId() {
-                return answerId;
-            }
-
-            public List<String> getCheckboxIds() {
-                return checkboxIds;
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(final Parcel dest, int flags) {
-                dest.writeString(getQuestionId());
-                dest.writeString(getAnswerId());
-
-                if (checkboxIds != null) {
-                    dest.writeArray(checkboxIds.toArray());
-                }
-            }
-        }
-
-        List<QuestionAnswer> getAnswers() {
-            return answers;
-        }
-
-        boolean isFavorite() {
-            return favorite;
-        }
-    }
-
-    //TODO: Can this fragment be reused, meaning we'd need to reset this?
-    private ClassificationInProgress mClassificationInProgress = new ClassificationInProgress();
-
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
@@ -249,30 +90,19 @@ public class QuestionFragment extends BaseQuestionFragment
         public void onClassificationFinished() {
         }
     };
-
     /**
      * The fragment's current callback object, which is notified of list item
      * clicks.
      */
     private Callbacks mCallbacks = sDummyCallbacks;
-
-    /**
-     * A callback interface that all activities containing some fragments must
-     * implement. This mechanism allows activities to be notified of
-     * navigation selections.
-     * <p/>
-     * This is the recommended way for activities and fragments to communicate,
-     * presumably because, unlike a direct function call, it still keeps the
-     * fragment and activity implementations separate.
-     * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
-     */
-    static interface Callbacks {
-
-        /** We call this when the classification has been finished and saved.
-         */
-        public void onClassificationFinished();
-    }
-
+    private final String[] mColumns = {Item.Columns._ID, Item.Columns.ZOONIVERSE_ID};
+    // A map of checkbox IDs to buttons.
+    private final Map<String, ToggleButton> mCheckboxButtons = new HashMap<>();
+    private Cursor mCursor;
+    private String mZooniverseId; //Only used for the talk URI so far.
+    private boolean mLoaderFinished = false;
+    //TODO: Can this fragment be reused, meaning we'd need to reset this?
+    private ClassificationInProgress mClassificationInProgress = new ClassificationInProgress();
     private View mRootView;
 
     /**
@@ -280,6 +110,14 @@ public class QuestionFragment extends BaseQuestionFragment
      * fragment (e.g. upon screen orientation changes).
      */
     public QuestionFragment() {
+    }
+
+    private String getZooniverseId() {
+        return mZooniverseId;
+    }
+
+    private void setZooniverseId(final String zooniverseId) {
+        mZooniverseId = zooniverseId;
     }
 
     @Override
@@ -345,7 +183,6 @@ public class QuestionFragment extends BaseQuestionFragment
 
         return mRootView;
     }
-
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
@@ -446,7 +283,7 @@ public class QuestionFragment extends BaseQuestionFragment
         final DecisionTree.Question question = getQuestion();
 
         //Show the title:
-        final TextView textViewTitle = (TextView)mRootView.findViewById(R.id.textViewZooniverseId);
+        final TextView textViewTitle = (TextView) mRootView.findViewById(R.id.textViewZooniverseId);
         if (textViewTitle == null) {
             Log.error("textViewTitle is null.");
             return;
@@ -454,7 +291,7 @@ public class QuestionFragment extends BaseQuestionFragment
         textViewTitle.setText(question.getTitle());
 
         //Show the text:
-        final TextView textViewText = (TextView)mRootView.findViewById(R.id.textViewText);
+        final TextView textViewText = (TextView) mRootView.findViewById(R.id.textViewText);
         if (textViewText == null) {
             Log.error("textViewText is null.");
             return;
@@ -462,7 +299,7 @@ public class QuestionFragment extends BaseQuestionFragment
         textViewText.setText(question.getText());
 
 
-        final GridLayout layoutAnswers = (GridLayout)mRootView.findViewById(R.id.layoutAnswers);
+        final GridLayout layoutAnswers = (GridLayout) mRootView.findViewById(R.id.layoutAnswers);
         if (layoutAnswers == null) {
             Log.error("layoutAnswers is null.");
             return;
@@ -472,7 +309,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
         //Checkboxes:
         mCheckboxButtons.clear();
-        for(final DecisionTree.Checkbox checkbox : question.checkboxes) {
+        for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
             final ToggleButton button = new ToggleButton(activity);
             makeButtonTextSmall(activity, button);
 
@@ -506,7 +343,7 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         //Answers:
-        for(final DecisionTree.Answer answer : question.answers) {
+        for (final DecisionTree.Answer answer : question.answers) {
             final Button button = createAnswerButton(activity, answer);
 
             //We specify Gravity.FILL to make the buttons all be the same width and height.
@@ -548,7 +385,7 @@ public class QuestionFragment extends BaseQuestionFragment
         if (activity == null)
             return;
 
-        if((TextUtils.equals(questionId, QUESTION_ID_DISCUSS)) &&
+        if ((TextUtils.equals(questionId, QUESTION_ID_DISCUSS)) &&
                 (TextUtils.equals(answerId, ANSWER_ID_DISCUSS_YES))) {
             //Open a link to the discussion page.
             UiUtils.openDiscussionPage(activity, getZooniverseId());
@@ -578,7 +415,7 @@ public class QuestionFragment extends BaseQuestionFragment
         final DecisionTree tree = singleton.getDecisionTree();
 
         final DecisionTree.Question question = tree.getNextQuestionForAnswer(questionId, answerId);
-        if(question != null) {
+        if (question != null) {
             setQuestionId(question.getId());
             update();
         } else {
@@ -753,5 +590,158 @@ public class QuestionFragment extends BaseQuestionFragment
          * This prevents memory leaks.
          */
         mCursor = null;
+    }
+
+    /**
+     * A callback interface that all activities containing some fragments must
+     * implement. This mechanism allows activities to be notified of
+     * navigation selections.
+     * <p/>
+     * This is the recommended way for activities and fragments to communicate,
+     * presumably because, unlike a direct function call, it still keeps the
+     * fragment and activity implementations separate.
+     * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
+     */
+    static interface Callbacks {
+
+        /**
+         * We call this when the classification has been finished and saved.
+         */
+        public void onClassificationFinished();
+    }
+
+    /**
+     * This lets us store the classification's answers
+     * during the classification. Alternatively,
+     * we could insert the answers into the ContentProvider along the
+     * way, but this lets us avoid having half-complete classifications
+     * in the content provider.
+     */
+    static private class ClassificationInProgress implements Parcelable {
+        public static final Parcelable.Creator<ClassificationInProgress> CREATOR
+                = new Parcelable.Creator<ClassificationInProgress>() {
+            public ClassificationInProgress createFromParcel(Parcel in) {
+                return new ClassificationInProgress(in);
+            }
+
+            public ClassificationInProgress[] newArray(int size) {
+                return new ClassificationInProgress[size];
+            }
+        };
+        private final List<QuestionAnswer> answers = new ArrayList<>();
+        private boolean favorite = false;
+
+        public ClassificationInProgress() {
+
+        }
+
+        public ClassificationInProgress(final Parcel in) {
+            final Object[] array = in.readArray(String.class.getClassLoader());
+            if ((array != null) && (array.length != 0)) {
+                for (final Object object : array) {
+                    final QuestionAnswer str = (QuestionAnswer) object;
+                    this.answers.add(str);
+                }
+            }
+
+            favorite = (in.readInt() == 1);
+        }
+
+        public void add(final String questionId, final String answerId, final List<String> checkboxIds) {
+            answers.add(new QuestionAnswer(questionId, answerId, checkboxIds));
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(final Parcel dest, int flags) {
+            dest.writeArray(answers.toArray());
+            dest.writeInt(favorite ? 1 : 0);
+        }
+
+        List<QuestionAnswer> getAnswers() {
+            return answers;
+        }
+
+        boolean isFavorite() {
+            return favorite;
+        }
+
+        public void setFavorite(boolean favorite) {
+            this.favorite = favorite;
+        }
+
+        static private class QuestionAnswer implements Parcelable {
+            public static final Parcelable.Creator<QuestionAnswer> CREATOR
+                    = new Parcelable.Creator<QuestionAnswer>() {
+                public QuestionAnswer createFromParcel(Parcel in) {
+                    return new QuestionAnswer(in);
+                }
+
+                public QuestionAnswer[] newArray(int size) {
+                    return new QuestionAnswer[size];
+                }
+            };
+
+            // The question that was answered.
+            private final String questionId;
+
+            // The Answer that was chosen.
+            private final String answerId;
+
+            // Any checkboxes that were selected before the answer (usually "Done") was chosen.
+            private List<String> checkboxIds;
+
+            public QuestionAnswer(final String questionId, final String answerId, final List<String> checkboxIds) {
+                this.questionId = questionId;
+                this.answerId = answerId;
+                this.checkboxIds = checkboxIds;
+            }
+
+            private QuestionAnswer(final Parcel in) {
+                //Keep this in sync with writeToParcel().
+                this.questionId = in.readString();
+                this.answerId = in.readString();
+
+                final Object[] array = in.readArray(String.class.getClassLoader());
+                if ((array != null) && (array.length != 0)) {
+                    this.checkboxIds = new ArrayList<>();
+                    for (final Object object : array) {
+                        final String str = (String) object;
+                        this.checkboxIds.add(str);
+                    }
+                }
+            }
+
+            public String getQuestionId() {
+                return questionId;
+            }
+
+            public String getAnswerId() {
+                return answerId;
+            }
+
+            public List<String> getCheckboxIds() {
+                return checkboxIds;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(final Parcel dest, int flags) {
+                dest.writeString(getQuestionId());
+                dest.writeString(getAnswerId());
+
+                if (checkboxIds != null) {
+                    dest.writeArray(checkboxIds.toArray());
+                }
+            }
+        }
     }
 }

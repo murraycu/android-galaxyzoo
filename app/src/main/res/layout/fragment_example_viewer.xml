@@ -5,20 +5,20 @@
     tools:context="com.murrayc.galaxyzoo.app.ExampleViewerActivity$PlaceholderFragment">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/activity_vertical_margin"
         android:clipToPadding="false"
-        android:id="@+id/scrollView">
+        android:paddingTop="@dimen/activity_vertical_margin">
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:id="@+id/imageView"
             android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_example_image"/>
+            android:contentDescription="@string/content_description_example_image" />
 
     </ScrollView>
 

@@ -72,13 +72,13 @@ class ListCursorAdapter extends CursorAdapter {
             UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
 
             final ImageView checkboxFavorite = (ImageView) view.findViewById(R.id.item_checkboxFavorite);
-            checkboxFavorite.setVisibility(favorite ? View.VISIBLE: View.GONE);
+            checkboxFavorite.setVisibility(favorite ? View.VISIBLE : View.GONE);
 
             final ImageView checkboxClassified = (ImageView) view.findViewById(R.id.item_checkboxClassified);
             checkboxClassified.setVisibility(done ? View.VISIBLE : View.GONE);
 
             final ImageView checkboxUploaded = (ImageView) view.findViewById(R.id.item_checkboxUploaded);
-            checkboxUploaded.setVisibility(uploaded ? View.VISIBLE: View.GONE);
+            checkboxUploaded.setVisibility(uploaded ? View.VISIBLE : View.GONE);
         }
     }
 
