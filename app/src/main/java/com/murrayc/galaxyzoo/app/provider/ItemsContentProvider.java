@@ -774,6 +774,10 @@ public class ItemsContentProvider extends ContentProvider {
 
                 if (result.getSuccess()) {
                     saveAuthToPreferences(result.getName(), result.getApiKey());
+                } else {
+                    //Make sure that the auth key is wiped, so we know we are not logged in.
+                    //This is an unofficial way to log out, though that is only useful for debugging.
+                    saveAuthToPreferences(username, "");
                 }
 
                 final Bundle bundle = new Bundle();

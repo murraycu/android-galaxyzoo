@@ -37,6 +37,8 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  */
 public class ClassifyActivity extends ItemActivity implements ItemFragment.Callbacks, QuestionFragment.Callbacks {
 
+    private int mClassificationsDoneInSession = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +107,17 @@ public class ClassifyActivity extends ItemActivity implements ItemFragment.Callb
 
     @Override
     public void onClassificationFinished() {
-        //Start another one:
+        //Suggest registering or logging in after a certain number of classifications,
+        //as the web UI does, but don't ask again.
+        if(mClassificationsDoneInSession == 3) {
+            if (!Utils.getLoggedIn(this)) {
+                final Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+            }
+        }
+        mClassificationsDoneInSession++;
+
+        //Start another classification:
         setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
         final ClassifyFragment fragmentClassify = (ClassifyFragment) getSupportFragmentManager().findFragmentById(R.id.container);
         fragmentClassify.setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
