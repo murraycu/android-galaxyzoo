@@ -273,9 +273,6 @@ class IconsCache {
                     }
                 }
             }
-        } catch (final FileNotFoundException e) {
-            Log.error("getFileContents(): FileNotFoundException", e);
-            return "";
         } catch (final IOException e) {
             Log.error("getFileContents(): IOException", e);
             return "";
