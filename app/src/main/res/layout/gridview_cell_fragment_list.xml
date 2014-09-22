@@ -82,7 +82,7 @@
             android:contentDescription="@string/content_description_uploaded"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:src="@android:drawable/arrow_up_float"
+            android:src="@drawable/ic_action_upload"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_gravity="bottom|right" />
