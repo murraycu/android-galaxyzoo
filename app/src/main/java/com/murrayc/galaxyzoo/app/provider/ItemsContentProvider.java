@@ -761,7 +761,7 @@ public class ItemsContentProvider extends ContentProvider {
     public boolean onCreate() {
         mOpenDbHelper = new DatabaseHelper(getContext());
         //This is useful to wipe the database when testing.
-        mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
+        //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
         return true;
     }
 
