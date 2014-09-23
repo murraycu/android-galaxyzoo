@@ -4,6 +4,7 @@
     <string name="action_examples">Beispiele</string>
     <string name="action_list">Liste</string>
     <string name="action_next">Klassifizieren</string>
+    <string name="action_settings">Einstellungen</string>
     <string name="action_about">Info</string>
     <string name="button_title_examples">Beispiele</string>
     <string name="prompt_password">Passwort</string>
@@ -34,4 +35,6 @@
     <string name="content_description_uploaded">Whether the subject has been uploaded.</string>
     <string name="login_hint">Login or create an account to receive credit for your work.</string>
     <string name="title_activity_subject_viewer">Subject</string>
+    <string name="pref_title_cache_size">Download in advance</string>
+    <string name="title_activity_settings">Einstellungen</string>
 </resources>
