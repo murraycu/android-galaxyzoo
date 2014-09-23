@@ -22,8 +22,6 @@ package com.murrayc.galaxyzoo.app;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
-
 /**
  * An activity showing the preferences.
  */
