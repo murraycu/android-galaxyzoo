@@ -3,14 +3,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/option_menu_item_login"
-        android:title="@string/action_login" />
+        android:title="@string/action_login"
+        android:orderInCategory="7" />
     <item
         android:id="@+id/option_menu_item_list"
-        android:title="@string/action_list" />
+        android:title="@string/action_list"
+        android:orderInCategory="8" />
     <item
         android:id="@+id/option_menu_item_settings"
-        android:title="@string/action_settings" />
+        android:title="@string/action_settings"
+        android:orderInCategory="9" />
     <item
         android:id="@+id/option_menu_item_about"
-        android:title="@string/action_about" />
+        android:title="@string/action_about"
+        android:orderInCategory="10" />
 </menu>
