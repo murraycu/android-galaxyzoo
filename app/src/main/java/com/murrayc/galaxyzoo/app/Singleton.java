@@ -23,6 +23,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +40,12 @@ public class Singleton {
     private static Singleton ourInstance = null;
     private IconsCache mIconsCache = null;
     private DecisionTree mDecisionTree = null;
+
     private Singleton(final Context context) {
+        //This needs to be done as soon as the app opens.
+        //See http://developer.android.com/guide/topics/ui/settings.html#Fragment
+        PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
+
         InputStream inputStream = null;
         try {
             inputStream = context.getAssets().open("sloan_tree.xml");

@@ -15,6 +15,9 @@
         android:showAsAction="ifRoom"
         android:title="@string/action_next" />
     <item
+        android:id="@+id/option_menu_item_settings"
+        android:title="@string/action_settings" />
+    <item
         android:id="@+id/option_menu_item_about"
         android:title="@string/action_about" />
 </menu>

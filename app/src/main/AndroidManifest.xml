@@ -52,6 +52,10 @@
             android:name=".ExampleViewerActivity"
             android:label="@string/title_activity_example_viewer" >
         </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 
 </manifest>

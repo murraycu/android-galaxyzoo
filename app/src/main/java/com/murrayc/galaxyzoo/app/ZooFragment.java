@@ -29,6 +29,9 @@ public class ZooFragment extends Fragment {
             case R.id.option_menu_item_about:
                 showAbout();
                 return true;
+            case R.id.option_menu_item_settings:
+                showSettings();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -57,7 +60,6 @@ public class ZooFragment extends Fragment {
         startActivity(intent);
     }
 
-
     void showAbout() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -81,5 +83,10 @@ public class ZooFragment extends Fragment {
         dialog.setIcon(R.drawable.ic_launcher);
 
         dialog.show();
+    }
+
+    void showSettings() {
+        final Intent intent = new Intent(getActivity(), SettingsActivity.class);
+        startActivity(intent);
     }
 }

@@ -8,6 +8,9 @@
         android:id="@+id/option_menu_item_list"
         android:title="@string/action_list" />
     <item
+        android:id="@+id/option_menu_item_settings"
+        android:title="@string/action_settings" />
+    <item
         android:id="@+id/option_menu_item_about"
         android:title="@string/action_about" />
 </menu>

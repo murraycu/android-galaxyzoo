@@ -35,6 +35,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -80,7 +81,9 @@ public class ItemsContentProvider extends ContentProvider {
     public static final String URI_PART_FILE = "file";
     public static final String URI_PART_CLASSIFICATION_ANSWER = "classification-answer";
     public static final String URI_PART_CLASSIFICATION_CHECKBOX = "classification-checkbox";
+    public static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
     public static final String PREF_KEY_AUTH_NAME = "auth_name";
+    public static final String PREF_KEY_CACHE_SIZE = "cache_size";
     private static final String URI_PART_CLASSIFICATION = "classification";
     /**
      * The MIME type of {@link Item#CONTENT_URI} providing a directory of items.
@@ -211,14 +214,11 @@ public class ItemsContentProvider extends ContentProvider {
 
     }
 
-    public static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
-    private static final int MIN_CACHE_COUNT = 5; //Don't let the count of undone items get this low.
-    private static final int QUERY_COUNT_LARGE = 10;
     private int mUploadsInProgress = 0;
     private DatabaseHelper mOpenDbHelper;
 
     public ItemsContentProvider() {
-        startRegularUploads();
+        startRegularTasks();
     }
 
     private static LoginResult parseLoginResponseContent(final InputStream content) throws IOException {
@@ -418,16 +418,38 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    private void startRegularUploads() {
+    private void startRegularTasks() {
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 uploadOutstandingClassifications();
-                startRegularUploads();
+                downloadMinimumSubjects();
+                startRegularTasks();
             }
         };
         handler.postDelayed(runnable, 10000); // 10 seconds
+    }
+
+    private void downloadMinimumSubjects() {
+        final int missing = getNotDoneNeededForCache();
+        if (missing > 0) {
+            requestMoreItemsAsync(missing);
+        }
+    }
+
+    private int getNotDoneNeededForCache() {
+        final int count = getNotDoneCount();
+        final int min_cache_size = getMinCacheSize();
+        return min_cache_size - count;
+    }
+
+    private int getNotDoneCount() {
+        final SQLiteDatabase db = getDb();
+        final Cursor c = db.rawQuery("SELECT COUNT (*) FROM " + DatabaseHelper.TABLE_NAME_ITEMS +
+                " WHERE " + getWhereClauseForNotDone(), null);
+        c.moveToFirst();
+        return c.getInt(0);
     }
 
     @Override
@@ -739,7 +761,7 @@ public class ItemsContentProvider extends ContentProvider {
     public boolean onCreate() {
         mOpenDbHelper = new DatabaseHelper(getContext());
         //This is useful to wipe the database when testing.
-        //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
+        mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
         return true;
     }
 
@@ -752,7 +774,7 @@ public class ItemsContentProvider extends ContentProvider {
                 /** Check with the remote REST API asynchronously,
                  * informing the calling client later via notification.
                  */
-                requestMoreItemsAsync();
+                downloadMinimumSubjects();
                 break;
             case METHOD_LOGIN:
                 throwIfNoNetwork();
@@ -788,9 +810,9 @@ public class ItemsContentProvider extends ContentProvider {
         return null;
     }
 
-    private void requestMoreItemsAsync() {
+    private void requestMoreItemsAsync(int count) {
         final QueryAsyncTask task = new QueryAsyncTask();
-        task.execute();
+        task.execute(count);
     }
 
     private void uploadOutstandingClassifications() {
@@ -910,9 +932,7 @@ public class ItemsContentProvider extends ContentProvider {
 
                 // Make sure we have enough soon enough,
                 // so get the rest asynchronously.
-                if (count <= MIN_CACHE_COUNT) {
-                    requestMoreItemsAsync();
-                }
+                downloadMinimumSubjects();
 
                 c.setNotificationUri(getContext().getContentResolver(),
                         Item.CONTENT_URI); //TODO: More precise?
@@ -1010,10 +1030,18 @@ public class ItemsContentProvider extends ContentProvider {
         return c;
     }
 
+    private int getMinCacheSize() {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        //Android's PreferencesScreen XMl has no way to specify an integer rather than a string,
+        //so we parse it here.
+        final String str = prefs.getString(PREF_KEY_CACHE_SIZE, "13");
+        return Integer.parseInt(str);
+    }
+
     private Cursor queryItemNext(String[] projection, String selection, String[] selectionArgs, String orderBy) {
         Cursor c;// query the database for a single  item that is not yet done:
-        final String whereClause =
-                DatabaseHelper.ItemsDbColumns.DONE + " != 1";
+        final String whereClause = getWhereClauseForNotDone();
 
         //Prepend our ID=? argument to the selection arguments.
         //This lets us use the ? syntax to avoid SQL injection
@@ -1026,8 +1054,12 @@ public class ItemsContentProvider extends ContentProvider {
         // some more in the background, ready for the next time that we need a next one.
         c = builder.query(getDb(), projection,
                 selection, selectionArgs,
-                null, null, orderBy, Integer.toString(MIN_CACHE_COUNT + 1)); //TODO: Is Integer.toString locale-dependent?
+                null, null, orderBy, Integer.toString(getMinCacheSize() + 1)); //TODO: Is Integer.toString locale-dependent?
         return c;
+    }
+
+    private String getWhereClauseForNotDone() {
+        return DatabaseHelper.ItemsDbColumns.DONE + " != 1";
     }
 
     private String[] prependToArray(final String[] selectionArgs, long value) {
@@ -1222,6 +1254,10 @@ public class ItemsContentProvider extends ContentProvider {
         //TODO: Can we use Java 7's try-with-resources to automatically close()
         //the InputStream even though none of the code here should throw an
         //exception?
+        //Not that the server often won't give us as many as we want,
+        //so a subsequent request might be needed to get all of them.
+        //We don't need to check how many we get, and ask again,
+        //because startRegularTasks() already checks regularly.
         final InputStream in = HttpUtils.httpGetRequest(getQueryUri(count));
         if (in == null) {
             return null;
@@ -1250,7 +1286,20 @@ public class ItemsContentProvider extends ContentProvider {
             return;
         }
 
-        addSubjects(result, true /* async */);
+        //Check that we are not adding too many,
+        //which can happen if a second request was queued befor we got the result from a
+        //first request.
+        List<Subject> listToUse = result;
+        final int missing = getNotDoneNeededForCache();
+        if (missing <= 0) {
+            return;
+        }
+
+        final int size = result.size();
+        if (missing < size) {
+            listToUse = result.subList(0, missing);
+        }
+        addSubjects(listToUse, true /* async */);
     }
 
     /**
@@ -1592,10 +1641,21 @@ public class ItemsContentProvider extends ContentProvider {
         public String itemId;
     }
 
-    private class QueryAsyncTask extends AsyncTask<Void, Integer, List<Subject>> {
+    private class QueryAsyncTask extends AsyncTask<Integer, Integer, List<Subject>> {
         @Override
-        protected List<Subject> doInBackground(final Void... params) {
-            return requestMoreItemsSync(QUERY_COUNT_LARGE);
+        protected List<Subject> doInBackground(final Integer... params) {
+            if (params.length < 1) {
+                Log.error("QueryAsyncTask: not enough params.");
+                return null;
+            }
+
+            //TODO: Why not just set these in the constructor?
+            //That seems to be allowed:
+            //See Memory observability here:
+            //http://developer.android.com/reference/android/os/AsyncTask.html
+            final int count = params[0];
+
+            return requestMoreItemsSync(count);
         }
 
         @Override
