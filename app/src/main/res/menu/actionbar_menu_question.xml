@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/option_menu_item_examples"
+        android:icon="@drawable/ic_action_help"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_examples" />
+    <item
+        android:id="@+id/option_menu_item_favorite"
+        android:icon="@drawable/ic_action_favorite"
+        android:title="@string/action_favorite"
+        android:checkable="true" />
+</menu>

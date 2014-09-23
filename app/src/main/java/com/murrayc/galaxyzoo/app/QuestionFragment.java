@@ -199,14 +199,8 @@ public class QuestionFragment extends BaseQuestionFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem menuItem = menu.add(Menu.NONE, R.id.option_menu_item_examples, Menu.NONE, R.string.action_examples);
-        menuItem.setIcon(R.drawable.ic_action_help);
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-        menuItem = menu.add(Menu.NONE, R.id.option_menu_item_favorite, Menu.NONE, R.string.action_favorite);
-        menuItem.setIcon(R.drawable.ic_action_favorite); //Not actually seen
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER); //Because the option menu cannot show a checked state.
-        menuItem.setCheckable(true);
+        // Inflate the menu items for use in the action bar
+        inflater.inflate(R.menu.actionbar_menu_question, menu);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
