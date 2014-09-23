@@ -121,8 +121,8 @@ public class SubjectFragment extends ItemFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        final MenuItem menuItem = menu.add(Menu.NONE, R.id.option_menu_item_invert, Menu.NONE, R.string.action_invert);
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        // Inflate the menu items for use in the action bar
+        inflater.inflate(R.menu.actionbar_menu_subject, menu);
 
         super.onCreateOptionsMenu(menu, inflater);
     }

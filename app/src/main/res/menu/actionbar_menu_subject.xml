@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/option_menu_item_invert"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_invert" />
+</menu>
