@@ -25,11 +25,10 @@ import com.murrayc.galaxyzoo.app.provider.Config;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link QuestionHelpFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class QuestionHelpFragment extends BaseQuestionFragment {
     private static final int MARGIN_SMALL_DP = 4;
+    private static final int MARGIN_MEDIUM_DP = 8;
     private Singleton mSingleton;
     private View mRootView;
 
@@ -103,7 +102,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
                         TableRow.LayoutParams.WRAP_CONTENT));
         final TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
                 TableLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, getPxForDp(activity, MARGIN_SMALL_DP), 0, 0);
+        params.setMargins(0, getPxForDp(activity, MARGIN_MEDIUM_DP), 0, 0);
         tableLayout.addView(row, params);
 
 
@@ -140,9 +139,9 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             final LinearLayout.LayoutParams paramsImage = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            //This requires API level 17: paramsImage.setMarginStart(getPxForDp(activity, MARGIN_SMALL_DP));
+            //This requires API level 17: paramsImage.setMarginStart(getPxForDp(activity, MARGIN_MEDIUM_DP));
             //imageExample.setLayoutParams(paramsImage);
-            MarginLayoutParamsCompat.setMarginStart(paramsImage, getPxForDp(activity, MARGIN_SMALL_DP));
+            MarginLayoutParamsCompat.setMarginStart(paramsImage, getPxForDp(activity, MARGIN_MEDIUM_DP));
 
             imageExample.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
