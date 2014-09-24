@@ -20,7 +20,11 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.text.TextUtils;
+import android.util.JsonReader;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -28,6 +32,8 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -48,7 +54,13 @@ public class DecisionTree {
     //TODO: Make this private and add accessors.
     public final Hashtable<String, Question> questionsMap = new Hashtable<>();
 
-    public DecisionTree(final InputStream inputStream) {
+    /**
+     *
+     * @param inputStreamTree The XMl file containing the decision tree.
+     * @param inputStreamTranslation A JSON file containing translations of the question and answers,
+     *                               such as https://github.com/zooniverse/Galaxy-Zoo/blob/master/public/locales/es.json
+     */
+    public DecisionTree(final InputStream inputStreamTree, final InputStream inputStreamTranslation) {
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
         //Disable feature that we don't need and which just slow the parsing down:
@@ -68,7 +80,7 @@ public class DecisionTree {
         org.w3c.dom.Document xmlDocument;
 
         try {
-            xmlDocument = documentBuilder.parse(inputStream);
+            xmlDocument = documentBuilder.parse(inputStreamTree);
         } catch (final SAXException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -91,6 +103,103 @@ public class DecisionTree {
             final Question question = loadQuestion(element);
             questionsMap.put(question.getId(), question);
         }
+
+        //Load the translation if one was provided:
+        //We don't avoid loading the English strings before,
+        //because the translation might be incomplete.
+        //TODO: Find an efficient way to avoid loading English strings that will be replaced,
+        //maybe by loading the translation first.
+        if (inputStreamTranslation != null) {
+            loadTranslation(inputStreamTranslation);
+        }
+    }
+
+    private void loadTranslation(final InputStream inputStreamTranslation) {
+        final JsonReader reader;
+        try {
+            reader = new JsonReader(new InputStreamReader(inputStreamTranslation, "UTF-8"));
+            reader.beginObject();
+            while (reader.hasNext()) {
+                if(reader.nextName().equals("questions")) { //We ignore the "zooniverse" and "quiz_questions" objects
+                    readJsonQuestions(reader);
+                } else {
+                    reader.skipValue();
+                }
+            }
+            reader.endObject();
+        } catch (final UnsupportedEncodingException e) {
+            Log.info("DecisionTree: UnsupportedEncodingException parsing JSON", e);
+        } catch (final IOException e) {
+            Log.info("DecisionTree: IOException parsing JSON", e);
+        } catch (final IllegalStateException e) {
+            Log.info("DecisionTree: IllegalStateException parsing JSON", e);
+        }
+    }
+
+    private void readJsonQuestions(final JsonReader reader) throws IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            final String questionId = reader.nextName();
+
+            final Question question = questionsMap.get(questionId);
+            if (question != null) {
+                readJsonQuestion(reader, question);
+            } else {
+                reader.skipValue();
+            }
+        }
+        reader.endObject();
+    }
+
+    private void readJsonQuestion(final JsonReader reader, final Question question) throws IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            final String name = reader.nextName();
+            switch (name) {
+                case "text":
+                    question.setText(reader.nextString());
+                    break;
+                case "title":
+                    question.setTitle(reader.nextString());
+                    break;
+                case "help":
+                    question.setHelp(reader.nextString());
+                    break;
+                case "answers": {
+                    readJsonAnswers(reader, question.answers);
+                    break;
+                }
+                default:
+                    reader.skipValue();
+            }
+        }
+        reader.endObject();
+    }
+
+    private void readJsonAnswers(final JsonReader reader, final List<Answer> answers) throws IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            final String answerId = reader.nextName();
+
+            final Answer answer = getAnswerWithId(answers, answerId);
+            if (answer != null) {
+                answer.setText(reader.nextString());
+            } else {
+                reader.skipValue();
+            }
+        }
+        reader.endObject();
+
+    }
+
+    private Answer getAnswerWithId(final List<Answer> answers, final String id) {
+        for(final Answer answer : answers) {
+            if(TextUtils.equals(id, answer.getId())) {
+                return answer;
+            }
+        }
+
+        return null;
     }
 
     public Question getFirstQuestion() {
@@ -260,7 +369,7 @@ public class DecisionTree {
 
     static class BaseButton {
         private final String id;
-        private final String text;
+        private String text;
         private final String icon;
         private final int examplesCount;
 
@@ -277,6 +386,10 @@ public class DecisionTree {
 
         public String getText() {
             return text;
+        }
+
+        public void setText(final String text) {
+            this.text = text;
         }
 
         public String getIcon() {
@@ -314,9 +427,9 @@ public class DecisionTree {
         public final List<Checkbox> checkboxes = new ArrayList<>();
         public final List<Answer> answers = new ArrayList<>();
         private final String id;
-        private final String title;
-        private final String text;
-        private final String help;
+        private String title;
+        private String text;
+        private String help;
 
         Question(final String id, final String title, final String text, final String help) {
             this.id = id;
@@ -333,12 +446,24 @@ public class DecisionTree {
             return title;
         }
 
+        public void setTitle(final String title) {
+            this.title = title;
+        }
+
         public String getText() {
             return text;
         }
 
+        public void setText(final String text) {
+            this.text = text;
+        }
+
         public String getHelp() {
             return help;
+        }
+
+        public void setHelp(final String help) {
+            this.help = help;
         }
 
         public boolean hasCheckboxes() {

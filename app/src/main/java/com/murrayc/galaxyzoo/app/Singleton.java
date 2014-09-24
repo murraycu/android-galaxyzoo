@@ -49,7 +49,7 @@ public class Singleton {
         InputStream inputStream = null;
         try {
             inputStream = context.getAssets().open("sloan_tree.xml");
-            mDecisionTree = new DecisionTree(inputStream);
+            mDecisionTree = new DecisionTree(inputStream, null);
         } catch (final IOException e) {
             Log.error("Singleton: Error parsing decision tree.", e);
         } finally {
