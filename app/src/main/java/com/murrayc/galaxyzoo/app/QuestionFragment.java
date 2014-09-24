@@ -279,7 +279,7 @@ public class QuestionFragment extends BaseQuestionFragment
         final DecisionTree.Question question = getQuestion();
 
         //Show the title:
-        final TextView textViewTitle = (TextView) mRootView.findViewById(R.id.textViewZooniverseId);
+        final TextView textViewTitle = (TextView) mRootView.findViewById(R.id.textViewTitle);
         if (textViewTitle == null) {
             Log.error("textViewTitle is null.");
             return;
