@@ -27,8 +27,6 @@ import com.murrayc.galaxyzoo.app.provider.Config;
  * A simple {@link Fragment} subclass.
  */
 public class QuestionHelpFragment extends BaseQuestionFragment {
-    private static final int MARGIN_SMALL_DP = 4;
-    private static final int MARGIN_MEDIUM_DP = 8;
     private Singleton mSingleton;
     private View mRootView;
 
@@ -102,7 +100,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
                         TableRow.LayoutParams.WRAP_CONTENT));
         final TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
                 TableLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, getPxForDp(activity, MARGIN_MEDIUM_DP), 0, 0);
+        params.setMargins(0, getPxForDp(activity, R.dimen.standard_large_margin), 0, 0);
         tableLayout.addView(row, params);
 
 
@@ -117,7 +115,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
         final LinearLayout.LayoutParams paramsHorizontal = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        paramsHorizontal.setMargins(0, getPxForDp(activity, MARGIN_SMALL_DP), 0, 0);
+        paramsHorizontal.setMargins(0, getPxForDp(activity, R.dimen.standard_margin), 0, 0);
         layoutHorizontal.setLayoutParams(paramsHorizontal);
         layoutVertical.addView(layoutHorizontal);
 
@@ -141,7 +139,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
             //This requires API level 17: paramsImage.setMarginStart(getPxForDp(activity, MARGIN_MEDIUM_DP));
             //imageExample.setLayoutParams(paramsImage);
-            MarginLayoutParamsCompat.setMarginStart(paramsImage, getPxForDp(activity, MARGIN_MEDIUM_DP));
+            MarginLayoutParamsCompat.setMarginStart(paramsImage, getPxForDp(activity, R.dimen.standard_large_margin));
 
             imageExample.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
