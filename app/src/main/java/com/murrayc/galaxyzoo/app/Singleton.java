@@ -24,9 +24,11 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 /**
  * A singleton that allows our various Activities to share the same data.
@@ -36,6 +38,7 @@ import java.io.InputStream;
  */
 public class Singleton {
 
+    public static final String JSON_FILE_EXTENSION = ".json";
     private static Callbacks mCallbacks;
     private static Singleton ourInstance = null;
     private IconsCache mIconsCache = null;
@@ -46,23 +49,60 @@ public class Singleton {
         //See http://developer.android.com/guide/topics/ui/settings.html#Fragment
         PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
 
-        InputStream inputStream = null;
-        try {
-            inputStream = context.getAssets().open("sloan_tree.xml");
-            mDecisionTree = new DecisionTree(inputStream, null);
-        } catch (final IOException e) {
-            Log.error("Singleton: Error parsing decision tree.", e);
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (final IOException e) {
-                    Log.error("Singleton: Exception while closing inputStream", e);
-                }
+
+        //Try to find a translation file:
+        InputStream inputStreamTranslation = null;
+        final Locale locale = context.getResources().getConfiguration().locale;
+        //The Galaxy zoo files, such as ch_cn.json are lowercase, instead of having the
+        //country code in uppercase, such as ch_CN, like normal system locales.
+        final String countryCode = locale.getCountry().toLowerCase();
+        final String language = locale.getLanguage();
+        if(!TextUtils.isEmpty(language)) {
+            //Try finding a translation for a country-specific form of the language:
+            String translationFileName = language + "_" + countryCode + JSON_FILE_EXTENSION;
+            inputStreamTranslation = openAsset(context, translationFileName);
+            if (inputStreamTranslation == null) {
+                //Try just the language instead:
+                translationFileName = language + JSON_FILE_EXTENSION;
+                inputStreamTranslation = openAsset(context, translationFileName);
+            }
+        }
+
+        final InputStream inputStreamTree = openAsset(context, "sloan_tree.xml");
+        if (inputStreamTree == null) {
+            Log.error("Singleton: Error parsing decision tree.");
+        } else {
+            mDecisionTree = new DecisionTree(inputStreamTree, inputStreamTranslation);
+        }
+
+        if (inputStreamTree != null) {
+            try {
+                inputStreamTree.close();
+            } catch (final IOException e) {
+                Log.error("Singleton: Exception while closing inputStreamTree", e);
+            }
+        }
+
+        if (inputStreamTranslation != null) {
+            try {
+                inputStreamTranslation.close();
+            } catch (final IOException e) {
+                Log.error("Singleton: Exception while closing inputStreamTranslation", e);
             }
         }
 
         mIconsCache = new IconsCache(context, mDecisionTree);
+    }
+
+    private InputStream openAsset(Context context, String translationFileName) {
+        try {
+            return context.getAssets().open(translationFileName);
+        } catch (final IOException e) {
+            //Don't log this because we expect the file to not exist sometimes,
+            //and the caller will ust check for a null result to know that.
+        }
+
+        return null;
     }
 
     private static void onLoginTaskFinished() {
