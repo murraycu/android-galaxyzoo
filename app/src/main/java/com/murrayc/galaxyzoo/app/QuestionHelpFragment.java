@@ -149,8 +149,6 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             });
 
             layoutHorizontal.addView(imageExample);
-
-            //TODO: Show the full image on click.
         }
 
         row.addView(layoutVertical);
