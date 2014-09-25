@@ -19,11 +19,11 @@ import java.net.URLConnection;
 
 /**
  * A simple {@link android.app.Fragment} subclass.
- * Use the {@link com.murrayc.galaxyzoo.app.ExampleViewerFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class ExampleViewerFragment extends Fragment {
     public static final String ARG_EXAMPLE_URL = "example-url";
+    private View mLoadingView;
+    private View mRootView;
 
     public ExampleViewerFragment() {
         // Required empty public constructor
@@ -38,7 +38,8 @@ public class ExampleViewerFragment extends Fragment {
      * @param imageView
      */
     private void loadBitmap(final String strUri, ImageView imageView) {
-        final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        showLoadingView(true);
+        final BitmapWorkerTask task = new BitmapWorkerTask(imageView, this);
         task.execute(strUri);
     }
 
@@ -52,7 +53,7 @@ public class ExampleViewerFragment extends Fragment {
             uriStr = bundle.getString(ARG_EXAMPLE_URL);
         }
 
-        View mRootView = inflater.inflate(R.layout.fragment_example_viewer, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_example_viewer, container, false);
 
         final ImageView imageView = (ImageView) mRootView.findViewById(R.id.imageView);
         if (imageView != null) {
@@ -65,11 +66,17 @@ public class ExampleViewerFragment extends Fragment {
     //See http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
     private static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
+        private final WeakReference<ExampleViewerFragment> fragmentReference;
+
         private String strUri = null;
 
-        public BitmapWorkerTask(ImageView imageView) {
+        public BitmapWorkerTask(final ImageView imageView, final ExampleViewerFragment fragment) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             imageViewReference = new WeakReference<>(imageView);
+
+            // Use a WeakReference to ensure the ImageView can be garbage collected
+            fragment.showLoadingView(true);
+            fragmentReference = new WeakReference<>(fragment);
         }
 
         // Decode image in background.
@@ -114,7 +121,22 @@ public class ExampleViewerFragment extends Fragment {
                     imageView.setImageBitmap(bitmap);
                 }
             }
+
+            if (fragmentReference != null) {
+                final ExampleViewerFragment fragment = fragmentReference.get();
+                if (fragment != null) {
+                    fragment.showLoadingView(false);
+                }
+            }
         }
+    }
+
+    private void showLoadingView(boolean show) {
+        if (mLoadingView == null) {
+            mLoadingView = mRootView.findViewById(R.id.loading_spinner);
+        }
+
+        mLoadingView.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
 

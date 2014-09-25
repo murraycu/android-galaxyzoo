@@ -1,9 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.murrayc.galaxyzoo.app.ExampleViewerActivity$PlaceholderFragment"
-    android:gravity="top">
+    android:gravity="top"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imageView"
@@ -16,6 +17,12 @@
         android:adjustViewBounds="false"
         android:contentDescription="@string/content_description_example_image"
         android:layout_gravity="top"
-        android:scaleType="fitStart" />
+        android:scaleType="fitStart"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
 
-</LinearLayout>
+    <include layout="@layout/progress" />
+
+</RelativeLayout>
+
+
