@@ -38,7 +38,7 @@ import java.util.Locale;
  */
 public class Singleton {
 
-    public static final String JSON_FILE_EXTENSION = ".json";
+    private static final String JSON_FILE_EXTENSION = ".json";
     private static Callbacks mCallbacks;
     private static Singleton ourInstance = null;
     private IconsCache mIconsCache = null;
