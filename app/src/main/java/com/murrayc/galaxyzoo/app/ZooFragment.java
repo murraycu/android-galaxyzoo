@@ -78,6 +78,13 @@ public class ZooFragment extends Fragment {
             textView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
+        final TextView textViewVersion = (TextView) view.findViewById(R.id.textViewVersion);
+        if (textViewVersion != null) {
+            final String versionText =
+                    String.format(getString(R.string.about_version_text_format), BuildConfig.VERSION_NAME);
+            textViewVersion.setText(versionText);
+        }
+
         final AlertDialog dialog = builder.create();
         dialog.setTitle(R.string.app_name);
         dialog.setIcon(R.drawable.ic_launcher);

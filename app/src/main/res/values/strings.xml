@@ -46,4 +46,5 @@
     <string name="pref_title_cache_size">Download in advance</string>
     <string name="pref_default_cache_size" translatable="false">10</string>
     <string name="progress_loading_text">Loading…</string>
+    <string name="about_version_text_format">Version: %s</string>
 </resources>
