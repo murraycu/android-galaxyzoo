@@ -45,13 +45,6 @@
 
     </LinearLayout>
 
-
-    <ProgressBar
-        android:id="@+id/loading_spinner"
-        style="?android:progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center" />
+    <include layout="@layout/progress" />
 
 </RelativeLayout>
