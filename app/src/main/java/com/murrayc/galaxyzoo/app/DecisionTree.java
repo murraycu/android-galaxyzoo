@@ -22,9 +22,6 @@ package com.murrayc.galaxyzoo.app;
 import android.text.TextUtils;
 import android.util.JsonReader;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
