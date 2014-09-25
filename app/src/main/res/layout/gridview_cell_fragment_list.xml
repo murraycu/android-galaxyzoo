@@ -24,7 +24,9 @@
         android:layout_alignParentBottom="true"
         android:background="#14ffffff"
         android:paddingTop="@dimen/standard_margin"
-        android:paddingBottom="@dimen/standard_margin">
+        android:paddingBottom="@dimen/standard_margin"
+        android:paddingLeft="@dimen/standard_margin"
+        android:paddingRight="@dimen/standard_margin">
 
         <ImageView
             android:id="@+id/item_checkboxClassified"
@@ -66,8 +68,7 @@
             android:src="@drawable/ic_small_favorite"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_gravity="bottom"
-            android:layout_marginRight="@dimen/standard_large_margin" />
+            android:layout_gravity="bottom" />
     </LinearLayout>
 
 </RelativeLayout>
