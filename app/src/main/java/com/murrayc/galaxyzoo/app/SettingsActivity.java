@@ -19,8 +19,10 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 /**
  * An activity showing the preferences.
@@ -36,7 +38,29 @@ public class SettingsActivity extends Activity {
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
 
+        // Show the Up button in the action bar.
+        final ActionBar actionBar = getActionBar();
+        if (actionBar == null)
+            return;
 
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            // This activity has no single possible parent activity.
+            // In this case Up should be the same as Back.
+            // See "Navigating to screens with multiple entry points":
+            //   http://developer.android.com/design/patterns/navigation.html
+            // Just closing the activity might be enough:
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }
