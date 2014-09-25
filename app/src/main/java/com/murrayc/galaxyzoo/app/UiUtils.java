@@ -43,17 +43,6 @@ import java.util.Locale;
  */
 class UiUtils {
 
-    static String getLocale(final Context context) {
-        final Locale locale = context.getResources().getConfiguration().locale;
-        final String countryCode = locale.getCountry();
-        String result = locale.getLanguage();
-        if (!TextUtils.isEmpty(countryCode)) {
-            result += "_" + countryCode;
-        }
-
-        return result;
-    }
-
     static void fillImageViewFromContentUri(final Context context, final String imageUriStr, final ImageView imageView) {
         if (imageUriStr == null) {
             Log.error("fillImageViewFromContentUri(): imageUriStr is null.");
