@@ -156,12 +156,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
     private int getPxForDpResource(final Context context, int resourceId) {
         final Resources r = context.getResources();
-        float dp = r.getDimension(resourceId);
-        return (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp,
-                r.getDisplayMetrics()
-        );
+        return r.getDimensionPixelSize(resourceId);
     }
 
     private void onExampleImageClicked(final String iconName) {
