@@ -46,10 +46,7 @@ public class ListActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        //Don't use the action bar on this top-level activity,
-        //though we have it via the shared base class.
-        //TODO: ActionBar actionBar = getActionBar();
-        //actionBar.hide();
+        showUpButton();
     }
 
     /**

@@ -69,14 +69,7 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
                     .commit();
         }
 
-        /*
-        // Show the Up button in the action bar.
-        final ActionBar actionBar = getActionBar();
-        if (actionBar == null)
-            return;
-
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        */
+        showUpButton();
     }
 
     private String getQuestionId() {

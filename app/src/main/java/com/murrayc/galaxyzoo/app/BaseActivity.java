@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -30,7 +31,7 @@ import android.view.MenuItem;
  * Created by murrayc on 2/7/14.
  */
 @SuppressLint("Registered")
-        //This is a base class for other Activities.
+//This is a base class for other Activities.
 class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,5 +78,14 @@ class BaseActivity extends FragmentActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void showUpButton() {
+        // Show the Up button in the action bar.
+        final ActionBar actionBar = getActionBar();
+        if (actionBar == null)
+            return;
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

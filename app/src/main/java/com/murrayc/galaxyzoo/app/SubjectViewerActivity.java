@@ -72,14 +72,7 @@ public class SubjectViewerActivity extends ItemActivity {
                     .commit();
         }
 
-        /*
-        // Show the Up button in the action bar.
-        final ActionBar actionBar = getActionBar();
-        if (actionBar == null)
-            return;
-
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        */
+        showUpButton();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.murrayc.galaxyzoo.app;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -25,5 +26,12 @@ public class ExampleViewerActivity extends FragmentActivity {
                     .add(R.id.container, fragment)
                     .commit();
         }
+
+        // Show the Up button in the action bar.
+        final ActionBar actionBar = getActionBar();
+        if (actionBar == null)
+            return;
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

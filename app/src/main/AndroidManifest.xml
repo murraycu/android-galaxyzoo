@@ -14,7 +14,12 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".ListActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:parentActivityName="com.murrayc.galaxyzoo.app.ClassifyActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.murrayc.galaxyzoo.app.ClassifyActivity" />
         </activity>
         <activity
             android:name=".ClassifyActivity"
@@ -30,18 +35,21 @@
 
         <activity
             android:name=".SubjectViewerActivity"
-            android:label="@string/title_activity_subject_viewer" >
+            android:label="@string/title_activity_subject_viewer"
+            android:parentActivityName="com.murrayc.galaxyzoo.app.ListActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.murrayc.galaxyzoo.app.ListActivity" />
         </activity>
-
-        <provider
-            android:name=".provider.ItemsContentProvider"
-            android:authorities="com.murrayc.galaxyzoo.app"
-            android:enabled="true"
-            android:exported="false" />
-
         <activity
             android:name=".QuestionHelpActivity"
-            android:label="@string/title_activity_question_help">
+            android:label="@string/title_activity_question_help"
+            android:parentActivityName="com.murrayc.galaxyzoo.app.ClassifyActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.murrayc.galaxyzoo.app.ClassifyActivity" />
         </activity>
         <activity
             android:name=".LoginActivity"
@@ -50,12 +58,22 @@
         </activity>
         <activity
             android:name=".ExampleViewerActivity"
-            android:label="@string/title_activity_example_viewer" >
+            android:label="@string/title_activity_example_viewer"
+            android:parentActivityName="com.murrayc.galaxyzoo.app.QuestionHelpActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.murrayc.galaxyzoo.app.QuestionHelpActivity" />
         </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        <provider
+            android:name=".provider.ItemsContentProvider"
+            android:authorities="com.murrayc.galaxyzoo.app"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
