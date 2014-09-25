@@ -13,4 +13,19 @@
         <item>20</item>
         <item>50</item>
     </string-array>
+
+
+    <string-array name="pref_keep_count_entries">
+        <item>5 classified subjects</item>
+        <item>10 classified subjects</item>
+        <item>20 classified subjects</item>
+        <item>50 classified subjects</item>
+    </string-array>
+
+    <string-array name="pref_keep_count_values" translatable="false">
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>50</item>
+    </string-array>
 </resources>

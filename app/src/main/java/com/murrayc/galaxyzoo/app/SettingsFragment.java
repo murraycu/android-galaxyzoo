@@ -30,8 +30,8 @@ import android.preference.PreferenceFragment;
  */
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-
     private static final String KEY_PREF_CACHE_SIZE = "cache_size";
+    private static final String KEY_PREF_KEEP_COUNT = "keep_count";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -58,8 +58,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         //https://code.google.com/p/android/issues/detail?id=76538&thanks=76538&ts=1411464975
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-        //Set the initial summary:
-        final Preference pref = findPreference(KEY_PREF_CACHE_SIZE);
+        //Set the initial summaries:
+        Preference pref = findPreference(KEY_PREF_CACHE_SIZE);
+        showUserDescriptionAsSummary(pref);
+        pref = findPreference(KEY_PREF_KEEP_COUNT);
         showUserDescriptionAsSummary(pref);
     }
 
@@ -72,9 +74,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences,
                                           final String key) {
-        if (key.equals(KEY_PREF_CACHE_SIZE)) {
-            final Preference connectionPref = findPreference(key);
-
+        final Preference connectionPref = findPreference(key);
+        if (connectionPref instanceof ListPreference) {
             showUserDescriptionAsSummary(connectionPref);
         }
     }
