@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="pref_default_cache_size_entries">
+    <string-array name="pref_cache_size_entries">
         <item>5 subjects</item>
         <item>10 subjects</item>
         <item>20 subjects</item>
         <item>50 subjects</item>
     </string-array>
 
-    <string-array name="pref_default_cache_size_values" translatable="false">
+    <string-array name="pref_cache_size_values" translatable="false">
         <item>5</item>
         <item>10</item>
         <item>20</item>
