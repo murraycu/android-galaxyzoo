@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * Created by murrayc on 5/16/14.
@@ -71,14 +72,22 @@ class ListCursorAdapter extends CursorAdapter {
             final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);
             UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
 
-            final ImageView checkboxFavorite = (ImageView) view.findViewById(R.id.item_checkboxFavorite);
-            checkboxFavorite.setVisibility(favorite ? View.VISIBLE : View.GONE);
+            final LinearLayout iconsPanel = (LinearLayout) view.findViewById(R.id.itemIconsPanel);
 
-            final ImageView checkboxClassified = (ImageView) view.findViewById(R.id.item_checkboxClassified);
-            checkboxClassified.setVisibility(done ? View.VISIBLE : View.GONE);
+            if (!favorite && !done && !uploaded) {
+                iconsPanel.setVisibility(View.GONE);
+            } else {
+                iconsPanel.setVisibility(View.VISIBLE);
 
-            final ImageView checkboxUploaded = (ImageView) view.findViewById(R.id.item_checkboxUploaded);
-            checkboxUploaded.setVisibility(uploaded ? View.VISIBLE : View.GONE);
+                final ImageView checkboxFavorite = (ImageView) view.findViewById(R.id.item_checkboxFavorite);
+                checkboxFavorite.setVisibility(favorite ? View.VISIBLE : View.GONE);
+
+                final ImageView checkboxClassified = (ImageView) view.findViewById(R.id.item_checkboxClassified);
+                checkboxClassified.setVisibility(done ? View.VISIBLE : View.GONE);
+
+                final ImageView checkboxUploaded = (ImageView) view.findViewById(R.id.item_checkboxUploaded);
+                checkboxUploaded.setVisibility(uploaded ? View.VISIBLE : View.GONE);
+            }
         }
     }
 

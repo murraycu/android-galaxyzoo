@@ -26,7 +26,8 @@
         android:paddingTop="@dimen/standard_margin"
         android:paddingBottom="@dimen/standard_margin"
         android:paddingLeft="@dimen/standard_margin"
-        android:paddingRight="@dimen/standard_margin">
+        android:paddingRight="@dimen/standard_margin"
+        android:id="@+id/itemIconsPanel">
 
         <ImageView
             android:id="@+id/item_checkboxClassified"
