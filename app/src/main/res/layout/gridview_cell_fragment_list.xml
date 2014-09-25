@@ -35,7 +35,7 @@
             android:contentDescription="@string/content_description_classified"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:src="@drawable/ic_action_accept"
+            android:src="@drawable/ic_small_accept"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_gravity="bottom|right" />
@@ -50,7 +50,7 @@
             android:contentDescription="@string/content_description_uploaded"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:src="@drawable/ic_action_upload"
+            android:src="@drawable/ic_small_upload"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_gravity="bottom|right" />
@@ -63,7 +63,7 @@
             android:contentDescription="@string/content_description_favorite"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:src="@drawable/ic_action_favorite"
+            android:src="@drawable/ic_small_favorite"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_gravity="bottom"
