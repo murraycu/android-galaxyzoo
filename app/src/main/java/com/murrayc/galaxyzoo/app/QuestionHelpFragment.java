@@ -100,7 +100,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
                         TableRow.LayoutParams.WRAP_CONTENT));
         final TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
                 TableLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, getPxForDp(activity, R.dimen.standard_large_margin), 0, 0);
+        params.setMargins(0, getPxForDpResource(activity, R.dimen.standard_large_margin), 0, 0);
         tableLayout.addView(row, params);
 
 
@@ -115,7 +115,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
         final LinearLayout.LayoutParams paramsHorizontal = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        paramsHorizontal.setMargins(0, getPxForDp(activity, R.dimen.standard_margin), 0, 0);
+        paramsHorizontal.setMargins(0, getPxForDpResource(activity, R.dimen.standard_margin), 0, 0);
         layoutHorizontal.setLayoutParams(paramsHorizontal);
         layoutVertical.addView(layoutHorizontal);
 
@@ -139,7 +139,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
             //This requires API level 17: paramsImage.setMarginStart(getPxForDp(activity, MARGIN_MEDIUM_DP));
             //imageExample.setLayoutParams(paramsImage);
-            MarginLayoutParamsCompat.setMarginStart(paramsImage, getPxForDp(activity, R.dimen.standard_large_margin));
+            MarginLayoutParamsCompat.setMarginStart(paramsImage, getPxForDpResource(activity, R.dimen.standard_large_margin));
 
             imageExample.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -154,8 +154,9 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         row.addView(layoutVertical);
     }
 
-    private int getPxForDp(final Context context, int dp) {
+    private int getPxForDpResource(final Context context, int resourceId) {
         final Resources r = context.getResources();
+        float dp = r.getDimension(resourceId);
         return (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 dp,
