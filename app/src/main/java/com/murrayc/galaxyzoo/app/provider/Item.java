@@ -53,13 +53,15 @@ public class Item {
 
     public static final class Columns implements BaseColumns {
         //The ID is BaseColumns._ID;
-        public static final String DONE = "done";
-        public static final String UPLOADED = "uploaded";
+        public static final String DONE = "done"; //Integer boolean (1 or 0)
+        public static final String UPLOADED = "uploaded"; //Integer boolean (1 or 0)
         public static final String SUBJECT_ID = "subjectId";
         public static final String ZOONIVERSE_ID = "zooniverseId";
         public static final String LOCATION_STANDARD_URI = "locationStandardUri";
         public static final String LOCATION_THUMBNAIL_URI = "locationThumbnailUri";
         public static final String LOCATION_INVERTED_URI = "locationInvertedUri";
-        public static final String FAVORITE = "favorite";
+        public static final String FAVORITE = "favorite"; //Integer boolean (1 or 0)
+        public static final String DATETIME_DONE = "dateTimeDone"; //An ISO8601 string ("YYYY-MM-DD HH:MM:SS.SSS").
+
     }
 }

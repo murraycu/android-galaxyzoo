@@ -52,10 +52,15 @@ import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
 import com.murrayc.galaxyzoo.app.provider.Item;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * A fragment representing a single subject.
@@ -485,6 +490,7 @@ public class QuestionFragment extends BaseQuestionFragment
                 ContentProviderOperation.newUpdate(uriBuilder.build());
         final ContentValues values = new ContentValues();
         values.put(Item.Columns.DONE, true);
+        values.put(Item.Columns.DATETIME_DONE, getCurrentDateTimeAsIso8601());
         values.put(Item.Columns.FAVORITE, classificationInProgress.isFavorite());
         builder.withValues(values);
         ops.add(builder.build());
@@ -496,6 +502,15 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         //The ItemsContentProvider will upload the classification later.
+    }
+
+    private String getCurrentDateTimeAsIso8601() {
+        final Date now = new Date();
+        //TODO: Is there a simpler way of getting an ISO-8601-formatted date,
+        //or at least a way to avoid writing the format out manually here?
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return dateFormat.format(now);
     }
 
     private void updateFromCursor() {
