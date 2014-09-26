@@ -658,7 +658,7 @@ public class ItemsContentProvider extends ContentProvider {
 
         try {
             final long rowId = db.insertOrThrow(tableName,
-                    Item.Columns._ID, valuesToUse);
+                    DatabaseHelper.ItemsDbColumns._ID, valuesToUse);
             if (rowId >= 0) {
                 final Uri itemUri =
                         ContentUris.withAppendedId(
@@ -840,7 +840,8 @@ public class ItemsContentProvider extends ContentProvider {
         final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
         builder.appendWhere(whereClause);
-        final String[] projection = {Item.Columns._ID, Item.Columns.SUBJECT_ID};
+        final String[] projection = {DatabaseHelper.ItemsDbColumns._ID,
+                DatabaseHelper.ItemsDbColumns.SUBJECT_ID};
         final Cursor c = builder.query(getDb(), projection,
                 null, null,
                 null, null, null); //TODO: Order by?
@@ -1219,7 +1220,7 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         final long rowId = db.insert(DatabaseHelper.TABLE_NAME_ITEMS,
-                Item.Columns._ID, values);
+                DatabaseHelper.ItemsDbColumns._ID, values);
         if (rowId >= 0) {
             final Uri insertUri =
                     ContentUris.withAppendedId(
