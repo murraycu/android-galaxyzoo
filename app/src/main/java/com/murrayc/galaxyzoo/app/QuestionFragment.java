@@ -211,6 +211,22 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
+    public void onPrepareOptionsMenu(final Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        //Before the menu item is displayed,
+        //make sure that the checked state is correct:
+        final MenuItem item = menu.findItem(R.id.option_menu_item_favorite);
+        if (item != null) {
+            boolean checked = false;
+            if (mClassificationInProgress != null) {
+                checked = mClassificationInProgress.isFavorite();
+            }
+            item.setChecked(checked);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
