@@ -663,11 +663,11 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         public ClassificationInProgress(final Parcel in) {
-            final Object[] array = in.readArray(String.class.getClassLoader());
+            final Object[] array = in.readArray(QuestionAnswer.class.getClassLoader());
             if ((array != null) && (array.length != 0)) {
                 for (final Object object : array) {
-                    final QuestionAnswer str = (QuestionAnswer) object;
-                    this.answers.add(str);
+                    final QuestionAnswer answer = (QuestionAnswer) object;
+                    this.answers.add(answer);
                 }
             }
 
