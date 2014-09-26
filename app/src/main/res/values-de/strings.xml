@@ -36,6 +36,7 @@
     <string name="login_hint">Login or create an account to receive credit for your work.</string>
     <string name="title_activity_subject_viewer">Subject</string>
     <string name="pref_title_cache_size">Download in advance</string>
+    <string name="pref_title_keep_count">Keep</string>
     <string name="title_activity_settings">Einstellungen</string>
     <string name="progress_loading_text">Loading…</string>
     <string name="about_version_text_format">Version: %s</string>

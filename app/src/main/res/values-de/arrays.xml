@@ -6,4 +6,11 @@
         <item>20 subjects</item>
         <item>50 subjects</item>
     </string-array>
+
+    <string-array name="pref_keep_count_entries">
+    <item>5 classified subjects</item>
+    <item>10 classified subjects</item>
+    <item>20 classified subjects</item>
+    <item>50 classified subjects</item>
+    </string-array>
 </resources>
