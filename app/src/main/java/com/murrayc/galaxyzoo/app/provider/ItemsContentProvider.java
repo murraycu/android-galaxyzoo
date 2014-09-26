@@ -84,6 +84,7 @@ public class ItemsContentProvider extends ContentProvider {
     public static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
     public static final String PREF_KEY_AUTH_NAME = "auth_name";
     public static final String PREF_KEY_CACHE_SIZE = "cache_size";
+    public static final String PREF_KEY_KEEP_COUNT = "keep_count";
     private static final String URI_PART_CLASSIFICATION = "classification";
     /**
      * The MIME type of {@link Item#CONTENT_URI} providing a directory of items.
@@ -425,6 +426,7 @@ public class ItemsContentProvider extends ContentProvider {
             public void run() {
                 uploadOutstandingClassifications();
                 downloadMinimumSubjects();
+                removeOldSubjects();
                 startRegularTasks();
             }
         };
@@ -448,6 +450,14 @@ public class ItemsContentProvider extends ContentProvider {
         final SQLiteDatabase db = getDb();
         final Cursor c = db.rawQuery("SELECT COUNT (*) FROM " + DatabaseHelper.TABLE_NAME_ITEMS +
                 " WHERE " + getWhereClauseForNotDone(), null);
+        c.moveToFirst();
+        return c.getInt(0);
+    }
+
+    private int getUploadedCount() {
+        final SQLiteDatabase db = getDb();
+        final Cursor c = db.rawQuery("SELECT COUNT (*) FROM " + DatabaseHelper.TABLE_NAME_ITEMS +
+                " WHERE " + getWhereClauseForUploaded(), null);
         c.moveToFirst();
         return c.getInt(0);
     }
@@ -855,6 +865,95 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
+    private void removeOldSubjects() {
+        final int count = getUploadedCount();
+        final int max = getKeepCount();
+        if (count > max) {
+            //Get the oldest done items:
+            final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+            builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
+            builder.appendWhere(getWhereClauseForUploaded());
+            final String[] projection = {DatabaseHelper.ItemsDbColumns._ID,
+                DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI,
+                DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI,
+                DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI};
+            final String orderBy = DatabaseHelper.ItemsDbColumns._ID + " ASC";
+            final String limit = Integer.toString(count - max); //TODO: Is this locale-independent?
+            final Cursor c = builder.query(getDb(), projection,
+                    null, null,
+                    null, null, orderBy, limit);
+
+            //Remove them one by one:
+            while (c.moveToNext()) {
+                final String itemId = c.getString(0);
+                if (!TextUtils.isEmpty(itemId)) {
+                    final String[] imageUris = {
+                            c.getString(1),
+                            c.getString(2),
+                            c.getString(3)
+                    };
+                    removeItem(itemId, imageUris);
+                }
+            }
+        }
+    }
+
+    private void removeItem(final String itemId, final String[] imageUris) {
+        final SQLiteDatabase db = getDb();
+
+        //Get the cached image files, delete them, and forget them:
+        for (final String contentUri : imageUris) {
+            //Get the real local URI for the file:
+            final Uri uri = Uri.parse(contentUri);
+            final long fileId = ContentUris.parseId(uri);
+            final String strFileId = Double.toString(fileId); //TODO: Is this locale-independent?
+
+            final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+            builder.setTables(DatabaseHelper.TABLE_NAME_FILES);
+            builder.appendWhere(DatabaseHelper.FilesDbColumns._ID + " = ?");
+            final String[] selectionArgs = {strFileId};
+            final String[] projection = {DatabaseHelper.FilesDbColumns.FILE_DATA};
+            final Cursor c = builder.query(db, projection,
+                    null, selectionArgs,
+                    null, null, null);
+
+            if (c.moveToFirst()) {
+                final String realFileUri = c.getString(0);
+                final File realFile = new File(realFileUri);
+                realFile.delete();
+            }
+
+            final String[] whereArgs = {strFileId};
+            if (db.delete(DatabaseHelper.TABLE_NAME_FILES,
+                    DatabaseHelper.FilesDbColumns._ID + " = ?",
+                    whereArgs) <= 0) {
+                Log.error("removeItem(): Could not remove the file row.");
+            }
+        }
+
+        // Remove the related classification answers:
+        final String[] whereArgs = {itemId};
+        if (db.delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
+                DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?",
+                whereArgs) <= 0) {
+            Log.error("removeItem(): Could not remove the classification answers rows.");
+        }
+
+        // Remove the related classification checkboxes:
+        // We don't check that at least 1 row was deleted,
+        // because there are not always answers with checkboxes.
+        db.delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
+            DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID + " = ?",
+            whereArgs);
+
+        //Delete the item:
+        if(db.delete(DatabaseHelper.TABLE_NAME_ITEMS,
+                DatabaseHelper.ItemsDbColumns._ID + " = ?",
+                whereArgs) <= 0) {
+            Log.error("removeItem(): No item rows were removed.");
+        }
+    }
+
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
@@ -1032,11 +1131,19 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private int getMinCacheSize() {
+        return getIntPref(PREF_KEY_CACHE_SIZE);
+    }
+
+    private int getKeepCount() {
+        return getIntPref(PREF_KEY_KEEP_COUNT);
+    }
+
+    private int getIntPref(final String prefKey) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         //Android's PreferencesScreen XMl has no way to specify an integer rather than a string,
         //so we parse it here.
-        final String str = prefs.getString(PREF_KEY_CACHE_SIZE, "13");
+        final String str = prefs.getString(prefKey, "13");
         return Integer.parseInt(str);
     }
 
@@ -1061,6 +1168,10 @@ public class ItemsContentProvider extends ContentProvider {
 
     private String getWhereClauseForNotDone() {
         return DatabaseHelper.ItemsDbColumns.DONE + " != 1";
+    }
+
+    private String getWhereClauseForUploaded() {
+        return DatabaseHelper.ItemsDbColumns.UPLOADED + " == 1";
     }
 
     private String[] prependToArray(final String[] selectionArgs, long value) {
