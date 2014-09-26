@@ -136,6 +136,11 @@ class IconsCache {
     }
 
     private void reloadIcon(final String cssName) {
+        //LruCache throws exceptions on null keys or values.
+        if (TextUtils.isEmpty(cssName)) {
+            return;
+        }
+
         Log.info("reloadIcon:" + cssName);
 
         //Avoid loading and adding it again:
@@ -144,7 +149,15 @@ class IconsCache {
         }
 
         final String cacheFileUri = getCacheIconFileUri(cssName);
+        if (TextUtils.isEmpty(cacheFileUri)) {
+            return;
+        }
+
         final Bitmap bitmap = BitmapFactory.decodeFile(cacheFileUri);
+        if (bitmap == null) {
+            return;
+        }
+
         mIcons.put(cssName, bitmap);
     }
 
@@ -351,7 +364,11 @@ class IconsCache {
                     final String cacheFileUri = getCacheIconFileUri(cssName);
                     cacheBitmapToFile(bmapIcon, cacheFileUri);
 
-                    mIcons.put(cssName, bmapIcon);
+                    //We check for nulls because LruCache throws NullPointerExceptions on null
+                    //keys or values.
+                    if (!TextUtils.isEmpty(cssName) && (bmapIcon != null)) {
+                        mIcons.put(cssName, bmapIcon);
+                    }
                 } catch (final IllegalArgumentException ex) {
                     Log.error("IllegalArgumentException from createBitmap() for iconName=" + cssName + ", x=" + x + ", y=" + y + ", icons.width=" + icons.getWidth() + ", icons.height=" + icons.getHeight());
                 }
@@ -389,6 +406,11 @@ class IconsCache {
     }
 
     public Bitmap getIcon(final String iconName) {
+        //Avoid a NullPointerException from LruCache.get() if we pass a null key.
+        if (TextUtils.isEmpty(iconName)) {
+            return null;
+        }
+
         Bitmap result = mIcons.get(iconName);
 
         //Reload it if it is no longer in the cache:
