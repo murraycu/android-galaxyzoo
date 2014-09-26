@@ -833,11 +833,6 @@ public class ItemsContentProvider extends ContentProvider {
         if (mUploadsInProgress > 0)
             return;
 
-        //Don't upload anonymously:
-        if (!Utils.getLoggedIn(getContext())) {
-            return;
-        }
-
         // TODO: Request re-authentication when the server says we have used the wrong name + api_key.
         // What does the server reply in that case?
         final SharedPreferences prefs = Utils.getPreferences(getContext());
