@@ -36,7 +36,8 @@ class IconsCache {
     //TODO: Don't put both kinds of icons in the same map:
     //See this about the use of the LruCache:
     //http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html#memory-cache
-    private final LruCache<String, Bitmap> mIcons = new LruCache<>(30);
+    private final LruCache<String, Bitmap> mWorkflowIcons = new LruCache<>(20);
+    private final LruCache<String, Bitmap> mExampleIcons = new LruCache<>(20);
     private Bitmap mBmapWorkflowIcons = null;
     private Bitmap mBmapExampleIcons = null;
 
@@ -69,46 +70,62 @@ class IconsCache {
         }
 
         if (loadFromNetwork) {
-            //Get the updated files from the server and re-process them:
-            readIconsFileSync(Config.ICONS_URI, CACHE_FILE_WORKFLOW_ICONS);
-            readIconsFileSync(Config.EXAMPLES_URI, CACHE_FILE_EXAMPLE_ICONS);
-            readCssFileSync(Config.ICONS_CSS_URI, CACHE_FILE_CSS);
-
-            //Remember the dates of the files from the server,
-            //so we can check again next time.
-            final SharedPreferences prefs = Utils.getPreferences(context);
-            final SharedPreferences.Editor editor = prefs.edit();
-            editor.putLong(PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD, lastModified);
-            editor.apply();
+            loadFromNetwork(context, lastModified);
         } else {
             //Just get the cached icons:
-            reloadCachedIcons();
+            if(!reloadCachedIcons()) {
+                //Something went wrong while reloading the icons from the cache files,
+                //So try loading them again.
+                if (Utils.getNetworkIsConnected(context)) {
+                    Log.info("IconsCache(): Reloading the icons from the network after failing to reload them from the cache.");
+                    loadFromNetwork(context, lastModified);
+                }
+            }
         }
 
         mBmapWorkflowIcons = null;
-        mBmapExampleIcons = null;
+        mBmapExampleIcons =     null;
     }
 
-    private void reloadCachedIcons() {
-        mIcons.evictAll();
+    private void loadFromNetwork(final Context context, long lastModified) {
+        //Get the updated files from the server and re-process them:
+        readIconsFileSync(Config.ICONS_URI, CACHE_FILE_WORKFLOW_ICONS);
+        readIconsFileSync(Config.EXAMPLES_URI, CACHE_FILE_EXAMPLE_ICONS);
+        readCssFileSync(Config.ICONS_CSS_URI, CACHE_FILE_CSS);
+
+        //Remember the dates of the files from the server,
+        //so we can check again next time.
+        final SharedPreferences prefs = Utils.getPreferences(context);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD, lastModified);
+        editor.apply();
+    }
+
+    private boolean reloadCachedIcons() {
+        mWorkflowIcons.evictAll();
+        mExampleIcons.evictAll();
         final DecisionTree.Question question = mDecisionTree.getFirstQuestion();
 
         final List<String> alreadyReloadedQuestionIds = new ArrayList<>(100);
-        reloadIconsForQuestion(question, alreadyReloadedQuestionIds);
+        return reloadIconsForQuestion(question, alreadyReloadedQuestionIds);
     }
 
-    private void reloadIconsForQuestion(final DecisionTree.Question question, final List<String> alreadyReloadedQuestionIds) {
+    private boolean reloadIconsForQuestion(final DecisionTree.Question question, final List<String> alreadyReloadedQuestionIds) {
         //Prevent an unnecessary repeat reload:
         final String questionId = question.getId();
         if (alreadyReloadedQuestionIds.contains(questionId)) {
-            return;
+            return true;
         }
 
         for (final DecisionTree.Answer answer : question.answers) {
             //Get the icon for the answer:
-            reloadIcon(answer.getIcon());
+            if(!reloadIcon(answer.getIcon(), mWorkflowIcons)) {
+                return false;
+            }
 
-            reloadExampleImages(question, answer);
+            if(!reloadExampleImages(question, answer)) {
+                return false;
+            }
 
             //Prevent an unnecessary repeat reload:
             alreadyReloadedQuestionIds.add(question.getId());
@@ -116,55 +133,73 @@ class IconsCache {
             //Recurse:
             final DecisionTree.Question nextQuestion = mDecisionTree.getNextQuestionForAnswer(question.getId(), answer.getId());
             if (nextQuestion != null) {
-                reloadIconsForQuestion(nextQuestion, alreadyReloadedQuestionIds);
+                if(!reloadIconsForQuestion(nextQuestion, alreadyReloadedQuestionIds)) {
+                    return false;
+                }
             }
         }
 
         for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
-            reloadIcon(checkbox.getIcon());
+            if(!reloadIcon(checkbox.getIcon(), mWorkflowIcons)) {
+                return false;
+            }
 
-            reloadExampleImages(question, checkbox);
+            if(!reloadExampleImages(question, checkbox)) {
+                return false;
+            }
         }
+
+        return true;
     }
 
-    private void reloadExampleImages(final DecisionTree.Question question, final DecisionTree.BaseButton answer) {
+    private boolean reloadExampleImages(final DecisionTree.Question question, final DecisionTree.BaseButton answer) {
         //Get the example images for the answer or checkbox:
         for (int i = 0; i < answer.getExamplesCount(); i++) {
             final String exampleIconName = answer.getExampleIconName(question.getId(), i);
-            reloadIcon(exampleIconName);
+            if(!reloadIcon(exampleIconName, mExampleIcons)) {
+                return false;
+            }
         }
+
+        return true;
     }
 
-    private void reloadIcon(final String cssName) {
+    private boolean reloadIcon(final String cssName, final LruCache<String, Bitmap> map) {
         //LruCache throws exceptions on null keys or values.
         if (TextUtils.isEmpty(cssName)) {
-            return;
+            return false;
         }
 
         Log.info("reloadIcon:" + cssName);
 
         //Avoid loading and adding it again:
-        if (mIcons.get(cssName) != null) {
-            return;
+        if (map.get(cssName) != null) {
+            return true;
         }
 
         final String cacheFileUri = getCacheIconFileUri(cssName);
         if (TextUtils.isEmpty(cacheFileUri)) {
-            return;
+            return false;
         }
 
         final Bitmap bitmap = BitmapFactory.decodeFile(cacheFileUri);
         if (bitmap == null) {
             //The file contents are invalid.
             //Maybe the download was incomplete or something else odd happened.
-            //Anyway, we should stop trying to use it:
+            //Anyway, we should stop trying to use it,
+            //And tell the caller about the failure,
+            //so we can reload it by reloading and reparsing everything.
+            Log.error("IconsCache.reloadIcon(): BitmapFactory.decodeFile() failed for file (now deleting it): ", cacheFileUri);
+
             final File file = new File(cacheFileUri);
             if(!file.delete()) {
                 Log.error("IconsCache.reloadIcon(): Failed to delete invalid cache file.");
+                return false;
             }
         }
 
-        mIcons.put(cssName, bitmap);
+        map.put(cssName, bitmap);
+        return true;
     }
 
     private void readIconsFileSync(final String uriStr, final String cacheId) {
@@ -225,7 +260,8 @@ class IconsCache {
         final String css = getFileContents(cacheFileUri);
 
         // Recurse through the questions, looking at each icon:
-        mIcons.evictAll();
+        mWorkflowIcons.evictAll();
+        mExampleIcons.evictAll();
         final DecisionTree.Question question = mDecisionTree.getFirstQuestion();
         cacheIconsForQuestion(question, css);
     }
@@ -326,7 +362,7 @@ class IconsCache {
             return;
         }
 
-        if (mIcons.get(cssName) != null) {
+        if (mWorkflowIcons.get(cssName) != null) {
             //Avoid getting it again.
             return;
         }
@@ -373,7 +409,7 @@ class IconsCache {
                     //We check for nulls because LruCache throws NullPointerExceptions on null
                     //keys or values.
                     if (!TextUtils.isEmpty(cssName) && (bmapIcon != null)) {
-                        mIcons.put(cssName, bmapIcon);
+                        mWorkflowIcons.put(cssName, bmapIcon);
                     }
                 } catch (final IllegalArgumentException ex) {
                     Log.error("IllegalArgumentException from createBitmap() for iconName=" + cssName + ", x=" + x + ", y=" + y + ", icons.width=" + icons.getWidth() + ", icons.height=" + icons.getHeight());
@@ -417,12 +453,12 @@ class IconsCache {
             return null;
         }
 
-        Bitmap result = mIcons.get(iconName);
+        Bitmap result = mWorkflowIcons.get(iconName);
 
         //Reload it if it is no longer in the cache:
         if (result == null) {
-            reloadIcon(iconName);
-            result = mIcons.get(iconName);
+            reloadIcon(iconName, mWorkflowIcons);
+            result = mWorkflowIcons.get(iconName);
         }
 
         return result;
