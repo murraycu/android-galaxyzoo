@@ -155,7 +155,13 @@ class IconsCache {
 
         final Bitmap bitmap = BitmapFactory.decodeFile(cacheFileUri);
         if (bitmap == null) {
-            return;
+            //The file contents are invalid.
+            //Maybe the download was incomplete or something else odd happened.
+            //Anyway, we should stop trying to use it:
+            final File file = new File(cacheFileUri);
+            if(!file.delete()) {
+                Log.error("IconsCache.reloadIcon(): Failed to delete invalid cache file.");
+            }
         }
 
         mIcons.put(cssName, bitmap);
