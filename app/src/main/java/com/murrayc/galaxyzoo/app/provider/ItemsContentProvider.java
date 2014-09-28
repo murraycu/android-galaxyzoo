@@ -1355,11 +1355,11 @@ public class ItemsContentProvider extends ContentProvider {
      * @param item
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private long addSubject(final Subject item, boolean asyncFileDownloads) {
+    private void addSubject(final Subject item, boolean asyncFileDownloads) {
         if (subjectIsInDatabase(item.mId)) {
             //It is already in the database.
             //TODO: Update the row?
-            return 0;
+            return;
         }
 
         final SQLiteDatabase db = getDb();
@@ -1406,7 +1406,6 @@ public class ItemsContentProvider extends ContentProvider {
                     ContentUris.withAppendedId(
                             Item.ITEMS_URI, rowId);
             getContext().getContentResolver().notifyChange(insertUri, null);
-            return rowId;
         } else {
             throw new IllegalStateException("could not insert " +
                     "content values: " + values);
