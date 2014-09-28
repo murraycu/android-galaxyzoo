@@ -59,6 +59,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -618,17 +619,17 @@ public class ItemsContentProvider extends ContentProvider {
                 // it in the table row for later use.
                 final ContentValues valuesComplete = new ContentValues(values);
 
-                Uri fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_STANDARD_URI), true /* async download */);
+                Uri fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_STANDARD_URI), subjectId, ImageType.STANDARD, true /* async download */);
                 if (fileUri != null) {
                     valuesComplete.put(Item.Columns.LOCATION_STANDARD_URI, fileUri.toString());
                 }
 
-                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_THUMBNAIL_URI), true /* async download */);
+                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_THUMBNAIL_URI), subjectId, ImageType.THUMBNAIL, true /* async download */);
                 if (fileUri != null) {
                     valuesComplete.put(Item.Columns.LOCATION_THUMBNAIL_URI, fileUri.toString());
                 }
 
-                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_INVERTED_URI), true /* async */);
+                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_INVERTED_URI), subjectId, ImageType.INVERTED, true /* async */);
                 if (fileUri != null) {
                     valuesComplete.put(Item.Columns.LOCATION_INVERTED_URI, fileUri.toString());
                 }
@@ -701,7 +702,7 @@ public class ItemsContentProvider extends ContentProvider {
      * @param uriOfFileToCache   This may be null if the new file should be empty.
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private Uri createFileUri(final String uriOfFileToCache, boolean asyncFileDownloads) {
+    private Uri createFileUri(final String uriOfFileToCache, final String subjectId, final ImageType imageType, boolean asyncFileDownloads) {
         final SQLiteDatabase db = getDb();
         final long fileId = db.insertOrThrow(DatabaseHelper.TABLE_NAME_FILES,
                 DatabaseHelper.FilesDbColumns.FILE_DATA, null);
@@ -749,7 +750,10 @@ public class ItemsContentProvider extends ContentProvider {
 
         //Actually cache the URI's data in the local file:
         if (uriOfFileToCache != null) {
-            cacheUriToFile(uriOfFileToCache, realFileUri, asyncFileDownloads);
+            if(!(cacheUriToFile(uriOfFileToCache, realFileUri, subjectId, imageType, asyncFileDownloads))) {
+                Log.error("createFileUri(): cacheUriToFile() failed.");
+                return null;
+            }
         }
 
 
@@ -761,15 +765,49 @@ public class ItemsContentProvider extends ContentProvider {
      *
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri, boolean asyncFileDownloads) {
+    private boolean cacheUriToFile(final String uriFileToCache, final String cacheFileUri, final String subjectId, final ImageType imageType, boolean asyncFileDownloads) {
         throwIfNoNetwork();
 
         if (asyncFileDownloads) {
-            final HttpUtils.FileCacheAsyncTask task = new HttpUtils.FileCacheAsyncTask();
+            //TODO: Pass the subjectId and imageType:
+            final FileCacheAsyncTask task = new FileCacheAsyncTask(this, subjectId, imageType);
             task.execute(uriFileToCache, cacheFileUri);
+            return true;
         } else {
-            HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri);
+            return HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri);
         }
+    }
+
+    private boolean markImageDownloadAsDownloaded(final String subjectId, final ImageType imageType) {
+        String fieldName = null;
+        switch(imageType) {
+            case STANDARD:
+                fieldName = DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED;
+                break;
+            case THUMBNAIL:
+                fieldName = DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED;
+                break;
+            case INVERTED:
+                fieldName = DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED;
+                break;
+            default:
+                Log.error("markImageDownloadAsDownloaded(): Unexpected imageType.");
+        }
+
+        final String whereClause = DatabaseHelper.ItemsDbColumns.SUBJECT_ID + " = ?"; //We use ? to avoid SQL Injection.
+        final String[] selectionArgs = {subjectId};
+
+        final ContentValues values = new ContentValues();
+        values.put(fieldName, 1);
+
+        final int affected = getDb().update(DatabaseHelper.TABLE_NAME_ITEMS, values,
+                whereClause, selectionArgs);
+        if (affected != 1) {
+            Log.error("markImageDownloadAsDownloaded(): Failed to mark image download as done.");
+            return false;
+        }
+
+        return true;
     }
 
     /*
@@ -1322,19 +1360,34 @@ public class ItemsContentProvider extends ContentProvider {
         values.put(DatabaseHelper.ItemsDbColumns.ZOONIVERSE_ID, item.mZooniverseId);
 
         //Get (our) local content URIs of cache files instead of the remote URIs for the images:
-        Uri fileUri = createFileUri(item.mLocationStandard, asyncFileDownloads);
+        Uri fileUri = createFileUri(item.mLocationStandard, item.mId, ImageType.STANDARD, asyncFileDownloads);
         if (fileUri != null) {
             values.put(DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI, fileUri.toString());
+
+            //It definitely finished downloading if we did it synchronously and we were given a URI:
+            if(!asyncFileDownloads) {
+                values.put(DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED, 1);
+            }
         }
 
-        fileUri = createFileUri(item.mLocationThumbnail, asyncFileDownloads);
+        fileUri = createFileUri(item.mLocationThumbnail, item.mId, ImageType.THUMBNAIL, asyncFileDownloads);
         if (fileUri != null) {
             values.put(DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI, fileUri.toString());
+
+            //It definitely finished downloading if we did it synchronously and we were given a URI:
+            if(!asyncFileDownloads) {
+                values.put(DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED, 1);
+            }
         }
 
-        fileUri = createFileUri(item.mLocationInverted, asyncFileDownloads);
+        fileUri = createFileUri(item.mLocationInverted, item.mId, ImageType.INVERTED, asyncFileDownloads);
         if (fileUri != null) {
             values.put(DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI, fileUri.toString());
+
+            //It definitely finished downloading if we did it synchronously and we were given a URI:
+            if(!asyncFileDownloads) {
+                values.put(DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED, 1);
+            }
         }
 
         final long rowId = db.insert(DatabaseHelper.TABLE_NAME_ITEMS,
@@ -1764,6 +1817,49 @@ public class ItemsContentProvider extends ContentProvider {
 
         public String getName() {
             return name;
+        }
+    }
+
+    public static class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
+
+        private final String subjectId;
+        private final ImageType imageType;
+        private final WeakReference<ItemsContentProvider> providerReference;
+
+        public FileCacheAsyncTask(final ItemsContentProvider provider, final String subjectId, ImageType imageType) {
+            this.subjectId = subjectId;
+            this.imageType = imageType;
+            this.providerReference = new WeakReference<>(provider);
+        }
+
+        @Override
+        protected Boolean doInBackground(final String... params) {
+            if (params.length < 2) {
+                Log.error("LoginTask: not enough params.");
+                return false;
+            }
+
+            //TODO: Just set these in the constructor?
+            final String uriFileToCache = params[0];
+            final String cacheFileUri = params[1];
+
+            return HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                if (providerReference != null) {
+                    final ItemsContentProvider provider = providerReference.get();
+                    if (provider != null) {
+                        if(!provider.markImageDownloadAsDownloaded(subjectId, imageType)) {
+                            Log.error("FileCacheAsyncTask(): onPostExecute(): markImageDownloadAsDownloaded() failed.");
+                        }
+                    }
+                }
+            }
+
+            super.onPostExecute(result);
         }
     }
 

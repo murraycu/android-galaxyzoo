@@ -170,29 +170,4 @@ public class HttpUtils {
         connection.setRequestProperty(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
     }
 
-    public static class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
-
-        public FileCacheAsyncTask() {
-
-        }
-
-        @Override
-        protected Boolean doInBackground(final String... params) {
-            if (params.length < 2) {
-                Log.error("LoginTask: not enough params.");
-                return false;
-            }
-
-            //TODO: Just set these in the constructor?
-            final String uriFileToCache = params[0];
-            final String cacheFileUri = params[1];
-
-            return HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-        }
-    }
 }
