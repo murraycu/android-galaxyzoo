@@ -56,8 +56,12 @@ public class SubjectFragment extends ItemFragment
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
     private static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 1;
-    private static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 2;
-    private final String[] mColumns = {Item.Columns._ID, Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_INVERTED_URI};
+    private static final int COLUMN_INDEX_LOCATION_STANDARD_DOWNLOADED = 2;
+    private static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 3;
+    private static final int COLUMN_INDEX_LOCATION_INVERTED_DOWNLOADED = 4;
+    private final String[] mColumns = {Item.Columns._ID,
+            Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_STANDARD_DOWNLOADED,
+            Item.Columns.LOCATION_INVERTED_URI, Item.Columns.LOCATION_INVERTED_DOWNLOADED};
     private Cursor mCursor;
     private View mRootView;
     private ImageView mImageView;
@@ -206,14 +210,24 @@ public class SubjectFragment extends ItemFragment
             return;
 
         final boolean inverted = getInverted();
-        String imageUriStr;
+        String imageUriStr = null;
         if (inverted) {
-            imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_INVERTED_URI);
+            if (mCursor.getInt(COLUMN_INDEX_LOCATION_INVERTED_DOWNLOADED) == 1) {
+                imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_INVERTED_URI);
+            }
         } else {
-            imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI);
+            if (mCursor.getInt(COLUMN_INDEX_LOCATION_STANDARD_DOWNLOADED) == 1) {
+                imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI);
+            }
         }
 
-        UiUtils.fillImageViewFromContentUri(activity, imageUriStr, mImageView);
+        if(!TextUtils.isEmpty(imageUriStr)) {
+            UiUtils.fillImageViewFromContentUri(activity, imageUriStr, mImageView);
+        } else {
+            //Make it blank,
+            //to avoid still showing the picture from the previous subject:
+            mImageView.setImageResource(android.R.color.transparent);
+        }
     }
 
     private boolean getInverted() {
