@@ -1192,7 +1192,7 @@ public class ItemsContentProvider extends ContentProvider {
         return Integer.parseInt(str);
     }
 
-    private Cursor queryItemNext(String[] projection, String selection, String[] selectionArgs, String orderBy) {
+    private Cursor queryItemNext(final String[] projection, final String selection, final String[] selectionArgs, final String orderBy) {
         Cursor c;// query the database for a single  item that is not yet done:
         final String whereClause = getWhereClauseForNotDone();
 
@@ -1203,11 +1203,20 @@ public class ItemsContentProvider extends ContentProvider {
         builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
         builder.setProjectionMap(sItemsProjectionMap);
         builder.appendWhere(whereClause);
+
+        //Default to the order of creation,
+        //so we are more likely to get the first record that was created synchronously
+        //so we could be sure that it was fully loaded.
+        String orderByToUse = orderBy;
+        if (orderBy == null || orderBy.isEmpty()) {
+            orderByToUse = DatabaseHelper.ItemsDbColumns._ID + " ASC";
+        }
+
         // We set the limit to MIN_CACHE_COUNT + 1, instead of 1, so we know when to do the work to get
         // some more in the background, ready for the next time that we need a next one.
         c = builder.query(getDb(), projection,
                 selection, selectionArgs,
-                null, null, orderBy, Integer.toString(getMinCacheSize() + 1)); //TODO: Is Integer.toString locale-dependent?
+                null, null, orderByToUse, Integer.toString(getMinCacheSize() + 1)); //TODO: Is Integer.toString locale-dependent?
         return c;
     }
 
