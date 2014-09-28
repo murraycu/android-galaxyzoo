@@ -778,7 +778,7 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    private boolean markImageDownloadAsDownloaded(final String subjectId, final ImageType imageType) {
+    private boolean markImageAsDownloaded(final String subjectId, final ImageType imageType) {
         String fieldName = null;
         switch(imageType) {
             case STANDARD:
@@ -791,7 +791,7 @@ public class ItemsContentProvider extends ContentProvider {
                 fieldName = DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED;
                 break;
             default:
-                Log.error("markImageDownloadAsDownloaded(): Unexpected imageType.");
+                Log.error("markImageAsDownloaded(): Unexpected imageType.");
         }
 
         final String whereClause = DatabaseHelper.ItemsDbColumns.SUBJECT_ID + " = ?"; //We use ? to avoid SQL Injection.
@@ -803,7 +803,7 @@ public class ItemsContentProvider extends ContentProvider {
         final int affected = getDb().update(DatabaseHelper.TABLE_NAME_ITEMS, values,
                 whereClause, selectionArgs);
         if (affected != 1) {
-            Log.error("markImageDownloadAsDownloaded(): Failed to mark image download as done.");
+            Log.error("markImageAsDownloaded(): Failed to mark image download as done.");
             return false;
         }
 
@@ -1860,8 +1860,8 @@ public class ItemsContentProvider extends ContentProvider {
                 if (providerReference != null) {
                     final ItemsContentProvider provider = providerReference.get();
                     if (provider != null) {
-                        if(!provider.markImageDownloadAsDownloaded(subjectId, imageType)) {
-                            Log.error("FileCacheAsyncTask(): onPostExecute(): markImageDownloadAsDownloaded() failed.");
+                        if(!provider.markImageAsDownloaded(subjectId, imageType)) {
+                            Log.error("FileCacheAsyncTask(): onPostExecute(): markImageAsDownloaded() failed.");
                         }
                     }
                 }
