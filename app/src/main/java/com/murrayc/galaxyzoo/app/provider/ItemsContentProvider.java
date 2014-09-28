@@ -732,7 +732,7 @@ public class ItemsContentProvider extends ContentProvider {
 
         //Put the value for the _data column in the files table:
         //This will be used implicitly by openOutputStream() and openInputStream():
-        ContentValues valuesUpdate = new ContentValues();
+        final ContentValues valuesUpdate = new ContentValues();
         valuesUpdate.put(DatabaseHelper.FilesDbColumns.FILE_DATA, realFileUri);
         db.update(DatabaseHelper.TABLE_NAME_FILES, valuesUpdate,
                 BaseColumns._ID + " = ?", new String[]{Double.toString(fileId)});
