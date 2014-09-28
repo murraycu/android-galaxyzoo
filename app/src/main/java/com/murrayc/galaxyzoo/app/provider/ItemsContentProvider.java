@@ -618,24 +618,16 @@ public class ItemsContentProvider extends ContentProvider {
                 // Even if no URI is provided by the client, we still create the local URI and put
                 // it in the table row for later use.
                 final ContentValues valuesComplete = new ContentValues(values);
-
-                Uri fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_STANDARD_URI), subjectId, ImageType.STANDARD, true /* async download */);
-                if (fileUri != null) {
-                    valuesComplete.put(Item.Columns.LOCATION_STANDARD_URI, fileUri.toString());
-                }
-
-                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_THUMBNAIL_URI), subjectId, ImageType.THUMBNAIL, true /* async download */);
-                if (fileUri != null) {
-                    valuesComplete.put(Item.Columns.LOCATION_THUMBNAIL_URI, fileUri.toString());
-                }
-
-                fileUri = createFileUri(values.getAsString(Item.Columns.LOCATION_INVERTED_URI), subjectId, ImageType.INVERTED, true /* async */);
-                if (fileUri != null) {
-                    valuesComplete.put(Item.Columns.LOCATION_INVERTED_URI, fileUri.toString());
-                }
+                final List<CreatedFileUri> listFiles = createFileUrisForImages(valuesComplete,
+                        subjectId,
+                        values.getAsString(Item.Columns.LOCATION_STANDARD_URI),
+                        values.getAsString(Item.Columns.LOCATION_THUMBNAIL_URI),
+                        values.getAsString(Item.Columns.LOCATION_INVERTED_URI));
 
                 uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, valuesComplete,
                         sItemsProjectionMap, Item.ITEMS_URI);
+
+                cacheUrisToFiles(subjectId, listFiles, true /* async */);
 
                 break;
             }
@@ -698,11 +690,28 @@ public class ItemsContentProvider extends ContentProvider {
         return null;
     }
 
-    /**
+    class CreatedFileUri {
+        final String subjectId;
+        final ImageType imageType;
+        final String remoteUri;
+        final Uri contentUri;
+        final String localUri;
+
+        CreatedFileUri(final String subjectId, final ImageType imageType, final String remoteUri, final Uri contentUri, final String localUri) {
+            this.subjectId = subjectId;
+            this.imageType = imageType;
+            this.remoteUri = remoteUri;
+            this.contentUri = contentUri;
+            this.localUri = localUri;
+        }
+    }
+
+    /** This returns both the content URI and the local URI, just to avoid the caller needing to
+     * look the local one up again.
+     *
      * @param uriOfFileToCache   This may be null if the new file should be empty.
-     * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private Uri createFileUri(final String uriOfFileToCache, final String subjectId, final ImageType imageType, boolean asyncFileDownloads) {
+    private CreatedFileUri createFileUri(final String uriOfFileToCache, final String subjectId, final ImageType imageType) {
         final SQLiteDatabase db = getDb();
         final long fileId = db.insertOrThrow(DatabaseHelper.TABLE_NAME_FILES,
                 DatabaseHelper.FilesDbColumns.FILE_DATA, null);
@@ -717,7 +726,7 @@ public class ItemsContentProvider extends ContentProvider {
 
                 //Actually create an empty file there -
                 //otherwise when we try to write to it via openOutputStream()
-                //we will get a FileNotFoundException.
+               //we will get a FileNotFoundException.
                 realFile.createNewFile();
 
                 realFileUri = realFile.getAbsolutePath();
@@ -748,16 +757,7 @@ public class ItemsContentProvider extends ContentProvider {
             //TODO? getContext().getContentResolver().notifyChange(fileId, null);
         }
 
-        //Actually cache the URI's data in the local file:
-        if (uriOfFileToCache != null) {
-            if(!(cacheUriToFile(uriOfFileToCache, realFileUri, subjectId, imageType, asyncFileDownloads))) {
-                Log.error("createFileUri(): cacheUriToFile() failed.");
-                return null;
-            }
-        }
-
-
-        return fileUri;
+        return new CreatedFileUri(subjectId, imageType, uriOfFileToCache, fileUri, realFileUri);
     }
 
     /**
@@ -774,7 +774,12 @@ public class ItemsContentProvider extends ContentProvider {
             task.execute(uriFileToCache, cacheFileUri);
             return true;
         } else {
-            return HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri);
+            if(HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri)) {
+                return markImageAsDownloaded(subjectId, imageType);
+            } else {
+                Log.error("cacheUriToFile(): cacheUriToFileSync(): failed.");
+                return false;
+            }
         }
     }
 
@@ -1372,44 +1377,53 @@ public class ItemsContentProvider extends ContentProvider {
         values.put(DatabaseHelper.ItemsDbColumns.ZOONIVERSE_ID, item.mZooniverseId);
 
         //Get (our) local content URIs of cache files instead of the remote URIs for the images:
-        Uri fileUri = createFileUri(item.mLocationStandard, item.mId, ImageType.STANDARD, asyncFileDownloads);
-        if (fileUri != null) {
-            values.put(DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI, fileUri.toString());
-
-            //It definitely finished downloading if we did it synchronously and we were given a URI:
-            if(!asyncFileDownloads) {
-                values.put(DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED, 1);
-            }
-        }
-
-        fileUri = createFileUri(item.mLocationThumbnail, item.mId, ImageType.THUMBNAIL, asyncFileDownloads);
-        if (fileUri != null) {
-            values.put(DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI, fileUri.toString());
-
-            //It definitely finished downloading if we did it synchronously and we were given a URI:
-            if(!asyncFileDownloads) {
-                values.put(DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED, 1);
-            }
-        }
-
-        fileUri = createFileUri(item.mLocationInverted, item.mId, ImageType.INVERTED, asyncFileDownloads);
-        if (fileUri != null) {
-            values.put(DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI, fileUri.toString());
-
-            //It definitely finished downloading if we did it synchronously and we were given a URI:
-            if(!asyncFileDownloads) {
-                values.put(DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED, 1);
-            }
-        }
+        final List<CreatedFileUri> listFiles = createFileUrisForImages(values, item.mId, item.mLocationStandard, item.mLocationThumbnail, item.mLocationInverted);
 
         final long rowId = db.insert(DatabaseHelper.TABLE_NAME_ITEMS,
                 DatabaseHelper.ItemsDbColumns._ID, values);
-        if (rowId >= 0) {
-            notifyRowChangeById(rowId);
-        } else {
+        if (rowId < 0) {
             throw new IllegalStateException("could not insert " +
                     "content values: " + values);
         }
+
+        cacheUrisToFiles(item.mId, listFiles, asyncFileDownloads);
+
+        notifyRowChangeById(rowId);
+    }
+
+    private void cacheUrisToFiles(final String subjectId, final List<CreatedFileUri> listFiles, boolean asyncFileDownloads) {
+        //Actually cache the URIs' data in the local files:
+        //This will mark the data as fully downloaded by setting the *Downloaded boolean fields,
+        //so we do this only after creating the items record.
+        for(final CreatedFileUri fileUris : listFiles) {
+            if(!(cacheUriToFile(fileUris.remoteUri, fileUris.localUri, subjectId, fileUris.imageType, asyncFileDownloads))) {
+                Log.error("cacheUrisToFiles(): cacheUriToFile() failed.");
+            }
+        }
+    }
+
+    private List<CreatedFileUri> createFileUrisForImages(final ContentValues values, final String subjectId, final String locationStandard, final String locationThumbnail, final String locationInverted) {
+        List<CreatedFileUri> listFiles = new ArrayList<>();
+
+        CreatedFileUri fileUri = createFileUri(locationStandard, subjectId, ImageType.STANDARD);
+        if (fileUri != null) {
+            values.put(DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI, fileUri.contentUri.toString());
+            listFiles.add(fileUri);
+        }
+
+        fileUri = createFileUri(locationThumbnail, subjectId, ImageType.THUMBNAIL);
+        if (fileUri != null) {
+            values.put(DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI, fileUri.contentUri.toString());
+            listFiles.add(fileUri);
+        }
+
+        fileUri = createFileUri(locationInverted, subjectId, ImageType.INVERTED);
+        if (fileUri != null) {
+            values.put(DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI, fileUri.contentUri.toString());
+            listFiles.add(fileUri);
+        }
+
+        return listFiles;
     }
 
     private void notifyRowChangeBySubjectId(final String subjectID) {
