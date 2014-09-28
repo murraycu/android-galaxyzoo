@@ -194,8 +194,11 @@ public class ItemsContentProvider extends ContentProvider {
         sItemsProjectionMap.put(Item.Columns.SUBJECT_ID, DatabaseHelper.ItemsDbColumns.SUBJECT_ID);
         sItemsProjectionMap.put(Item.Columns.ZOONIVERSE_ID, DatabaseHelper.ItemsDbColumns.ZOONIVERSE_ID);
         sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_DOWNLOADED, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED);
         sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL_URI, DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED, DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED);
         sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_URI, DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_DOWNLOADED, DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED);
         sItemsProjectionMap.put(Item.Columns.FAVORITE, DatabaseHelper.ItemsDbColumns.FAVORITE);
         sItemsProjectionMap.put(Item.Columns.DATETIME_DONE, DatabaseHelper.ItemsDbColumns.DATETIME_DONE);
 
@@ -1609,7 +1612,7 @@ public class ItemsContentProvider extends ContentProvider {
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         //After the first official release, try to preserve data when changing this. See onUpgrade()
-        private static final int DATABASE_VERSION = 17;
+        private static final int DATABASE_VERSION = 18;
 
         private static final String DATABASE_NAME = "items.db";
 
@@ -1658,8 +1661,11 @@ public class ItemsContentProvider extends ContentProvider {
                     ItemsDbColumns.SUBJECT_ID + " TEXT, " +
                     ItemsDbColumns.ZOONIVERSE_ID + " TEXT, " +
                     ItemsDbColumns.LOCATION_STANDARD_URI + " TEXT, " +
+                    ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.LOCATION_THUMBNAIL_URI + " TEXT, " +
+                    ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.LOCATION_INVERTED_URI + " TEXT, " +
+                    ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.FAVORITE + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.DATETIME_DONE + " TEXT)";
 
@@ -1700,8 +1706,11 @@ public class ItemsContentProvider extends ContentProvider {
             static final String SUBJECT_ID = "subjectId";
             static final String ZOONIVERSE_ID = "zooniverseId";
             static final String LOCATION_STANDARD_URI = "locationStandardUri"; //The content URI for a file in the files table.
+            static final String LOCATION_STANDARD_DOWNLOADED = "locationStandardDownloaded"; //1 or 0. Whether the file has finished downloading.
             static final String LOCATION_THUMBNAIL_URI = "locationThumbnailUri"; //The content URI for a file in the files table.
+            static final String LOCATION_THUMBNAIL_DOWNLOADED = "locationThumbnailDownloaded"; //1 or 0. Whether the file has finished downloading.
             static final String LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
+            static final String LOCATION_INVERTED_DOWNLOADED = "locationInvertedDownloaded"; //1 or 0. Whether the file has finished downloading.
             static final String FAVORITE = "favorite"; //1 or 0. Whether the user has marked this as a favorite.
             static final String DATETIME_DONE = "dataTimeDone"; //An ISO8601 string ("YYYY-MM-DD HH:MM:SS.SSS").
         }
