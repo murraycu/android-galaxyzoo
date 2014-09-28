@@ -52,6 +52,7 @@ class ListCursorAdapter extends CursorAdapter {
 
         //final String subjectId = cursor.getString(ListFragment.COLUMN_INDEX_SUBJECT_ID);
         final String imageUriStr = cursor.getString(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_URI);
+        final boolean thumbnailDownloaded = (cursor.getInt(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_DONE) == 1);
         final boolean done = (cursor.getInt(ListFragment.COLUMN_INDEX_DONE) == 1);
         final boolean uploaded = (cursor.getInt(ListFragment.COLUMN_INDEX_UPLOADED) == 1);
         final boolean favorite = (cursor.getInt(ListFragment.COLUMN_INDEX_FAVOURITE) == 1);
@@ -69,8 +70,12 @@ class ListCursorAdapter extends CursorAdapter {
         */
 
         if (!TextUtils.isEmpty(imageUriStr)) {
-            final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);
-            UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
+            if (thumbnailDownloaded) {
+                final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);
+                UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
+            } else {
+                //TODO: Make sure it gets updated later?
+            }
 
             final LinearLayout iconsPanel = (LinearLayout) view.findViewById(R.id.itemIconsPanel);
 

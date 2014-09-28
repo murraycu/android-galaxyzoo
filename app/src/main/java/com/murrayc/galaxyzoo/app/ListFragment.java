@@ -54,9 +54,10 @@ public class ListFragment extends ZooFragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     static final int COLUMN_INDEX_LOCATION_THUMBNAIL_URI = 1;
-    static final int COLUMN_INDEX_DONE = 2;
-    static final int COLUMN_INDEX_UPLOADED = 3;
-    static final int COLUMN_INDEX_FAVOURITE = 4;
+    static final int COLUMN_INDEX_LOCATION_THUMBNAIL_DONE = 2;
+    static final int COLUMN_INDEX_DONE = 3;
+    static final int COLUMN_INDEX_UPLOADED = 4;
+    static final int COLUMN_INDEX_FAVOURITE = 5;
     private static final int URL_LOADER = 0;
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
@@ -88,7 +89,8 @@ public class ListFragment extends ZooFragment
      */
     private Callbacks mCallbacks = sDummyCallbacks;
     private final String[] mColumns = {Item.Columns._ID,
-            Item.Columns.LOCATION_THUMBNAIL_URI, Item.Columns.DONE, Item.Columns.UPLOADED, Item.Columns.FAVORITE};
+            Item.Columns.LOCATION_THUMBNAIL_URI,Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED,
+            Item.Columns.DONE, Item.Columns.UPLOADED, Item.Columns.FAVORITE};
     private View mRootView;
     private ListCursorAdapter mAdapter;
     /**
