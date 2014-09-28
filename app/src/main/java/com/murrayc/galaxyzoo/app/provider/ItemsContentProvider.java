@@ -602,6 +602,12 @@ public class ItemsContentProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_ITEMS:
             case MATCHER_ID_ITEM: {
+                //Refuse to insert without a Subject ID:
+                final String subjectId = values.getAsString(Item.Columns.SUBJECT_ID);
+                if(TextUtils.isEmpty(subjectId)) {
+                    throw new IllegalArgumentException("Refusing to insert without a SubjectID: " + uri);
+                }
+
                 // Get (our) local content URIs for the local caches of any (or any future) remote URIs for the images:
                 // Notice that we allow the client to provide a remote URI for each but we then change
                 // it to our local URI of our local cache of that remote file.
