@@ -1,7 +1,6 @@
 package com.murrayc.galaxyzoo.app.provider;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
