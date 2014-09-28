@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 /**
  * Created by murrayc on 5/16/14.
@@ -70,10 +71,14 @@ class ListCursorAdapter extends CursorAdapter {
         */
 
         if (!TextUtils.isEmpty(imageUriStr)) {
+            final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.imageProgressBar);
+
             if (thumbnailDownloaded) {
                 final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);
                 UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
+                progressBar.setVisibility(View.GONE);
             } else {
+                progressBar.setVisibility(View.VISIBLE);
                 //TODO: Make sure it gets updated later?
             }
 
