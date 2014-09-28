@@ -805,6 +805,9 @@ public class ItemsContentProvider extends ContentProvider {
         if (affected != 1) {
             Log.error("markImageAsDownloaded(): Failed to mark image download as done.");
             return false;
+        } else {
+            //Let the ListView (or other UI) know that there is more to display.
+            notifyRowChangeBySubjectId(subjectId);
         }
 
         return true;
@@ -1402,14 +1405,38 @@ public class ItemsContentProvider extends ContentProvider {
         final long rowId = db.insert(DatabaseHelper.TABLE_NAME_ITEMS,
                 DatabaseHelper.ItemsDbColumns._ID, values);
         if (rowId >= 0) {
-            final Uri insertUri =
-                    ContentUris.withAppendedId(
-                            Item.ITEMS_URI, rowId);
-            getContext().getContentResolver().notifyChange(insertUri, null);
+            notifyRowChangeById(rowId);
         } else {
             throw new IllegalStateException("could not insert " +
                     "content values: " + values);
         }
+    }
+
+    private void notifyRowChangeBySubjectId(final String subjectID) {
+        final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
+        builder.appendWhere(Item.Columns.SUBJECT_ID + " = ?"); //We use ? to avoid SQL Injection.
+        final String[] projection = {DatabaseHelper.ItemsDbColumns._ID};
+        final String[] selectionArgs = {subjectID}; //TODO: locale-independent?
+        final Cursor c = builder.query(getDb(), projection,
+                null, selectionArgs,
+                null, null, null);
+
+        long itemId = 0;
+        if (c.moveToFirst()) {
+            itemId = c.getLong(0);
+        }
+
+        c.close();
+
+        notifyRowChangeById(itemId);
+    }
+
+    private void notifyRowChangeById(long rowId) {
+        final Uri insertUri =
+                ContentUris.withAppendedId(
+                        Item.ITEMS_URI, rowId);
+        getContext().getContentResolver().notifyChange(insertUri, null);
     }
 
     //TODO: Reimplement this, in GalaxyZooResponseHandler, as an insert(uri) call,
