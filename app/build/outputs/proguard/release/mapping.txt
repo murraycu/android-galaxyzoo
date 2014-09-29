@@ -1895,12 +1895,13 @@ com.murrayc.galaxyzoo.app.QuestionFragment -> com.murrayc.galaxyzoo.app.Question
     void makeButtonTextSmall(android.app.Activity,android.widget.Button) -> a
     android.widget.Button createAnswerButton(android.app.Activity,com.murrayc.galaxyzoo.app.DecisionTree$Answer) -> a
     void onAnswerButtonClicked(java.lang.String,java.lang.String) -> a
+    void finishOrRestartClassification() -> M
     void saveClassification(com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress) -> a
-    java.lang.String getCurrentDateTimeAsIso8601() -> M
-    void updateFromCursor() -> N
+    java.lang.String getCurrentDateTimeAsIso8601() -> N
+    void updateFromCursor() -> O
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    void updateIfReady() -> O
+    void updateIfReady() -> P
     void onLoaderReset(android.support.v4.content.Loader) -> a
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.QuestionFragment) -> a
@@ -2140,6 +2141,7 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider -> com.murrayc.galaxyzoo
     int mUploadsInProgress -> f
     com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$DatabaseHelper mOpenDbHelper -> g
     boolean mRegularTasksNecessary -> h
+    boolean mAlreadyQueuedRegularTasks -> i
     com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$LoginResult parseLoginResponseContent(java.io.InputStream) -> a
     java.util.List parseQueryResponseContent(java.io.InputStream) -> b
     com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$Subject parseQueryJsonObjectSubject(org.json.JSONObject) -> a
@@ -2201,13 +2203,14 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider -> com.murrayc.galaxyzoo
     void markItemAsUploaded(java.lang.String) -> e
     boolean access$000(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider) -> a
     void access$100(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider) -> b
-    boolean access$500(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.lang.String,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
-    java.util.List access$600(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,int) -> a
-    void access$700(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.util.List) -> a
-    java.lang.String access$800(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.lang.String,java.lang.String) -> a
-    android.database.sqlite.SQLiteDatabase access$900(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider) -> c
-    boolean access$1000(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.net.HttpURLConnection,java.util.List) -> a
-    void access$1100(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,boolean,java.lang.String) -> a
+    boolean access$202(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,boolean) -> a
+    boolean access$600(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.lang.String,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
+    java.util.List access$700(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,int) -> a
+    void access$800(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.util.List) -> a
+    java.lang.String access$900(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.lang.String,java.lang.String) -> a
+    android.database.sqlite.SQLiteDatabase access$1000(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider) -> c
+    boolean access$1100(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.net.HttpURLConnection,java.util.List) -> a
+    void access$1200(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,boolean,java.lang.String) -> a
 com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$1 -> com.murrayc.galaxyzoo.app.provider.f:
     com.murrayc.galaxyzoo.app.provider.ItemsContentProvider this$0 -> a
     void run() -> run
