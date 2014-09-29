@@ -11,4 +11,9 @@
         android:icon="@drawable/ic_action_favorite"
         android:title="@string/action_favorite"
         android:checkable="true" />
+    <item
+        android:id="@+id/option_menu_item_restart"
+        android:icon="@drawable/ic_action_undo"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_restart"  />
 </menu>
