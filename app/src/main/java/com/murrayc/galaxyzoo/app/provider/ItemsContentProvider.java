@@ -224,6 +224,7 @@ public class ItemsContentProvider extends ContentProvider {
     private int mUploadsInProgress = 0;
     private DatabaseHelper mOpenDbHelper;
     private boolean mRegularTasksNecessary = true;
+    private boolean mAlreadyQueuedRegularTasks = false;
 
     public ItemsContentProvider() {
         //Download enough subjects:
@@ -432,6 +433,11 @@ public class ItemsContentProvider extends ContentProvider {
      * that necessary.
      */
     private void queueRegularTasks() {
+        if (mAlreadyQueuedRegularTasks) {
+            return;
+        }
+
+        mAlreadyQueuedRegularTasks = true;
 
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
@@ -444,6 +450,8 @@ public class ItemsContentProvider extends ContentProvider {
                     //Keep working until it is definitely done:
                     queueRegularTasks();
                 }
+
+                mAlreadyQueuedRegularTasks = false;
             }
         };
 
