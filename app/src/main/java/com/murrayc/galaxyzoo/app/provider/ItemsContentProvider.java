@@ -664,6 +664,8 @@ public class ItemsContentProvider extends ContentProvider {
 
                 cacheUrisToFiles(subjectId, listFiles, true /* async */);
 
+                queueRegularTasks();
+
                 break;
             }
             case MATCHER_ID_CLASSIFICATION_ANSWERS:
@@ -685,7 +687,6 @@ public class ItemsContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("unsupported uri: " + uri);
         }
 
-        queueRegularTasks();
         return uriInserted;
     }
 
@@ -1347,6 +1348,7 @@ public class ItemsContentProvider extends ContentProvider {
             case MATCHER_ID_ITEMS:
                 affected = updateMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, values, sItemsProjectionMap,
                         selection, selectionArgs);
+                queueRegularTasks();
                 break;
 
             case MATCHER_ID_ITEM: {
@@ -1357,6 +1359,7 @@ public class ItemsContentProvider extends ContentProvider {
                 affected = updateMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, values, sItemsProjectionMap,
                         prependIdToSelection(selection),
                         prependToArray(selectionArgs, uriParts.itemId));
+                queueRegularTasks();
                 break;
             }
 
@@ -1401,8 +1404,6 @@ public class ItemsContentProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
-
-        queueRegularTasks();
 
         getContext().getContentResolver().notifyChange(uri, null);
 
