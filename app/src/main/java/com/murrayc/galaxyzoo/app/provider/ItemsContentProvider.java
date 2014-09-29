@@ -426,6 +426,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private void startRegularTasks() {
+
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             @Override
@@ -457,7 +458,9 @@ public class ItemsContentProvider extends ContentProvider {
         final Cursor c = db.rawQuery("SELECT COUNT (*) FROM " + DatabaseHelper.TABLE_NAME_ITEMS +
                 " WHERE " + getWhereClauseForNotDone(), null);
         c.moveToFirst();
-        return c.getInt(0);
+        final int result = c.getInt(0);
+        c.close();
+        return result;
     }
 
     private int getUploadedCount() {
@@ -465,7 +468,9 @@ public class ItemsContentProvider extends ContentProvider {
         final Cursor c = db.rawQuery("SELECT COUNT (*) FROM " + DatabaseHelper.TABLE_NAME_ITEMS +
                 " WHERE " + getWhereClauseForUploaded(), null);
         c.moveToFirst();
-        return c.getInt(0);
+        final int result = c.getInt(0);
+        c.close();
+        return result;
     }
 
     @Override
@@ -915,6 +920,8 @@ public class ItemsContentProvider extends ContentProvider {
             final UploadAsyncTask task = new UploadAsyncTask();
             task.execute(itemId, subjectId, authName, authApiKey);
         }
+
+        c.close();
     }
 
     private void removeOldSubjects() {
@@ -948,6 +955,8 @@ public class ItemsContentProvider extends ContentProvider {
                     removeItem(itemId, imageUris);
                 }
             }
+
+            c.close();
         }
     }
 
@@ -975,6 +984,8 @@ public class ItemsContentProvider extends ContentProvider {
                 final File realFile = new File(realFileUri);
                 realFile.delete();
             }
+
+            c.close();
 
             final String[] whereArgs = {strFileId};
             if (db.delete(DatabaseHelper.TABLE_NAME_FILES,
@@ -1201,7 +1212,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private Cursor queryItemNext(final String[] projection, final String selection, final String[] selectionArgs, final String orderBy) {
-        Cursor c;// query the database for a single  item that is not yet done:
+        // query the database for a single  item that is not yet done:
         final String whereClause = getWhereClauseForNotDone();
 
         //Prepend our ID=? argument to the selection arguments.
@@ -1222,10 +1233,9 @@ public class ItemsContentProvider extends ContentProvider {
 
         // We set the limit to MIN_CACHE_COUNT + 1, instead of 1, so we know when to do the work to get
         // some more in the background, ready for the next time that we need a next one.
-        c = builder.query(getDb(), projection,
+        return builder.query(getDb(), projection,
                 selection, selectionArgs,
                 null, null, orderByToUse, Integer.toString(getMinCacheSize() + 1)); //TODO: Is Integer.toString locale-dependent?
-        return c;
     }
 
     private String getWhereClauseForNotDone() {
@@ -1466,7 +1476,9 @@ public class ItemsContentProvider extends ContentProvider {
         final Cursor c = builder.query(getDb(), projection,
                 null, selectionArgs,
                 null, null, null);
-        return c.getCount() > 0;
+        final boolean result = c.getCount() > 0;
+        c.close();
+        return result;
     }
 
     private List<Subject> requestMoreItemsSync(int count) {
@@ -2008,12 +2020,14 @@ public class ItemsContentProvider extends ContentProvider {
                                 "true"));
                     }
                 }
+
+                c.close();
             }
 
 
             Cursor c;
             {
-                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
                 builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);
                 builder.appendWhere(DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?"); //We use ? to avoid SQL Injection.
                 final String[] selectionArgs = {mItemId};
@@ -2060,7 +2074,11 @@ public class ItemsContentProvider extends ContentProvider {
                     //TODO: Is the string representation of sequence locale-dependent?
                     nameValuePairs.add(new BasicNameValuePair(questionKey, checkboxId));
                 }
+
+                cursorCheckboxes.close();
             }
+
+            c.close();
 
             if (!writeParamsToHttpPost(conn, nameValuePairs)) {
                 return false;
