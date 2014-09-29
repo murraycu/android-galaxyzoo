@@ -2139,17 +2139,19 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider -> com.murrayc.galaxyzoo
     java.util.Map sClassificationCheckboxesProjectionMap -> e
     int mUploadsInProgress -> f
     com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$DatabaseHelper mOpenDbHelper -> g
+    boolean mRegularTasksNecessary -> h
     com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$LoginResult parseLoginResponseContent(java.io.InputStream) -> a
     java.util.List parseQueryResponseContent(java.io.InputStream) -> b
     com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$Subject parseQueryJsonObjectSubject(org.json.JSONObject) -> a
     boolean parseQueryResponseContent(java.io.InputStream,java.lang.String) -> a
     android.content.ContentValues getMappedContentValues(android.content.ContentValues,java.util.Map) -> a
     void putValueinContentValues(android.content.ContentValues,java.lang.String,java.lang.Object) -> a
-    void startRegularTasks() -> a
-    void downloadMinimumSubjects() -> b
-    int getNotDoneNeededForCache() -> c
-    int getNotDoneCount() -> d
-    int getUploadedCount() -> e
+    void queueRegularTasks() -> a
+    boolean doRegularTasks() -> b
+    boolean downloadMinimumSubjects() -> c
+    int getNotDoneNeededForCache() -> d
+    int getNotDoneCount() -> e
+    int getUploadedCount() -> f
     int delete(android.net.Uri,java.lang.String,java.lang.String[]) -> delete
     java.lang.String getType(android.net.Uri) -> getType
     java.lang.String[] getStreamTypes(android.net.Uri,java.lang.String) -> getStreamTypes
@@ -2163,22 +2165,22 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider -> com.murrayc.galaxyzoo
     boolean onCreate() -> onCreate
     android.os.Bundle call(java.lang.String,java.lang.String,android.os.Bundle) -> call
     void requestMoreItemsAsync(int) -> a
-    void uploadOutstandingClassifications() -> f
-    void removeOldSubjects() -> g
+    boolean uploadOutstandingClassifications() -> g
+    boolean removeOldSubjects() -> h
     void removeItem(java.lang.String,java.lang.String[]) -> a
     android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String) -> query
-    int getMinCacheSize() -> h
-    int getKeepCount() -> i
+    int getMinCacheSize() -> i
+    int getKeepCount() -> j
     int getIntPref(java.lang.String) -> a
     android.database.Cursor queryItemNext(java.lang.String[],java.lang.String,java.lang.String[],java.lang.String) -> a
-    java.lang.String getWhereClauseForNotDone() -> j
-    java.lang.String getWhereClauseForUploaded() -> k
+    java.lang.String getWhereClauseForNotDone() -> k
+    java.lang.String getWhereClauseForUploaded() -> l
     java.lang.String[] prependToArray(java.lang.String[],long) -> a
     java.lang.String[] prependToArray(java.lang.String[],java.lang.String) -> a
     com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$UriParts parseContentUri(android.net.Uri) -> a
     int update(android.net.Uri,android.content.ContentValues,java.lang.String,java.lang.String[]) -> update
     java.lang.String prependIdToSelection(java.lang.String) -> b
-    android.database.sqlite.SQLiteDatabase getDb() -> l
+    android.database.sqlite.SQLiteDatabase getDb() -> m
     void addSubject(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$Subject,boolean) -> a
     void cacheUrisToFiles(java.lang.String,java.util.List,boolean) -> a
     java.util.List createFileUrisForImages(android.content.ContentValues,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
@@ -2186,7 +2188,7 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider -> com.murrayc.galaxyzoo
     void notifyRowChangeById(long) -> a
     boolean subjectIsInDatabase(java.lang.String) -> d
     java.util.List requestMoreItemsSync(int) -> b
-    void throwIfNoNetwork() -> m
+    void throwIfNoNetwork() -> n
     java.lang.String getQueryUri(int) -> c
     void onQueryTaskFinished(java.util.List) -> a
     void addSubjects(java.util.List,boolean) -> a
@@ -2197,17 +2199,15 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider -> com.murrayc.galaxyzoo
     java.lang.String generateAuthorizationHeader(java.lang.String,java.lang.String) -> c
     void onUploadTaskFinished(boolean,java.lang.String) -> a
     void markItemAsUploaded(java.lang.String) -> e
-    void access$000(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider) -> a
+    boolean access$000(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider) -> a
     void access$100(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider) -> b
-    void access$200(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider) -> c
-    void access$300(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider) -> d
-    boolean access$700(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.lang.String,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
-    java.util.List access$800(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,int) -> a
-    void access$900(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.util.List) -> a
-    java.lang.String access$1000(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.lang.String,java.lang.String) -> a
-    android.database.sqlite.SQLiteDatabase access$1100(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider) -> e
-    boolean access$1200(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.net.HttpURLConnection,java.util.List) -> a
-    void access$1300(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,boolean,java.lang.String) -> a
+    boolean access$500(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.lang.String,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
+    java.util.List access$600(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,int) -> a
+    void access$700(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.util.List) -> a
+    java.lang.String access$800(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.lang.String,java.lang.String) -> a
+    android.database.sqlite.SQLiteDatabase access$900(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider) -> c
+    boolean access$1000(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,java.net.HttpURLConnection,java.util.List) -> a
+    void access$1100(com.murrayc.galaxyzoo.app.provider.ItemsContentProvider,boolean,java.lang.String) -> a
 com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$1 -> com.murrayc.galaxyzoo.app.provider.f:
     com.murrayc.galaxyzoo.app.provider.ItemsContentProvider this$0 -> a
     void run() -> run
