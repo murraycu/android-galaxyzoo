@@ -226,7 +226,8 @@ public class ItemsContentProvider extends ContentProvider {
     private boolean mRegularTasksNecessary = true;
 
     public ItemsContentProvider() {
-        startRegularTasks();
+        //Download enough subjects:
+        queueRegularTasks();
     }
 
     private static LoginResult parseLoginResponseContent(final InputStream content) throws IOException {
@@ -426,23 +427,26 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    private void startRegularTasks() {
+    /** Call this when something about the data might need us to run the regular tasks again.
+     * For instance, if initial data might need that, or if some changes to the data might make
+     * that necessary.
+     */
+    private void queueRegularTasks() {
 
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if (mRegularTasksNecessary) {
-                    final boolean noWorkDone = doRegularTasks();
-                    if (noWorkDone) {
-                        //This will be reset to true whenever something might have changed:
-                        mRegularTasksNecessary = false;
-                    }
+                final boolean noWorkDone = doRegularTasks();
+                if (noWorkDone) {
+                    // queueRegularTasks() will be called again, whenever something might have changed.
+                } else {
+                    //Keep working until it is definitely done:
+                    queueRegularTasks();
                 }
-
-                startRegularTasks();
             }
         };
+
         handler.postDelayed(runnable, 10000); // 10 seconds
     }
 
@@ -681,15 +685,8 @@ public class ItemsContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("unsupported uri: " + uri);
         }
 
-        setRegularTasksNecessary();
+        queueRegularTasks();
         return uriInserted;
-    }
-
-    /** Call this when something about the data might have changed
-     * that could need us to run the regular tasks again.
-     */
-    private void setRegularTasksNecessary() {
-        mRegularTasksNecessary = true;
     }
 
     private int updateMappedValues(final String tableName, final ContentValues values, final Map<String, String> projectionMap, String selection,
@@ -1405,7 +1402,7 @@ public class ItemsContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
 
-        setRegularTasksNecessary();
+        queueRegularTasks();
 
         getContext().getContentResolver().notifyChange(uri, null);
 
@@ -1543,7 +1540,7 @@ public class ItemsContentProvider extends ContentProvider {
         //Not that the server often won't give us as many as we want,
         //so a subsequent request might be needed to get all of them.
         //We don't need to check how many we get, and ask again,
-        //because startRegularTasks() already checks regularly.
+        //because we already just call queueRegularTasks() again if necessary.
         final InputStream in = HttpUtils.httpGetRequest(getQueryUri(count));
         if (in == null) {
             return null;
