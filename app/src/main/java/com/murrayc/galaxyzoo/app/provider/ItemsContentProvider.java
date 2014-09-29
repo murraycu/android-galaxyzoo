@@ -223,6 +223,7 @@ public class ItemsContentProvider extends ContentProvider {
 
     private int mUploadsInProgress = 0;
     private DatabaseHelper mOpenDbHelper;
+    private boolean mRegularTasksNecessary = true;
 
     public ItemsContentProvider() {
         startRegularTasks();
@@ -431,19 +432,44 @@ public class ItemsContentProvider extends ContentProvider {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                uploadOutstandingClassifications();
-                downloadMinimumSubjects();
-                removeOldSubjects();
+                if (mRegularTasksNecessary) {
+                    final boolean noWorkDone = doRegularTasks();
+                    if (noWorkDone) {
+                        //This will be reset to true whenever something might have changed:
+                        mRegularTasksNecessary = false;
+                    }
+                }
+
                 startRegularTasks();
             }
         };
         handler.postDelayed(runnable, 10000); // 10 seconds
     }
 
-    private void downloadMinimumSubjects() {
+    /** Do any uploads, downloads, or removals that are currently necessary.
+     * This might not finish all necessary work, so subsequent calls might be necessary.
+     *
+     * @return Return true if we know for sure that no further work is currently necessary.
+     */
+    private boolean doRegularTasks() {
+        final boolean noUploadNecessary = uploadOutstandingClassifications();
+        final boolean noDownloadNecessary = downloadMinimumSubjects();
+        final boolean noRemovalNecessary = removeOldSubjects();
+
+        return noUploadNecessary && noDownloadNecessary && noRemovalNecessary;
+    }
+
+    /** Download enough extra subjects to meet our minimum number.
+     *
+     * @return Return true if we know for sure that no further downloading is currently necessary.
+     */
+    private boolean downloadMinimumSubjects() {
         final int missing = getNotDoneNeededForCache();
         if (missing > 0) {
             requestMoreItemsAsync(missing);
+            return false;
+        } else {
+            return true; //Tell the caller that no action was necessary.
         }
     }
 
@@ -655,7 +681,15 @@ public class ItemsContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("unsupported uri: " + uri);
         }
 
+        setRegularTasksNecessary();
         return uriInserted;
+    }
+
+    /** Call this when something about the data might have changed
+     * that could need us to run the regular tasks again.
+     */
+    private void setRegularTasksNecessary() {
+        mRegularTasksNecessary = true;
     }
 
     private int updateMappedValues(final String tableName, final ContentValues values, final Map<String, String> projectionMap, String selection,
@@ -887,11 +921,15 @@ public class ItemsContentProvider extends ContentProvider {
         task.execute(count);
     }
 
-    private void uploadOutstandingClassifications() {
+    /** Upload any outstanding classifications.
+     *
+     * @return Return true if we know for sure that no further uploading is currently necessary.
+     */
+    private boolean uploadOutstandingClassifications() {
         //To keep things simple, don't do this while it is already happening.
         //This only ever happens on this thread so there should be no need for a lock here.
         if (mUploadsInProgress > 0)
-            return;
+            return false;
 
         // TODO: Request re-authentication when the server says we have used the wrong name + api_key.
         // What does the server reply in that case?
@@ -912,6 +950,11 @@ public class ItemsContentProvider extends ContentProvider {
         final Cursor c = builder.query(getDb(), projection,
                 null, null,
                 null, null, null); //TODO: Order by?
+        if (c.getCount() == 0) {
+            c.close();
+            return true; //Tell the caller that no action was necessary.
+        }
+
         while (c.moveToNext()) {
             final String itemId = c.getString(0);
             final String subjectId = c.getString(1);
@@ -922,9 +965,14 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         c.close();
+        return false;
     }
 
-    private void removeOldSubjects() {
+    /** Remove old classified subjects if we have too many.
+     *
+     * @return Return true if we know for sure that no further removal is currently necessary.
+     */
+    private boolean removeOldSubjects() {
         final int count = getUploadedCount();
         final int max = getKeepCount();
         if (count > max) {
@@ -957,6 +1005,9 @@ public class ItemsContentProvider extends ContentProvider {
             }
 
             c.close();
+            return false;
+        } else {
+            return true; //Tell the caller that no action was necessary.
         }
     }
 
@@ -1353,6 +1404,8 @@ public class ItemsContentProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
+
+        setRegularTasksNecessary();
 
         getContext().getContentResolver().notifyChange(uri, null);
 
