@@ -197,7 +197,7 @@ public class SubjectFragment extends ItemFragment
 
         //Look at each group in the layout:
         if (mRootView == null) {
-            Log.error("SubjectFragment.update(): mRootView is null.");
+            Log.error("SubjectFragment.updateFromCursor(): mRootView is null.");
             return;
         }
 

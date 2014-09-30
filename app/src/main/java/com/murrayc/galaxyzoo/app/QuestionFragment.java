@@ -294,9 +294,12 @@ public class QuestionFragment extends BaseQuestionFragment
         if (activity == null)
             return;
 
-
         if (mRootView == null) {
-            Log.error("QuestionFragment.update(): mRootView is null.");
+            //This can happen when update() is called by the parent fragment
+            //after this fragment has been instantiated after an orientation change,
+            //but before onCreateView() has been called. It's not a problem
+            //because onCreateView() will call this method again after setting mRootView.
+            //Log.error("QuestionFragment.update(): mRootView is null.");
             return;
         }
 
