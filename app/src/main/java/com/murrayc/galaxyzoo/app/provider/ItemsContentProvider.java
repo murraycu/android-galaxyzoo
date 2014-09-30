@@ -457,7 +457,7 @@ public class ItemsContentProvider extends ContentProvider {
             }
         };
 
-        handler.postDelayed(runnable, 10000); // 10 seconds
+        handler.postDelayed(runnable, 20000); // 20 seconds
     }
 
     /** Do any uploads, downloads, or removals that are currently necessary.
