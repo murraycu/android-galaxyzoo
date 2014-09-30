@@ -198,7 +198,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         mCursor.moveToFirst(); //There should only be one anyway.
 
         if (mRootView == null) {
-            Log.error("mRootView is null.");
+            Log.error("ClassifyFragment.updateFromCursor(): mRootView is null.");
             return;
         }
 

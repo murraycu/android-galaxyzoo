@@ -198,7 +198,7 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
         mCursor.moveToFirst(); //There should only be one anyway.
 
         if (mRootView == null) {
-            Log.error("mRootView is null.");
+            Log.error("SubjectViewerFragment.updateFromCursor(): mRootView is null.");
             return;
         }
 

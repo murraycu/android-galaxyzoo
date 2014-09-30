@@ -128,7 +128,7 @@ public class SubjectExtrasFragment extends ItemFragment
 
 
         if (mRootView == null) {
-            Log.error("mRootView is null.");
+            Log.error("SubjectsExtraFragment.update(): mRootView is null.");
             return;
         }
 
@@ -218,7 +218,7 @@ public class SubjectExtrasFragment extends ItemFragment
 
         //Look at each group in the layout:
         if (mRootView == null) {
-            Log.error("mRootView is null.");
+            Log.error("SubjectsExtraFragment.update(): mRootView is null.");
             return;
         }
 

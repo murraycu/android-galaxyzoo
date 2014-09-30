@@ -296,7 +296,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
 
         if (mRootView == null) {
-            Log.error("mRootView is null.");
+            Log.error("QuestionFragment.update(): mRootView is null.");
             return;
         }
 
@@ -568,7 +568,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
         //Look at each group in the layout:
         if (mRootView == null) {
-            Log.error("mRootView is null.");
+            Log.error("QuestionFragment.updateFromCursor(): mRootView is null.");
             return;
         }
 
