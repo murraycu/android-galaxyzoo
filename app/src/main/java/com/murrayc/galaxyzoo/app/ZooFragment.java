@@ -1,8 +1,6 @@
 package com.murrayc.galaxyzoo.app;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
@@ -10,9 +8,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
-import com.murrayc.galaxyzoo.app.provider.Item;
-import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 /**
  * Created by murrayc on 8/7/14.
