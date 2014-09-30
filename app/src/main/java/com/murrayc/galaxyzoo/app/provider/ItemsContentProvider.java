@@ -466,8 +466,11 @@ public class ItemsContentProvider extends ContentProvider {
      * @return Return true if we know for sure that no further work is currently necessary.
      */
     private boolean doRegularTasks() {
-        final boolean noUploadNecessary = uploadOutstandingClassifications();
+        //Do the download first, to avoid the UI having to wait for new subjects to classify.
         final boolean noDownloadNecessary = downloadMinimumSubjectsAsync();
+
+        //Do less urgent things next:
+        final boolean noUploadNecessary = uploadOutstandingClassifications();
         final boolean noRemovalNecessary = removeOldSubjects();
 
         return noUploadNecessary && noDownloadNecessary && noRemovalNecessary;
@@ -1154,8 +1157,8 @@ public class ItemsContentProvider extends ContentProvider {
                 }
 
                 // Make sure we have enough soon enough,
-                // so get the rest asynchronously.
-                downloadMinimumSubjectsAsync();
+                // by getting rest asynchronously.
+                queueRegularTasks();
 
                 c.setNotificationUri(getContext().getContentResolver(),
                         Item.CONTENT_URI); //TODO: More precise?
