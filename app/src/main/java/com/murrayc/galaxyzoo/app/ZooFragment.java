@@ -37,6 +37,7 @@ public class ZooFragment extends Fragment {
         }
     }
 
+    /*
     void requestMoreItems() {
         final Activity activity = getActivity();
         if (activity == null) {
@@ -54,6 +55,7 @@ public class ZooFragment extends Fragment {
             UiUtils.warnAboutNoNetworkConnection(activity);
         }
     }
+    */
 
     void requestLogin() {
         final Intent intent = new Intent(getActivity(), LoginActivity.class);
