@@ -465,7 +465,7 @@ public class ItemsContentProvider extends ContentProvider {
      */
     private boolean doRegularTasks() {
         final boolean noUploadNecessary = uploadOutstandingClassifications();
-        final boolean noDownloadNecessary = downloadMinimumSubjects();
+        final boolean noDownloadNecessary = downloadMinimumSubjectsAsync();
         final boolean noRemovalNecessary = removeOldSubjects();
 
         return noUploadNecessary && noDownloadNecessary && noRemovalNecessary;
@@ -475,7 +475,7 @@ public class ItemsContentProvider extends ContentProvider {
      *
      * @return Return true if we know for sure that no further downloading is currently necessary.
      */
-    private boolean downloadMinimumSubjects() {
+    private boolean downloadMinimumSubjectsAsync() {
         final int missing = getNotDoneNeededForCache();
         if (missing > 0) {
             requestMoreItemsAsync(missing);
@@ -886,7 +886,7 @@ public class ItemsContentProvider extends ContentProvider {
                 /** Check with the remote REST API asynchronously,
                  * informing the calling client later via notification.
                  */
-                downloadMinimumSubjects();
+                downloadMinimumSubjectsAsync();
                 break;
             case METHOD_LOGIN:
                 throwIfNoNetwork();
@@ -1153,7 +1153,7 @@ public class ItemsContentProvider extends ContentProvider {
 
                 // Make sure we have enough soon enough,
                 // so get the rest asynchronously.
-                downloadMinimumSubjects();
+                downloadMinimumSubjectsAsync();
 
                 c.setNotificationUri(getContext().getContentResolver(),
                         Item.CONTENT_URI); //TODO: More precise?
