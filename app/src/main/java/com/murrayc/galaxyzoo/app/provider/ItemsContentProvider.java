@@ -34,6 +34,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
@@ -441,7 +442,9 @@ public class ItemsContentProvider extends ContentProvider {
 
         mAlreadyQueuedRegularTasks = true;
 
-        final Handler handler = new Handler();
+        //We use Looper.getMainLooper() to avoid this error sometimes:
+        //java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
+        final Handler handler = new Handler(Looper.getMainLooper());
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
