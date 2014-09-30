@@ -446,14 +446,13 @@ public class ItemsContentProvider extends ContentProvider {
             @Override
             public void run() {
                 final boolean noWorkDone = doRegularTasks();
+                mAlreadyQueuedRegularTasks = false;
                 if (noWorkDone) {
                     // queueRegularTasks() will be called again, whenever something might have changed.
                 } else {
                     //Keep working until it is definitely done:
                     queueRegularTasks();
                 }
-
-                mAlreadyQueuedRegularTasks = false;
             }
         };
 
