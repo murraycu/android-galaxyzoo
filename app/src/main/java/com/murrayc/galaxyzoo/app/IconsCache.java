@@ -170,7 +170,7 @@ class IconsCache {
             return false;
         }
 
-        Log.info("reloadIcon:" + cssName);
+        //Log.info("reloadIcon:" + cssName);
 
         //Avoid loading and adding it again:
         if (map.get(cssName) != null) {
