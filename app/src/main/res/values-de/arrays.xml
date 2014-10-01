@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pref_cache_size_entries">
-        <item>5 subjecten</item>
-        <item>10 subjects</item>
-        <item>20 subjects</item>
-        <item>50 subjects</item>
+        <item>5 Objekte</item>
+        <item>10 Objekte</item>
+        <item>20 Objekte</item>
+        <item>50 Objekte</item>
     </string-array>
 
     <string-array name="pref_keep_count_entries">
-    <item>5 classified subjects</item>
-    <item>10 classified subjects</item>
-    <item>20 classified subjects</item>
-    <item>50 classified subjects</item>
+    <item>5 classified Objekte</item>
+    <item>10 classified Objekte</item>
+    <item>20 classified Objekte</item>
+    <item>50 classified Objekte</item>
     </string-array>
 </resources>
