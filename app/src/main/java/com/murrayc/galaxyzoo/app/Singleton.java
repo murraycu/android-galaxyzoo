@@ -57,7 +57,7 @@ public class Singleton {
         //country code in uppercase, such as ch_CN, like normal system locales.
         final String countryCode = locale.getCountry().toLowerCase();
         final String language = locale.getLanguage();
-        if(!TextUtils.isEmpty(language)) {
+        if (!TextUtils.isEmpty(language)) {
             //Try finding a translation for a country-specific form of the language:
             String translationFileName = language + "_" + countryCode + JSON_FILE_EXTENSION;
             inputStreamTranslation = openAsset(context, translationFileName);

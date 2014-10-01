@@ -221,7 +221,7 @@ public class SubjectFragment extends ItemFragment
             }
         }
 
-        if(!TextUtils.isEmpty(imageUriStr)) {
+        if (!TextUtils.isEmpty(imageUriStr)) {
             UiUtils.fillImageViewFromContentUri(activity, imageUriStr, mImageView);
         } else {
             //Make it blank,

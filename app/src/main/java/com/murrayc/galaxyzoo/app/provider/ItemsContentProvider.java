@@ -207,7 +207,6 @@ public class ItemsContentProvider extends ContentProvider {
         sItemsProjectionMap.put(Item.Columns.DATETIME_DONE, DatabaseHelper.ItemsDbColumns.DATETIME_DONE);
 
 
-
         sClassificationAnswersProjectionMap = new HashMap<>();
         sClassificationAnswersProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
         sClassificationAnswersProjectionMap.put(ClassificationAnswer.Columns.ITEM_ID, DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID);
@@ -431,7 +430,8 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    /** Call this when something about the data might need us to run the regular tasks again.
+    /**
+     * Call this when something about the data might need us to run the regular tasks again.
      * For instance, if initial data might need that, or if some changes to the data might make
      * that necessary.
      */
@@ -462,7 +462,8 @@ public class ItemsContentProvider extends ContentProvider {
         handler.postDelayed(runnable, 20000); // 20 seconds
     }
 
-    /** Do any uploads, downloads, or removals that are currently necessary.
+    /**
+     * Do any uploads, downloads, or removals that are currently necessary.
      * This might not finish all necessary work, so subsequent calls might be necessary.
      *
      * @return Return true if we know for sure that no further work is currently necessary.
@@ -478,7 +479,8 @@ public class ItemsContentProvider extends ContentProvider {
         return noUploadNecessary && noDownloadNecessary && noRemovalNecessary;
     }
 
-    /** Download enough extra subjects to meet our minimum number.
+    /**
+     * Download enough extra subjects to meet our minimum number.
      *
      * @return Return true if we know for sure that no further downloading is currently necessary.
      */
@@ -658,7 +660,7 @@ public class ItemsContentProvider extends ContentProvider {
             case MATCHER_ID_ITEM: {
                 //Refuse to insert without a Subject ID:
                 final String subjectId = values.getAsString(Item.Columns.SUBJECT_ID);
-                if(TextUtils.isEmpty(subjectId)) {
+                if (TextUtils.isEmpty(subjectId)) {
                     throw new IllegalArgumentException("Refusing to insert without a SubjectID: " + uri);
                 }
 
@@ -761,7 +763,7 @@ public class ItemsContentProvider extends ContentProvider {
     /** This returns both the content URI and the local URI, just to avoid the caller needing to
      * look the local one up again.
      *
-     * @param uriOfFileToCache   This may be null if the new file should be empty.
+     * @param uriOfFileToCache This may be null if the new file should be empty.
      */
     private CreatedFileUri createFileUri(final String uriOfFileToCache, final String subjectId, final ImageType imageType) {
         final SQLiteDatabase db = getDb();
@@ -778,7 +780,7 @@ public class ItemsContentProvider extends ContentProvider {
 
                 //Actually create an empty file there -
                 //otherwise when we try to write to it via openOutputStream()
-               //we will get a FileNotFoundException.
+                //we will get a FileNotFoundException.
                 realFile.createNewFile();
 
                 realFileUri = realFile.getAbsolutePath();
@@ -826,7 +828,7 @@ public class ItemsContentProvider extends ContentProvider {
             task.execute(uriFileToCache, cacheFileUri);
             return true;
         } else {
-            if(HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri)) {
+            if (HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri)) {
                 return markImageAsDownloaded(subjectId, imageType);
             } else {
                 Log.error("cacheUriToFile(): cacheUriToFileSync(): failed.");
@@ -837,7 +839,7 @@ public class ItemsContentProvider extends ContentProvider {
 
     private boolean markImageAsDownloaded(final String subjectId, final ImageType imageType) {
         String fieldName = null;
-        switch(imageType) {
+        switch (imageType) {
             case STANDARD:
                 fieldName = DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED;
                 break;
@@ -934,7 +936,8 @@ public class ItemsContentProvider extends ContentProvider {
         task.execute(count);
     }
 
-    /** Upload any outstanding classifications.
+    /**
+     * Upload any outstanding classifications.
      *
      * @return Return true if we know for sure that no further uploading is currently necessary.
      */
@@ -981,7 +984,8 @@ public class ItemsContentProvider extends ContentProvider {
         return false;
     }
 
-    /** Remove old classified subjects if we have too many.
+    /**
+     * Remove old classified subjects if we have too many.
      *
      * @return Return true if we know for sure that no further removal is currently necessary.
      */
@@ -994,9 +998,9 @@ public class ItemsContentProvider extends ContentProvider {
             builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
             builder.appendWhere(getWhereClauseForUploaded());
             final String[] projection = {DatabaseHelper.ItemsDbColumns._ID,
-                DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI,
-                DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI,
-                DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI};
+                    DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI,
+                    DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI,
+                    DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI};
             //ISO-8601 dates can be alphabetically sorted to get date-time order:
             final String orderBy = DatabaseHelper.ItemsDbColumns.DATETIME_DONE + " ASC";
             final String limit = Integer.toString(count - max); //TODO: Is this locale-independent?
@@ -1071,11 +1075,11 @@ public class ItemsContentProvider extends ContentProvider {
         // We don't check that at least 1 row was deleted,
         // because there are not always answers with checkboxes.
         db.delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
-            DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID + " = ?",
-            whereArgs);
+                DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID + " = ?",
+                whereArgs);
 
         //Delete the item:
-        if(db.delete(DatabaseHelper.TABLE_NAME_ITEMS,
+        if (db.delete(DatabaseHelper.TABLE_NAME_ITEMS,
                 DatabaseHelper.ItemsDbColumns._ID + " = ?",
                 whereArgs) <= 0) {
             Log.error("removeItem(): No item rows were removed.");
@@ -1471,8 +1475,8 @@ public class ItemsContentProvider extends ContentProvider {
         //Actually cache the URIs' data in the local files:
         //This will mark the data as fully downloaded by setting the *Downloaded boolean fields,
         //so we do this only after creating the items record.
-        for(final CreatedFileUri fileUris : listFiles) {
-            if(!(cacheUriToFile(fileUris.remoteUri, fileUris.localUri, subjectId, fileUris.imageType, asyncFileDownloads))) {
+        for (final CreatedFileUri fileUris : listFiles) {
+            if (!(cacheUriToFile(fileUris.remoteUri, fileUris.localUri, subjectId, fileUris.imageType, asyncFileDownloads))) {
                 Log.error("cacheUrisToFiles(): cacheUriToFile() failed.");
             }
         }
@@ -1979,7 +1983,7 @@ public class ItemsContentProvider extends ContentProvider {
                 if (providerReference != null) {
                     final ItemsContentProvider provider = providerReference.get();
                     if (provider != null) {
-                        if(!provider.markImageAsDownloaded(subjectId, imageType)) {
+                        if (!provider.markImageAsDownloaded(subjectId, imageType)) {
                             Log.error("FileCacheAsyncTask(): onPostExecute(): markImageAsDownloaded() failed.");
                         }
                     }

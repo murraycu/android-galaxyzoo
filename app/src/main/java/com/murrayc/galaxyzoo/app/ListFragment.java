@@ -89,7 +89,7 @@ public class ListFragment extends ZooFragment
      */
     private Callbacks mCallbacks = sDummyCallbacks;
     private final String[] mColumns = {Item.Columns._ID,
-            Item.Columns.LOCATION_THUMBNAIL_URI,Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED,
+            Item.Columns.LOCATION_THUMBNAIL_URI, Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED,
             Item.Columns.DONE, Item.Columns.UPLOADED, Item.Columns.FAVORITE};
     private View mRootView;
     private ListCursorAdapter mAdapter;

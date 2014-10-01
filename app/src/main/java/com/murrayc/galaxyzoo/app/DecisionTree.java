@@ -52,8 +52,7 @@ public class DecisionTree {
     public final Hashtable<String, Question> questionsMap = new Hashtable<>();
 
     /**
-     *
-     * @param inputStreamTree The XMl file containing the decision tree.
+     * @param inputStreamTree        The XMl file containing the decision tree.
      * @param inputStreamTranslation A JSON file containing translations of the question and answers,
      *                               such as https://github.com/zooniverse/Galaxy-Zoo/blob/master/public/locales/es.json
      */
@@ -117,7 +116,7 @@ public class DecisionTree {
             reader = new JsonReader(new InputStreamReader(inputStreamTranslation, "UTF-8"));
             reader.beginObject();
             while (reader.hasNext()) {
-                if(reader.nextName().equals("questions")) { //We ignore the "zooniverse" and "quiz_questions" objects
+                if (reader.nextName().equals("questions")) { //We ignore the "zooniverse" and "quiz_questions" objects
                     readJsonQuestions(reader);
                 } else {
                     reader.skipValue();
@@ -190,8 +189,8 @@ public class DecisionTree {
     }
 
     private Answer getAnswerWithId(final List<Answer> answers, final String id) {
-        for(final Answer answer : answers) {
-            if(TextUtils.equals(id, answer.getId())) {
+        for (final Answer answer : answers) {
+            if (TextUtils.equals(id, answer.getId())) {
                 return answer;
             }
         }

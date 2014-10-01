@@ -73,7 +73,7 @@ class IconsCache {
             loadFromNetwork(context, lastModified);
         } else {
             //Just get the cached icons:
-            if(!reloadCachedIcons()) {
+            if (!reloadCachedIcons()) {
                 //Something went wrong while reloading the icons from the cache files,
                 //So try loading them again.
                 if (Utils.getNetworkIsConnected(context)) {
@@ -84,7 +84,7 @@ class IconsCache {
         }
 
         mBmapWorkflowIcons = null;
-        mBmapExampleIcons =     null;
+        mBmapExampleIcons = null;
     }
 
     private void loadFromNetwork(final Context context, long lastModified) {
@@ -119,11 +119,11 @@ class IconsCache {
 
         for (final DecisionTree.Answer answer : question.answers) {
             //Get the icon for the answer:
-            if(!reloadIcon(answer.getIcon(), mWorkflowIcons)) {
+            if (!reloadIcon(answer.getIcon(), mWorkflowIcons)) {
                 return false;
             }
 
-            if(!reloadExampleImages(question, answer)) {
+            if (!reloadExampleImages(question, answer)) {
                 return false;
             }
 
@@ -133,18 +133,18 @@ class IconsCache {
             //Recurse:
             final DecisionTree.Question nextQuestion = mDecisionTree.getNextQuestionForAnswer(question.getId(), answer.getId());
             if (nextQuestion != null) {
-                if(!reloadIconsForQuestion(nextQuestion, alreadyReloadedQuestionIds)) {
+                if (!reloadIconsForQuestion(nextQuestion, alreadyReloadedQuestionIds)) {
                     return false;
                 }
             }
         }
 
         for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
-            if(!reloadIcon(checkbox.getIcon(), mWorkflowIcons)) {
+            if (!reloadIcon(checkbox.getIcon(), mWorkflowIcons)) {
                 return false;
             }
 
-            if(!reloadExampleImages(question, checkbox)) {
+            if (!reloadExampleImages(question, checkbox)) {
                 return false;
             }
         }
@@ -156,7 +156,7 @@ class IconsCache {
         //Get the example images for the answer or checkbox:
         for (int i = 0; i < answer.getExamplesCount(); i++) {
             final String exampleIconName = answer.getExampleIconName(question.getId(), i);
-            if(!reloadIcon(exampleIconName, mExampleIcons)) {
+            if (!reloadIcon(exampleIconName, mExampleIcons)) {
                 return false;
             }
         }
@@ -192,7 +192,7 @@ class IconsCache {
             Log.error("IconsCache.reloadIcon(): BitmapFactory.decodeFile() failed for file (now deleting it): ", cacheFileUri);
 
             final File file = new File(cacheFileUri);
-            if(!file.delete()) {
+            if (!file.delete()) {
                 Log.error("IconsCache.reloadIcon(): Failed to delete invalid cache file.");
                 return false;
             }

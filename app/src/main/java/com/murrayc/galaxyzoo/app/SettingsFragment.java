@@ -81,7 +81,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
     private void showUserDescriptionAsSummary(final Preference preference) {
-        final ListPreference listPref = (ListPreference)preference;
+        final ListPreference listPref = (ListPreference) preference;
         preference.setSummary(listPref.getEntry());
     }
 }

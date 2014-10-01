@@ -75,7 +75,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
         // because it requires this client code to know the actual column name of the internal database table,
         // because the Cursor won't have the column names mapped.
         assertEquals(VALID_SUBJECT_ID, cursor.getString(cursor.getColumnIndex(Item.Columns.SUBJECT_ID)));
-	cursor.close();
+        cursor.close();
     }
 
     public void testInsertThenQuerySpecific() {
@@ -90,7 +90,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
         // because it requires this client code to know the actual column name of the internal database table,
         // because the Cursor won't have the column names mapped.
         assertEquals(VALID_SUBJECT_ID, cursor.getString(cursor.getColumnIndex(Item.Columns.SUBJECT_ID)));
-	cursor.close();
+        cursor.close();
     }
 
 
@@ -116,7 +116,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
         stream.close();
         */
 
-	cursor.close();
+        cursor.close();
     }
 
     //TODO: Test filtering of mime types?
