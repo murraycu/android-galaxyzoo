@@ -1,53 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- The name of the app -->
     <string name="app_name">Galaxy Zoo</string>
-    <string name="action_invert">Invert</string>
-    <string name="action_examples">Examples</string>
-    <string name="action_login">Login</string>
-    <string name="action_favorite">Favorite</string>
-    <string name="action_restart">Restart</string>
-    <string name="action_list">List</string>
-    <string name="action_next">Classify</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_about">About</string>
-    <string name="description_thumbnail">Thumbnail</string>
-    <string name="description_standard_image">Standard Image</string>
-    <string name="button_title_examples">Examples</string>
-    <string name="title_activity_example_viewer">Example</string>
-    <string name="title_activity_subject_viewer">Subject</string>
-    <string name="forgot_password_button_text"><a href="https://www.zooniverse.org/password/reset">Forgot password?</a></string>
-    <string name="register_button_text"><a href="https://www.zooniverse.org/signup">Register</a></string>
-    <string name="content_description_example_image">Example image.</string>
-    <string name="title_zooniverse_id">Zooniverse ID:</string>
-    <string name="content_description_favorite">Whether the subject is a favorite.</string>
-    <string name="content_description_classified">Whether the subject has been classified.</string>
-    <string name="content_description_uploaded">Whether the subject has been uploaded.</string>
-    <string name="button_title_examine">Examine</string>
-    <string name="button_title_discuss">Discuss</string>
 
-    <string name="title_activity_question_help">Help</string>
-
-    <!-- Strings related to login -->
-    <string name="title_activity_login">Sign in</string>
-    <string name="login_hint">Login or create an account to receive credit for your work.</string>
-    <string name="prompt_username">Username</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_sign_in_short">Sign in</string>
-
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <!-- The description of the app -->
     <string name="about_text">An android app for classifying <a href="http://www.galaxyzoo.org/">Galaxy Zoo</a> subjects. This is not an official Zooniverse or Galaxy Zoo app.\n\nThis android app was developed by <a href="http://murrayc.com/">Murray Cumming</a>.\n\nThe launcher Icon is based on the <a href="http://www.eso.org/public/images/eso1042e/">ESO/HAWK-I image of galaxy NGC 4030</a> and is used under the Attribution 3.0 Unported license.</string>
 
-    <!-- Strings for preferences -->
+    <!-- This shows the version number of the app. -->
+    <string name="about_version_text_format">Version: %s</string>
+
+    <!-- This is shown while the app is first starting. -->
+    <string name="progress_loading_text">Loading…</string>
+
+    <!-- An action. Shown on a button or menu item. -->
+    <string name="action_invert">Invert</string>
+
+    <!-- An action. Shown on a button or menu item. -->
+    <string name="action_examples">Examples</string>
+
+    <!-- An action. Shown on a button or menu item. -->
+    <string name="action_login">Login</string>
+
+    <!-- An action. Shown on a button or menu item. -->
+    <string name="action_favorite">Favorite</string>
+
+    <!-- An action. Shown on a button or menu item. -->
+    <string name="action_restart">Restart</string>
+
+    <!-- An action. Shown on a button or menu item. -->
+    <string name="action_list">List</string>
+
+    <!-- An action. Shown on a button or menu item. -->
+    <string name="action_next">Classify</string>
+
+    <!-- Shown on a menu item to open the application's settings (preferences). -->
+    <string name="action_settings">Settings</string>
+
+    <!-- Shown on a menu item to view the application's description. -->
+    <string name="action_about">About</string>
+
+    <!-- The accessibility description of an image -->
+    <string name="description_thumbnail">Thumbnail</string>
+
+    <!-- The accessibility description of an image -->
+    <string name="description_standard_image">Standard Image</string>
+
+    <!-- The title of a set of example images. -->
+    <string name="title_examples">Examples</string>
+
+    <!-- The title of a screen that shows an example image. -->
+    <string name="title_activity_example_viewer">Example</string>
+
+    <!-- The title of a screen that shows an image. -->
+    <string name="title_activity_subject_viewer">Subject</string>
+
+    <!-- The text for a button that lets the user reset a password. -->
+    <string name="forgot_password_button_text"><a href="https://www.zooniverse.org/password/reset">Forgot password?</a></string>
+
+    <!-- The text for a button that lets the user register to get a username and password. -->
+    <string name="register_button_text"><a href="https://www.zooniverse.org/signup">Register</a></string>
+
+    <!-- The accessibility description of an image -->
+    <string name="content_description_example_image">Example image.</string>
+
+    <string name="title_zooniverse_id">Zooniverse ID:</string>
+
+    <!-- The accessibility description of a contextual icon. -->
+    <string name="content_description_favorite">Whether the subject is a favorite.</string>
+
+    <!-- The accessibility description of a contextual icon. -->
+    <string name="content_description_classified">Whether the subject has been classified.</string>
+
+    <!-- The accessibility description of a contextual icon. -->
+    <string name="content_description_uploaded">Whether the subject has been uploaded.</string>
+
+    <!-- The title of a button that lets the user look at an image in more detail. -->
+    <string name="button_title_examine">Examine</string>
+
+    <!-- The title of a button that takes the user to a discussion forum for the image. -->
+    <string name="button_title_discuss">Discuss</string>
+
+    <!-- The title of a screen that explains how to use the app. -->
+    <string name="title_activity_question_help">Help</string>
+
+    <!-- The title of a screen that lets the user log in to the system. -->
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Some text to encourage the user to login. -->
+    <string name="login_hint">Login or create an account to receive credit for your work.</string>
+
+    <!-- The description of the username field when logging in.. -->
+    <string name="prompt_username">Username</string>
+
+    <!-- The description of the password field when logging in.. -->
+    <string name="prompt_password">Password</string>
+
+    <!-- The title of the login button. -->
+    <string name="action_sign_in">Sign in</string>
+
+    <!-- The title of the login button that will appear on the on-screen keyboard. -->
+    <string name="action_sign_in_short">Sign in</string>
+
+    <!-- An error message. -->
+    <string name="error_invalid_password">This password is too short</string>
+
+    <!-- An error message. -->
+    <string name="error_incorrect_password">This password is incorrect</string>
+
+    <!-- An error message. -->
+
+    <string name="error_field_required">This field is required</string>
+
+
+    <!-- The title of the Settings screen to show or change the app preferences. -->
     <string name="title_activity_settings">Settings</string>
+
+    <!-- The title of the preference that controls how many items are downloaded before they are needed. -->
     <string name="pref_title_cache_size">Download in advance</string>
     <string name="pref_default_cache_size" translatable="false">10</string>
+
+    <!-- The title of the preference that controls how many old items should stay on the device. -->
     <string name="pref_title_keep_count">Keep</string>
     <string name="pref_default_keep_count" translatable="false">50</string>
 
-    <string name="progress_loading_text">Loading…</string>
-    <string name="about_version_text_format">Version: %s</string>
 </resources>

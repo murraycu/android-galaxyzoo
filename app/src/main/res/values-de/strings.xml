@@ -6,7 +6,7 @@
     <string name="action_next">Klassifizieren</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_about">Info</string>
-    <string name="button_title_examples">Beispiele</string>
+    <string name="title_examples">Beispiele</string>
     <string name="prompt_password">Passwort</string>
     <string name="prompt_username">Benutzername</string>
     <string name="title_activity_example_viewer">Beispiel</string>
