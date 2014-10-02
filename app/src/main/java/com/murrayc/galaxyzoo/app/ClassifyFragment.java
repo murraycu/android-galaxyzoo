@@ -78,12 +78,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         //particularly during first start when we are waiting to get the first data in our cache.
         showLoadingView(true);
 
-        Singleton.init(getActivity(), new Singleton.Callbacks() {
-            @Override
-            public void onInitialized() {
-                onSingletonInitialized();
-            }
-        });
+        initializeSingleton();
 
         return mRootView;
     }

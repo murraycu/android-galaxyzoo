@@ -130,6 +130,15 @@ public class ItemFragment extends ZooFragment {
         this.mSingleton = Singleton.getInstance();
     }
 
+    void initializeSingleton() {
+        Singleton.init(getActivity(), new Singleton.Callbacks() {
+            @Override
+            public void onInitialized() {
+                onSingletonInitialized();
+            }
+        });
+    }
+
     /**
      * A callback interface that all activities containing some fragments must
      * implement. This mechanism allows activities to be notified of table

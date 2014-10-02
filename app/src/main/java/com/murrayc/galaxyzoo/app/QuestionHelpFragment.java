@@ -49,16 +49,16 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
         //Do most of the UI building only after we know that our
         //Singleton has been initialized:
-        Singleton.init(activity, new Singleton.Callbacks() {
-            @Override
-            public void onInitialized() {
-                QuestionHelpFragment.this.mSingleton = Singleton.getInstance();
-
-                update();
-            }
-        });
+        initializeSingleton();
 
         return mRootView;
+    }
+
+    @Override
+    void onSingletonInitialized() {
+        super.onSingletonInitialized();
+
+        update();
     }
 
     private void update() {

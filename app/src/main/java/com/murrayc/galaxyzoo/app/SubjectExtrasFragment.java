@@ -107,18 +107,19 @@ public class SubjectExtrasFragment extends ItemFragment
         mRootView = inflater.inflate(R.layout.fragment_subject_extras, container, false);
         assert mRootView != null;
 
-        Singleton.init(getActivity(), new Singleton.Callbacks() {
-            @Override
-            public void onInitialized() {
-                SubjectExtrasFragment.this.mSingleton = Singleton.getInstance();
-
-                updateIfReady();
-            }
-        });
+        initializeSingleton();
 
         //This will be called later by updateIfReady(): update();
 
         return mRootView;
+    }
+
+
+    @Override
+    void onSingletonInitialized() {
+        super.onSingletonInitialized();
+
+        updateIfReady();
     }
 
     public void update() {

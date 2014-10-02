@@ -175,18 +175,18 @@ public class QuestionFragment extends BaseQuestionFragment
 
         setHasOptionsMenu(true);
 
-        Singleton.init(getActivity(), new Singleton.Callbacks() {
-            @Override
-            public void onInitialized() {
-                QuestionFragment.this.mSingleton = Singleton.getInstance();
-
-                updateIfReady();
-            }
-        });
+        initializeSingleton();
 
         //This will be called later by updateIfReady(): update();
 
         return mRootView;
+    }
+
+    @Override
+    void onSingletonInitialized() {
+        super.onSingletonInitialized();
+
+        updateIfReady();
     }
 
     @Override

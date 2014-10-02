@@ -20,6 +20,7 @@ public class BaseQuestionFragment extends ItemFragment {
 
     DecisionTree.Question getQuestion() {
         final Singleton singleton = getSingleton();
+
         final DecisionTree tree = singleton.getDecisionTree();
 
         DecisionTree.Question question = tree.getQuestionOrFirst(getQuestionId());
