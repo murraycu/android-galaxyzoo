@@ -294,6 +294,12 @@ public class QuestionFragment extends BaseQuestionFragment
         if (activity == null)
             return;
 
+        if (getSingleton() == null) {
+            //The parent fragment's onSingletonInitialized has been called
+            //but this fragment's onSingletonInitialized hasn't been called yet.
+            //That's OK. update() will be called, indirectly, later by this fragment's onSingletonInitialized().
+        }
+
         if (mRootView == null) {
             //This can happen when update() is called by the parent fragment
             //after this fragment has been instantiated after an orientation change,
