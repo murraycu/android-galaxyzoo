@@ -10,7 +10,7 @@
     <string name="about_version_text_format">Versione: %s</string>
 
     <!-- This is shown while the app is first starting. -->
-    <string name="progress_loading_text">Caricamento in corso...</string>
+    <string name="progress_loading_text">Caricamento in corso…</string>
 
     <!-- An action. Shown on a button or menu item. -->
     <string name="action_invert">Inverti</string>
