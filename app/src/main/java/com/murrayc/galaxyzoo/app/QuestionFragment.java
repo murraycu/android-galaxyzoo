@@ -298,6 +298,7 @@ public class QuestionFragment extends BaseQuestionFragment
             //The parent fragment's onSingletonInitialized has been called
             //but this fragment's onSingletonInitialized hasn't been called yet.
             //That's OK. update() will be called, indirectly, later by this fragment's onSingletonInitialized().
+            return;
         }
 
         if (mRootView == null) {
