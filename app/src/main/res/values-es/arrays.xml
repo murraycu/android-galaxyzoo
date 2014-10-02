@@ -7,25 +7,11 @@
     <item>50 objetos</item>
   </string-array>
 
-    <string-array name="pref_cache_size_values" translatable="false">
-    <item>5</item>
-    <item>10</item>
-    <item>20</item>
-    <item>50</item>
-  </string-array>
-
     <!-- The possible numbers of old items that may be kept on the device. -->
     <string-array name="pref_keep_count_entries">
     <item>5 objetos clasificados</item>
     <item>10 objetos clasificados</item>
     <item>20 objetos clasificados</item>
     <item>50 objetos clasificados</item>
-  </string-array>
-
-    <string-array name="pref_keep_count_values" translatable="false">
-    <item>5</item>
-    <item>10</item>
-    <item>20</item>
-    <item>50</item>
   </string-array>
 </resources>
