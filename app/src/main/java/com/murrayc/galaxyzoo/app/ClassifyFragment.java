@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
@@ -107,6 +108,30 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         }
 
         mLoadingView.setVisibility(show ? View.VISIBLE : View.GONE);
+
+        //If we are showing the loading view then we should hide the other fragments,
+        //and vice-versa.
+        final FragmentManager fragmentManager = getChildFragmentManager();
+        final FragmentTransaction transaction = fragmentManager.beginTransaction();
+        final Fragment fragmentSubject = fragmentManager.findFragmentById(R.id.child_fragment_subject);
+        if (fragmentSubject != null) {
+            if (show) {
+                transaction.hide(fragmentSubject);
+            } else {
+                transaction.show(fragmentSubject);
+            }
+        }
+
+        final Fragment fragmentQuestion = fragmentManager.findFragmentById(R.id.child_fragment_question);
+        if (fragmentQuestion != null) {
+            if (show) {
+                transaction.hide(fragmentSubject);
+            } else {
+                transaction.show(fragmentSubject);
+            }
+        }
+
+        transaction.commit();
     }
 
     private void addOrUpdateChildFragments() {
