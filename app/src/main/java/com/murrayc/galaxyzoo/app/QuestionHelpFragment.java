@@ -26,7 +26,6 @@ import com.murrayc.galaxyzoo.app.provider.Config;
  * A simple {@link Fragment} subclass.
  */
 public class QuestionHelpFragment extends BaseQuestionFragment {
-    private Singleton mSingleton;
     private View mRootView;
 
     public QuestionHelpFragment() {
@@ -177,9 +176,4 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             Log.error("Could not open the example image URI.", e);
         }
     }
-
-    public Singleton getSingleton() {
-        return mSingleton;
-    }
-
 }
