@@ -28,6 +28,8 @@ import android.text.TextUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -39,7 +41,7 @@ import java.util.Locale;
 public class Singleton {
 
     private static final String JSON_FILE_EXTENSION = ".json";
-    private static Callbacks mCallbacks;
+    private static List<Callbacks> mCallbacks = new ArrayList<>();
     private static Singleton ourInstance = null;
     private IconsCache mIconsCache = null;
     private DecisionTree mDecisionTree = null;
@@ -99,7 +101,10 @@ public class Singleton {
 
         //The Galaxy zoo files, such as ch_cn.json are lowercase, instead of having the
         //country code in uppercase, such as ch_CN, like normal system locales.
-        result.countryCode =  locale.getCountry().toLowerCase();
+        final String country = locale.getCountry();
+        if (!TextUtils.isEmpty(country)) {
+            result.countryCode = country.toLowerCase();
+        }
 
         return result;
     }
@@ -115,9 +120,35 @@ public class Singleton {
         return null;
     }
 
-    private static void onLoginTaskFinished() {
-        if (mCallbacks != null) {
-            mCallbacks.onInitialized();
+    private static void onInitTaskFinished() {
+        //Sanity check:
+        if (ourInstance == null) {
+            Log.error("onInitTaskFinished(): ourInstance is null.");
+        }
+
+        //Make a deep copy of the list,
+        //to avoid the callbacks from adding to the list as we iterate over it:
+        final List<Callbacks> copy = new ArrayList<>();
+        for(final Callbacks callbacks : mCallbacks) {
+            if (callbacks != null) {
+                copy.add(callbacks);
+            }
+        }
+
+        //Clear the list of callbacks,
+        //so we can find any that were added (by the callbacks) while we were iterating.
+        mCallbacks = new ArrayList<>();
+
+        for(final Callbacks callbacks : copy) {
+            if (callbacks != null) {
+                callbacks.onInitialized();
+            }
+        }
+
+        //Call the new callbacks, if any.
+        //TODO: Avoid an infinite loop.
+        if (!mCallbacks.isEmpty()) {
+            onInitTaskFinished();
         }
     }
 
@@ -134,7 +165,7 @@ public class Singleton {
         }
 
         // Instantiate the Singleton and call our callback later:
-        mCallbacks = callbacks;
+        mCallbacks.add(callbacks);
         final InitAsyncTask task = new InitAsyncTask();
         task.execute(context);
     }
@@ -208,7 +239,7 @@ public class Singleton {
         protected void onPostExecute(final Void result) {
             super.onPostExecute(result);
 
-            onLoginTaskFinished();
+            onInitTaskFinished();
         }
     }
 
