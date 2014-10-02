@@ -43,6 +43,7 @@ public class Singleton {
     private static final String JSON_FILE_EXTENSION = ".json";
     private static List<Callbacks> mCallbacks = new ArrayList<>();
     private static Singleton ourInstance = null;
+    private static boolean initializationInProgress = false;
     private IconsCache mIconsCache = null;
     private DecisionTree mDecisionTree = null;
     private LocaleDetails mLocaleDetails = null;
@@ -150,6 +151,8 @@ public class Singleton {
         if (!mCallbacks.isEmpty()) {
             onInitTaskFinished();
         }
+
+        initializationInProgress = false;
     }
 
     public static void init(final Context context, final Callbacks callbacks) {
@@ -166,8 +169,14 @@ public class Singleton {
 
         // Instantiate the Singleton and call our callback later:
         mCallbacks.add(callbacks);
-        final InitAsyncTask task = new InitAsyncTask();
-        task.execute(context);
+
+        if(!initializationInProgress) {
+            //Set initializationInProgress to stop the (slow) constructor
+            //being called twice.
+            initializationInProgress = true;
+            final InitAsyncTask task = new InitAsyncTask();
+            task.execute(context);
+        }
     }
 
     public static Singleton getInstance() {
