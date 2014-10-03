@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
@@ -89,7 +90,7 @@ public class SubjectViewerActivity extends ItemActivity {
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
             final Intent intent = new Intent(this, ListActivity.class);
-            navigateUpTo(intent);
+            NavUtils.navigateUpTo(this, intent);
             return true;
         }
 
