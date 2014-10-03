@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
@@ -365,7 +366,7 @@ public class QuestionFragment extends BaseQuestionFragment
             button.setTextOn(checkbox.getText());
             button.setTextOff(checkbox.getText());
 
-            insertButtonInRow(row, button);
+            insertButtonInRow(activity, row, button);
 
             final BitmapDrawable icon = getIcon(activity, checkbox);
             button.setCompoundDrawables(null, icon, null, null);
@@ -398,7 +399,7 @@ public class QuestionFragment extends BaseQuestionFragment
             }
 
             final Button button = createAnswerButton(activity, answer);
-            insertButtonInRow(row, button);
+            insertButtonInRow(activity, row, button);
 
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -419,7 +420,7 @@ public class QuestionFragment extends BaseQuestionFragment
             final int remaining_in_row = COL_COUNT - col + 1;
             for (int i = 0; i < remaining_in_row; i++) {
                 final FrameLayout placeholder = new FrameLayout(activity);
-                insertButtonInRow(row, placeholder);
+                insertButtonInRow(activity ,row, placeholder);
             }
         }
     }
@@ -431,9 +432,22 @@ public class QuestionFragment extends BaseQuestionFragment
         return row;
     }
 
-    private static void insertButtonInRow(final TableRow row, final View button) {
+    private static void insertButtonInRow(final Context context, final TableRow row, final View button) {
         final TableRow.LayoutParams params =
                 new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1f);
+        //Use as little padding as possible at the left and right because the button
+        //will usually get extra space from the TableLayout anyway,
+        //but we want to avoid ugly line-breaks when the text is long (such as in translations).
+
+        //TODO: When we use smaller dp values, there seems to be no padding at the sides at all.
+        final int padding = UiUtils.getPxForDpResource(context, R.dimen.standard_margin) * 2;
+        button.setPadding(padding, button.getPaddingTop(), padding, button.getPaddingBottom());
+
+        //TODO: A margin of 0 still seems to leave a visible margin.
+        //if(row.getChildCount() > 0) {
+            //final int margin = UiUtils.getPxForDpResource(context, R.dimen.standard_margin);
+            //params.setMargins(0, 0, 0, 0);
+        //}
         row.addView(button, params);
     }
 

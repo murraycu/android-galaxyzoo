@@ -25,6 +25,7 @@ import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -99,5 +100,10 @@ class UiUtils {
     static void showLoggedInToast(final Context context) {
         final Toast toast = Toast.makeText(context, "Logged In", Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    static int getPxForDpResource(final Context context, int resourceId) {
+        final Resources r = context.getResources();
+        return r.getDimensionPixelSize(resourceId);
     }
 }

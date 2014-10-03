@@ -3,9 +3,7 @@ package com.murrayc.galaxyzoo.app;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.view.MarginLayoutParamsCompat;
@@ -98,7 +96,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
                         TableRow.LayoutParams.WRAP_CONTENT));
         final TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
                 TableLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, getPxForDpResource(activity, R.dimen.standard_large_margin), 0, 0);
+        params.setMargins(0, UiUtils.getPxForDpResource(activity, R.dimen.standard_large_margin), 0, 0);
         tableLayout.addView(row, params);
 
 
@@ -113,7 +111,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
         final LinearLayout.LayoutParams paramsHorizontal = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        paramsHorizontal.setMargins(0, getPxForDpResource(activity, R.dimen.standard_margin), 0, 0);
+        paramsHorizontal.setMargins(0, UiUtils.getPxForDpResource(activity, R.dimen.standard_margin), 0, 0);
         layoutHorizontal.setLayoutParams(paramsHorizontal);
         layoutVertical.addView(layoutHorizontal);
 
@@ -137,7 +135,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
             //This requires API level 17: paramsImage.setMarginStart(getPxForDp(activity, MARGIN_MEDIUM_DP));
             //imageExample.setLayoutParams(paramsImage);
-            MarginLayoutParamsCompat.setMarginStart(paramsImage, getPxForDpResource(activity, R.dimen.standard_large_margin));
+            MarginLayoutParamsCompat.setMarginStart(paramsImage, UiUtils.getPxForDpResource(activity, R.dimen.standard_large_margin));
 
             imageExample.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -150,11 +148,6 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         }
 
         row.addView(layoutVertical);
-    }
-
-    private int getPxForDpResource(final Context context, int resourceId) {
-        final Resources r = context.getResources();
-        return r.getDimensionPixelSize(resourceId);
     }
 
     private void onExampleImageClicked(final String iconName) {
