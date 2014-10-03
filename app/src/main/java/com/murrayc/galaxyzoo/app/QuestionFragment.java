@@ -415,7 +415,7 @@ public class QuestionFragment extends BaseQuestionFragment
             }
         }
 
-        if (rows > 1) {
+        if ((row != null) && (rows > 1)) {
             final int remaining_in_row = COL_COUNT - col + 1;
             for (int i = 0; i < remaining_in_row; i++) {
                 final FrameLayout placeholder = new FrameLayout(activity);
