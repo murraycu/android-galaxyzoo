@@ -54,22 +54,25 @@ public class ListFragment extends ZooFragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     static final int COLUMN_INDEX_LOCATION_THUMBNAIL_URI = 1;
-    static final int COLUMN_INDEX_LOCATION_THUMBNAIL_DONE = 2;
+    static final int COLUMN_INDEX_LOCATION_THUMBNAIL_DOWNLOADED = 2;
     static final int COLUMN_INDEX_DONE = 3;
     static final int COLUMN_INDEX_UPLOADED = 4;
     static final int COLUMN_INDEX_FAVOURITE = 5;
     private static final int URL_LOADER = 0;
+
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
     // from our ContentProvider) only knows about the underlying SQLite database column names,
     // not our ContentProvider's column names. That seems like a design error in the Android API.
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
+
     /**
      * The serialization (saved instance state) Bundle key representing the
      * activated item position. Only used on tablets.
      */
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
+
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.

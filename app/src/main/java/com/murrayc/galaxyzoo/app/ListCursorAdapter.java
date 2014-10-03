@@ -53,7 +53,7 @@ class ListCursorAdapter extends CursorAdapter {
 
         //final String subjectId = cursor.getString(ListFragment.COLUMN_INDEX_SUBJECT_ID);
         final String imageUriStr = cursor.getString(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_URI);
-        final boolean thumbnailDownloaded = (cursor.getInt(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_DONE) == 1);
+        final boolean thumbnailDownloaded = (cursor.getInt(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_DOWNLOADED) == 1);
         final boolean done = (cursor.getInt(ListFragment.COLUMN_INDEX_DONE) == 1);
         final boolean uploaded = (cursor.getInt(ListFragment.COLUMN_INDEX_UPLOADED) == 1);
         final boolean favorite = (cursor.getInt(ListFragment.COLUMN_INDEX_FAVOURITE) == 1);
