@@ -196,6 +196,8 @@ class IconsCache {
                 Log.error("IconsCache.reloadIcon(): Failed to delete invalid cache file.");
                 return false;
             }
+
+            return false;
         }
 
         map.put(cssName, bitmap);
