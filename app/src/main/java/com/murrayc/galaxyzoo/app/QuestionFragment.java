@@ -338,17 +338,19 @@ public class QuestionFragment extends BaseQuestionFragment
 
         layoutAnswers.removeAllViews();
         layoutAnswers.setShrinkAllColumns(true);
-        //layoutAnswers.setStretchAllColumns(true);
+        layoutAnswers.setStretchAllColumns(true);
 
         //Checkboxes:
         mCheckboxButtons.clear();
         final int COL_COUNT = 4;
         int col = 1;
+        int rows = 0;
         TableRow row = null;
         for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
             //Start a new row if necessary:
             if (row == null) {
                 row = addRowToTable(activity, layoutAnswers);
+                rows++;
             }
 
             final ToggleButton button = new ToggleButton(activity);
@@ -392,6 +394,7 @@ public class QuestionFragment extends BaseQuestionFragment
             //Start a new row if necessary:
             if (row == null) {
                 row = addRowToTable(activity, layoutAnswers);
+                rows++;
             }
 
             final Button button = createAnswerButton(activity, answer);
@@ -411,18 +414,26 @@ public class QuestionFragment extends BaseQuestionFragment
                 row = null;
             }
         }
+
+        if (rows > 1) {
+            final int remaining_in_row = COL_COUNT - col + 1;
+            for (int i = 0; i < remaining_in_row; i++) {
+                final FrameLayout placeholder = new FrameLayout(activity);
+                insertButtonInRow(row, placeholder);
+            }
+        }
     }
 
     private static TableRow addRowToTable(final Activity activity, final TableLayout layoutAnswers) {
-        TableRow row = new TableRow(activity);
+        final TableRow row = new TableRow(activity);
         layoutAnswers.addView(row,
-                new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.MATCH_PARENT));
+                new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT));
         return row;
     }
 
-    private static void insertButtonInRow(final TableRow row, final Button button) {
+    private static void insertButtonInRow(final TableRow row, final View button) {
         final TableRow.LayoutParams params =
-                new TableRow.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+                new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1f);
         row.addView(button, params);
     }
 
