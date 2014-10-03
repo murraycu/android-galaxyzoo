@@ -165,6 +165,10 @@ public class DecisionTree {
                     readJsonAnswers(reader, question.answers);
                     break;
                 }
+                case "checkboxes": {
+                    readJsonCheckboxes(reader, question.checkboxes);
+                    break;
+                }
                 default:
                     reader.skipValue();
             }
@@ -185,13 +189,38 @@ public class DecisionTree {
             }
         }
         reader.endObject();
+    }
 
+    private void readJsonCheckboxes(final JsonReader reader, final List<Checkbox> checkboxes) throws IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            final String answerId = reader.nextName();
+
+            final Checkbox checkbox = getCheckboxWithId(checkboxes, answerId);
+            if (checkbox != null) {
+                checkbox.setText(reader.nextString());
+            } else {
+                reader.skipValue();
+            }
+        }
+        reader.endObject();
     }
 
     private Answer getAnswerWithId(final List<Answer> answers, final String id) {
         for (final Answer answer : answers) {
             if (TextUtils.equals(id, answer.getId())) {
                 return answer;
+            }
+        }
+
+        return null;
+    }
+
+
+    private Checkbox getCheckboxWithId(final List<Checkbox> checkboxes, final String id) {
+        for (final Checkbox checkbox : checkboxes) {
+            if (TextUtils.equals(id, checkbox.getId())) {
+                return checkbox;
             }
         }
 
