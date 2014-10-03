@@ -36,7 +36,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,7 +43,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridLayout;
+import android.widget.FrameLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -329,19 +330,30 @@ public class QuestionFragment extends BaseQuestionFragment
         textViewText.setText(question.getText());
 
 
-        final GridLayout layoutAnswers = (GridLayout) mRootView.findViewById(R.id.layoutAnswers);
+        final TableLayout layoutAnswers = (TableLayout) mRootView.findViewById(R.id.layoutAnswers);
         if (layoutAnswers == null) {
             Log.error("layoutAnswers is null.");
             return;
         }
 
         layoutAnswers.removeAllViews();
+        layoutAnswers.setShrinkAllColumns(true);
+        //layoutAnswers.setStretchAllColumns(true);
 
         //Checkboxes:
         mCheckboxButtons.clear();
+        final int COL_COUNT = 4;
+        int col = 1;
+        TableRow row = null;
         for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
+            //Start a new row if necessary:
+            if (row == null) {
+                row = addRowToTable(activity, layoutAnswers);
+            }
+
             final ToggleButton button = new ToggleButton(activity);
             makeButtonTextSmall(activity, button);
+
 
             //Use just the highlighting (line, color, etc) to show that it's selected,
             //instead of On/Off, so we don't need a separate label.
@@ -351,11 +363,7 @@ public class QuestionFragment extends BaseQuestionFragment
             button.setTextOn(checkbox.getText());
             button.setTextOff(checkbox.getText());
 
-            //We specify Gravity.FILL to make the buttons all be the same width and height.
-            //Note that just using button.setGravity() doesn't seem to work.
-            final GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.setGravity(Gravity.FILL);
-            layoutAnswers.addView(button, params);
+            insertButtonInRow(row, button);
 
             final BitmapDrawable icon = getIcon(activity, checkbox);
             button.setCompoundDrawables(null, icon, null, null);
@@ -370,17 +378,24 @@ public class QuestionFragment extends BaseQuestionFragment
                 }
             });
             */
+
+            if (col < COL_COUNT) {
+                col++;
+            } else {
+                col = 1;
+                row = null;
+            }
         }
 
         //Answers:
         for (final DecisionTree.Answer answer : question.answers) {
-            final Button button = createAnswerButton(activity, answer);
+            //Start a new row if necessary:
+            if (row == null) {
+                row = addRowToTable(activity, layoutAnswers);
+            }
 
-            //We specify Gravity.FILL to make the buttons all be the same width and height.
-            //Note that just using button.setGravity() doesn't seem to work.
-            final GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.setGravity(Gravity.FILL);
-            layoutAnswers.addView(button, params);
+            final Button button = createAnswerButton(activity, answer);
+            insertButtonInRow(row, button);
 
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -388,7 +403,27 @@ public class QuestionFragment extends BaseQuestionFragment
                     onAnswerButtonClicked(question.getId(), answer.getId());
                 }
             });
+
+            if (col < COL_COUNT) {
+                col++;
+            } else {
+                col = 1;
+                row = null;
+            }
         }
+    }
+
+    private static TableRow addRowToTable(final Activity activity, final TableLayout layoutAnswers) {
+        TableRow row = new TableRow(activity);
+        layoutAnswers.addView(row,
+                new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.MATCH_PARENT));
+        return row;
+    }
+
+    private static void insertButtonInRow(final TableRow row, final Button button) {
+        final TableRow.LayoutParams params =
+                new TableRow.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+        row.addView(button, params);
     }
 
     private void makeButtonTextSmall(final Activity activity, final Button button) {
