@@ -304,6 +304,14 @@ public class ListFragment extends ZooFragment
             return;
         }
 
+        final boolean imageDownloaded = (cursor.getInt(COLUMN_INDEX_LOCATION_THUMBNAIL_DOWNLOADED) == 1);
+        if (!imageDownloaded) {
+            //Just ignore clicks on items that are still downloading.
+            //TODO: We don't check tha the full image has been downloaded,
+            //so make sure that the activities can show them when they are ready.
+            return;
+        }
+
         final String itemId = cursor.getString(COLUMN_INDEX_ID);
         final boolean done = (cursor.getInt(COLUMN_INDEX_DONE) == 1);
 
