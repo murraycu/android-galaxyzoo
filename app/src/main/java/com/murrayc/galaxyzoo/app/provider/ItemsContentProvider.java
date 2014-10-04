@@ -1173,6 +1173,7 @@ public class ItemsContentProvider extends ContentProvider {
                         return c;
                     }
 
+                    c.close();
                     c = queryItemNext(projection, selection, selectionArgs, orderBy);
                 }
 
