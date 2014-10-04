@@ -828,7 +828,6 @@ public class ItemsContentProvider extends ContentProvider {
         throwIfNoNetwork();
 
         if (asyncFileDownloads) {
-            //TODO: Pass the subjectId and imageType:
             final FileCacheAsyncTask task = new FileCacheAsyncTask(this, subjectId, imageType);
             task.execute(uriFileToCache, cacheFileUri);
             return true;
