@@ -68,7 +68,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ItemsContentProvider extends ContentProvider {
+public class ItemsContentProvider extends ContentProvider implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     //Whether the call to METHOD_LOGIN was successful.
     public static final String METHOD_LOGIN = "login";
@@ -755,6 +755,15 @@ public class ItemsContentProvider extends ContentProvider {
         return null;
     }
 
+    @Override
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        //Changes to these preferences would need us to do some work:
+        if (TextUtils.equals(key, PREF_KEY_CACHE_SIZE) ||
+                TextUtils.equals(key, PREF_KEY_KEEP_COUNT)) {
+            queueRegularTasks();
+        }
+    }
+
     class CreatedFileUri {
         final String subjectId;
         final ImageType imageType;
@@ -893,6 +902,9 @@ public class ItemsContentProvider extends ContentProvider {
         mOpenDbHelper = new DatabaseHelper(getContext());
         //This is useful to wipe the database when testing.
         //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
+
+        PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
+
         return true;
     }
 
