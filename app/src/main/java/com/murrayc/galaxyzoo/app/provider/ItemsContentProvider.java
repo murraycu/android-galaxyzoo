@@ -1559,8 +1559,19 @@ public class ItemsContentProvider extends ContentProvider {
         return result;
     }
 
+    /** This will not always provide as many items as requested.
+     *
+     * @param count
+     * @return
+     */
     private List<Subject> requestMoreItemsSync(int count) {
         throwIfNoNetwork();
+
+        //Avoid suddenly doing too much network and disk IO
+        //as we download too many images.
+        if (count > 2) {
+            count = 2;
+        }
 
         //TODO: Can we use Java 7's try-with-resources to automatically close()
         //the InputStream even though none of the code here should throw an
