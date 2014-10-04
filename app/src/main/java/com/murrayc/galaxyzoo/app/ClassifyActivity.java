@@ -19,12 +19,16 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 /**
@@ -40,9 +44,22 @@ public class ClassifyActivity extends ItemActivity implements ItemFragment.Callb
 
     private int mClassificationsDoneInSession = 0;
 
+    // The authority for the sync adapter's content provider
+    public static final String AUTHORITY = Item.AUTHORITY;
+
+    // An account type, in the form of a domain name
+    public static final String ACCOUNT_TYPE = "example.com";
+
+    // The account name
+    public static final String ACCOUNT = "dummyaccount";
+
+    Account mAccount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAccount = createSyncAccount(this);
 
         if (TextUtils.isEmpty(getItemId())) {
             setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
@@ -94,7 +111,38 @@ public class ClassifyActivity extends ItemActivity implements ItemFragment.Callb
         }
     }
 
-    @Override
+    private Account createSyncAccount(final Context context) {
+        // Create the account type and default account
+        Account newAccount = new Account(
+                ACCOUNT, ACCOUNT_TYPE);
+        // Get an instance of the Android account manager
+        final AccountManager accountManager =
+                (AccountManager) context.getSystemService(
+                        ACCOUNT_SERVICE);
+
+        /*
+         * Add the account and account type, no password or user data
+         * If successful, return the Account object, otherwise report an error.
+         */
+        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+            /*
+             * If you don't set android:syncable="true" in
+             * in your <provider> element in the manifest,
+             * then call context.setIsSyncable(account, AUTHORITY, 1)
+             * here.
+             */
+        } else {
+            /*
+             * The account exists or some other error occurred. Log this, report it,
+             * or handle it internally.
+             */
+        }
+
+        return newAccount;
+    }
+
+
+        @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         final int id = item.getItemId();
