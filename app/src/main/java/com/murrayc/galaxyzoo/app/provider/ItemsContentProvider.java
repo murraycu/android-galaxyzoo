@@ -2005,7 +2005,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         @Override
         protected Boolean doInBackground(final String... params) {
             if (params.length < 2) {
-                Log.error("LoginTask: not enough params.");
+                Log.error("FileCacheAsyncTask: not enough params.");
                 return false;
             }
 
