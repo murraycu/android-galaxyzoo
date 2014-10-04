@@ -442,6 +442,8 @@ public class ItemsContentProvider extends ContentProvider {
 
         mAlreadyQueuedRegularTasks = true;
 
+        Log.info("queueRegularTasks()");
+
         //We use Looper.getMainLooper() to avoid this error sometimes:
         //java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
         final Handler handler = new Handler(Looper.getMainLooper());
@@ -469,12 +471,15 @@ public class ItemsContentProvider extends ContentProvider {
      * @return Return true if we know for sure that no further work is currently necessary.
      */
     private boolean doRegularTasks() {
+        Log.info("queueRegularTasks() start");
         //Do the download first, to avoid the UI having to wait for new subjects to classify.
         final boolean noDownloadNecessary = downloadMinimumSubjectsAsync();
 
         //Do less urgent things next:
         final boolean noUploadNecessary = uploadOutstandingClassifications();
         final boolean noRemovalNecessary = removeOldSubjects();
+
+        Log.info("queueRegularTasks() end");
 
         return noUploadNecessary && noDownloadNecessary && noRemovalNecessary;
     }
@@ -993,6 +998,7 @@ public class ItemsContentProvider extends ContentProvider {
         final int count = getUploadedCount();
         final int max = getKeepCount();
         if (count > max) {
+            Log.info("removeOldSubjects(): start");
             //Get the oldest done (and uploaded) items:
             final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
             builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
@@ -1022,6 +1028,9 @@ public class ItemsContentProvider extends ContentProvider {
             }
 
             c.close();
+
+            Log.info("removeOldSubjects(): end");
+
             return false;
         } else {
             return true; //Tell the caller that no action was necessary.
@@ -1970,6 +1979,8 @@ public class ItemsContentProvider extends ContentProvider {
                 return false;
             }
 
+            Log.info("FileCacheAsyncTask.doInBackground()");
+
             //TODO: Just set these in the constructor?
             final String uriFileToCache = params[0];
             final String cacheFileUri = params[1];
@@ -2006,6 +2017,8 @@ public class ItemsContentProvider extends ContentProvider {
                 return null;
             }
 
+            Log.info("QueryAsyncTask.doInBackground()");
+
             //TODO: Why not just set these in the constructor?
             //That seems to be allowed:
             //See Memory observability here:
@@ -2033,6 +2046,8 @@ public class ItemsContentProvider extends ContentProvider {
                 Log.error("UploadAsyncTask: not enough params.");
                 return false;
             }
+
+            Log.info("UploadAsyncTask.doInBackground()");
 
             //TODO: Why not just set these in the constructor?
             //That seems to be allowed:
