@@ -162,7 +162,9 @@ public class HttpUtils {
             return 0;
         }
 
-        return con.getLastModified();
+        final long result = con.getLastModified();
+        con.disconnect(); //Otherwise StrictMode says (with an exception) that we leak.
+        return result;
     }
 
     private static void setConnectionUserAgent(final HttpURLConnection connection) {
