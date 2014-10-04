@@ -223,6 +223,12 @@ public class ItemsContentProvider extends ContentProvider {
 
     }
 
+    //This is an attempt to reduce the amount of Network and Disk IO
+    //that the system does, because even when using a Thread (with Thread.MIN_PRIORITY) instead of
+    //AsyncTask, the UI is non responsive during this work.
+    //For instance, buttons appear to be pressed, but their clicked listeners are not called.
+    private static final int MAXIMUM_DOWNLOAD_ITEMS = 2;
+
     private int mUploadsInProgress = 0;
     private DatabaseHelper mOpenDbHelper;
     private boolean mRegularTasksNecessary = true;
@@ -1569,8 +1575,8 @@ public class ItemsContentProvider extends ContentProvider {
 
         //Avoid suddenly doing too much network and disk IO
         //as we download too many images.
-        if (count > 2) {
-            count = 2;
+        if (count > MAXIMUM_DOWNLOAD_ITEMS) {
+            count = MAXIMUM_DOWNLOAD_ITEMS;
         }
 
         //TODO: Can we use Java 7's try-with-resources to automatically close()
