@@ -1666,7 +1666,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     }
     */
 
-    private LoginResult loginSync(final String username, final String password) {
+    private static LoginResult loginSync(final String username, final String password) {
         final HttpURLConnection conn = HttpUtils.openConnection(Config.LOGIN_URI);
         if (conn == null) {
             return null;
@@ -1717,7 +1717,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         }
     }
 
-    private String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
+    private static String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
         final StringBuilder result = new StringBuilder();
         boolean first = true;
 
@@ -1749,7 +1749,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         editor.apply();
     }
 
-    private boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
+    private static boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
         OutputStream out = null;
         try {
             out = conn.getOutputStream();
