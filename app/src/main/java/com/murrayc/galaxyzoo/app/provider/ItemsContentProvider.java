@@ -235,8 +235,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     private boolean mAlreadyQueuedRegularTasks = false;
 
     public ItemsContentProvider() {
-        //Download enough subjects:
-        queueRegularTasks();
     }
 
     private static LoginResult parseLoginResponseContent(final InputStream content) throws IOException {
@@ -902,6 +900,9 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         mOpenDbHelper = new DatabaseHelper(getContext());
         //This is useful to wipe the database when testing.
         //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
+
+        //Download enough subjects:
+        queueRegularTasks();
 
         PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
 
