@@ -2035,6 +2035,143 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
+    private Boolean doUploadSync(final String itemId, final String subjectId, final String authName, final String authApiKey) {
+        final HttpURLConnection conn = HttpUtils.openConnection(Config.POST_URI);
+        if (conn == null) {
+            return false;
+        }
+
+        try {
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+        } catch (final IOException e) {
+            Log.error("UploadAsyncTask.doInBackground(): exception during HTTP connection", e);
+
+            return false;
+        }
+
+
+        //Add the authentication details to the headers;
+        conn.setRequestProperty("Authorization", generateAuthorizationHeader(authName, authApiKey));
+
+        final String PARAM_PART_CLASSIFICATION = "classification";
+
+        //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
+        //but that did not allow multiple parameters with the same name, which we need.
+        final List<NameValuePair> nameValuePairs = new ArrayList<>();
+        nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
+                subjectId));
+
+        //Mark it as a favorite if necessary:
+        {
+            SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+            builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
+            builder.appendWhere(DatabaseHelper.ItemsDbColumns._ID + " = ?"); //We use ? to avoid SQL Injection.
+            final String[] selectionArgs = {itemId};
+            final String[] projection = {DatabaseHelper.ItemsDbColumns.FAVORITE};
+            final Cursor c = builder.query(getDb(), projection,
+                    null, selectionArgs,
+                    null, null, null);
+
+            if (c.moveToFirst()) {
+                final int favorite = c.getInt(0);
+                if (favorite == 1) {
+                    nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[favorite][]",
+                            "true"));
+                }
+            }
+
+            c.close();
+        }
+
+
+        Cursor c;
+        {
+            final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+            builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);
+            builder.appendWhere(DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?"); //We use ? to avoid SQL Injection.
+            final String[] selectionArgs = {itemId};
+            final String[] projection = {DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE,
+                    DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID,
+                    DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID};
+            final String orderBy = DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE + " ASC";
+            c = builder.query(getDb(), projection,
+                    null, selectionArgs,
+                    null, null, orderBy);
+        }
+
+
+        //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        while (c.moveToNext()) {
+            final int sequence = c.getInt(0);
+            final String questionId = c.getString(1);
+            final String answerId = c.getString(2);
+
+            //Add the question's answer:
+            //TODO: Is the string representation of sequence locale-dependent?
+            final String questionKey =
+                    PARAM_PART_CLASSIFICATION + "[annotations][" + sequence + "][" + questionId + "]";
+            nameValuePairs.add(new BasicNameValuePair(questionKey, answerId));
+
+            SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+            builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES);
+            builder.appendWhere("(" + DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID + " = ?) AND " +
+                    "(" + DatabaseHelper.ClassificationCheckboxesDbColumns.QUESTION_ID + " == ?)"); //We use ? to avoid SQL Injection.
+            final String[] selectionArgs = {itemId, questionId};
+
+            //Add the question's answer's selected checkboxes, if any:
+            //The sequence will be the same for any selected checkbox for the same answer,
+            //so we don't bother getting that, or sorting by that.
+            final String[] projection = {DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID};
+            final String orderBy = DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID + " ASC";
+            final Cursor cursorCheckboxes = builder.query(getDb(), projection,
+                    null, selectionArgs,
+                    null, null, orderBy);
+            while (cursorCheckboxes.moveToNext()) {
+                final String checkboxId = cursorCheckboxes.getString(0);
+
+                //TODO: The Galaxy-Zoo server expects us to reuse the parameter name,
+                //TODO: Is the string representation of sequence locale-dependent?
+                nameValuePairs.add(new BasicNameValuePair(questionKey, checkboxId));
+            }
+
+            cursorCheckboxes.close();
+        }
+
+        c.close();
+
+        if (!writeParamsToHttpPost(conn, nameValuePairs)) {
+            return false;
+        }
+
+        //TODO: Is this necessary? conn.connect();
+
+        //Get the response:
+        InputStream in = null;
+        try {
+            in = conn.getInputStream();
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+                Log.error("UploadAsyncTask.doInBackground(): Did not receive the 201 Created status code: " + conn.getResponseCode());
+                return false;
+            }
+
+            return true;
+        } catch (final IOException e) {
+            Log.error("UploadAsyncTask.doInBackground(): exception during HTTP connection", e);
+
+            return false;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (final IOException e) {
+                    Log.error("UploadAsyncTask.doInBackground(): exception while closing in", e);
+                }
+            }
+        }
+    }
+
     private class UploadAsyncTask extends AsyncTask<String, Integer, Boolean> {
 
         private String mItemId = null;
@@ -2059,140 +2196,7 @@ public class ItemsContentProvider extends ContentProvider {
             final String authApiKey = params[3];
 
 
-            final HttpURLConnection conn = HttpUtils.openConnection(Config.POST_URI);
-            if (conn == null) {
-                return false;
-            }
-
-            try {
-                conn.setRequestMethod("POST");
-                conn.setDoOutput(true);
-                conn.setDoInput(true);
-            } catch (final IOException e) {
-                Log.error("UploadAsyncTask.doInBackground(): exception during HTTP connection", e);
-
-                return false;
-            }
-
-
-            //Add the authentication details to the headers;
-            conn.setRequestProperty("Authorization", generateAuthorizationHeader(authName, authApiKey));
-
-            final String PARAM_PART_CLASSIFICATION = "classification";
-
-            //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
-            //but that did not allow multiple parameters with the same name, which we need.
-            final List<NameValuePair> nameValuePairs = new ArrayList<>();
-            nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
-                    subjectId));
-
-            //Mark it as a favorite if necessary:
-            {
-                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-                builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
-                builder.appendWhere(DatabaseHelper.ItemsDbColumns._ID + " = ?"); //We use ? to avoid SQL Injection.
-                final String[] selectionArgs = {mItemId};
-                final String[] projection = {DatabaseHelper.ItemsDbColumns.FAVORITE};
-                final Cursor c = builder.query(getDb(), projection,
-                        null, selectionArgs,
-                        null, null, null);
-
-                if (c.moveToFirst()) {
-                    final int favorite = c.getInt(0);
-                    if (favorite == 1) {
-                        nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[favorite][]",
-                                "true"));
-                    }
-                }
-
-                c.close();
-            }
-
-
-            Cursor c;
-            {
-                final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS);
-                builder.appendWhere(DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?"); //We use ? to avoid SQL Injection.
-                final String[] selectionArgs = {mItemId};
-                final String[] projection = {DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE,
-                        DatabaseHelper.ClassificationAnswersDbColumns.QUESTION_ID,
-                        DatabaseHelper.ClassificationAnswersDbColumns.ANSWER_ID};
-                final String orderBy = DatabaseHelper.ClassificationAnswersDbColumns.SEQUENCE + " ASC";
-                c = builder.query(getDb(), projection,
-                        null, selectionArgs,
-                        null, null, orderBy);
-            }
-
-
-            //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            while (c.moveToNext()) {
-                final int sequence = c.getInt(0);
-                final String questionId = c.getString(1);
-                final String answerId = c.getString(2);
-
-                //Add the question's answer:
-                //TODO: Is the string representation of sequence locale-dependent?
-                final String questionKey =
-                        PARAM_PART_CLASSIFICATION + "[annotations][" + sequence + "][" + questionId + "]";
-                nameValuePairs.add(new BasicNameValuePair(questionKey, answerId));
-
-                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-                builder.setTables(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES);
-                builder.appendWhere("(" + DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID + " = ?) AND " +
-                        "(" + DatabaseHelper.ClassificationCheckboxesDbColumns.QUESTION_ID + " == ?)"); //We use ? to avoid SQL Injection.
-                final String[] selectionArgs = {mItemId, questionId};
-
-                //Add the question's answer's selected checkboxes, if any:
-                //The sequence will be the same for any selected checkbox for the same answer,
-                //so we don't bother getting that, or sorting by that.
-                final String[] projection = {DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID};
-                final String orderBy = DatabaseHelper.ClassificationCheckboxesDbColumns.CHECKBOX_ID + " ASC";
-                final Cursor cursorCheckboxes = builder.query(getDb(), projection,
-                        null, selectionArgs,
-                        null, null, orderBy);
-                while (cursorCheckboxes.moveToNext()) {
-                    final String checkboxId = cursorCheckboxes.getString(0);
-
-                    //TODO: The Galaxy-Zoo server expects us to reuse the parameter name,
-                    //TODO: Is the string representation of sequence locale-dependent?
-                    nameValuePairs.add(new BasicNameValuePair(questionKey, checkboxId));
-                }
-
-                cursorCheckboxes.close();
-            }
-
-            c.close();
-
-            if (!writeParamsToHttpPost(conn, nameValuePairs)) {
-                return false;
-            }
-
-            //TODO: Is this necessary? conn.connect();
-
-            //Get the response:
-            InputStream in = null;
-            try {
-                in = conn.getInputStream();
-                if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-                    Log.error("UploadAsyncTask.doInBackground(): Did not receive the 201 Created status code: " + conn.getResponseCode());
-                    return false;
-                }
-
-                return true;
-            } catch (final IOException e) {
-                Log.error("UploadAsyncTask.doInBackground(): exception during HTTP connection", e);
-
-                return false;
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (final IOException e) {
-                        Log.error("UploadAsyncTask.doInBackground(): exception while closing in", e);
-                    }
-                }
-            }
+            return doUploadSync(mItemId, subjectId, authName, authApiKey);
         }
 
         @Override
