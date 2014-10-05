@@ -32,7 +32,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
@@ -42,6 +41,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
 
 import org.apache.http.NameValuePair;
@@ -51,30 +51,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ItemsContentProvider extends ContentProvider implements SharedPreferences.OnSharedPreferenceChangeListener {
-
-    //Whether the call to METHOD_LOGIN was successful.
-    public static final String METHOD_LOGIN = "login";
-    public static final String METHOD_LOGIN_ARG_USERNAME = "username";
-    public static final String METHOD_LOGIN_ARG_PASSWORD = "password";
-    public static final String LOGIN_METHOD_RESULT = "result";
 
     //TODO: Remove these explicit method calls, or keep them just for debugging,
     //when we make them happen automatically.
@@ -85,11 +74,10 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     public static final String URI_PART_FILE = "file";
     public static final String URI_PART_CLASSIFICATION_ANSWER = "classification-answer";
     public static final String URI_PART_CLASSIFICATION_CHECKBOX = "classification-checkbox";
-    public static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
-    public static final String PREF_KEY_AUTH_NAME = "auth_name";
     public static final String PREF_KEY_CACHE_SIZE = "cache_size";
     public static final String PREF_KEY_KEEP_COUNT = "keep_count";
     private static final String URI_PART_CLASSIFICATION = "classification";
+
     /**
      * The MIME type of {@link Item#CONTENT_URI} providing a directory of items.
      */
@@ -235,65 +223,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     private boolean mRequeue = false;
 
     public ItemsContentProvider() {
-    }
-
-    private static LoginResult parseLoginResponseContent(final InputStream content) throws IOException {
-        final String str = HttpUtils.getStringFromInputStream(content);
-
-        //A failure by default.
-        LoginResult result = new LoginResult(false, null, null);
-
-        JSONTokener tokener = new JSONTokener(str);
-        JSONObject jsonObject;
-        try {
-            jsonObject = new JSONObject(tokener);
-        } catch (JSONException e) {
-            Log.error("JSON parsing failed.", e);
-            return result;
-        }
-
-        try {
-            if (TextUtils.equals(jsonObject.getString("success"), "true")) {
-                Log.info("Login succeeded.");
-
-                //TODO: Store the name and api_key for later use when uploading classifications.
-                //final String id = jsonObject.getString("id");
-                final String apiKey = jsonObject.getString("api_key");
-                //final String avatar = jsonObject.getString("avatar");
-                //final long classificationCount = jsonObject.getLong("classification_count");
-                //final String email = jsonObject.getString("email");
-                //final long favoriteCount = jsonObject.getLong("favorite_count");
-                final String name = jsonObject.getString("name");
-                //final String zooniverseId = jsonObject.getString("zooniverse_id");
-
-                return new LoginResult(true, name, apiKey);
-
-                //Then there is an object called "project", like so:
-                /*
-                "project":{
-                    "classification_count":66,
-                            "favorite_count":2,
-                            "groups":{
-                        "50251c3b516bcb6ecb000002":{
-                            "classification_count":66,
-                                    "name":"sloan"
-                        }
-                    },
-                    "splits":{
-                    }
-                }
-                */
-            } else {
-                Log.info("Login failed.");
-
-                final String message = jsonObject.getString("message");
-                Log.info("Login failure message", message);
-                return result;
-            }
-        } catch (final JSONException e) {
-            Log.error("parseLoginResponseContent(): Exception", e);
-            return result;
-        }
     }
 
     private static List<Subject> parseQueryResponseContent(final InputStream content) {
@@ -924,51 +853,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         return true;
     }
 
-    @Override
-    public Bundle call(String method, String arg, Bundle extras) {
-        switch (method) {
-//            case METHOD_REQUEST_ITEMS:
-//                throwIfNoNetwork();
-//
-//                /** Check with the remote REST API asynchronously,
-//                 * informing the calling client later via notification.
-//                 */
-//                downloadMinimumSubjectsAsync();
-//                break;
-            case METHOD_LOGIN:
-                throwIfNoNetwork();
-
-                final String username = extras.getString(METHOD_LOGIN_ARG_USERNAME);
-                final String password = extras.getString(METHOD_LOGIN_ARG_PASSWORD);
-                if ((username == null) || (password == null)) {
-                    return null;
-                }
-
-                /** Attempt to login to the server.
-                 * We do this synchronously, waiting for the result,
-                 * so we can return the result to the caller.
-                 */
-                final LoginResult result = loginSync(username, password);
-                if (result == null) {
-                    return null;
-                }
-
-                if (result.getSuccess()) {
-                    saveAuthToPreferences(result.getName(), result.getApiKey());
-                } else {
-                    //Make sure that the auth key is wiped, so we know we are not logged in.
-                    //This is an unofficial way to log out, though that is only useful for debugging.
-                    saveAuthToPreferences(username, "");
-                }
-
-                final Bundle bundle = new Bundle();
-                bundle.putBoolean(LOGIN_METHOD_RESULT, result.getSuccess());
-                return bundle;
-        }
-
-        return null;
-    }
-
     private void requestMoreItemsAsync(int count) {
         final QueryAsyncTask task = new QueryAsyncTask();
         task.execute(count);
@@ -987,9 +871,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
         // TODO: Request re-authentication when the server says we have used the wrong name + api_key.
         // What does the server reply in that case?
-        final SharedPreferences prefs = Utils.getPreferences(getContext());
-        final String authName = prefs.getString(PREF_KEY_AUTH_NAME, null);
-        final String authApiKey = prefs.getString(PREF_KEY_AUTH_API_KEY, null);
+
 
         // query the database for any item whose classification is not yet uploaded.
         final String whereClause =
@@ -1015,7 +897,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
             mUploadsInProgress++;
             final UploadAsyncTask task = new UploadAsyncTask();
-            task.execute(itemId, subjectId, authName, authApiKey);
+            task.execute(itemId, subjectId);
         }
 
         c.close();
@@ -1687,124 +1569,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     }
     */
 
-    private static LoginResult loginSync(final String username, final String password) {
-        final HttpURLConnection conn = HttpUtils.openConnection(Config.LOGIN_URI);
-        if (conn == null) {
-            return null;
-        }
-
-        final List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new BasicNameValuePair("username", username));
-        nameValuePairs.add(new BasicNameValuePair("password", password));
-
-        try {
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-
-            if (!writeParamsToHttpPost(conn, nameValuePairs)) {
-                return null;
-            }
-
-            conn.connect();
-        } catch (final IOException e) {
-            Log.error("loginSync(): exception during HTTP connection", e);
-
-            return null;
-        }
-
-        //Get the response:
-        InputStream in = null;
-        try {
-            in = conn.getInputStream();
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.error("loginSync(): response code: " + conn.getResponseCode());
-                return null;
-            }
-
-            return parseLoginResponseContent(in);
-        } catch (final IOException e) {
-            Log.error("loginSync(): exception during HTTP connection", e);
-
-            return null;
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (final IOException e) {
-                    Log.error("loginSync(): exception while closing in", e);
-                }
-            }
-        }
-    }
-
-    private static String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
-        final StringBuilder result = new StringBuilder();
-        boolean first = true;
-
-        for (final NameValuePair pair : nameValuePairs) {
-            if (first) {
-                first = false;
-            } else {
-                result.append("&");
-            }
-
-            try {
-                result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
-                result.append("=");
-                result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                Log.error("getPostDataBytes(): Exception", e);
-                return null;
-            }
-        }
-
-        return result.toString();
-    }
-
-    private void saveAuthToPreferences(final String name, final String apiKey) {
-        final SharedPreferences prefs = Utils.getPreferences(getContext());
-        final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PREF_KEY_AUTH_NAME, name);
-        editor.putString(PREF_KEY_AUTH_API_KEY, apiKey);
-        editor.apply();
-    }
-
-    private static boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
-        OutputStream out = null;
-        try {
-            out = conn.getOutputStream();
-
-            BufferedWriter writer = null;
-            try {
-                writer = new BufferedWriter(
-                        new OutputStreamWriter(out, "UTF-8"));
-                writer.write(getPostDataBytes(nameValuePairs));
-                writer.flush();
-            } catch (final IOException e) {
-                Log.error("writeParamsToHttpPost(): Exception: ", e);
-                return false;
-            } finally {
-                if (writer != null) {
-                    writer.close();
-                }
-            }
-        } catch (final IOException e) {
-            Log.error("writeParamsToHttpPost(): Exception: ", e);
-            return false;
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (final IOException e) {
-                    Log.error("writeParamsToHttpPost(): Exception while closing out", e);
-                }
-            }
-        }
-
-        return true;
-    }
-
     private String generateAuthorizationHeader(final String authName, final String authApiKey) {
         //See the similar code in Zooniverse's user.coffee source code:
         //https://github.com/zooniverse/Zooniverse/blob/master/src/models/user.coffee#L49
@@ -1985,30 +1749,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         public String mLocationStandard;
         public String mLocationThumbnail;
         public String mLocationInverted;
-    }
-
-    public static class LoginResult {
-        private final boolean success;
-        private final String name;
-        private final String apiKey;
-
-        public LoginResult(boolean success, final String name, final String apiKey) {
-            this.success = success;
-            this.name = name;
-            this.apiKey = apiKey;
-        }
-
-        public String getApiKey() {
-            return apiKey;
-        }
-
-        public boolean getSuccess() {
-            return success;
-        }
-
-        public String getName() {
-            return name;
-        }
     }
 
     public static class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
@@ -2198,7 +1938,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
         c.close();
 
-        if (!writeParamsToHttpPost(conn, nameValuePairs)) {
+        if (!Utils.writeParamsToHttpPost(conn, nameValuePairs)) {
             return false;
         }
 
@@ -2236,7 +1976,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
         @Override
         protected Boolean doInBackground(final String... params) {
-            if (params.length < 4) {
+            if (params.length < 2) {
                 Log.error("UploadAsyncTask: not enough params.");
                 return false;
             }
@@ -2250,9 +1990,20 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             mItemId = params[0];
             final String subjectId = params[1];
 
-            final String authName = params[2];
-            final String authApiKey = params[3];
+            String authName = null;
+            String authApiKey = null;
+            final LoginUtils.LoginDetails loginDetails = LoginUtils.getAccountLoginDetails(getContext());
+            if (loginDetails == null) {
+                Log.error("uploadOutstandingClassifications(): getAccountLoginDetails() returned null");
+            } else {
+                authName = loginDetails.name;
+                authApiKey = loginDetails.authApiKey;
+            }
 
+            if (TextUtils.isEmpty(loginDetails.authApiKey)) {
+                Log.error("uploadOutstandingClassifications(): getAuthToken() returned an empty authApiKey");
+                return false;
+            }
 
             return doUploadSync(mItemId, subjectId, authName, authApiKey);
         }

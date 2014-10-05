@@ -24,7 +24,7 @@ public class Config {
             SERVER + "groups/50251c3b516bcb6ecb000002/subjects?limit="; //Should have a number, such as 5, appended.
     static final String POST_URI =
             SERVER + "workflows/50251c3b516bcb6ecb000002/classifications";
-    static final String LOGIN_URI =
+    public static final String LOGIN_URI =
             //"http://www.murrayc.com/galaxyzootestlogin"; //Avoid bothering the zooniverse server until we are more sure that this works.
             SERVER + "login";
     static private final String STATIC_IMAGES_SERVER = "http://static.zooniverse.org/www.galaxyzoo.org/images/";

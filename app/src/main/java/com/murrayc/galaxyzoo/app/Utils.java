@@ -23,9 +23,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.text.TextUtils;
 
-import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
+import org.apache.http.NameValuePair;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URLEncoder;
+import java.util.List;
 
 //import org.apache.http.client.utils.URIBuilder;
 
@@ -53,10 +61,62 @@ public class Utils {
         return connected;
     }
 
-    //TODO: Ask the provider instead of using this hack which uses too much internal knowledge.
-    public static boolean getLoggedIn(final Context context) {
-        final SharedPreferences prefs = getPreferences(context);
-        final String apiKey = prefs.getString(ItemsContentProvider.PREF_KEY_AUTH_API_KEY, null);
-        return !(TextUtils.isEmpty(apiKey));
+    public static boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
+        OutputStream out = null;
+        try {
+            out = conn.getOutputStream();
+
+            BufferedWriter writer = null;
+            try {
+                writer = new BufferedWriter(
+                        new OutputStreamWriter(out, "UTF-8"));
+                writer.write(getPostDataBytes(nameValuePairs));
+                writer.flush();
+            } catch (final IOException e) {
+                Log.error("writeParamsToHttpPost(): Exception: ", e);
+                return false;
+            } finally {
+                if (writer != null) {
+                    writer.close();
+                }
+            }
+        } catch (final IOException e) {
+            Log.error("writeParamsToHttpPost(): Exception: ", e);
+            return false;
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (final IOException e) {
+                    Log.error("writeParamsToHttpPost(): Exception while closing out", e);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
+        final StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (final NameValuePair pair : nameValuePairs) {
+            if (first) {
+                first = false;
+            } else {
+                result.append("&");
+            }
+
+            try {
+                result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                Log.error("getPostDataBytes(): Exception", e);
+                return null;
+            }
+        }
+
+        return result.toString();
     }
 }

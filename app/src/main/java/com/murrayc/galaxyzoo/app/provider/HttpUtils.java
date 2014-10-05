@@ -90,7 +90,7 @@ public class HttpUtils {
         }
     }
 
-    static HttpURLConnection openConnection(final String strURL) {
+    public static HttpURLConnection openConnection(final String strURL) {
         final URL url;
         try {
             url = new URL(strURL);
