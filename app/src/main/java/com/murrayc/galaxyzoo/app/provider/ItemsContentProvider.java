@@ -232,6 +232,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     private int mUploadsInProgress = 0;
     private DatabaseHelper mOpenDbHelper;
     private boolean mAlreadyQueuedRegularTasks = false;
+    private boolean mRequeue = false;
 
     public ItemsContentProvider() {
     }
@@ -440,12 +441,19 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
      */
     private void queueRegularTasks() {
         if (mAlreadyQueuedRegularTasks) {
+            //When the currently-queued runnable runs,
+            //just queue it again, instead of doing the work.
+            //This avoids us doing any I/O when the UI seems to be in use.
+            //We want to avoid that because it can make the UI non responsive
+            //for just long enough to make a button press not call our clicked listener.
+            Log.info("queueRegularTasks(): Requesting later requeue.");
+            mRequeue = true;
             return;
         }
 
         mAlreadyQueuedRegularTasks = true;
 
-        Log.info("queueRegularTasks()");
+        Log.info("queueRegularTasks(): queuing");
 
         //We use Looper.getMainLooper() to avoid this error sometimes:
         //java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
@@ -453,6 +461,14 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                if (mRequeue) {
+                    Log.info("queueRegularTasks(): requeueing");
+                    mRequeue = false;
+                    mAlreadyQueuedRegularTasks = false;
+                    queueRegularTasks();
+                    return;
+                }
+
                 final boolean noWorkDone = doRegularTasks();
                 mAlreadyQueuedRegularTasks = false;
                 if (noWorkDone) {
@@ -464,7 +480,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             }
         };
 
-        handler.postDelayed(runnable, 20000); // 20 seconds
+        handler.postDelayed(runnable, 10000); // 10 seconds
     }
 
     /**
@@ -474,7 +490,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
      * @return Return true if we know for sure that no further work is currently necessary.
      */
     private boolean doRegularTasks() {
-        Log.info("queueRegularTasks() start");
+        Log.info("doRegularTasks() start");
         //Do the download first, to avoid the UI having to wait for new subjects to classify.
         final boolean noDownloadNecessary = downloadMinimumSubjectsAsync();
 
@@ -482,7 +498,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         final boolean noUploadNecessary = uploadOutstandingClassifications();
         final boolean noRemovalNecessary = removeOldSubjects();
 
-        Log.info("queueRegularTasks() end");
+        Log.info("doRegularTasks() end");
 
         return noUploadNecessary && noDownloadNecessary && noRemovalNecessary;
     }
