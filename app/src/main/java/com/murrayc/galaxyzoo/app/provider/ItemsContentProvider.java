@@ -231,7 +231,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
     private int mUploadsInProgress = 0;
     private DatabaseHelper mOpenDbHelper;
-    private boolean mRegularTasksNecessary = true;
     private boolean mAlreadyQueuedRegularTasks = false;
 
     public ItemsContentProvider() {
