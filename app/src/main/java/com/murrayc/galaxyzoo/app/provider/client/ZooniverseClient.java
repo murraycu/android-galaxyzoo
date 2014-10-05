@@ -107,7 +107,7 @@ public class ZooniverseClient {
         }
     }
 
-    static boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
+    public static boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
         OutputStream out = null;
         try {
             out = conn.getOutputStream();

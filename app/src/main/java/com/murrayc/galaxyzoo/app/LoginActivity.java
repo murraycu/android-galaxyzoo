@@ -1,10 +1,12 @@
 package com.murrayc.galaxyzoo.app;
 
+import android.accounts.Account;
+import android.accounts.AccountAuthenticatorActivity;
+import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -21,14 +23,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.murrayc.galaxyzoo.app.provider.HttpUtils;
-import com.murrayc.galaxyzoo.app.provider.Item;
-import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
+import com.murrayc.galaxyzoo.app.provider.*;
+import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 /**
  * A login screen that offers login via username/password.
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends AccountAuthenticatorActivity {
+
+    /** The Intent extra to store username. */
+    public static final String ARG_USERNAME = "username";
+
+    private ZooniverseClient mClient = null;
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -39,18 +46,28 @@ public class LoginActivity extends Activity {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private boolean mRequestNewAccount = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mClient = new ZooniverseClient(this, com.murrayc.galaxyzoo.app.provider.Config.SERVER);
+
         setContentView(R.layout.activity_login);
 
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
 
         //Get the name that was succeeded last time, if any:
-        final LoginUtils.LoginDetails loginDetails = LoginUtils.getPrefsAuth(this);
-        mUsernameView.setText(loginDetails.authName);
+        String authName = null;
+        final Intent intent = getIntent();
+        if (intent != null) {
+            authName = intent.getStringExtra(ARG_USERNAME);
+        }
+
+        mRequestNewAccount = TextUtils.isEmpty(authName);
+
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -88,6 +105,17 @@ public class LoginActivity extends Activity {
             return;
 
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        //Get the existing logged-in username, if any:
+        final LoginUtils.GetExistingLogin task = new LoginUtils.GetExistingLogin(this) {
+            @Override
+            protected void onPostExecute(final LoginUtils.LoginDetails loginDetails) {
+                super.onPostExecute(loginDetails);
+
+                onExistingLoginRetrieved(loginDetails);
+            }
+        };
+        task.execute();
     }
 
     @Override
@@ -104,6 +132,19 @@ public class LoginActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void onExistingLoginRetrieved(final LoginUtils.LoginDetails loginDetails) {
+
+        String authName = null;
+        if (loginDetails == null) {
+            Log.error("uploadOutstandingClassifications(): getAccountLoginDetails() returned null");
+        } else {
+            authName = loginDetails.name;
+        }
+
+        mUsernameView.setText(authName);
+        mRequestNewAccount = TextUtils.isEmpty(authName);
     }
 
     /**
@@ -196,12 +237,33 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private void finishWithResult(boolean loggedIn) {
-        if (loggedIn) {
+    private void finishWithResult(final LoginUtils.LoginResult result) {
+        boolean loggedIn = false;
+        if ((result != null) && result.getSuccess()) {
+            loggedIn = true;
+        }
+
+        if(loggedIn) {
             UiUtils.showLoggedInToast(this);
         }
 
+        if (loggedIn) {
+            final AccountManager accountManager = AccountManager.get(this);
+            final Account account = new Account(result.getName(), LoginUtils.ACCOUNT_TYPE);
+            if (mRequestNewAccount) {
+                accountManager.addAccountExplicitly(account, null, null);
+            }
+
+            //TODO? ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true)
+
+            accountManager.setAuthToken(account, LoginUtils.ACCOUNT_AUTHTOKEN_TYPE, result.getApiKey());
+        }
+
         final Intent intent = new Intent();
+        if (loggedIn) {
+            intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, result.getName());
+            intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, LoginUtils.ACCOUNT_TYPE);
+        }
         setResult(loggedIn ? RESULT_OK : RESULT_CANCELED, intent);
         finish();
     }
@@ -211,14 +273,14 @@ public class LoginActivity extends Activity {
         // super.onBackPressed();
 
         //Let callers (via startActivityForResult() know that this was cancelled.
-        finishWithResult(false);
+        finishWithResult(null);
     }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, LoginUtils.LoginResult> {
 
         private final String mUsername;
         private final String mPassword;
@@ -229,23 +291,22 @@ public class LoginActivity extends Activity {
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: handle the response.
-            if (!requestLogin()) {
-                return false;
+        protected LoginUtils.LoginResult doInBackground(Void... params) {
+            final ContentResolver contentResolver = getContentResolver();
+            if (contentResolver == null) {
+                return null;
             }
 
-            // TODO: register the new account here.
-            return true;
+            return mClient.loginSync(mUsername, mPassword);
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final LoginUtils.LoginResult result) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-                finishWithResult(true);
+            if ((result != null) && result.getSuccess()) {
+                finishWithResult(result);
             } else {
                 if (!Utils.getNetworkIsConnected(LoginActivity.this)) {
                     UiUtils.warnAboutNoNetworkConnection(LoginActivity.this);
@@ -262,33 +323,6 @@ public class LoginActivity extends Activity {
             mAuthTask = null;
             showProgress(false);
         }
-
-        private boolean requestLogin() {
-            final ContentResolver contentResolver = getContentResolver();
-            if (contentResolver == null) {
-                return false;
-            }
-
-            final Bundle arguments = new Bundle();
-            arguments.putString(ItemsContentProvider.METHOD_LOGIN_ARG_USERNAME,
-                    mUsername);
-            arguments.putString(ItemsContentProvider.METHOD_LOGIN_ARG_PASSWORD,
-                    mPassword);
-
-            try {
-                final Bundle result = contentResolver.call(Item.ITEMS_URI, ItemsContentProvider.METHOD_LOGIN, null, arguments);
-                if (result == null) {
-                    return false;
-                }
-
-                return result.getBoolean(ItemsContentProvider.LOGIN_METHOD_RESULT);
-            } catch (final HttpUtils.NoNetworkException e) {
-                Log.error("requestLogin(): No network connection.", e);
-                //UiUtils.warnAboutNoNetworkConnection(g);
-                return false;
-            }
-        }
-
     }
 }
 

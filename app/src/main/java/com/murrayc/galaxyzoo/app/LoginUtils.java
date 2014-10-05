@@ -1,63 +1,53 @@
 package com.murrayc.galaxyzoo.app;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.JsonReader;
+
+import com.murrayc.galaxyzoo.app.provider.Config;
+import com.murrayc.galaxyzoo.app.provider.HttpUtils;
+import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by murrayc on 10/6/14.
+ * Created by murrayc on 10/5/14.
  */
 public class LoginUtils {
-
-    private static final String ENCRYPTION_KEY_ALGORITHM = "AES";
-    private static final String ENCRYPTION_CIPHER_TRANSFORMATION = ENCRYPTION_KEY_ALGORITHM + "/CBC/PKCS5Padding";
-    //private static final String ENCRYPTION_CIPHER_TRANSFORMATION = ENCRYPTION_KEY_ALGORITHM + "/GCM/NoPadding";
+    // An account type, in the form of a domain name
+    // This must match the android:accountType in authenticator.xml
+    public static final String ACCOUNT_TYPE = "galaxyzoo.com";
+    //This is an arbitrary string, because Accountmanager.setAuthToken() needs something non-null
+    public static final String ACCOUNT_AUTHTOKEN_TYPE = "authApiKey";
 
     //TODO: Ask the provider instead of using this hack which uses too much internal knowledge.
     public static boolean getLoggedIn(final Context context) {
-        final LoginDetails loginDetails = getPrefsAuth(context);
-        return (loginDetails != null) && !(TextUtils.isEmpty(loginDetails.authApiKey));
-    }
+        final LoginDetails loginDetails = getAccountLoginDetails(context);
+        if (loginDetails == null) {
+            return false;
+        }
 
-    public static void saveAuthToPreferences(final Context context, final String name, final String apiKey) {
-        final SharedPreferences prefs = Utils.getPreferences(context);
-        final SharedPreferences.Editor editor = prefs.edit();
-
-        //We store both the encrypted strings and the initialization vectors that were used
-        //(generated) when we did that encryption:
-        final EncryptionResult encryptedAuthName = encryptString(context, name);
-        editor.putString(context.getString(R.string.pref_key_auth_name),
-                (encryptedAuthName == null ? null : encryptedAuthName.encryptedString));
-        Utils.setBytesPref(context, R.string.pref_key_auth_name_initialization_vector,
-                (encryptedAuthName == null ? null : encryptedAuthName.iv));
-
-        final EncryptionResult encryptedAuthApiKey = encryptString(context, apiKey);
-        editor.putString(context.getString(R.string.pref_key_auth_api_key),
-                (encryptedAuthApiKey == null ? null : encryptedAuthApiKey.encryptedString));
-        Utils.setBytesPref(context, R.string.pref_key_auth_api_key_initialization_vector,
-                (encryptedAuthApiKey == null ? null : encryptedAuthApiKey.iv));
-
-        editor.apply();
+        return !(TextUtils.isEmpty(loginDetails.authApiKey));
     }
 
     public static LoginResult parseLoginResponseContent(final InputStream content) {
@@ -112,263 +102,71 @@ public class LoginUtils {
         return result;
     }
 
+    public static LoginDetails getAccountLoginDetails(final Context context) {
+        final AccountManager mgr = AccountManager.get(context);
+        final Account[] accts = mgr.getAccountsByType(ACCOUNT_TYPE);
+        if((accts == null) || (accts.length < 1)) {
+            Log.error("getAccountLoginDetails(): getAccountsByType() return no account.");
+            return null;
+        }
+
+        final LoginDetails result = new LoginDetails();
+
+        final Account account = accts[0];
+        result.name = account.name;
+
+        final AccountManagerFuture<Bundle> response = mgr.getAuthToken(account, ACCOUNT_AUTHTOKEN_TYPE, null, null, null, null);
+        try {
+            final Bundle bundle = response.getResult();
+            result.authApiKey = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+            return result;
+        } catch (OperationCanceledException e) {
+            Log.error("getAccountLoginDetails(): getAccountLoginDetails() failed", e);
+            return null;
+        } catch (AuthenticatorException e) {
+            Log.error("getAccountLoginDetails(): getAccountLoginDetails() failed", e);
+            return null;
+        } catch (IOException e) {
+            Log.error("getAccountLoginDetails(): getAccountLoginDetails() failed", e);
+            return null;
+        }
+    }
+
     public static class LoginDetails {
-        public String authName = null;
+        public String name = null;
         public String authApiKey = null;
     }
 
-    public static LoginDetails getPrefsAuth(final Context context) {
-        final LoginDetails result = new LoginDetails();
-        final SharedPreferences prefs = Utils.getPreferences(context);
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public static class GetExistingLogin extends AsyncTask<Void, Void, LoginDetails> {
 
-        //Get both the encrypted strings and the initialization vectors that were used (generated)
-        //when encrypting the original strings:
-        final String encryptedAuthName = prefs.getString(context.getString(R.string.pref_key_auth_name), null);
-        final byte[] authNameIv = Utils.getBytesPref(context, R.string.pref_key_auth_name_initialization_vector);
+        private final WeakReference<Context> mContextReference;
 
-        final String encryptedAuthApiKey = prefs.getString(context.getString(R.string.pref_key_auth_api_key), null);
-        final byte[] authApiKeyIv = Utils.getBytesPref(context, R.string.pref_key_auth_api_key_initialization_vector);
-
-        boolean resetAuthName = false;
-        boolean resetAuthApiKey = false;
-
-        if (!TextUtils.isEmpty(encryptedAuthName)) {
-            result.authName = decryptString(context, encryptedAuthName, authNameIv);
-            if(TextUtils.isEmpty(result.authName)) {
-                resetAuthName = true;
-            }
+        GetExistingLogin(final Context context) {
+            mContextReference = new WeakReference<>(context);
         }
 
-        if (!TextUtils.isEmpty(encryptedAuthApiKey)) {
-            result.authApiKey = decryptString(context, encryptedAuthApiKey, authApiKeyIv);
-            if(TextUtils.isEmpty(result.authApiKey)) {
-                resetAuthApiKey = true;
-            }
-        }
+        @Override
+        protected LoginDetails doInBackground(Void... params) {
 
-        if (resetAuthName || resetAuthApiKey) {
-            //We couldn't decrypt these values so discard them,
-            //keeping any that were OK:
-            final String authName = resetAuthName ? null : result.authName;
-            final String authApiKey = resetAuthApiKey ? null : result.authApiKey;
-            saveAuthToPreferences(context, authName, authApiKey);
-        }
-
-        return result;
-    }
-
-    public static class EncryptionResult {
-        public String encryptedString;
-        public byte[] iv;
-    }
-
-    public static EncryptionResult encryptString(final Context context, final String input) {
-        //Don't bother trying to encrypt null or an empty string:
-        if (TextUtils.isEmpty(input)) {
-            return null;
-        }
-
-        final Cipher cipher = getCipher(context, Cipher.ENCRYPT_MODE,
-                null /* auto-generate an initialization vector */);
-        if (cipher == null) {
-            return null;
-        }
-
-        //This should be the reverse of decryptString().
-
-        //Get the bytes:
-        byte[] inputAsBytes = null;
-        try {
-            inputAsBytes = input.getBytes(Utils.STRING_ENCODING);
-        } catch (final UnsupportedEncodingException e) {
-            Log.error("encryptString(): String.getBytes() failed", e);
-            return null;
-        }
-
-        //Encrypt the bytes:
-        byte[] inputEncryptedAsBytes = null;
-        try {
-            inputEncryptedAsBytes = cipher.doFinal(inputAsBytes);
-        } catch (final IllegalBlockSizeException e) {
-            Log.error("encryptString(): Cipher.doFinal() failed", e);
-            return null;
-        } catch (final BadPaddingException e) {
-            Log.error("encryptString(): Cipher.doFinal() failed", e);
-            return null;
-        }
-
-        //Convert the encrypted bytes to Base64 so it can go into a String:
-        final byte[] inputEncryptedBase64 = Base64.encode(inputEncryptedAsBytes, Base64.DEFAULT);
-
-        final EncryptionResult result = new EncryptionResult();
-
-        //Put it in a String:
-        try {
-            result.encryptedString = new String(inputEncryptedBase64, Utils.STRING_ENCODING);
-        } catch (final UnsupportedEncodingException e) {
-            Log.error("encryptString(): new String() failed", e);
-            return null;
-        }
-
-        //We store the initialization vector too
-        //(generated appropriately by the Cipher,
-        //though we could have supplied one instead via Cipher.init()),
-        //because we need to provide this when decrypting later.
-        result.iv = cipher.getIV();
-
-        return result;
-    }
-
-    public static String decryptString(final Context context, final String input, final byte[] iv) {
-        if (input == null) {
-            return null;
-        }
-
-        //We need the initialization vector that was used when encrypting.
-        if (iv == null) {
-            return null;
-        }
-
-        //Don't bother trying to decrypt null or an empty string:
-        if (TextUtils.isEmpty(input)) {
-            return null;
-        }
-
-        final Cipher cipher = getCipher(context, Cipher.DECRYPT_MODE, iv);
-        if (cipher == null) {
-            return null;
-        }
-
-        //This should be the reverse of encryptString().
-
-        //Get the bytes:
-        byte[] inputAsBytes = null;
-        try {
-            inputAsBytes = input.getBytes(Utils.STRING_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            Log.error("encryptString(): new String() failed", e);
-            return null;
-        }
-
-        //Undo the Base64 encoding:
-        final byte[] inputUnBase64ed = Base64.decode(inputAsBytes, Base64.DEFAULT);
-
-        //Decrypt the bytes:
-        byte[] inputDecryptedAsBytes = null;
-        try {
-            inputDecryptedAsBytes = cipher.doFinal(inputUnBase64ed);
-        } catch (final IllegalBlockSizeException e) {
-            Log.error("decryptString(): Cipher.doFinal() failed", e);
-            return null;
-        } catch (final BadPaddingException e) {
-            Log.error("decryptString(): Cipher.doFinal() failed", e);
-            return null;
-        }
-
-        //Convert it to a string.
-        try {
-            return new String(inputDecryptedAsBytes, Utils.STRING_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            Log.error("decryptString(): new String() failed", e);
-            return null;
-        }
-    }
-
-    private static Cipher getCipher(final Context context, int opmode, byte[] iv) {
-        final SecretKey encryptionKey = getEncryptionKey(context);
-
-        Cipher cipher = null;
-        try {
-            cipher = Cipher.getInstance(ENCRYPTION_CIPHER_TRANSFORMATION);
-        } catch (final NoSuchAlgorithmException e) {
-            Log.error("getCipher(): Cipher.getInstance() failed", e);
-            return null;
-        } catch (NoSuchPaddingException e) {
-            Log.error("getCipher(): Cipher.getInstance() failed", e);
-            return null;
-        }
-
-        try {
-            //When using "AES/CBC/PKCS5Padding", but not when using "AES",
-            //the Cipher generates and uses an initialization vector.
-            //When decrypting we need to use the same one the was used when encrypting.
-            if (iv == null) {
-                //We are probably encrypting
-                //and letting the Cipher generate an initialization vector.
-                cipher.init(opmode, encryptionKey);
-            } else {
-                final IvParameterSpec ivParamSpec = new IvParameterSpec(iv);
-                cipher.init(opmode, encryptionKey, ivParamSpec);
-            }
-        } catch (final InvalidKeyException e) {
-            Log.error("getCipher(): Cipher.init() failed", e);
-            return null;
-        } catch (InvalidAlgorithmParameterException e) {
-            Log.error("getCipher(): Cipher.init() failed", e);
-            return null;
-        }
-
-        return cipher;
-    }
-
-    /*
-    public static void wipeEncryptionKey(final Context context) {
-        final SharedPreferences prefs = Utils.getPreferences(context);
-
-        final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(context.getString(R.string.pref_key_auth_encryption_key), null);
-        editor.apply();
-    }
-    */
-
-    private static SecretKey getEncryptionKey(final Context context) {
-        //Get the already-generated encryption key if any:
-        final SharedPreferences prefs = Utils.getPreferences(context);
-        final String keyAsString = prefs.getString(context.getString(R.string.pref_key_auth_encryption_key), null);
-        if (!TextUtils.isEmpty(keyAsString)) {
-            final byte[] keyAsBytes;
-            try {
-                keyAsBytes = keyAsString.getBytes(Utils.STRING_ENCODING);
-            } catch (UnsupportedEncodingException e) {
-                Log.error("getEncryptionKey(): String.getBytes() failed.", e);
+            if (mContextReference == null) {
                 return null;
             }
 
-            final byte[] keyAsBytesUnBase64ed = Base64.decode(keyAsBytes, Base64.DEFAULT);
-            return new SecretKeySpec(keyAsBytesUnBase64ed, ENCRYPTION_KEY_ALGORITHM);
+            final Context context = mContextReference.get();
+            if (context == null) {
+                return null;
+            }
+
+            return getAccountLoginDetails(context);
         }
 
-        //Generate it and store it for next time:
-        //This should only happen the first time the app is launched.
-        final SecretKey result = generateEncryptionKey();
-        saveEncryptionKey(context, result);
-
-        return result;
-    }
-
-    private static void saveEncryptionKey(final Context context, final SecretKey encryptionKey) {
-        final byte[] keyAsBytes = encryptionKey.getEncoded();
-        Utils.setBytesPref(context, R.string.pref_key_auth_encryption_key, keyAsBytes);
-    }
-
-    //See http://android-developers.blogspot.co.uk/2013/02/using-cryptography-to-store-credentials.html
-    private static SecretKey generateEncryptionKey() {
-        // Generate a 256-bit key
-        final int outputKeyLength = 256;
-
-        // Do *not* seed secureRandom! Automatically seeded from system entropy.
-        final SecureRandom secureRandom = new SecureRandom();
-
-        KeyGenerator keyGenerator = null;
-        try {
-            keyGenerator = KeyGenerator.getInstance(ENCRYPTION_KEY_ALGORITHM);
-        } catch (NoSuchAlgorithmException e) {
-            Log.error("generateEncryptionKey(): KeyGenerator.getInstance() failed", e);
-            return null;
+        @Override
+        protected void onCancelled() {
         }
-
-        keyGenerator.init(outputKeyLength, secureRandom);
-        return keyGenerator.generateKey();
     }
 
     public static class LoginResult {

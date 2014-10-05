@@ -8,5 +8,5 @@ package com.murrayc.galaxyzoo.app.provider;
  */
 public class Config {
 
-    static final String SERVER = "https://api.zooniverse.org/projects/galaxy_zoo/";
+    public static final String SERVER = "https://api.zooniverse.org/projects/galaxy_zoo/";
 }

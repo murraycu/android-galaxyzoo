@@ -61,12 +61,6 @@ import java.util.Map;
 
 public class ItemsContentProvider extends ContentProvider implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    //Whether the call to METHOD_LOGIN was successful.
-    public static final String METHOD_LOGIN = "login";
-    public static final String METHOD_LOGIN_ARG_USERNAME = "username";
-    public static final String METHOD_LOGIN_ARG_PASSWORD = "password";
-    public static final String LOGIN_METHOD_RESULT = "result";
-
     public static final String URI_PART_ITEM = "item";
     public static final String URI_PART_ITEM_ID_NEXT = "next"; //Use in place of the item ID to get the next unclassified item.
     public static final String URI_PART_FILE = "file";
@@ -920,52 +914,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         return true;
     }
 
-    @Override
-    public Bundle call(String method, String arg, Bundle extras) {
-        switch (method) {
-//            case METHOD_REQUEST_ITEMS:
-//                throwIfNoNetwork();
-//
-//                /** Check with the remote REST API asynchronously,
-//                 * informing the calling client later via notification.
-//                 */
-//                downloadMinimumSubjectsAsync();
-//                break;
-            case METHOD_LOGIN:
-                throwIfNoNetwork();
-
-                final String username = extras.getString(METHOD_LOGIN_ARG_USERNAME);
-                final String password = extras.getString(METHOD_LOGIN_ARG_PASSWORD);
-                if ((username == null) || (password == null)) {
-                    return null;
-                }
-
-                /** Attempt to login to the server.
-                 * We do this synchronously, waiting for the result,
-                 * so we can return the result to the caller.
-                 */
-                final LoginUtils.LoginResult result = mClient.loginSync(username, password);
-                if (result == null) {
-                    return null;
-                }
-
-                final Context context = getContext();
-                if (result.getSuccess()) {
-                    LoginUtils.saveAuthToPreferences(context, result.getName(), result.getApiKey());
-                } else {
-                    //Make sure that the auth key is wiped, so we know we are not logged in.
-                    //This is an unofficial way to log out, though that is only useful for debugging.
-                    LoginUtils.saveAuthToPreferences(context, username, "");
-                }
-
-                final Bundle bundle = new Bundle();
-                bundle.putBoolean(LOGIN_METHOD_RESULT, result.getSuccess());
-                return bundle;
-        }
-
-        return null;
-    }
-
     private void requestMoreItemsAsync(int count) {
         if(mRequestMoreItemsAsyncInProgress) {
             //Do just one of these at a time,
@@ -993,7 +941,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
         // TODO: Request re-authentication when the server says we have used the wrong name + api_key.
         // What does the server reply in that case?
-        final LoginUtils.LoginDetails loginDetails = LoginUtils.getPrefsAuth(getContext());
+        final LoginUtils.LoginDetails loginDetails = LoginUtils.getAccountLoginDetails(getContext());
 
         // query the database for any item whose classification is not yet uploaded.
         final String whereClause =
@@ -1019,7 +967,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
             mUploadsInProgress++;
             final UploadAsyncTask task = new UploadAsyncTask();
-            task.execute(itemId, subjectId, loginDetails.authName, loginDetails.authApiKey);
+            task.execute(itemId, subjectId, loginDetails.name, loginDetails.authApiKey);
         }
 
         c.close();
@@ -1837,7 +1785,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             static final String LOCATION_INVERTED_URI_REMOTE = "locationInvertedUriRemote"; //The original file on the remote server.
             static final String LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
             static final String LOCATION_INVERTED_DOWNLOADED = "locationInvertedDownloaded"; //1 or 0. Whether the file has finished downloading.
-//            static final String LOCATIONS_REQUESTED_DATETIME = "locationsRequestedDateTime"; //When we last tried to download the images. An ISO8601 string ("YYYY-MM-DD HH:MM:SS.SSS")
+            //            static final String LOCATIONS_REQUESTED_DATETIME = "locationsRequestedDateTime"; //When we last tried to download the images. An ISO8601 string ("YYYY-MM-DD HH:MM:SS.SSS")
             static final String FAVORITE = "favorite"; //1 or 0. Whether the user has marked this as a favorite.
             static final String DATETIME_DONE = "dateTimeDone"; //An ISO8601 string ("YYYY-MM-DD HH:MM:SS.SSS").
         }
