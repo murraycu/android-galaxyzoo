@@ -250,6 +250,10 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
             //TODO? ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true)
 
+            //This is apparently not necessary, when updating an existing account,
+            //if this activity was launched from our Authenticator, for instance if our
+            //Authenticator found that the accounts' existing auth token was invalid.
+            //Presumably it is necessary if this activity is launched from our app.
             accountManager.setAuthToken(account, LoginUtils.ACCOUNT_AUTHTOKEN_TYPE, result.getApiKey());
         }
 
@@ -258,6 +262,11 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, result.getName());
             intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, LoginUtils.ACCOUNT_TYPE);
         }
+
+        //This sets the AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE response,
+        //for when this activity was launched by our Authenticator.
+        setAccountAuthenticatorResult(intent.getExtras());
+
         setResult(loggedIn ? RESULT_OK : RESULT_CANCELED, intent);
         finish();
     }
