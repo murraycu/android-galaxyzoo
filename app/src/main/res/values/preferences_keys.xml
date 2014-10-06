@@ -4,6 +4,9 @@
     <!-- Keys for SharedPreferences values. -->
     <string name="pref_key_auth_name" translatable="false">auth_name</string>
     <string name="pref_key_auth_api_key" translatable="false">auth_api_key</string>
+    <!-- Generated at the app's first start. -->
+    <string name="pref_key_auth_encryption_key" translatable="false">auth_api_enryption_key</string>
+
     <string name="pref_key_cache_size" translatable="false">cache_size</string>
     <string name="pref_key_keep_count" translatable="false">keep_count</string>
     <string name="pref_key_icons_cache_last_mod" translatable="false">icons-cache-last-mod</string>
