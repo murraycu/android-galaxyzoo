@@ -42,8 +42,8 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.R;
-import com.murrayc.galaxyzoo.app.Utils;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -952,12 +952,13 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     return null;
                 }
 
+                final Context context = getContext();
                 if (result.getSuccess()) {
-                    saveAuthToPreferences(result.getName(), result.getApiKey());
+                    LoginUtils.saveAuthToPreferences(context, result.getName(), result.getApiKey());
                 } else {
                     //Make sure that the auth key is wiped, so we know we are not logged in.
                     //This is an unofficial way to log out, though that is only useful for debugging.
-                    saveAuthToPreferences(username, "");
+                    LoginUtils.saveAuthToPreferences(context, username, "");
                 }
 
                 final Bundle bundle = new Bundle();
@@ -986,9 +987,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
         // TODO: Request re-authentication when the server says we have used the wrong name + api_key.
         // What does the server reply in that case?
-        final SharedPreferences prefs = Utils.getPreferences(getContext());
-        final String authName = getStringPref(R.string.pref_key_auth_name);
-        final String authApiKey = getStringPref(R.string.pref_key_auth_api_key);
+        final LoginUtils.LoginDetails loginDetails = LoginUtils.getPrefsAuth(getContext());
 
         // query the database for any item whose classification is not yet uploaded.
         final String whereClause =
@@ -1014,7 +1013,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
             mUploadsInProgress++;
             final UploadAsyncTask task = new UploadAsyncTask();
-            task.execute(itemId, subjectId, authName, authApiKey);
+            task.execute(itemId, subjectId, loginDetails.authName, loginDetails.authApiKey);
         }
 
         c.close();
@@ -1765,15 +1764,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         }
 
         return result.toString();
-    }
-
-    private void saveAuthToPreferences(final String name, final String apiKey) {
-        final Context context = getContext();
-        final SharedPreferences prefs = Utils.getPreferences(getContext());
-        final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(context.getString(R.string.pref_key_auth_name), name);
-        editor.putString(context.getString(R.string.pref_key_auth_api_key), apiKey);
-        editor.apply();
     }
 
     private static boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {

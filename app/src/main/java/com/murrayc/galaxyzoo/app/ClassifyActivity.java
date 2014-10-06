@@ -84,7 +84,7 @@ public class ClassifyActivity extends ItemActivity implements ItemFragment.Callb
         actionBar.setDisplayHomeAsUpEnabled(true);
         */
 
-        if (Utils.getLoggedIn(this)) {
+        if (LoginUtils.getLoggedIn(this)) {
             //Tell the user that we are logged in,
             //reassuring them that their classifications will be part of their profile:
             //TODO: Is there a better way to do this?
@@ -120,7 +120,7 @@ public class ClassifyActivity extends ItemActivity implements ItemFragment.Callb
         //Suggest registering or logging in after a certain number of classifications,
         //as the web UI does, but don't ask again.
         if (mClassificationsDoneInSession == 3) {
-            if (!Utils.getLoggedIn(this)) {
+            if (!LoginUtils.getLoggedIn(this)) {
                 final Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
             }

@@ -7,7 +7,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,9 +48,8 @@ public class LoginActivity extends Activity {
         mUsernameView = (EditText) findViewById(R.id.username);
 
         //Get the name that was succeeded last time, if any:
-        final SharedPreferences prefs = Utils.getPreferences(this);
-        final String authName = prefs.getString(getString(R.string.pref_key_auth_name), null);
-        mUsernameView.setText(authName);
+        final LoginUtils.LoginDetails loginDetails = LoginUtils.getPrefsAuth(this);
+        mUsernameView.setText(loginDetails.authName);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {

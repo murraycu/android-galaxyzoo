@@ -23,9 +23,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.text.TextUtils;
-
-import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 //import org.apache.http.client.utils.URIBuilder;
 
@@ -96,10 +93,4 @@ public class Utils {
         return connected;
     }
 
-    //TODO: Ask the provider instead of using this hack which uses too much internal knowledge.
-    public static boolean getLoggedIn(final Context context) {
-        final SharedPreferences prefs = getPreferences(context);
-        final String apiKey = prefs.getString(context.getString(R.string.pref_key_auth_api_key), null);
-        return !(TextUtils.isEmpty(apiKey));
-    }
 }
