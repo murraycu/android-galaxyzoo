@@ -2099,7 +2099,12 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
 
         //Add the authentication details to the headers;
-        conn.setRequestProperty("Authorization", generateAuthorizationHeader(authName, authApiKey));
+        //Be careful: The server still returns OK_CREATED even if we provide the wrong Authorization here.
+        //There doesn't seem to be any way to know if it's correct other than checking your recent
+        //classifications in your profile.
+        if ((authName != null) && (authApiKey != null)) {
+            conn.setRequestProperty("Authorization", generateAuthorizationHeader(authName, authApiKey));
+        }
 
         final String PARAM_PART_CLASSIFICATION = "classification";
 
@@ -2197,7 +2202,8 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         InputStream in = null;
         try {
             in = conn.getInputStream();
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+            final int responseCode = conn.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_CREATED) {
                 Log.error("UploadAsyncTask.doInBackground(): Did not receive the 201 Created status code: " + conn.getResponseCode());
                 return false;
             }
