@@ -212,7 +212,7 @@ public class LoginUtils {
     private static SecretKey getEncryptionKey(final Context context) {
         //Get the already-generated encryption key if any:
         final SharedPreferences prefs = Utils.getPreferences(context);
-        String keyAsString = prefs.getString(context.getString(R.string.pref_key_auth_encryption_key), null);
+        final String keyAsString = prefs.getString(context.getString(R.string.pref_key_auth_encryption_key), null);
         if (!TextUtils.isEmpty(keyAsString)) {
             final byte[] keyAsBytes;
             try {
@@ -229,21 +229,26 @@ public class LoginUtils {
         //Generate it and store it for next time:
         //This should only happen the first time the app is launched.
         final SecretKey result = generateEncryptionKey();
+        saveEncryptionKey(context, result);
 
-        final byte[] keyAsBytes = result.getEncoded();
+        return result;
+    }
+
+    private static void saveEncryptionKey(final Context context, final SecretKey encryptionKey) {
+        final byte[] keyAsBytes = encryptionKey.getEncoded();
 
         final byte[] keyAsBytesBase64 = Base64.encode(keyAsBytes, Base64.DEFAULT);
+        String keyAsString = null;
         try {
             keyAsString = new String(keyAsBytesBase64, STRING_ENCODING);
         } catch (final UnsupportedEncodingException e) {
             Log.error("getEncryptionKey(): new String() failed.", e);
         }
 
+        final SharedPreferences prefs = Utils.getPreferences(context);
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putString(context.getString(R.string.pref_key_auth_encryption_key), keyAsString);
         editor.apply();
-
-        return result;
     }
 
     //See http://android-developers.blogspot.co.uk/2013/02/using-cryptography-to-store-credentials.html
