@@ -41,7 +41,7 @@ public class DecisionTreeTest extends AndroidTestCase {
         assertNotNull(inputStream);
 
         //TODO: Close the stream.
-        decisionTree = new DecisionTree(inputStream);
+        decisionTree = new DecisionTree(inputStream, null);
 
         inputStream.close();
     }
