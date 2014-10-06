@@ -99,7 +99,7 @@ public class Utils {
     //TODO: Ask the provider instead of using this hack which uses too much internal knowledge.
     public static boolean getLoggedIn(final Context context) {
         final SharedPreferences prefs = getPreferences(context);
-        final String apiKey = prefs.getString(ItemsContentProvider.PREF_KEY_AUTH_API_KEY, null);
+        final String apiKey = prefs.getString(context.getString(R.string.pref_key_auth_api_key), null);
         return !(TextUtils.isEmpty(apiKey));
     }
 }

@@ -28,7 +28,7 @@ class IconsCache {
     private static final String CACHE_FILE_WORKFLOW_ICONS = "workflowicons";
     private static final String CACHE_FILE_EXAMPLE_ICONS = "exampleicons";
     private static final String CACHE_FILE_CSS = "css";
-    private static final String PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD = "icons-cache-last-mod";
+
 
     private final DecisionTree mDecisionTree;
     private final File mCacheDir;
@@ -62,7 +62,7 @@ class IconsCache {
             lastModified = HttpUtils.getLatestLastModified(uris);
             final SharedPreferences prefs = Utils.getPreferences(context);
 
-            final long prevLastModified = prefs.getLong(PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD, 0);
+            final long prevLastModified = prefs.getLong(getPrefKeyIconCacheLastMod(context), 0);
             if ((lastModified == 0) /* Always update if we can't get the last-modified from the server */
                     || (lastModified > prevLastModified)) {
                 loadFromNetwork = true;
@@ -97,8 +97,12 @@ class IconsCache {
         //so we can check again next time.
         final SharedPreferences prefs = Utils.getPreferences(context);
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(PREF_KEY_AUTH_ICONS_CACHE_LAST_MOD, lastModified);
+        editor.putLong(getPrefKeyIconCacheLastMod(context), lastModified);
         editor.apply();
+    }
+
+    private static String getPrefKeyIconCacheLastMod(Context context) {
+        return context.getString(R.string.pref_key_icons_cache_last_mod);
     }
 
     private boolean reloadCachedIcons() {

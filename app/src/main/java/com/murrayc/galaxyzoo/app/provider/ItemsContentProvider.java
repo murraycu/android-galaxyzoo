@@ -42,6 +42,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.R;
 import com.murrayc.galaxyzoo.app.Utils;
 
 import org.apache.http.NameValuePair;
@@ -85,10 +86,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     public static final String URI_PART_FILE = "file";
     public static final String URI_PART_CLASSIFICATION_ANSWER = "classification-answer";
     public static final String URI_PART_CLASSIFICATION_CHECKBOX = "classification-checkbox";
-    public static final String PREF_KEY_AUTH_API_KEY = "auth_api_key";
-    public static final String PREF_KEY_AUTH_NAME = "auth_name";
-    public static final String PREF_KEY_CACHE_SIZE = "cache_size";
-    public static final String PREF_KEY_KEEP_COUNT = "keep_count";
     private static final String URI_PART_CLASSIFICATION = "classification";
     /**
      * The MIME type of {@link Item#CONTENT_URI} providing a directory of items.
@@ -770,9 +767,11 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        final Context context = getContext();
+
         //Changes to these preferences would need us to do some work:
-        if (TextUtils.equals(key, PREF_KEY_CACHE_SIZE) ||
-                TextUtils.equals(key, PREF_KEY_KEEP_COUNT)) {
+        if (TextUtils.equals(key, context.getString(R.string.pref_key_cache_size)) ||
+                TextUtils.equals(key,  context.getString(R.string.pref_key_keep_count))) {
             queueRegularTasks();
         }
     }
@@ -988,8 +987,8 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         // TODO: Request re-authentication when the server says we have used the wrong name + api_key.
         // What does the server reply in that case?
         final SharedPreferences prefs = Utils.getPreferences(getContext());
-        final String authName = prefs.getString(PREF_KEY_AUTH_NAME, null);
-        final String authApiKey = prefs.getString(PREF_KEY_AUTH_API_KEY, null);
+        final String authName = getStringPref(R.string.pref_key_auth_name);
+        final String authApiKey = getStringPref(R.string.pref_key_auth_api_key);
 
         // query the database for any item whose classification is not yet uploaded.
         final String whereClause =
@@ -1306,20 +1305,32 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     }
 
     private int getMinCacheSize() {
-        return getIntPref(PREF_KEY_CACHE_SIZE);
+        return getIntPref(R.string.pref_key_cache_size);
     }
 
     private int getKeepCount() {
-        return getIntPref(PREF_KEY_KEEP_COUNT);
+        return getIntPref(R.string.pref_key_keep_count);
     }
 
-    private int getIntPref(final String prefKey) {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+    private int getIntPref(final int prefKeyResId) {
+        final Context context = getContext();
+
+        final String prefKey = context.getString(prefKeyResId);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         //Android's PreferencesScreen XMl has no way to specify an integer rather than a string,
         //so we parse it here.
-        final String str = prefs.getString(prefKey, "13");
+        final String str = prefs.getString(prefKey, "");
         return Integer.parseInt(str);
+    }
+
+    private String getStringPref(final int prefKeyResId) {
+        final Context context = getContext();
+
+        final String prefKey = context.getString(prefKeyResId);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        return prefs.getString(prefKey, "");
     }
 
     private Cursor queryItemNext(final String[] projection, final String selection, final String[] selectionArgs, final String orderBy) {
@@ -1757,10 +1768,11 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     }
 
     private void saveAuthToPreferences(final String name, final String apiKey) {
+        final Context context = getContext();
         final SharedPreferences prefs = Utils.getPreferences(getContext());
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PREF_KEY_AUTH_NAME, name);
-        editor.putString(PREF_KEY_AUTH_API_KEY, apiKey);
+        editor.putString(context.getString(R.string.pref_key_auth_name), name);
+        editor.putString(context.getString(R.string.pref_key_auth_api_key), apiKey);
         editor.apply();
     }
 

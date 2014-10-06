@@ -50,7 +50,7 @@ public class LoginActivity extends Activity {
 
         //Get the name that was succeeded last time, if any:
         final SharedPreferences prefs = Utils.getPreferences(this);
-        final String authName = prefs.getString(ItemsContentProvider.PREF_KEY_AUTH_NAME, null);
+        final String authName = prefs.getString(getString(R.string.pref_key_auth_name), null);
         mUsernameView.setText(authName);
 
         mPasswordView = (EditText) findViewById(R.id.password);
