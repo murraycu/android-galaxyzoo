@@ -57,8 +57,4 @@ public class LoginUtilsTest extends AndroidTestCase {
         final String decrypted = LoginUtils.decryptString(getContext(), encrypted);
         assertEquals(original, decrypted);
     }
-
-
-
-
-    }
+}
