@@ -120,6 +120,8 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         imageIcon.setImageDrawable(icon);
         layoutHorizontal.addView(imageIcon);
 
+        // TODO: Use a custom FlowTable class to avoid items going off the right edge of the screen
+        // when there are too many.
         final Singleton singleton = getSingleton();
         for (int i = 0; i < answer.getExamplesCount(); i++) {
 
@@ -144,7 +146,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
                 }
             });
 
-            layoutHorizontal.addView(imageExample);
+            layoutHorizontal.addView(imageExample, paramsImage);
         }
 
         row.addView(layoutVertical);
