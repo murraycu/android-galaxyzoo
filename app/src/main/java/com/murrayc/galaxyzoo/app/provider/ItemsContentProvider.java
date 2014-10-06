@@ -1318,7 +1318,13 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
         //Android's PreferencesScreen XMl has no way to specify an integer rather than a string,
         //so we parse it here.
-        final String str = prefs.getString(prefKey, "13");
+        final String str = prefs.getString(prefKey, null);
+
+        //Avoid a NumberFormatException
+        if (TextUtils.isEmpty(str)) {
+            return 0;
+        }
+
         return Integer.parseInt(str);
     }
 
