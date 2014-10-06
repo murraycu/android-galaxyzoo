@@ -24,6 +24,10 @@ import javax.crypto.spec.SecretKeySpec;
 public class LoginUtils {
 
     public static final String ENCRYPTION_KEY_ALGORITHM = "AES";
+    public static final String ENCRYPTION_CIPHER_TRANSFORMATION = ENCRYPTION_KEY_ALGORITHM; //+ "/CBC/PKCS5Padding";
+    public static final String STRING_ENCODING = "UTF-8";
+    //public static final String ENCRYPTION_CIPHER_TRANSFORMATION = ENCRYPTION_KEY_ALGORITHM + "/GCM/NoPadding";
+
 
     //TODO: Ask the provider instead of using this hack which uses too much internal knowledge.
     public static boolean getLoggedIn(final Context context) {
@@ -92,14 +96,18 @@ public class LoginUtils {
             return null;
         }
 
+        //This should be the reverse of decryptString().
+
+        //Get the bytes:
         byte[] inputAsBytes = null;
         try {
-            inputAsBytes = input.getBytes("UTF8");
+            inputAsBytes = input.getBytes("UTF-8");
         } catch (final UnsupportedEncodingException e) {
             Log.error("encryptString(): String.getBytes() failed", e);
             return null;
         }
 
+        //Encrypt the bytes:
         byte[] inputEncryptedAsBytes = null;
         try {
             inputEncryptedAsBytes = cipher.doFinal(inputAsBytes);
@@ -111,7 +119,16 @@ public class LoginUtils {
             return null;
         }
 
-        return new String(Base64.encode(inputEncryptedAsBytes, Base64.DEFAULT));
+        //Convert the encrypted bytes to Base64 so it can go into a String:
+        final byte[] inputEncryptedBase64 = Base64.encode(inputEncryptedAsBytes, Base64.DEFAULT);
+
+        //Put it in a String:
+        try {
+            return new String(inputEncryptedBase64, "UTF-8");
+        } catch (final UnsupportedEncodingException e) {
+            Log.error("encryptString(): new String() failed", e);
+            return null;
+        }
     }
 
     public static String decryptString(final Context context, final String input) {
@@ -125,8 +142,21 @@ public class LoginUtils {
             return null;
         }
 
-        final byte[] inputUnBase64ed = Base64.decode(input, Base64.DEFAULT);
+        //This should be the reverse of encryptString().
 
+        //Get the bytes:
+        byte[] inputAsBytes = null;
+        try {
+            inputAsBytes = input.getBytes(STRING_ENCODING);
+        } catch (UnsupportedEncodingException e) {
+            Log.error("encryptString(): new String() failed", e);
+            return null;
+        }
+
+        //Undo the Base64 encoding:
+        final byte[] inputUnBase64ed = Base64.decode(inputAsBytes, Base64.DEFAULT);
+
+        //Decrypt the bytes:
         byte[] inputDecryptedAsBytes = null;
         try {
             inputDecryptedAsBytes = cipher.doFinal(inputUnBase64ed);
@@ -138,7 +168,13 @@ public class LoginUtils {
             return null;
         }
 
-        return new String(inputDecryptedAsBytes);
+        //Convert it to a string.
+        try {
+            return new String(inputDecryptedAsBytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Log.error("decryptString(): new String() failed", e);
+            return null;
+        }
     }
 
     private static Cipher getCipher(final Context context, int opmode) {
@@ -146,23 +182,31 @@ public class LoginUtils {
 
         Cipher cipher = null;
         try {
-            cipher = Cipher.getInstance(ENCRYPTION_KEY_ALGORITHM);
+            cipher = Cipher.getInstance(ENCRYPTION_CIPHER_TRANSFORMATION);
         } catch (final NoSuchAlgorithmException e) {
-            Log.error("encryptString(): Cipher.getInstanc failed", e);
+            Log.error("getCipher(): Cipher.getInstance() failed", e);
             return null;
         } catch (NoSuchPaddingException e) {
-            Log.error("encryptString(): Cipher.getInstanc failed", e);
+            Log.error("getCipher(): Cipher.getInstance() failed", e);
             return null;
         }
 
         try {
             cipher.init(opmode, encryptionKey);
         } catch (final InvalidKeyException e) {
-            Log.error("encryptString(): Cipher.init() failed", e);
+            Log.error("getCipher(): Cipher.init() failed", e);
             return null;
         }
 
         return cipher;
+    }
+
+    public static void wipeEncryptionKey(final Context context) {
+        final SharedPreferences prefs = Utils.getPreferences(context);
+
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(context.getString(R.string.pref_key_auth_encryption_key), null);
+        editor.apply();
     }
 
     private static SecretKey getEncryptionKey(final Context context) {
@@ -170,8 +214,16 @@ public class LoginUtils {
         final SharedPreferences prefs = Utils.getPreferences(context);
         String keyAsString = prefs.getString(context.getString(R.string.pref_key_auth_encryption_key), null);
         if (!TextUtils.isEmpty(keyAsString)) {
-            final byte[] keyAsBytes = Base64.decode(keyAsString, Base64.DEFAULT);
-            return new SecretKeySpec(keyAsBytes, 0, keyAsBytes.length, ENCRYPTION_KEY_ALGORITHM);
+            final byte[] keyAsBytes;
+            try {
+                keyAsBytes = keyAsString.getBytes(STRING_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                Log.error("getEncryptionKey(): String.getBytes() failed.", e);
+                return null;
+            }
+
+            final byte[] keyAsBytesUnBase64ed = Base64.decode(keyAsBytes, Base64.DEFAULT);
+            return new SecretKeySpec(keyAsBytesUnBase64ed, ENCRYPTION_KEY_ALGORITHM);
         }
 
         //Generate it and store it for next time:
@@ -179,7 +231,14 @@ public class LoginUtils {
         final SecretKey result = generateEncryptionKey();
 
         final byte[] keyAsBytes = result.getEncoded();
-        keyAsString = new String(Base64.encode(keyAsBytes, Base64.DEFAULT));
+
+        final byte[] keyAsBytesBase64 = Base64.encode(keyAsBytes, Base64.DEFAULT);
+        try {
+            keyAsString = new String(keyAsBytesBase64, STRING_ENCODING);
+        } catch (final UnsupportedEncodingException e) {
+            Log.error("getEncryptionKey(): new String() failed.", e);
+        }
+
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putString(context.getString(R.string.pref_key_auth_encryption_key), keyAsString);
         editor.apply();
