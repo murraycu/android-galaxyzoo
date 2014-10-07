@@ -276,12 +276,14 @@ public class LoginUtils {
     }
 
     private static void setBytesPref(final Context context, int prefKeyId, byte[] bytes) {
-        final byte[] asBytesBase64 = Base64.encode(bytes, Base64.DEFAULT);
         String asString = null;
-        try {
-            asString = new String(asBytesBase64, STRING_ENCODING);
-        } catch (final UnsupportedEncodingException e) {
-            Log.error("getEncryptionKey(): new String() failed.", e);
+        if (bytes != null && (bytes.length != 0)) {
+            final byte[] asBytesBase64 = Base64.encode(bytes, Base64.DEFAULT);
+            try {
+                asString = new String(asBytesBase64, STRING_ENCODING);
+            } catch (final UnsupportedEncodingException e) {
+                Log.error("getEncryptionKey(): new String() failed.", e);
+            }
         }
 
         final SharedPreferences prefs = Utils.getPreferences(context);
