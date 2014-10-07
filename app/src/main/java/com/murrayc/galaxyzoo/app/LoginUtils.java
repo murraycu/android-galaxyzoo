@@ -45,15 +45,15 @@ public class LoginUtils {
         //(generated) when we did that encryption:
         final EncryptionResult encryptedAuthName = encryptString(context, name);
         editor.putString(context.getString(R.string.pref_key_auth_name),
-                encryptedAuthName.encryptedString);
-        setBytesPref(context, R.string.pref_key_auth_name_initialization_vector,
-                encryptedAuthName.iv);
+                (encryptedAuthName == null ? null : encryptedAuthName.encryptedString));
+        Utils.setBytesPref(context, R.string.pref_key_auth_name_initialization_vector,
+                (encryptedAuthName == null ? null : encryptedAuthName.iv));
 
         final EncryptionResult encryptedAuthApiKey = encryptString(context, apiKey);
         editor.putString(context.getString(R.string.pref_key_auth_api_key),
-                encryptedAuthApiKey.encryptedString);
-        setBytesPref(context, R.string.pref_key_auth_api_key_initialization_vector,
-                encryptedAuthApiKey.iv);
+                (encryptedAuthApiKey == null ? null : encryptedAuthApiKey.encryptedString));
+        Utils.setBytesPref(context, R.string.pref_key_auth_api_key_initialization_vector,
+                (encryptedAuthApiKey == null ? null : encryptedAuthApiKey.iv));
 
         editor.apply();
     }
@@ -70,10 +70,10 @@ public class LoginUtils {
         //Get both the encrypted strings and the initialization vectors that were used (generated)
         //when encrypting the original strings:
         final String encryptedAuthName = prefs.getString(context.getString(R.string.pref_key_auth_name), null);
-        final byte[] authNameIv = getBytesPref(context, R.string.pref_key_auth_name_initialization_vector);
+        final byte[] authNameIv = Utils.getBytesPref(context, R.string.pref_key_auth_name_initialization_vector);
 
         final String encryptedAuthApiKey = prefs.getString(context.getString(R.string.pref_key_auth_api_key), null);
-        final byte[] authApiKeyIv = getBytesPref(context, R.string.pref_key_auth_api_key_initialization_vector);
+        final byte[] authApiKeyIv = Utils.getBytesPref(context, R.string.pref_key_auth_api_key_initialization_vector);
 
         boolean resetAuthName = false;
         boolean resetAuthApiKey = false;
@@ -257,43 +257,6 @@ public class LoginUtils {
         return cipher;
     }
 
-    private static byte[] getBytesPref(final Context context, final int prefsKeyId) {
-        final SharedPreferences prefs = Utils.getPreferences(context);
-        final String asString = prefs.getString(context.getString(prefsKeyId), null);
-        if (!TextUtils.isEmpty(asString)) {
-            final byte[] asBytes;
-            try {
-                asBytes = asString.getBytes(STRING_ENCODING);
-            } catch (UnsupportedEncodingException e) {
-                Log.error("getEncryptionKey(): String.getBytes() failed.", e);
-                return null;
-            }
-
-            return Base64.decode(asBytes, Base64.DEFAULT);
-        }
-
-        return null;
-    }
-
-    private static void setBytesPref(final Context context, int prefKeyId, byte[] bytes) {
-        String asString = null;
-        if (bytes != null && (bytes.length != 0)) {
-            final byte[] asBytesBase64 = Base64.encode(bytes, Base64.DEFAULT);
-            try {
-                asString = new String(asBytesBase64, STRING_ENCODING);
-            } catch (final UnsupportedEncodingException e) {
-                Log.error("getEncryptionKey(): new String() failed.", e);
-            }
-        }
-
-        final SharedPreferences prefs = Utils.getPreferences(context);
-        final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(context.getString(prefKeyId), asString);
-        editor.apply();
-
-    }
-
-    /*
     public static void wipeEncryptionKey(final Context context) {
         final SharedPreferences prefs = Utils.getPreferences(context);
 
@@ -301,7 +264,6 @@ public class LoginUtils {
         editor.putString(context.getString(R.string.pref_key_auth_encryption_key), null);
         editor.apply();
     }
-    */
 
     private static SecretKey getEncryptionKey(final Context context) {
         //Get the already-generated encryption key if any:
@@ -330,7 +292,7 @@ public class LoginUtils {
 
     private static void saveEncryptionKey(final Context context, final SecretKey encryptionKey) {
         final byte[] keyAsBytes = encryptionKey.getEncoded();
-        setBytesPref(context, R.string.pref_key_auth_encryption_key, keyAsBytes);
+        Utils.setBytesPref(context, R.string.pref_key_auth_encryption_key, keyAsBytes);
     }
 
     //See http://android-developers.blogspot.co.uk/2013/02/using-cryptography-to-store-credentials.html

@@ -19,12 +19,17 @@
 
 package com.murrayc.galaxyzoo.app.test;
 
+import android.content.Context;
 import android.test.AndroidTestCase;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.LoginUtils;
+import com.murrayc.galaxyzoo.app.R;
+import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.IOException;
+
+import javax.crypto.SecretKey;
 
 /**
  * Simple test to ensure that the generated bindings are working.
@@ -61,6 +66,62 @@ public class LoginUtilsTest extends AndroidTestCase {
         assertEquals(generated, retrieved);
     }
     */
+
+    public void testSaveAuth() {
+        final Context context = getContext();
+        final String originalAuthName = "some auth name";
+        final String originalAuthApiKey = "some auth api key";
+
+        LoginUtils.saveAuthToPreferences(context, originalAuthName, originalAuthApiKey);
+
+        final LoginUtils.LoginDetails details = LoginUtils.getPrefsAuth(context);
+        assertNotNull(details);
+        assertNotNull(details.authName);
+        assertEquals(originalAuthName, details.authName);
+        assertNotNull(details.authApiKey);
+        assertEquals(originalAuthApiKey, details.authApiKey);
+    }
+
+
+    public void testGetAuthWithBrokenIvPreferences() {
+        final Context context = getContext();
+        final String originalAuthName = "some auth name";
+        final String originalAuthApiKey = "some auth api key";
+
+        LoginUtils.saveAuthToPreferences(context, originalAuthName, originalAuthApiKey);
+
+        //Damage the preferences by removing the initialization vectors.
+        //We are testing that it fails without crashing.
+        Utils.setBytesPref(context, R.string.pref_key_auth_name_initialization_vector,
+                null);
+        Utils.setBytesPref(context, R.string.pref_key_auth_api_key,
+                null);
+
+        final LoginUtils.LoginDetails details = LoginUtils.getPrefsAuth(context);
+        if (details != null) {
+            assertTrue(!TextUtils.equals(originalAuthName, details.authName));
+            assertTrue(!TextUtils.equals(originalAuthApiKey, details.authApiKey));
+        }
+    }
+
+    public void testGetAuthWithBrokenEncryptionKeyPreferences() {
+        final Context context = getContext();
+        final String originalAuthName = "some auth name";
+        final String originalAuthApiKey = "some auth api key";
+
+        LoginUtils.saveAuthToPreferences(context, originalAuthName, originalAuthApiKey);
+
+        //Damage the preferences by removing the encryption key.
+        //We are testing that it fails without crashing.
+        Utils.setBytesPref(context, R.string.pref_key_auth_encryption_key, null);
+
+        final LoginUtils.LoginDetails details = LoginUtils.getPrefsAuth(context);
+        if (details != null) {
+            assertTrue(!TextUtils.equals(originalAuthName, details.authName));
+            assertTrue(!TextUtils.equals(originalAuthApiKey, details.authApiKey));
+        }
+    }
+
 
     public void testEncryptDecrypt() {
         final String original = "Some original text";

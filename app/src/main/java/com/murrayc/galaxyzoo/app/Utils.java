@@ -23,6 +23,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.util.Base64;
+
+import java.io.UnsupportedEncodingException;
 
 //import org.apache.http.client.utils.URIBuilder;
 
@@ -93,4 +98,55 @@ public class Utils {
         return connected;
     }
 
+    public static void setBytesPref(final Context context, int prefKeyId, byte[] bytes) {
+        String asString = null;
+        if (bytes != null && (bytes.length != 0)) {
+            final byte[] asBytesBase64 = Base64.encode(bytes, Base64.DEFAULT);
+            try {
+                asString = new String(asBytesBase64, LoginUtils.STRING_ENCODING);
+            } catch (final UnsupportedEncodingException e) {
+                Log.error("getEncryptionKey(): new String() failed.", e);
+            }
+        }
+
+        final SharedPreferences prefs = getPreferences(context);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(context.getString(prefKeyId), asString);
+        editor.apply();
+
+    }
+
+    static byte[] getBytesPref(final Context context, final int prefsKeyId) {
+        final SharedPreferences prefs = getPreferences(context);
+        final String asString = prefs.getString(context.getString(prefsKeyId), null);
+        if (!TextUtils.isEmpty(asString)) {
+            final byte[] asBytes;
+            try {
+                asBytes = asString.getBytes(LoginUtils.STRING_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                Log.error("getEncryptionKey(): String.getBytes() failed.", e);
+                return null;
+            }
+
+            return Base64.decode(asBytes, Base64.DEFAULT);
+        }
+
+        return null;
+    }
+
+    public static int getIntPref(final Context context, final int prefKeyResId) {
+        final String prefKey = context.getString(prefKeyResId);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        //Android's PreferencesScreen XMl has no way to specify an integer rather than a string,
+        //so we parse it here.
+        final String str = prefs.getString(prefKey, null);
+
+        //Avoid a NumberFormatException
+        if (TextUtils.isEmpty(str)) {
+            return 0;
+        }
+
+        return Integer.parseInt(str);
+    }
 }

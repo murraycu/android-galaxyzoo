@@ -44,6 +44,7 @@ import android.util.Base64;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.R;
+import com.murrayc.galaxyzoo.app.Utils;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -1304,38 +1305,11 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     }
 
     private int getMinCacheSize() {
-        return getIntPref(R.string.pref_key_cache_size);
+        return Utils.getIntPref(getContext(), R.string.pref_key_cache_size);
     }
 
     private int getKeepCount() {
-        return getIntPref(R.string.pref_key_keep_count);
-    }
-
-    private int getIntPref(final int prefKeyResId) {
-        final Context context = getContext();
-
-        final String prefKey = context.getString(prefKeyResId);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        //Android's PreferencesScreen XMl has no way to specify an integer rather than a string,
-        //so we parse it here.
-        final String str = prefs.getString(prefKey, null);
-
-        //Avoid a NumberFormatException
-        if (TextUtils.isEmpty(str)) {
-            return 0;
-        }
-
-        return Integer.parseInt(str);
-    }
-
-    private String getStringPref(final int prefKeyResId) {
-        final Context context = getContext();
-
-        final String prefKey = context.getString(prefKeyResId);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        return prefs.getString(prefKey, "");
+        return Utils.getIntPref(getContext(), R.string.pref_key_keep_count);
     }
 
     private Cursor queryItemNext(final String[] projection, final String selection, final String[] selectionArgs, final String orderBy) {
