@@ -19,17 +19,12 @@
 
 package com.murrayc.galaxyzoo.app.test;
 
-import android.content.Context;
 import android.test.AndroidTestCase;
 import android.text.TextUtils;
 
-import com.murrayc.galaxyzoo.app.DecisionTree;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
-
-import javax.crypto.SecretKey;
 
 /**
  * Simple test to ensure that the generated bindings are working.
