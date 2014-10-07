@@ -106,7 +106,7 @@ public class LoginUtils {
     public static class EncryptionResult {
         public String encryptedString;
         public byte[] iv;
-    };
+    }
 
     public static EncryptionResult encryptString(final Context context, final String input) {
         //Don't bother trying to encrypt null or an empty string:
