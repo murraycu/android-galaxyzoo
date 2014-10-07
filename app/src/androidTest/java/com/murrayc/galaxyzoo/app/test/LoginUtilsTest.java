@@ -19,6 +19,7 @@
 
 package com.murrayc.galaxyzoo.app.test;
 
+import android.content.Context;
 import android.test.AndroidTestCase;
 import android.text.TextUtils;
 
@@ -27,6 +28,8 @@ import com.murrayc.galaxyzoo.app.LoginUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.crypto.SecretKey;
 
 /**
  * Simple test to ensure that the generated bindings are working.
@@ -43,18 +46,33 @@ public class LoginUtilsTest extends AndroidTestCase {
     }
 
     public void testEncryptNull() {
+
         assertNull(LoginUtils.encryptString(getContext(), null));
     }
 
     public void testDecryptNull() {
-        assertNull(LoginUtils.decryptString(getContext(), null));
+        assertNull(LoginUtils.decryptString(getContext(), null, null));
     }
+
+    /*
+    public void testSecretKeyRetrieval() {
+        final Context context = getContext();
+        LoginUtils.wipeEncryptionKey(context);
+        final SecretKey generated = LoginUtils.generateEncryptionKey();
+        LoginUtils.saveEncryptionKey(context, generated);
+
+        final SecretKey retrieved = LoginUtils.getEncryptionKey(context);
+
+        assertEquals(generated, retrieved);
+    }
+    */
 
     public void testEncryptDecrypt() {
         final String original = "Some original text";
-        final String encrypted = LoginUtils.encryptString(getContext(), original);
-        assertFalse(TextUtils.equals(original, encrypted));
-        final String decrypted = LoginUtils.decryptString(getContext(), encrypted);
+
+        final LoginUtils.EncryptionResult encrypted = LoginUtils.encryptString(getContext(), original);
+        assertFalse(TextUtils.equals(original, encrypted.encryptedString));
+        final String decrypted = LoginUtils.decryptString(getContext(), encrypted.encryptedString, encrypted.iv);
         assertEquals(original, decrypted);
     }
 }

@@ -6,9 +6,11 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.AlgorithmParameterSpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -16,6 +18,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -24,7 +27,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class LoginUtils {
 
     public static final String ENCRYPTION_KEY_ALGORITHM = "AES";
-    public static final String ENCRYPTION_CIPHER_TRANSFORMATION = ENCRYPTION_KEY_ALGORITHM; //+ "/CBC/PKCS5Padding";
+    public static final String ENCRYPTION_CIPHER_TRANSFORMATION = ENCRYPTION_KEY_ALGORITHM + "/CBC/PKCS5Padding";
     public static final String STRING_ENCODING = "UTF-8";
     //public static final String ENCRYPTION_CIPHER_TRANSFORMATION = ENCRYPTION_KEY_ALGORITHM + "/GCM/NoPadding";
 
@@ -38,10 +41,21 @@ public class LoginUtils {
     public static void saveAuthToPreferences(final Context context, final String name, final String apiKey) {
         final SharedPreferences prefs = Utils.getPreferences(context);
         final SharedPreferences.Editor editor = prefs.edit();
+
+        //We store both the encrypted strings and the initialization vectors that were used
+        //(generated) when we did that encryption:
+        final EncryptionResult encryptedAuthName = encryptString(context, name);
         editor.putString(context.getString(R.string.pref_key_auth_name),
-                encryptString(context, name));
+                encryptedAuthName.encryptedString);
+        setBytesPref(context, R.string.pref_key_auth_name_initialization_vector,
+                encryptedAuthName.iv);
+
+        final EncryptionResult encryptedAuthApiKey = encryptString(context, apiKey);
         editor.putString(context.getString(R.string.pref_key_auth_api_key),
-                encryptString(context, apiKey));
+                encryptedAuthApiKey.encryptedString);
+        setBytesPref(context, R.string.pref_key_auth_api_key_initialization_vector,
+                encryptedAuthApiKey.iv);
+
         editor.apply();
     }
 
@@ -54,21 +68,26 @@ public class LoginUtils {
         final LoginDetails result = new LoginDetails();
         final SharedPreferences prefs = Utils.getPreferences(context);
 
+        //Get both the encrypted strings and the initialization vectors that were used (generated)
+        //when encrypting the original strings:
         final String encryptedAuthName = prefs.getString(context.getString(R.string.pref_key_auth_name), null);
+        final byte[] authNameIv = getBytesPref(context, R.string.pref_key_auth_name_initialization_vector);
+
         final String encryptedAuthApiKey = prefs.getString(context.getString(R.string.pref_key_auth_api_key), null);
+        final byte[] authApiKeyIv = getBytesPref(context, R.string.pref_key_auth_api_key_initialization_vector);
 
         boolean resetAuthName = false;
         boolean resetAuthApiKey = false;
 
         if (!TextUtils.isEmpty(encryptedAuthName)) {
-            result.authName = decryptString(context, encryptedAuthName);
+            result.authName = decryptString(context, encryptedAuthName, authNameIv);
             if(TextUtils.isEmpty(result.authName)) {
                 resetAuthName = true;
             }
         }
 
         if (!TextUtils.isEmpty(encryptedAuthApiKey)) {
-            result.authApiKey = decryptString(context, encryptedAuthApiKey);
+            result.authApiKey = decryptString(context, encryptedAuthApiKey, authApiKeyIv);
             if(TextUtils.isEmpty(result.authApiKey)) {
                 resetAuthApiKey = true;
             }
@@ -85,13 +104,19 @@ public class LoginUtils {
         return result;
     }
 
-    public static String encryptString(final Context context, final String input) {
+    public static class EncryptionResult {
+        public String encryptedString;
+        public byte[] iv;
+    };
+
+    public static EncryptionResult encryptString(final Context context, final String input) {
         //Don't bother trying to encrypt null or an empty string:
         if (TextUtils.isEmpty(input)) {
             return null;
         }
 
-        final Cipher cipher = getCipher(context, Cipher.ENCRYPT_MODE);
+        final Cipher cipher = getCipher(context, Cipher.ENCRYPT_MODE,
+                null /* auto-generate an initialization vector */);
         if (cipher == null) {
             return null;
         }
@@ -122,22 +147,41 @@ public class LoginUtils {
         //Convert the encrypted bytes to Base64 so it can go into a String:
         final byte[] inputEncryptedBase64 = Base64.encode(inputEncryptedAsBytes, Base64.DEFAULT);
 
+        final EncryptionResult result = new EncryptionResult();
+
         //Put it in a String:
         try {
-            return new String(inputEncryptedBase64, "UTF-8");
+            result.encryptedString = new String(inputEncryptedBase64, "UTF-8");
         } catch (final UnsupportedEncodingException e) {
             Log.error("encryptString(): new String() failed", e);
             return null;
         }
+
+        //We store the initialization vector too
+        //(generated appropriately by the Cipher,
+        //though we could have supplied one instead via Cipher.init()),
+        //because we need to provide this when decrypting later.
+        result.iv = cipher.getIV();
+
+        return result;
     }
 
-    public static String decryptString(final Context context, final String input) {
+    public static String decryptString(final Context context, final String input, final byte[] iv) {
+        if (input == null) {
+            return null;
+        }
+
+        //We need the initialization vector that was used when encrypting.
+        if (iv == null) {
+            return null;
+        }
+
         //Don't bother trying to decrypt null or an empty string:
         if (TextUtils.isEmpty(input)) {
             return null;
         }
 
-        final Cipher cipher = getCipher(context, Cipher.DECRYPT_MODE);
+        final Cipher cipher = getCipher(context, Cipher.DECRYPT_MODE, iv);
         if (cipher == null) {
             return null;
         }
@@ -177,7 +221,7 @@ public class LoginUtils {
         }
     }
 
-    private static Cipher getCipher(final Context context, int opmode) {
+    private static Cipher getCipher(final Context context, int opmode, byte[] iv) {
         final SecretKey encryptionKey = getEncryptionKey(context);
 
         Cipher cipher = null;
@@ -192,8 +236,21 @@ public class LoginUtils {
         }
 
         try {
-            cipher.init(opmode, encryptionKey);
+            //When using "AES/CBC/PKCS5Padding", but not when using "AES",
+            //the Cipher generates and uses an initialization vector.
+            //When decrypting we need to use the same one the was used when encrypting.
+            if (iv == null) {
+                //We are probably encrypting
+                //and letting the Cipher generate an initialization vector.
+                cipher.init(opmode, encryptionKey);
+            } else {
+                final IvParameterSpec ivParamSpec = new IvParameterSpec(iv);
+                cipher.init(opmode, encryptionKey, ivParamSpec);
+            }
         } catch (final InvalidKeyException e) {
+            Log.error("getCipher(): Cipher.init() failed", e);
+            return null;
+        } catch (InvalidAlgorithmParameterException e) {
             Log.error("getCipher(): Cipher.init() failed", e);
             return null;
         }
@@ -201,6 +258,41 @@ public class LoginUtils {
         return cipher;
     }
 
+    private static byte[] getBytesPref(final Context context, final int prefsKeyId) {
+        final SharedPreferences prefs = Utils.getPreferences(context);
+        final String asString = prefs.getString(context.getString(prefsKeyId), null);
+        if (!TextUtils.isEmpty(asString)) {
+            final byte[] asBytes;
+            try {
+                asBytes = asString.getBytes(STRING_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                Log.error("getEncryptionKey(): String.getBytes() failed.", e);
+                return null;
+            }
+
+            return Base64.decode(asBytes, Base64.DEFAULT);
+        }
+
+        return null;
+    }
+
+    private static void setBytesPref(final Context context, int prefKeyId, byte[] bytes) {
+        final byte[] asBytesBase64 = Base64.encode(bytes, Base64.DEFAULT);
+        String asString = null;
+        try {
+            asString = new String(asBytesBase64, STRING_ENCODING);
+        } catch (final UnsupportedEncodingException e) {
+            Log.error("getEncryptionKey(): new String() failed.", e);
+        }
+
+        final SharedPreferences prefs = Utils.getPreferences(context);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(context.getString(prefKeyId), asString);
+        editor.apply();
+
+    }
+
+    /*
     public static void wipeEncryptionKey(final Context context) {
         final SharedPreferences prefs = Utils.getPreferences(context);
 
@@ -208,6 +300,7 @@ public class LoginUtils {
         editor.putString(context.getString(R.string.pref_key_auth_encryption_key), null);
         editor.apply();
     }
+    */
 
     private static SecretKey getEncryptionKey(final Context context) {
         //Get the already-generated encryption key if any:
@@ -236,19 +329,7 @@ public class LoginUtils {
 
     private static void saveEncryptionKey(final Context context, final SecretKey encryptionKey) {
         final byte[] keyAsBytes = encryptionKey.getEncoded();
-
-        final byte[] keyAsBytesBase64 = Base64.encode(keyAsBytes, Base64.DEFAULT);
-        String keyAsString = null;
-        try {
-            keyAsString = new String(keyAsBytesBase64, STRING_ENCODING);
-        } catch (final UnsupportedEncodingException e) {
-            Log.error("getEncryptionKey(): new String() failed.", e);
-        }
-
-        final SharedPreferences prefs = Utils.getPreferences(context);
-        final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(context.getString(R.string.pref_key_auth_encryption_key), keyAsString);
-        editor.apply();
+        setBytesPref(context, R.string.pref_key_auth_encryption_key, keyAsBytes);
     }
 
     //See http://android-developers.blogspot.co.uk/2013/02/using-cryptography-to-store-credentials.html
