@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
@@ -281,7 +282,7 @@ public class LoginActivity extends Activity {
                 }
 
                 return result.getBoolean(ItemsContentProvider.LOGIN_METHOD_RESULT);
-            } catch (final ItemsContentProvider.NoNetworkException e) {
+            } catch (final HttpUtils.NoNetworkException e) {
                 Log.error("requestLogin(): No network connection.", e);
                 //UiUtils.warnAboutNoNetworkConnection(g);
                 return false;

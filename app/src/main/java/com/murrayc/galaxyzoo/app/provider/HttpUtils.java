@@ -5,10 +5,9 @@ import android.content.Context;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 
-import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,18 +19,6 @@ public class HttpUtils {
 
     private static final String HTTP_REQUEST_HEADER_PARAM_USER_AGENT = "User-Agent";
     private static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";
-
-    public static String getStringFromInputStream(final InputStream content) throws IOException {
-        final InputStreamReader inputReader = new InputStreamReader(content);
-        final BufferedReader reader = new BufferedReader(inputReader);
-
-        final StringBuilder builder = new StringBuilder();
-        for (String line; (line = reader.readLine()) != null; ) {
-            builder.append(line).append("\n");
-        }
-
-        return builder.toString();
-    }
 
     /**
      * Callers should use throwIfNoNetwork() before calling this.
@@ -86,7 +73,7 @@ public class HttpUtils {
     static void throwIfNoNetwork(final Context context) {
         if (!Utils.getNetworkIsConnected(context)) {
             //Throw an exception so the caller knows.
-            throw new ItemsContentProvider.NoNetworkException();
+            throw new NoNetworkException();
         }
     }
 
@@ -119,7 +106,7 @@ public class HttpUtils {
             return false;
         }
 
-        final boolean result = ItemsContentProvider.parseQueryResponseContent(in, cacheFileUri);
+        final boolean result = parseGetFileResponseContent(in, cacheFileUri);
         try {
             in.close();
         } catch (IOException e) {
@@ -171,4 +158,41 @@ public class HttpUtils {
         connection.setRequestProperty(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
     }
 
+    private static boolean parseGetFileResponseContent(final InputStream in, final String cacheFileUr) {
+        //Write the content to the file:
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream(cacheFileUr);
+            // TODO: Find a way to use writeTo(), instead of looping ourselves,
+            // while also having optional ungzipping?
+            //response.getEntity().writeTo(fout);
+
+            byte[] bytes = new byte[256];
+            int r;
+            do {
+                r = in.read(bytes);
+                if (r >= 0) {
+                    fout.write(bytes, 0, r);
+                }
+            } while (r >= 0);
+        } catch (final IOException e) {
+            Log.error("parseMoreItemsResponseContent(): Exception while writing to FileOutputStream", e);
+            return false;
+        } finally {
+            if (fout != null) {
+                try {
+                    fout.close();
+                } catch (final IOException e) {
+                    Log.error("parseMoreItemsResponseContent(): Exception while closing fout", e);
+                }
+            }
+        }
+
+        return true; //TODO?
+    }
+
+    public static class NoNetworkException extends RuntimeException {
+        public NoNetworkException() {
+        }
+    }
 }
