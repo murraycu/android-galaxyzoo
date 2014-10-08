@@ -241,7 +241,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         //A failure by default.
         LoginResult result = new LoginResult(false, null, null);
 
-        JSONTokener tokener = new JSONTokener(str);
+        final JSONTokener tokener = new JSONTokener(str);
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(tokener);
@@ -255,32 +255,10 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                 Log.info("Login succeeded.");
 
                 //TODO: Store the name and api_key for later use when uploading classifications.
-                //final String id = jsonObject.getString("id");
                 final String apiKey = jsonObject.getString("api_key");
-                //final String avatar = jsonObject.getString("avatar");
-                //final long classificationCount = jsonObject.getLong("classification_count");
-                //final String email = jsonObject.getString("email");
-                //final long favoriteCount = jsonObject.getLong("favorite_count");
                 final String name = jsonObject.getString("name");
-                //final String zooniverseId = jsonObject.getString("zooniverse_id");
 
                 return new LoginResult(true, name, apiKey);
-
-                //Then there is an object called "project", like so:
-                /*
-                "project":{
-                    "classification_count":66,
-                            "favorite_count":2,
-                            "groups":{
-                        "50251c3b516bcb6ecb000002":{
-                            "classification_count":66,
-                                    "name":"sloan"
-                        }
-                    },
-                    "splits":{
-                    }
-                }
-                */
             } else {
                 Log.info("Login failed.");
 
