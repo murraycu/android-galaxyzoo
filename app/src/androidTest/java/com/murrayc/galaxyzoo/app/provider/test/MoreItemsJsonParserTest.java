@@ -21,7 +21,6 @@ package com.murrayc.galaxyzoo.app.provider.test;
 
 import android.test.AndroidTestCase;
 
-import com.murrayc.galaxyzoo.app.DecisionTree;
 import com.murrayc.galaxyzoo.app.provider.MoreItemsJsonParser;
 
 import java.io.IOException;
