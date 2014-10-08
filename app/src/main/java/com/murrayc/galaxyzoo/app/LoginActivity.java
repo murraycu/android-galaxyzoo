@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 /**
  * A login screen that offers login via username/password.
  */

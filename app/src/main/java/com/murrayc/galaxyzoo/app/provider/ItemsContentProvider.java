@@ -51,11 +51,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -225,18 +226,18 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     public ItemsContentProvider() {
     }
 
-    private static List<Subject> parseQueryResponseContent(final InputStream content) {
+    private static List<Subject> parseMoreItemsResponseContent(final InputStream content) {
         final String str;
         try {
-            str = HttpUtils.getStringFromInputStream(content);
+            str = getStringFromInputStream(content);
         } catch (IOException e) {
-            Log.error("parseQueryResponseContent(): Exception while getting string from input stream", e);
+            Log.error("parseMoreItemsResponseContent(): Exception while getting string from input stream", e);
             return null;
         }
 
         final List<Subject> result = new ArrayList<>();
 
-        JSONTokener tokener = new JSONTokener(str);
+        final JSONTokener tokener = new JSONTokener(str);
         JSONArray jsonArray;
         try {
             jsonArray = new JSONArray(tokener);
@@ -254,7 +255,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                 return result;
             }
 
-            final Subject subject = parseQueryJsonObjectSubject(obj);
+            final Subject subject = parseMoreItemsJsonObjectSubject(obj);
             if (subject != null) {
                 result.add(subject);
             }
@@ -266,13 +267,13 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             Log.error("Failed. No JSON entities parsed."); //TODO: Use some constant error code?
         }
 
-        //maybe via the parseQueryJsonObjectSubject() return string..
+        //maybe via the parseMoreItemsJsonObjectSubject() return string..
         //For instance, the Galaxy-Zoo server could be down for maintenance (this has happened before),
         //or there could be some other network problem.
         return result;
     }
 
-    private static Subject parseQueryJsonObjectSubject(final JSONObject objSubject) {
+    private static Subject parseMoreItemsJsonObjectSubject(final JSONObject objSubject) {
         try {
             final Subject subject = new Subject();
             subject.mId = objSubject.getString("id");
@@ -290,39 +291,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         }
 
         return null;
-    }
-
-    public static boolean parseQueryResponseContent(final InputStream in, final String cacheFileUr) {
-        //Write the content to the file:
-        FileOutputStream fout = null;
-        try {
-            fout = new FileOutputStream(cacheFileUr);
-            // TODO: Find a way to use writeTo(), instead of looping ourselves,
-            // while also having optional ungzipping?
-            //response.getEntity().writeTo(fout);
-
-            byte[] bytes = new byte[256];
-            int r;
-            do {
-                r = in.read(bytes);
-                if (r >= 0) {
-                    fout.write(bytes, 0, r);
-                }
-            } while (r >= 0);
-        } catch (final IOException e) {
-            Log.error("parseQueryResponseContent(): Exception while writing to FileOutputStream", e);
-            return false;
-        } finally {
-            if (fout != null) {
-                try {
-                    fout.close();
-                } catch (final IOException e) {
-                    Log.error("parseQueryResponseContent(): Exception while closing fout", e);
-                }
-            }
-        }
-
-        return true; //TODO?
     }
 
     private static ContentValues getMappedContentValues(final ContentValues values, final Map<String, String> projectionMap) {
@@ -361,6 +329,18 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         } else if (value instanceof Double) {
             values.put(key, (Double) value);
         }
+    }
+
+    private static String getStringFromInputStream(final InputStream content) throws IOException {
+        final InputStreamReader inputReader = new InputStreamReader(content);
+        final BufferedReader reader = new BufferedReader(inputReader);
+
+        final StringBuilder builder = new StringBuilder();
+        for (String line; (line = reader.readLine()) != null; ) {
+            builder.append(line).append("\n");
+        }
+
+        return builder.toString();
     }
 
     /**
@@ -1074,7 +1054,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     try {
                         final List<Subject> subjects = requestMoreItemsSync(1);
                         addSubjects(subjects, false /* not async - we need it immediately. */);
-                    } catch (final NoNetworkException e) {
+                    } catch (final HttpUtils.NoNetworkException e) {
                         //Return the empty cursor,
                         //and let the caller guess at the cause.
                         //If we let the exception be thrown by this query() method then
@@ -1508,7 +1488,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             return null;
         }
 
-        final List<Subject> result = parseQueryResponseContent(in);
+        final List<Subject> result = parseMoreItemsResponseContent(in);
         try {
             in.close();
         } catch (IOException e) {
@@ -1600,11 +1580,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                 whereClause, selectionArgs);
         if (affected != 1) {
             Log.error("markItemAsUploaded(): Unexpected affected rows: " + affected);
-        }
-    }
-
-    public static class NoNetworkException extends RuntimeException {
-        public NoNetworkException() {
         }
     }
 
