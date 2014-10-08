@@ -5,9 +5,11 @@ import android.content.Context;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -189,6 +191,19 @@ public class HttpUtils {
         }
 
         return true; //TODO?
+    }
+
+    //TODO: Avoid using this. Parse the InputStream directly instead.
+    static String getStringFromInputStream(final InputStream content) throws IOException {
+        final InputStreamReader inputReader = new InputStreamReader(content);
+        final BufferedReader reader = new BufferedReader(inputReader);
+
+        final StringBuilder builder = new StringBuilder();
+        for (String line; (line = reader.readLine()) != null; ) {
+            builder.append(line).append("\n");
+        }
+
+        return builder.toString();
     }
 
     public static class NoNetworkException extends RuntimeException {

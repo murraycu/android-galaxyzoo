@@ -48,18 +48,15 @@ import com.murrayc.galaxyzoo.app.Utils;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -237,7 +234,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     }
 
     private static LoginResult parseLoginResponseContent(final InputStream content) throws IOException {
-        final String str = getStringFromInputStream(content);
+        final String str = HttpUtils.getStringFromInputStream(content);
 
         //A failure by default.
         LoginResult result = new LoginResult(false, null, null);
@@ -271,73 +268,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             Log.error("parseLoginResponseContent(): Exception", e);
             return result;
         }
-    }
-
-    private static List<Subject> parseMoreItemsResponseContent(final InputStream content) {
-        final String str;
-        try {
-            str = getStringFromInputStream(content);
-        } catch (IOException e) {
-            Log.error("parseMoreItemsResponseContent(): Exception while getting string from input stream", e);
-            return null;
-        }
-
-        final List<Subject> result = new ArrayList<>();
-
-        final JSONTokener tokener = new JSONTokener(str);
-        JSONArray jsonArray;
-        try {
-            jsonArray = new JSONArray(tokener);
-        } catch (JSONException e) {
-            Log.error("JSON parsing failed.", e);
-            return result;
-        }
-
-        for (int i = 0; i < jsonArray.length(); ++i) {
-            JSONObject obj;
-            try {
-                obj = jsonArray.getJSONObject(i);
-            } catch (JSONException e) {
-                Log.error("JSON parsing of object failed.", e);
-                return result;
-            }
-
-            final Subject subject = parseMoreItemsJsonObjectSubject(obj);
-            if (subject != null) {
-                result.add(subject);
-            }
-        }
-
-        //TODO: If this is 0 then something went wrong. Let the user know,
-        // only flush old state now that new state has arrived
-        if (result.size() == 0) {
-            Log.error("Failed. No JSON entities parsed."); //TODO: Use some constant error code?
-        }
-
-        //maybe via the parseMoreItemsJsonObjectSubject() return string..
-        //For instance, the Galaxy-Zoo server could be down for maintenance (this has happened before),
-        //or there could be some other network problem.
-        return result;
-    }
-
-    private static Subject parseMoreItemsJsonObjectSubject(final JSONObject objSubject) {
-        try {
-            final Subject subject = new Subject();
-            subject.mId = objSubject.getString("id");
-            subject.mZooniverseId = objSubject.getString("zooniverse_id");
-            final JSONObject objLocation = objSubject.getJSONObject("location");
-            if (objLocation != null) {
-                subject.mLocationStandard = objLocation.getString("standard");
-                subject.mLocationThumbnail = objLocation.getString("thumbnail");
-                subject.mLocationInverted = objLocation.getString("inverted");
-            }
-
-            return subject;
-        } catch (JSONException e) {
-            Log.error("JSON parsing of object fields failed.", e);
-        }
-
-        return null;
     }
 
     private static ContentValues getMappedContentValues(final ContentValues values, final Map<String, String> projectionMap) {
@@ -376,18 +306,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         } else if (value instanceof Double) {
             values.put(key, (Double) value);
         }
-    }
-
-    private static String getStringFromInputStream(final InputStream content) throws IOException {
-        final InputStreamReader inputReader = new InputStreamReader(content);
-        final BufferedReader reader = new BufferedReader(inputReader);
-
-        final StringBuilder builder = new StringBuilder();
-        for (String line; (line = reader.readLine()) != null; ) {
-            builder.append(line).append("\n");
-        }
-
-        return builder.toString();
     }
 
     /**
@@ -1163,7 +1081,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     //Immediately get some more from the REST server and then try again.
                     //Get one synchronously, for now.
                     try {
-                        final List<Subject> subjects = requestMoreItemsSync(1);
+                        final List<MoreItemsJsonParser.Subject> subjects = requestMoreItemsSync(1);
                         addSubjects(subjects, false /* not async - we need it immediately. */);
                     } catch (final HttpUtils.NoNetworkException e) {
                         //Return the empty cursor,
@@ -1450,7 +1368,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
      * @param item
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private void addSubject(final Subject item, boolean asyncFileDownloads) {
+    private void addSubject(final MoreItemsJsonParser.Subject item, boolean asyncFileDownloads) {
         if (subjectIsInDatabase(item.mId)) {
             //It is already in the database.
             //TODO: Update the row?
@@ -1563,7 +1481,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
      * @param count
      * @return
      */
-    private List<Subject> requestMoreItemsSync(int count) {
+    private List<MoreItemsJsonParser.Subject> requestMoreItemsSync(int count) {
         throwIfNoNetwork();
 
         //Avoid suddenly doing too much network and disk IO
@@ -1584,7 +1502,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             return null;
         }
 
-        final List<Subject> result = parseMoreItemsResponseContent(in);
+        final List<MoreItemsJsonParser.Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(in);
         try {
             in.close();
         } catch (IOException e) {
@@ -1602,7 +1520,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         return Config.QUERY_URI + Integer.toString(count); //TODO: Is Integer.toString() locale-dependent?
     }
 
-    private void onQueryTaskFinished(final List<Subject> result) {
+    private void onQueryTaskFinished(final List<MoreItemsJsonParser.Subject> result) {
         if (result == null) {
             return;
         }
@@ -1610,7 +1528,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         //Check that we are not adding too many,
         //which can happen if a second request was queued befor we got the result from a
         //first request.
-        List<Subject> listToUse = result;
+        List<MoreItemsJsonParser.Subject> listToUse = result;
         final int missing = getNotDoneNeededForCache();
         if (missing <= 0) {
             return;
@@ -1627,12 +1545,12 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
      * @param subjects
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private void addSubjects(final List<Subject> subjects, boolean asyncFileDownloads) {
+    private void addSubjects(final List<MoreItemsJsonParser.Subject> subjects, boolean asyncFileDownloads) {
         if (subjects == null) {
             return;
         }
 
-        for (final Subject subject : subjects) {
+        for (final MoreItemsJsonParser.Subject subject : subjects) {
             addSubject(subject, asyncFileDownloads);
         }
     }
@@ -1924,14 +1842,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         }
     }
 
-    public static class Subject {
-        public String mId;
-        public String mZooniverseId;
-        public String mLocationStandard;
-        public String mLocationThumbnail;
-        public String mLocationInverted;
-    }
-
     public static class LoginResult {
         private final boolean success;
         private final String name;
@@ -2005,9 +1915,9 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         public String itemId;
     }
 
-    private class QueryAsyncTask extends AsyncTask<Integer, Integer, List<Subject>> {
+    private class QueryAsyncTask extends AsyncTask<Integer, Integer, List<MoreItemsJsonParser.Subject>> {
         @Override
-        protected List<Subject> doInBackground(final Integer... params) {
+        protected List<MoreItemsJsonParser.Subject> doInBackground(final Integer... params) {
             if (params.length < 1) {
                 Log.error("QueryAsyncTask: not enough params.");
                 return null;
@@ -2025,7 +1935,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         }
 
         @Override
-        protected void onPostExecute(final List<Subject> result) {
+        protected void onPostExecute(final List<MoreItemsJsonParser.Subject> result) {
             super.onPostExecute(result);
 
             onQueryTaskFinished(result);
