@@ -31,7 +31,7 @@ import java.util.List;
  * Simple test to ensure that the generated bindings are working.
  */
 public class MoreItemsJsonParserTest extends AndroidTestCase {
-    List<MoreItemsJsonParser.Subject> mSubjects = null;
+    private List<MoreItemsJsonParser.Subject> mSubjects = null;
 
     @Override
     public void setUp() throws IOException {
