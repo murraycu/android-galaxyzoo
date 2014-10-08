@@ -1881,8 +1881,6 @@ com.murrayc.galaxyzoo.app.LoginUtils -> com.murrayc.galaxyzoo.app.aa:
     com.murrayc.galaxyzoo.app.LoginUtils$EncryptionResult encryptString(android.content.Context,java.lang.String) -> a
     java.lang.String decryptString(android.content.Context,java.lang.String,byte[]) -> a
     javax.crypto.Cipher getCipher(android.content.Context,int,byte[]) -> a
-    byte[] getBytesPref(android.content.Context,int) -> a
-    void setBytesPref(android.content.Context,int,byte[]) -> b
     javax.crypto.SecretKey getEncryptionKey(android.content.Context) -> c
     void saveEncryptionKey(android.content.Context,javax.crypto.SecretKey) -> a
     javax.crypto.SecretKey generateEncryptionKey() -> a
@@ -2121,6 +2119,9 @@ com.murrayc.galaxyzoo.app.UiUtils -> com.murrayc.galaxyzoo.app.aw:
 com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.ax:
     android.content.SharedPreferences getPreferences(android.content.Context) -> a
     boolean getNetworkIsConnected(android.content.Context) -> b
+    void setBytesPref(android.content.Context,int,byte[]) -> a
+    byte[] getBytesPref(android.content.Context,int) -> a
+    int getIntPref(android.content.Context,int) -> b
 com.murrayc.galaxyzoo.app.ZooFragment -> com.murrayc.galaxyzoo.app.ay:
     boolean onOptionsItemSelected(android.view.MenuItem) -> a
     void requestLogin() -> H
@@ -2194,7 +2195,6 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider -> com.murrayc.galaxyzoo
     android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String) -> query
     int getMinCacheSize() -> i
     int getKeepCount() -> j
-    int getIntPref(int) -> b
     android.database.Cursor queryItemNext(java.lang.String[],java.lang.String,java.lang.String[],java.lang.String) -> a
     java.lang.String getWhereClauseForNotDone() -> k
     java.lang.String getWhereClauseForUploaded() -> l
@@ -2210,9 +2210,9 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider -> com.murrayc.galaxyzoo
     void notifyRowChangeBySubjectId(java.lang.String) -> b
     void notifyRowChangeById(long) -> a
     boolean subjectIsInDatabase(java.lang.String) -> c
-    java.util.List requestMoreItemsSync(int) -> c
+    java.util.List requestMoreItemsSync(int) -> b
     void throwIfNoNetwork() -> n
-    java.lang.String getQueryUri(int) -> d
+    java.lang.String getQueryUri(int) -> c
     void onQueryTaskFinished(java.util.List) -> a
     void addSubjects(java.util.List,boolean) -> a
     com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$LoginResult loginSync(java.lang.String,java.lang.String) -> a
