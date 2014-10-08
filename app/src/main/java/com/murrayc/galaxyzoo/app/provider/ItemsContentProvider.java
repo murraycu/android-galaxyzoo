@@ -379,7 +379,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             final String keyInternal = projectionMap.get(keyExternal);
             if (!TextUtils.isEmpty(keyInternal)) {
                 final Object value = values.get(keyExternal);
-                putValueinContentValues(result, keyInternal, value);
+                putValueInContentValues(result, keyInternal, value);
             }
         }
 
@@ -396,7 +396,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
      * @param key
      * @param value
      */
-    private static void putValueinContentValues(final ContentValues values, final String key, final Object value) {
+    private static void putValueInContentValues(final ContentValues values, final String key, final Object value) {
         if (value instanceof String) {
             values.put(key, (String) value);
         } else if (value instanceof Boolean) {
