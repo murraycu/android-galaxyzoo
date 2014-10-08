@@ -123,6 +123,7 @@ public class DecisionTree {
                 }
             }
             reader.endObject();
+            reader.close();
         } catch (final UnsupportedEncodingException e) {
             Log.info("DecisionTree: UnsupportedEncodingException parsing JSON", e);
         } catch (final IOException e) {
