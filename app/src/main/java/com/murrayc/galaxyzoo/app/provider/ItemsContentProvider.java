@@ -73,10 +73,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     public static final String METHOD_LOGIN_ARG_PASSWORD = "password";
     public static final String LOGIN_METHOD_RESULT = "result";
 
-    //TODO: Remove these explicit method calls, or keep them just for debugging,
-    //when we make them happen automatically.
-    //public static final String METHOD_REQUEST_ITEMS = "request-items";
-
     public static final String URI_PART_ITEM = "item";
     public static final String URI_PART_ITEM_ID_NEXT = "next"; //Use in place of the item ID to get the next unclassified item.
     public static final String URI_PART_FILE = "file";

@@ -188,7 +188,7 @@ public class HttpUtils {
             }
         }
 
-        return true; //TODO?
+        return true;
     }
 
     public static class NoNetworkException extends RuntimeException {
