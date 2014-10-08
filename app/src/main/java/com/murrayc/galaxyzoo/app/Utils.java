@@ -49,7 +49,13 @@ public class Utils {
         boolean connected = false;
         ConnectivityManager connMgr = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (connMgr == null) {
+            //This happens during our test case, probably because the MockContext doesn't support
+            //this, so let's ignore it.
+            return false;
+        }
+
+        final NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             connected = true;
         }

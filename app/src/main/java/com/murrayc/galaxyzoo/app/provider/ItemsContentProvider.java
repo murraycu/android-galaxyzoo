@@ -650,6 +650,9 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                 // Even if no URI is provided by the client, we still create the local URI and put
                 // it in the table row for later use.
                 final ContentValues valuesComplete = new ContentValues(values);
+
+                //This doesn't actually get any data from the locations - we provide them
+                //just to have them in the listFiles items together with the created content uris.
                 final List<CreatedFileUri> listFiles = createFileUrisForImages(valuesComplete,
                         subjectId,
                         values.getAsString(Item.Columns.LOCATION_STANDARD_URI),
@@ -811,6 +814,14 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
     private boolean cacheUriToFile(final String uriFileToCache, final String cacheFileUri, final String subjectId, final ImageType imageType, boolean asyncFileDownloads) {
+        if (TextUtils.isEmpty(uriFileToCache)) {
+            return false;
+        }
+
+        if (TextUtils.isEmpty(cacheFileUri)) {
+            return false;
+        }
+
         throwIfNoNetwork();
 
         if (asyncFileDownloads) {
@@ -877,7 +888,12 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         //Download enough subjects:
         queueRegularTasks();
 
-        PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
+        try {
+            PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
+        } catch (final UnsupportedOperationException e) {
+            //This happens during our test case, because the MockContext doesn't support this,
+            //so ignore this.
+        }
 
         return true;
     }
