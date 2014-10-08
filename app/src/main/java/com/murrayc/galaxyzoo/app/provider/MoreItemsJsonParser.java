@@ -16,7 +16,7 @@ import java.util.List;
  * Created by murrayc on 10/8/14.
  */
 public class MoreItemsJsonParser {
-    static List<Subject> parseMoreItemsResponseContent(final InputStream content) {
+    public static List<Subject> parseMoreItemsResponseContent(final InputStream content) {
         final String str;
         try {
             str = HttpUtils.getStringFromInputStream(content);
