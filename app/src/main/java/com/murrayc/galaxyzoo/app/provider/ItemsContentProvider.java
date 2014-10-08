@@ -48,9 +48,6 @@ import com.murrayc.galaxyzoo.app.Utils;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -231,43 +228,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     private boolean mRequeue = false;
 
     public ItemsContentProvider() {
-    }
-
-    private static LoginResult parseLoginResponseContent(final InputStream content) throws IOException {
-        final String str = HttpUtils.getStringFromInputStream(content);
-
-        //A failure by default.
-        LoginResult result = new LoginResult(false, null, null);
-
-        final JSONTokener tokener = new JSONTokener(str);
-        JSONObject jsonObject;
-        try {
-            jsonObject = new JSONObject(tokener);
-        } catch (JSONException e) {
-            Log.error("JSON parsing failed.", e);
-            return result;
-        }
-
-        try {
-            if (TextUtils.equals(jsonObject.getString("success"), "true")) {
-                Log.info("Login succeeded.");
-
-                //TODO: Store the name and api_key for later use when uploading classifications.
-                final String apiKey = jsonObject.getString("api_key");
-                final String name = jsonObject.getString("name");
-
-                return new LoginResult(true, name, apiKey);
-            } else {
-                Log.info("Login failed.");
-
-                final String message = jsonObject.getString("message");
-                Log.info("Login failure message", message);
-                return result;
-            }
-        } catch (final JSONException e) {
-            Log.error("parseLoginResponseContent(): Exception", e);
-            return result;
-        }
     }
 
     private static ContentValues getMappedContentValues(final ContentValues values, final Map<String, String> projectionMap) {
@@ -801,7 +761,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     public boolean onCreate() {
         mOpenDbHelper = new DatabaseHelper(getContext());
         //This is useful to wipe the database when testing.
-        //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
+        mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
 
         //Download enough subjects:
         queueRegularTasks();
@@ -840,7 +800,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                  * We do this synchronously, waiting for the result,
                  * so we can return the result to the caller.
                  */
-                final LoginResult result = loginSync(username, password);
+                final LoginUtils.LoginResult result = loginSync(username, password);
                 if (result == null) {
                     return null;
                 }
@@ -1563,7 +1523,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     }
     */
 
-    private static LoginResult loginSync(final String username, final String password) {
+    private static LoginUtils.LoginResult loginSync(final String username, final String password) {
         final HttpURLConnection conn = HttpUtils.openConnection(Config.LOGIN_URI);
         if (conn == null) {
             return null;
@@ -1598,7 +1558,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                 return null;
             }
 
-            return parseLoginResponseContent(in);
+            return LoginUtils.parseLoginResponseContent(in);
         } catch (final IOException e) {
             Log.error("loginSync(): exception during HTTP connection", e);
 
@@ -1839,30 +1799,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             private static final String SEQUENCE = "sequence";
             private static final String QUESTION_ID = "questionId";
             private static final String CHECKBOX_ID = "checkboxId";
-        }
-    }
-
-    public static class LoginResult {
-        private final boolean success;
-        private final String name;
-        private final String apiKey;
-
-        public LoginResult(boolean success, final String name, final String apiKey) {
-            this.success = success;
-            this.name = name;
-            this.apiKey = apiKey;
-        }
-
-        public String getApiKey() {
-            return apiKey;
-        }
-
-        public boolean getSuccess() {
-            return success;
-        }
-
-        public String getName() {
-            return name;
         }
     }
 

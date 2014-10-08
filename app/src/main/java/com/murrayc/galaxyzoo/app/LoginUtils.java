@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.JsonReader;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -54,6 +58,58 @@ public class LoginUtils {
                 (encryptedAuthApiKey == null ? null : encryptedAuthApiKey.iv));
 
         editor.apply();
+    }
+
+    public static LoginResult parseLoginResponseContent(final InputStream content) {
+        //A failure by default.
+        LoginResult result = new LoginResult(false, null, null);
+
+        final JsonReader reader;
+        try {
+            reader = new JsonReader(new InputStreamReader(content, "UTF-8"));
+            reader.beginObject();
+            boolean success = false;
+            String apiKey = null;
+            String userName = null;
+            String message = null;
+            while (reader.hasNext()) {
+                final String name = reader.nextName();
+                switch (name) {
+                    case "success":
+                        success = reader.nextBoolean();
+                        break;
+                    case "api_key":
+                        apiKey = reader.nextString();
+                        break;
+                    case "name":
+                        userName = reader.nextString();
+                        break;
+                    case "message":
+                        message = reader.nextString();
+                        break;
+                    default:
+                        reader.skipValue();
+                }
+            }
+
+            if (success) {
+                result = new LoginResult(true, userName, apiKey);
+            } else {
+                Log.info("Login failed.");
+                Log.info("Login failure message", message);
+            }
+
+            reader.endObject();
+            reader.close();
+        } catch (final UnsupportedEncodingException e) {
+            Log.info("parseLoginResponseContent: UnsupportedEncodingException parsing JSON", e);
+        } catch (final IOException e) {
+            Log.info("parseLoginResponseContent: IOException parsing JSON", e);
+        } catch (final IllegalStateException e) {
+            Log.info("parseLoginResponseContent: IllegalStateException parsing JSON", e);
+        }
+
+        return result;
     }
 
     public static class LoginDetails {
@@ -313,5 +369,29 @@ public class LoginUtils {
 
         keyGenerator.init(outputKeyLength, secureRandom);
         return keyGenerator.generateKey();
+    }
+
+    public static class LoginResult {
+        private final boolean success;
+        private final String name;
+        private final String apiKey;
+
+        public LoginResult(boolean success, final String name, final String apiKey) {
+            this.success = success;
+            this.name = name;
+            this.apiKey = apiKey;
+        }
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public boolean getSuccess() {
+            return success;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 }

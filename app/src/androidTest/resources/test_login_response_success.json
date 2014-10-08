@@ -1,0 +1,24 @@
+{
+    "success":true,
+    "id":"testid",
+    "api_key":"testapikey",
+    "avatar":"http://zooniverse-avatars.s3.amazonaws.com/default_forum_avatar.png",
+    "classification_count":87,
+    "email":"testemail",
+    "favorite_count":2,
+    "name":"testuser",
+    "zooniverse_id":1234567,
+    "project":{
+        "classification_count":66,
+        "favorite_count":2,
+        "groups":{
+            "testGroupId":{
+                "classification_count":66,
+                "name":"sloan"
+            }
+        },
+        "splits":{
+        }
+    }
+
+}
