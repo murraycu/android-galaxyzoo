@@ -29,8 +29,6 @@ import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.IOException;
 
-import javax.crypto.SecretKey;
-
 /**
  * Simple test to ensure that the generated bindings are working.
  */

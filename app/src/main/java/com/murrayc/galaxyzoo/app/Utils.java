@@ -37,6 +37,8 @@ import java.io.UnsupportedEncodingException;
 public class Utils {
 
 
+    public static final String STRING_ENCODING = "UTF-8";
+
     public static SharedPreferences getPreferences(final Context context) {
         //TODO: Use the application name, or the full domain here?
         //However, changing it now would lose existing preferences, including the login.
@@ -60,7 +62,7 @@ public class Utils {
         if (bytes != null && (bytes.length != 0)) {
             final byte[] asBytesBase64 = Base64.encode(bytes, Base64.DEFAULT);
             try {
-                asString = new String(asBytesBase64, LoginUtils.STRING_ENCODING);
+                asString = new String(asBytesBase64, STRING_ENCODING);
             } catch (final UnsupportedEncodingException e) {
                 Log.error("getEncryptionKey(): new String() failed.", e);
             }
@@ -79,7 +81,7 @@ public class Utils {
         if (!TextUtils.isEmpty(asString)) {
             final byte[] asBytes;
             try {
-                asBytes = asString.getBytes(LoginUtils.STRING_ENCODING);
+                asBytes = asString.getBytes(STRING_ENCODING);
             } catch (UnsupportedEncodingException e) {
                 Log.error("getEncryptionKey(): String.getBytes() failed.", e);
                 return null;

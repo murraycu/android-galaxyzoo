@@ -25,11 +25,9 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class LoginUtils {
 
-    public static final String ENCRYPTION_KEY_ALGORITHM = "AES";
-    public static final String ENCRYPTION_CIPHER_TRANSFORMATION = ENCRYPTION_KEY_ALGORITHM + "/CBC/PKCS5Padding";
-    public static final String STRING_ENCODING = "UTF-8";
-    //public static final String ENCRYPTION_CIPHER_TRANSFORMATION = ENCRYPTION_KEY_ALGORITHM + "/GCM/NoPadding";
-
+    private static final String ENCRYPTION_KEY_ALGORITHM = "AES";
+    private static final String ENCRYPTION_CIPHER_TRANSFORMATION = ENCRYPTION_KEY_ALGORITHM + "/CBC/PKCS5Padding";
+    //private static final String ENCRYPTION_CIPHER_TRANSFORMATION = ENCRYPTION_KEY_ALGORITHM + "/GCM/NoPadding";
 
     //TODO: Ask the provider instead of using this hack which uses too much internal knowledge.
     public static boolean getLoggedIn(final Context context) {
@@ -190,7 +188,7 @@ public class LoginUtils {
         //Get the bytes:
         byte[] inputAsBytes = null;
         try {
-            inputAsBytes = input.getBytes(STRING_ENCODING);
+            inputAsBytes = input.getBytes(Utils.STRING_ENCODING);
         } catch (UnsupportedEncodingException e) {
             Log.error("encryptString(): new String() failed", e);
             return null;
@@ -257,6 +255,7 @@ public class LoginUtils {
         return cipher;
     }
 
+    /*
     public static void wipeEncryptionKey(final Context context) {
         final SharedPreferences prefs = Utils.getPreferences(context);
 
@@ -264,6 +263,7 @@ public class LoginUtils {
         editor.putString(context.getString(R.string.pref_key_auth_encryption_key), null);
         editor.apply();
     }
+    */
 
     private static SecretKey getEncryptionKey(final Context context) {
         //Get the already-generated encryption key if any:
@@ -272,7 +272,7 @@ public class LoginUtils {
         if (!TextUtils.isEmpty(keyAsString)) {
             final byte[] keyAsBytes;
             try {
-                keyAsBytes = keyAsString.getBytes(STRING_ENCODING);
+                keyAsBytes = keyAsString.getBytes(Utils.STRING_ENCODING);
             } catch (UnsupportedEncodingException e) {
                 Log.error("getEncryptionKey(): String.getBytes() failed.", e);
                 return null;
