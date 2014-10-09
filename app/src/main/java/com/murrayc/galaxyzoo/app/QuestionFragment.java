@@ -87,11 +87,6 @@ public class QuestionFragment extends BaseQuestionFragment
     private static final int COLUMN_INDEX_ID = 0;
     private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
 
-    //Remember the greatest height that this has fragment has ever requested,
-    //so we can try to always ask for at least that,
-    //to avoid the other parts of the UI moving around too much.
-    private int maxHeightExperienced = 0;
-
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
@@ -115,7 +110,7 @@ public class QuestionFragment extends BaseQuestionFragment
     private boolean mLoaderFinished = false;
 
     private ClassificationInProgress mClassificationInProgress = new ClassificationInProgress();
-    private View mRootView;
+    private ZooLinearLayout mRootView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -177,7 +172,7 @@ public class QuestionFragment extends BaseQuestionFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_question, container, false);
+        mRootView = (ZooLinearLayout) inflater.inflate(R.layout.fragment_question, container, false);
         assert mRootView != null;
 
         setHasOptionsMenu(true);
@@ -431,12 +426,10 @@ public class QuestionFragment extends BaseQuestionFragment
 
         //Try to keep the height consistent, to avoid the user seeing everything moving about.
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            final int measuredHeight = mRootView.getMeasuredHeight();
-            if ((measuredHeight > 0) && (maxHeightExperienced < measuredHeight)) {
-                maxHeightExperienced = measuredHeight;
+            final int min = mRootView.getMaximumHeightExperienced();
+            if (min > 0) {
+                mRootView.setMinimumHeight(min);
             }
-
-            mRootView.setMinimumHeight(maxHeightExperienced);
         }
     }
 

@@ -8,6 +8,8 @@ import android.widget.LinearLayout;
  * Created by murrayc on 10/9/14.
  */
 public class ZooLinearLayout extends LinearLayout {
+    private int mMaxHeightExperienced = 0;
+
     public ZooLinearLayout(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
@@ -16,7 +18,18 @@ public class ZooLinearLayout extends LinearLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 
+        //Remember the greatest height that this has fragment has ever requested,
+        //so we can try to always ask for at least that,
+        //to avoid the other parts of the UI moving around too much.
         final int measuredHeight = getMeasuredHeight();
-        Log.info("ZooLinearLayout.onLayout(): measuredHeight=" + measuredHeight);
+        if ((measuredHeight > 0) && (mMaxHeightExperienced < measuredHeight)) {
+            mMaxHeightExperienced = measuredHeight;
+        }
+
+        //Log.info("ZooLinearLayout.onLayout(): measuredHeight=" + measuredHeight);
+    }
+
+    public int getMaximumHeightExperienced() {
+        return mMaxHeightExperienced;
     }
 }
