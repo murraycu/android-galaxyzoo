@@ -52,6 +52,7 @@ import android.widget.ToggleButton;
 
 import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
+import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 import java.text.DateFormat;
@@ -84,13 +85,6 @@ public class QuestionFragment extends BaseQuestionFragment
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
     private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
-
-    //We hard-code this.
-    //Alternatively, we could hard-code the removal of this question from the XML
-    //when generating the XML file,
-    //and then always ask the question at the end via Java code.
-    private static final CharSequence QUESTION_ID_DISCUSS = "sloan-11";
-    private static final CharSequence ANSWER_ID_DISCUSS_YES = "a-0";
 
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
@@ -480,8 +474,8 @@ public class QuestionFragment extends BaseQuestionFragment
         if (activity == null)
             return;
 
-        if ((TextUtils.equals(questionId, QUESTION_ID_DISCUSS)) &&
-                (TextUtils.equals(answerId, ANSWER_ID_DISCUSS_YES))) {
+        if ((TextUtils.equals(questionId, Config.QUESTION_ID_DISCUSS)) &&
+                (TextUtils.equals(answerId, Config.ANSWER_ID_DISCUSS_YES))) {
             //Open a link to the discussion page.
             UiUtils.openDiscussionPage(activity, getZooniverseId());
         } else {

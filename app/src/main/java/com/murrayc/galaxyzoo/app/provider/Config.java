@@ -42,6 +42,13 @@ public class Config {
     //Add the example ID and .jpg to this:
     public static final String FULL_EXAMPLE_URI = STATIC_IMAGES_SERVER + "examples/";
 
+    //We hard-code this.
+    //Alternatively, we could hard-code the removal of this question from the XML
+    //when generating the XML file,
+    //and then always ask the question at the end via Java code.
+    public static final CharSequence QUESTION_ID_DISCUSS = "sloan-11";
+    public static final CharSequence ANSWER_ID_DISCUSS_YES = "a-0";
+
     // galaxyzoo.org also has a register page, but it's only visible as part of the login page
     // (not an actual page either) after clicking a button.
     // Hopefully there is no disadvantage to using the general zooniverse pages instead.
