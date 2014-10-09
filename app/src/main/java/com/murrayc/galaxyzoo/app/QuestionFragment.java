@@ -26,6 +26,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -85,6 +86,11 @@ public class QuestionFragment extends BaseQuestionFragment
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
     private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
+
+    //Remember the greatest height that this has fragment has ever requested,
+    //so we can try to always ask for at least that,
+    //to avoid the other parts of the UI moving around too much.
+    private int maxHeightExperienced = 0;
 
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
@@ -421,6 +427,16 @@ public class QuestionFragment extends BaseQuestionFragment
                 final FrameLayout placeholder = new FrameLayout(activity);
                 insertButtonInRow(activity ,row, placeholder);
             }
+        }
+
+        //Try to keep the height consistent, to avoid the user seeing everything moving about.
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            final int measuredHeight = mRootView.getMeasuredHeight();
+            if ((measuredHeight > 0) && (maxHeightExperienced < measuredHeight)) {
+                maxHeightExperienced = measuredHeight;
+            }
+
+            mRootView.setMinimumHeight(maxHeightExperienced);
         }
     }
 
