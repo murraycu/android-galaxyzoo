@@ -120,9 +120,9 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         final Fragment fragmentQuestion = fragmentManager.findFragmentById(R.id.child_fragment_question);
         if (fragmentQuestion != null) {
             if (show) {
-                transaction.hide(fragmentSubject);
+                transaction.hide(fragmentQuestion);
             } else {
-                transaction.show(fragmentSubject);
+                transaction.show(fragmentQuestion);
             }
         }
 
