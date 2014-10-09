@@ -17,7 +17,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -108,19 +107,20 @@ class IconsCache {
     private boolean reloadCachedIcons() {
         mWorkflowIcons.evictAll();
         mExampleIcons.evictAll();
-        final DecisionTree.Question question = mDecisionTree.getFirstQuestion();
 
-        final List<String> alreadyReloadedQuestionIds = new ArrayList<>(100);
-        return reloadIconsForQuestion(question, alreadyReloadedQuestionIds);
-    }
-
-    private boolean reloadIconsForQuestion(final DecisionTree.Question question, final List<String> alreadyReloadedQuestionIds) {
-        //Prevent an unnecessary repeat reload:
-        final String questionId = question.getId();
-        if (alreadyReloadedQuestionIds.contains(questionId)) {
-            return true;
+        final List<DecisionTree.Question> questions = mDecisionTree.getAllQuestions();
+        boolean allSucceeded = true;
+        for (final DecisionTree.Question question : questions) {
+            if (!reloadIconsForQuestion(question)) {
+                allSucceeded = false;
+                //But keep on trying the other ones.
+            }
         }
 
+        return allSucceeded;
+    }
+
+    private boolean reloadIconsForQuestion(final DecisionTree.Question question) {
         for (final DecisionTree.Answer answer : question.answers) {
             //Get the icon for the answer:
             if (!reloadIcon(answer.getIcon(), mWorkflowIcons)) {
@@ -131,16 +131,7 @@ class IconsCache {
                 return false;
             }
 
-            //Prevent an unnecessary repeat reload:
-            alreadyReloadedQuestionIds.add(question.getId());
-
-            //Recurse:
-            final DecisionTree.Question nextQuestion = mDecisionTree.getNextQuestionForAnswer(question.getId(), answer.getId());
-            if (nextQuestion != null) {
-                if (!reloadIconsForQuestion(nextQuestion, alreadyReloadedQuestionIds)) {
-                    return false;
-                }
-            }
+            return true;
         }
 
         for (final DecisionTree.Checkbox checkbox : question.checkboxes) {

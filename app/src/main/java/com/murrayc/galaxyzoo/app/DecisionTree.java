@@ -48,6 +48,7 @@ public class DecisionTree {
     private static final String NODE_QUESTION = "question";
     private static final String NODE_CHECKBOX = "checkbox";
     private static final String NODE_ANSWER = "answer";
+
     //TODO: Make this private and add accessors.
     public final Hashtable<String, Question> questionsMap = new Hashtable<>();
 
@@ -282,6 +283,17 @@ public class DecisionTree {
         }
 
         return getQuestion(answer.leadsToQuestionId);
+    }
+
+    public List<Question> getAllQuestions() {
+        final List<Question> result = new ArrayList<>();
+        for (final Question question : questionsMap.values()) {
+            if (question != null) {
+                result.add(question);
+            }
+        }
+
+        return result;
     }
 
     /**
