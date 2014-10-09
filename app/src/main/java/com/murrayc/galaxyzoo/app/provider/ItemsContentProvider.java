@@ -1732,8 +1732,12 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.FAVORITE + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.DATETIME_DONE + " TEXT)";
-
             sqLiteDatabase.execSQL(qs);
+            createIndex(sqLiteDatabase, TABLE_NAME_ITEMS, ItemsDbColumns.SUBJECT_ID);
+            createIndex(sqLiteDatabase, TABLE_NAME_ITEMS, ItemsDbColumns.UPLOADED);
+            createIndex(sqLiteDatabase, TABLE_NAME_ITEMS, ItemsDbColumns.DONE);
+            createIndex(sqLiteDatabase, TABLE_NAME_ITEMS, ItemsDbColumns.DATETIME_DONE);
+
 
             qs = "CREATE TABLE " + TABLE_NAME_FILES + " (" +
                     BaseColumns._ID +
@@ -1750,6 +1754,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     ClassificationAnswersDbColumns.QUESTION_ID + " TEXT, " +
                     ClassificationAnswersDbColumns.ANSWER_ID + " TEXT)";
             sqLiteDatabase.execSQL(qs);
+            createIndex(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_ANSWERS, ClassificationAnswersDbColumns.ITEM_ID);
 
             qs = "CREATE TABLE " + TABLE_NAME_CLASSIFICATION_CHECKBOXES + " (" +
                     BaseColumns._ID +
@@ -1758,6 +1763,15 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     ClassificationCheckboxesDbColumns.ITEM_ID + " INTEGER, " + /* Foreign key. See TABLE_NAME_CLASSIFICATIONS . _ID. */
                     ClassificationCheckboxesDbColumns.QUESTION_ID + " TEXT, " +
                     ClassificationCheckboxesDbColumns.CHECKBOX_ID + " TEXT)";
+            sqLiteDatabase.execSQL(qs);
+            createIndex(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_CHECKBOXES, ClassificationCheckboxesDbColumns.ITEM_ID);
+            createIndex(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_CHECKBOXES, ClassificationCheckboxesDbColumns.QUESTION_ID);
+        }
+
+        private void createIndex(final SQLiteDatabase sqLiteDatabase, final String tableName, final String fieldName) {
+            final String qs = "CREATE INDEX " + tableName + "_" + fieldName + "_index" +
+                    " ON " + tableName +
+                    " ( " + fieldName + " )";
             sqLiteDatabase.execSQL(qs);
         }
 
