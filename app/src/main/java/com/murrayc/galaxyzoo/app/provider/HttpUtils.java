@@ -176,14 +176,14 @@ public class HttpUtils {
                 }
             } while (r >= 0);
         } catch (final IOException e) {
-            Log.error("parseMoreItemsResponseContent(): Exception while writing to FileOutputStream", e);
+            Log.error("parseGetFileResponseContent(): Exception while writing to FileOutputStream", e);
             return false;
         } finally {
             if (fout != null) {
                 try {
                     fout.close();
                 } catch (final IOException e) {
-                    Log.error("parseMoreItemsResponseContent(): Exception while closing fout", e);
+                    Log.error("parseGetFileResponseContent(): Exception while closing fout", e);
                 }
             }
         }
