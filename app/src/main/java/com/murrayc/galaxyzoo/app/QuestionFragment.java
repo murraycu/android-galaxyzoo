@@ -427,23 +427,28 @@ public class QuestionFragment extends BaseQuestionFragment
             }
         }
 
-        //Make sure there are always at least 2 rows,
-        //so we request roughly the same amount of space each time:
-        if (rows < 2) {
-            row = addRowToTable(activity, layoutAnswers);
-
-            final DecisionTree.Answer answer = new DecisionTree.Answer("bogus ID", "bogus title", getArbitraryIconId(), null, 0);
-            final Button button = createAnswerButton(activity, answer);
-            button.setVisibility(View.INVISIBLE); //It won't be seen, but it's size will be used.
-            insertButtonInRow(activity, row, button);
-        }
-
-        //Try to keep the height consistent, to avoid the user seeing everything moving about.
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+            //Make sure there are always at least 2 rows,
+            //so we request roughly the same amount of space each time:
+            if (rows < 2) {
+                row = addRowToTable(activity, layoutAnswers);
+
+                final DecisionTree.Answer answer = new DecisionTree.Answer("bogus ID", "bogus title", getArbitraryIconId(), null, 0);
+                final Button button = createAnswerButton(activity, answer);
+                button.setVisibility(View.INVISIBLE); //It won't be seen, but it's size will be used.
+                insertButtonInRow(activity, row, button);
+            }
+
+            //Try to keep the height consistent, to avoid the user seeing everything moving about.
             final int min = mRootView.getMaximumHeightExperienced();
             if (min > 0) {
                 mRootView.setMinimumHeight(min);
             }
+        } else {
+            //Ignore any previously-set minimum height,
+            //to stop the portrait-mode's layout from affecting the layout-mode's layout:
+            mRootView.setMinimumHeight(0);
         }
     }
 
