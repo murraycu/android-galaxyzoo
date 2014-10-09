@@ -76,6 +76,7 @@ public class QuestionFragment extends BaseQuestionFragment
     private static final String ARG_QUESTION_CLASSIFICATION_IN_PROGRESS = "classification-in-progress";
 
     private static final int URL_LOADER = 0;
+
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
     // from our ContentProvider) only knows about the underlying SQLite database column names,
@@ -83,12 +84,14 @@ public class QuestionFragment extends BaseQuestionFragment
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
     private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
+
     //We hard-code this.
     //Alternatively, we could hard-code the removal of this question from the XML
     //when generating the XML file,
     //and then always ask the question at the end via Java code.
     private static final CharSequence QUESTION_ID_DISCUSS = "sloan-11";
     private static final CharSequence ANSWER_ID_DISCUSS_YES = "a-0";
+
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
@@ -97,18 +100,20 @@ public class QuestionFragment extends BaseQuestionFragment
         public void onClassificationFinished() {
         }
     };
+
     /**
      * The fragment's current callback object, which is notified of list item
      * clicks.
      */
     private Callbacks mCallbacks = sDummyCallbacks;
     private final String[] mColumns = {Item.Columns._ID, Item.Columns.ZOONIVERSE_ID};
+
     // A map of checkbox IDs to buttons.
     private final Map<String, ToggleButton> mCheckboxButtons = new HashMap<>();
     private Cursor mCursor;
     private String mZooniverseId; //Only used for the talk URI so far.
     private boolean mLoaderFinished = false;
-    //TODO: Can this fragment be reused, meaning we'd need to reset this?
+
     private ClassificationInProgress mClassificationInProgress = new ClassificationInProgress();
     private View mRootView;
 
