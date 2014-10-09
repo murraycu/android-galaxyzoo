@@ -416,12 +416,26 @@ public class QuestionFragment extends BaseQuestionFragment
             }
         }
 
+        //Add empty remaining cells, to avoid the other cells from expanding to fill the space,
+        //because we want them to line up with the same cells above and below.
         if ((row != null) && (rows > 1)) {
             final int remaining_in_row = COL_COUNT - col + 1;
             for (int i = 0; i < remaining_in_row; i++) {
+                //TODO: We could use Space instead of FrameLayout when using API>14.
                 final FrameLayout placeholder = new FrameLayout(activity);
-                insertButtonInRow(activity ,row, placeholder);
+                insertButtonInRow(activity, row, placeholder);
             }
+        }
+
+        //Make sure there are always at least 2 rows,
+        //so we request roughly the same amount of space each time:
+        if (rows < 2) {
+            row = addRowToTable(activity, layoutAnswers);
+
+            final DecisionTree.Answer answer = new DecisionTree.Answer("bogus ID", "bogus title", getArbitraryIconId(), null, 0);
+            final Button button = createAnswerButton(activity, answer);
+            button.setVisibility(View.INVISIBLE); //It won't be seen, but it's size will be used.
+            insertButtonInRow(activity, row, button);
         }
 
         //Try to keep the height consistent, to avoid the user seeing everything moving about.
@@ -431,6 +445,27 @@ public class QuestionFragment extends BaseQuestionFragment
                 mRootView.setMinimumHeight(min);
             }
         }
+    }
+
+    /** Get an icon ID just so we can use an invisible icon to make the layout
+     * use an appropriate height on an invisible row.
+     * @return
+     */
+    private String getArbitraryIconId() {
+        final DecisionTree.Question question = getQuestion();
+        if (question == null) {
+            return null;
+        }
+
+        if ((question.answers != null) && (question.answers.size() > 0)) {
+            return question.answers.get(0).getIcon();
+        }
+
+        if ((question.checkboxes != null) && (question.checkboxes.size() > 0)) {
+            return question.checkboxes.get(0).getIcon();
+        }
+
+        return null;
     }
 
     private static TableRow addRowToTable(final Activity activity, final TableLayout layoutAnswers) {
