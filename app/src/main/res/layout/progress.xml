@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/progress_loading_text"
-        android:id="@+id/textView"
+        android:id="@+id/textViewProgress"
         android:layout_gravity="center_horizontal"
         android:textAlignment="center"
         android:singleLine="true" />
