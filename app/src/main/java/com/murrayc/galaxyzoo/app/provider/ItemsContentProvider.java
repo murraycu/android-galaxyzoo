@@ -1837,6 +1837,8 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                         }
                     }
                 }
+            } else {
+                Log.error("FileCacheAsyncTask(): cacheUriToFileSync(): failed.");
             }
 
             super.onPostExecute(result);
