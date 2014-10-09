@@ -201,13 +201,19 @@ class IconsCache {
 
     private void readIconsFileSync(final String uriStr, final String cacheId) {
         final String cacheFileUri = getCacheFileUri(cacheId);
-        HttpUtils.cacheUriToFileSync(uriStr, cacheFileUri);
+        if(!HttpUtils.cacheUriToFileSync(uriStr, cacheFileUri)) {
+            Log.error("readIconsFileSync(): cacheUriToFileSync() failed.");
+        }
     }
 
     private void readCssFileSync(final String uriStr, final String cacheId) {
         final String cacheFileUri = getCacheFileUri(cacheId);
-        HttpUtils.cacheUriToFileSync(uriStr, cacheFileUri);
-        onCssDownloaded();
+        if(!HttpUtils.cacheUriToFileSync(uriStr, cacheFileUri)) {
+            Log.error("readCssFileSync(): cacheUriToFileSync() failed.");
+            //TODO: Try again?
+        } else {
+            onCssDownloaded();
+        }
     }
 
     private void cacheIconsForQuestion(final DecisionTree.Question question, final String css) {

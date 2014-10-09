@@ -706,6 +706,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             if (HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri)) {
                 return markImageAsDownloaded(subjectId, imageType);
             } else {
+                //TODO: Make sure we try again later.
                 Log.error("cacheUriToFile(): cacheUriToFileSync(): failed.");
                 return false;
             }
@@ -1838,6 +1839,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     }
                 }
             } else {
+                //TODO: Make sure we try again later.
                 Log.error("FileCacheAsyncTask(): cacheUriToFileSync(): failed.");
             }
 
