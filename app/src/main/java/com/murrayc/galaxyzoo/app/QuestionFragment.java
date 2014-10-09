@@ -694,6 +694,11 @@ public class QuestionFragment extends BaseQuestionFragment
 
         mLoaderFinished = true;
         updateIfReady();
+
+        // Avoid this being called twice (actually multiple times), which seems to be an Android bug:
+        // See http://stackoverflow.com/questions/14719814/onloadfinished-called-twice
+        // and https://code.google.com/p/android/issues/detail?id=63179
+        getLoaderManager().destroyLoader(URL_LOADER);
     }
 
     private void updateIfReady() {
