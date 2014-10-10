@@ -21,7 +21,7 @@ package com.murrayc.galaxyzoo.app.provider.test;
 
 import android.test.AndroidTestCase;
 
-import com.murrayc.galaxyzoo.app.provider.client.MoreItemsJsonParser;
+import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -79,6 +79,65 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         server.shutdown();
     }
+
+    public void testLoginWithSuccess() throws IOException {
+        final MockWebServer server = new MockWebServer();
+
+        final String strResponse = getStringFromStream(
+                MoreItemsJsonParserTest.class.getClassLoader().getResourceAsStream("test_login_response_success.json"));
+        assertNotNull(strResponse);
+        server.enqueue(new MockResponse().setBody(strResponse));
+        server.play();
+
+        final URL mockUrl = server.getUrl("/");
+        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+
+        final LoginUtils.LoginResult result = client.loginSync("testusername", "testpassword");
+        assertNotNull(result);
+        assertTrue(result.getSuccess());
+        assertEquals(result.getApiKey(), "testapikey");
+
+        server.shutdown();
+    }
+
+    public void testLoginWithFailure() throws IOException {
+        final MockWebServer server = new MockWebServer();
+
+
+        //On failure, the server's response code is HTTP_OK,
+        //but it has a "success: false" parameter.
+        final MockResponse response = new MockResponse();
+        response.setResponseCode(HttpURLConnection.HTTP_OK);
+        response.setBody("test nonsense failure message");
+        server.enqueue(response);
+        server.play();
+
+        final URL mockUrl = server.getUrl("/");
+        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+
+        final LoginUtils.LoginResult result = client.loginSync("testusername", "testpassword");
+        assertNotNull(result);
+        assertFalse(result.getSuccess());
+
+        server.shutdown();
+    }
+
+    public void testLoginWithBadResponseContent() throws IOException {
+        final MockWebServer server = new MockWebServer();
+
+        server.enqueue(new MockResponse().setBody("test bad login response"));
+        server.play();
+
+        final URL mockUrl = server.getUrl("/");
+        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+
+        final LoginUtils.LoginResult result = client.loginSync("testusername", "testpassword");
+        assertNotNull(result);
+        assertFalse(result.getSuccess());
+
+        server.shutdown();
+    }
+
 
     public void testMoreItemsWithBadResponseContent() throws IOException {
         final MockWebServer server = new MockWebServer();
