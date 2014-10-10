@@ -70,7 +70,7 @@ public class ZooniverseClient {
             conn.setDoOutput(true);
             conn.setDoInput(true);
 
-            if (writeParamsToHttpPost(conn, nameValuePairs)) {
+            if (!writeParamsToHttpPost(conn, nameValuePairs)) {
                 return null;
             }
 
