@@ -79,50 +79,59 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     public static final String URI_PART_CLASSIFICATION_ANSWER = "classification-answer";
     public static final String URI_PART_CLASSIFICATION_CHECKBOX = "classification-checkbox";
     private static final String URI_PART_CLASSIFICATION = "classification";
+
     /**
      * The MIME type of {@link Item#CONTENT_URI} providing a directory of items.
      */
     private static final String CONTENT_TYPE_ITEMS =
             "vnd.android.cursor.dir/vnd.android-galaxyzoo.item";
+
     /**
      * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
      * item.
      */
     private static final String CONTENT_TYPE_ITEM =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.item";
+
     /**
      * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
      */
     private static final String CONTENT_TYPE_CLASSIFICATIONS =
             "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification";
+
     /**
      * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
      * classification.
      */
     private static final String CONTENT_TYPE_CLASSIFICATION =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.classification";
+
     /**
      * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
      */
     private static final String CONTENT_TYPE_CLASSIFICATION_ANSWERS =
             "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification-answer";
+
     /**
      * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
      * classification answer.
      */
     private static final String CONTENT_TYPE_CLASSIFICATION_ANSWER =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-answer";
+
     /**
      * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
      */
     private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOXES =
             "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification-checkboxes";
+
     /**
      * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
      * classification checkbox.
      */
     private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOX =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-checkbox";
+
     //TODO: Use an enum?
     private static final int MATCHER_ID_ITEMS = 1;
     private static final int MATCHER_ID_ITEM = 2;
@@ -171,6 +180,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     }
 
     private static final String[] FILE_MIME_TYPES = new String[]{"application/x-glom"};
+
     /**
      * A map of GlomContentProvider projection column names to underlying Sqlite column names
      * for /item/ URIs, mapping to the items tables.
