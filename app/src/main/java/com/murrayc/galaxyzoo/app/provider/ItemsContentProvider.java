@@ -61,6 +61,7 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,6 +236,10 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     private DatabaseHelper mOpenDbHelper;
     private boolean mAlreadyQueuedRegularTasks = false;
     private boolean mRequeue = false;
+
+    /* A map of remote URIs to the last dates that we tried to download them.
+     */
+    private Map<String, Date> mImageDownloadsInProgress = new HashMap<>();
 
     public ItemsContentProvider() {
     }
@@ -711,13 +716,16 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
         throwIfNoNetwork();
 
+        final Date now = new Date();
+        mImageDownloadsInProgress.put(uriFileToCache, now);
+
         if (asyncFileDownloads) {
             final FileCacheAsyncTask task = new FileCacheAsyncTask(this, subjectId, imageType);
             task.execute(uriFileToCache, cacheFileUri);
             return true;
         } else {
             if (HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri)) {
-                return markImageAsDownloaded(subjectId, imageType);
+                return markImageAsDownloaded(subjectId, imageType, uriFileToCache);
             } else {
                 //TODO: Make sure we try again later.
                 Log.error("cacheUriToFile(): cacheUriToFileSync(): failed.");
@@ -726,7 +734,13 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         }
     }
 
-    private boolean markImageAsDownloaded(final String subjectId, final ImageType imageType) {
+    private boolean markImageAsDownloaded(final String subjectId, final ImageType imageType, final String uriFileToCache) {
+
+        //Don't try downloading this again later:
+        mImageDownloadsInProgress.remove(uriFileToCache);
+
+        //Let users of the ContentProvider API know that the image has been fully downloaded
+        //so it's safe to use it:
         String fieldName = null;
         switch (imageType) {
             case STANDARD:
@@ -740,6 +754,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                 break;
             default:
                 Log.error("markImageAsDownloaded(): Unexpected imageType.");
+                return false;
         }
 
         final String whereClause = DatabaseHelper.ItemsDbColumns.SUBJECT_ID + " = ?"; //We use ? to avoid SQL Injection.
@@ -1852,6 +1867,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
         private final String subjectId;
         private final ImageType imageType;
+        private String uriFileToCache = null;
         private final WeakReference<ItemsContentProvider> providerReference;
 
         public FileCacheAsyncTask(final ItemsContentProvider provider, final String subjectId, ImageType imageType) {
@@ -1870,7 +1886,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             Log.info("FileCacheAsyncTask.doInBackground()");
 
             //TODO: Just set these in the constructor?
-            final String uriFileToCache = params[0];
+            uriFileToCache = params[0];
             final String cacheFileUri = params[1];
 
             return HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri);
@@ -1882,7 +1898,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                 if (providerReference != null) {
                     final ItemsContentProvider provider = providerReference.get();
                     if (provider != null) {
-                        if (!provider.markImageAsDownloaded(subjectId, imageType)) {
+                        if (!provider.markImageAsDownloaded(subjectId, imageType, uriFileToCache)) {
                             Log.error("FileCacheAsyncTask(): onPostExecute(): markImageAsDownloaded() failed.");
                         }
                     }
