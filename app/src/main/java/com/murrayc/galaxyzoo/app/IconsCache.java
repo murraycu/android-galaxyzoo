@@ -130,8 +130,6 @@ class IconsCache {
             if (!reloadExampleImages(question, answer)) {
                 return false;
             }
-
-            return true;
         }
 
         for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
