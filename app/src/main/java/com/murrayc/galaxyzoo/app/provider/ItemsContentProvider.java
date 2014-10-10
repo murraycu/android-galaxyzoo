@@ -341,14 +341,75 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         Log.info("doRegularTasks() start");
         //Do the download first, to avoid the UI having to wait for new subjects to classify.
         final boolean noDownloadNecessary = downloadMinimumSubjectsAsync();
+        final boolean noDownloadMissingImagesNecessary = downloadMissingImages();
 
         //Do less urgent things next:
         final boolean noUploadNecessary = uploadOutstandingClassifications();
         final boolean noRemovalNecessary = removeOldSubjects();
 
+
         Log.info("doRegularTasks() end");
 
-        return noUploadNecessary && noDownloadNecessary && noRemovalNecessary;
+        return noDownloadNecessary && noDownloadMissingImagesNecessary && noUploadNecessary
+                && noRemovalNecessary;
+    }
+
+    /**
+     * Download any images that have previously failed to download.
+     *
+     * @return Return true if we know for sure that no further downloading is currently necessary.
+     */
+    private boolean downloadMissingImages() {
+        boolean noWorkNeeded = true;
+
+        //Get all the items that have an image that is not yet fully downloaded:
+        final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
+        builder.appendWhere(getWhereClauseForDownloadNotDone());
+        final String[] projection = {DatabaseHelper.ItemsDbColumns.SUBJECT_ID,
+                DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI_REMOTE,
+                DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI,
+                DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI_REMOTE,
+                DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI,
+                DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI_REMOTE,
+                DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI};
+        final Cursor c = builder.query(getDb(), projection,
+                null, null,
+                null, null, null, null);
+
+        //Find out if the image is currently being downloaded:
+        while (c.moveToNext()) {
+            final String subjectId = c.getString(0);
+            if (TextUtils.isEmpty(subjectId)) {
+                continue;
+            }
+
+            //Restart any downloads that seem to have failed before, or have been interrupted:
+            final String uriStandardRemote = c.getString(1);
+            if (!mImageDownloadsInProgress.containsKey(uriStandardRemote)) {
+                final String uriStandard = c.getString(2);
+                cacheUriToFile(uriStandardRemote, uriStandard, subjectId, ImageType.STANDARD, true /* async */);
+                noWorkNeeded = false;
+            }
+
+            final String uriThumbnailRemote = c.getString(3);
+            if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
+                final String uriThumbnail = c.getString(4);
+                cacheUriToFile(uriThumbnailRemote, uriThumbnail, subjectId, ImageType.THUMBNAIL, true /* async */);
+                noWorkNeeded = false;
+            }
+
+            final String uriInvertedRemote = c.getString(5);
+            if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
+                final String uriInverted = c.getString(6);
+                cacheUriToFile(uriInvertedRemote, uriInverted, subjectId, ImageType.INVERTED, true /* async */);
+                noWorkNeeded = false;
+            }
+        }
+
+        c.close();
+
+        return noWorkNeeded;
     }
 
     /**
@@ -727,7 +788,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             if (HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri)) {
                 return markImageAsDownloaded(subjectId, imageType, uriFileToCache);
             } else {
-                //TODO: Make sure we try again later.
+                //doRegularTasks() will try again later.
                 Log.error("cacheUriToFile(): cacheUriToFileSync(): failed.");
                 return false;
             }
@@ -1222,6 +1283,16 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
     private String getWhereClauseForUploaded() {
         return DatabaseHelper.ItemsDbColumns.UPLOADED + " == 1";
+    }
+
+    private String getWhereClauseForDownloadNotDone() {
+        return "(" +
+                DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED + " != 1" +
+                ") OR (" +
+                DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED + " != 1" +
+                ") OR (" +
+                DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED + " != 1" +
+                ")";
     }
 
     private String[] prependToArray(final String[] selectionArgs, long value) {
@@ -1904,7 +1975,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     }
                 }
             } else {
-                //TODO: Make sure we try again later.
+                //doRegularTasks() will try again later.
                 Log.error("FileCacheAsyncTask(): cacheUriToFileSync(): failed.");
             }
 
