@@ -834,7 +834,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
     @Override
     public boolean onCreate() {
-        mClient = new ZooniverseClient(getContext());
+        mClient = new ZooniverseClient(getContext(), Config.SERVER);
 
         mOpenDbHelper = new DatabaseHelper(getContext());
         //This is useful to wipe the database when testing.
@@ -877,7 +877,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                  * We do this synchronously, waiting for the result,
                  * so we can return the result to the caller.
                  */
-                final LoginUtils.LoginResult result = ZooniverseClient.loginSync(username, password);
+                final LoginUtils.LoginResult result = mClient.loginSync(username, password);
                 if (result == null) {
                     return null;
                 }

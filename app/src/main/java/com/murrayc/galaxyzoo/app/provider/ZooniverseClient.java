@@ -25,6 +25,7 @@ import java.util.List;
  */
 public class ZooniverseClient {
     private final Context mContext;
+    private final String mServerBaseUri;
 
     //This is an attempt to reduce the amount of Network and Disk IO
     //that the system does, because even when using a Thread (with Thread.MIN_PRIORITY) instead of
@@ -32,12 +33,29 @@ public class ZooniverseClient {
     //For instance, buttons appear to be pressed, but their clicked listeners are not called.
     private static final int MAXIMUM_DOWNLOAD_ITEMS = 2;
 
-    ZooniverseClient(final Context context) {
+    ZooniverseClient(final Context context, final String serverBaseUri) {
         mContext = context;
+        mServerBaseUri = serverBaseUri;
     }
 
-    static LoginUtils.LoginResult loginSync(final String username, final String password) {
-        final HttpURLConnection conn = HttpUtils.openConnection(Config.LOGIN_URI);
+    private String getQueryMoreItemsUri() {
+        /**
+         * REST uri for querying items.
+         * Like, the Galaxy-Zoo website's code, this hard-codes the Group ID for the Sloan survey:
+         */
+        return mServerBaseUri + "groups/50251c3b516bcb6ecb000002/subjects?limit="; //Should have a number, such as 5, appended.
+    }
+
+    private String getPostUploadUri() {
+        return mServerBaseUri + "workflows/50251c3b516bcb6ecb000002/classifications";
+    }
+
+    private String getLoginUri() {
+        return mServerBaseUri + "login";
+    }
+
+    LoginUtils.LoginResult loginSync(final String username, final String password) {
+        final HttpURLConnection conn = HttpUtils.openConnection(getLoginUri());
         if (conn == null) {
             return null;
         }
@@ -190,7 +208,7 @@ public class ZooniverseClient {
     }
 
     private String getQueryUri(final int count) {
-        return Config.QUERY_URI + Integer.toString(count); //TODO: Is Integer.toString() locale-dependent?
+        return getQueryMoreItemsUri() + Integer.toString(count); //TODO: Is Integer.toString() locale-dependent?
     }
 
     private void throwIfNoNetwork() {
@@ -202,7 +220,7 @@ public class ZooniverseClient {
     }
 
     boolean doUpload(final String authName, final String authApiKey, final List<NameValuePair> nameValuePairs) {
-        final HttpURLConnection conn = HttpUtils.openConnection(Config.POST_URI);
+        final HttpURLConnection conn = HttpUtils.openConnection(getPostUploadUri());
         if (conn == null) {
             return false;
         }
