@@ -21,7 +21,8 @@ package com.murrayc.galaxyzoo.app.provider.test;
 
 import android.test.AndroidTestCase;
 
-import com.murrayc.galaxyzoo.app.provider.MoreItemsJsonParser;
+import com.murrayc.galaxyzoo.app.provider.client.MoreItemsJsonParser;
+import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +32,7 @@ import java.util.List;
  * Simple test to ensure that the generated bindings are working.
  */
 public class MoreItemsJsonParserTest extends AndroidTestCase {
-    private List<MoreItemsJsonParser.Subject> mSubjects = null;
+    private List<ZooniverseClient.Subject> mSubjects = null;
 
     @Override
     public void setUp() throws IOException {

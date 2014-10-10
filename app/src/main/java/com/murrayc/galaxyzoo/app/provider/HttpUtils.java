@@ -23,7 +23,7 @@ public class HttpUtils {
     /**
      * Callers should use throwIfNoNetwork() before calling this.
      */
-    static InputStream httpGetRequest(final String strUri) {
+    public static InputStream httpGetRequest(final String strUri) {
         final HttpURLConnection conn = openConnection(strUri);
         if (conn == null) {
             return null;
@@ -70,14 +70,14 @@ public class HttpUtils {
         }
     }
 
-    static void throwIfNoNetwork(final Context context) {
+    public static void throwIfNoNetwork(final Context context) {
         if (!Utils.getNetworkIsConnected(context)) {
             //Throw an exception so the caller knows.
             throw new NoNetworkException();
         }
     }
 
-    static HttpURLConnection openConnection(final String strURL) {
+    public static HttpURLConnection openConnection(final String strURL) {
         final URL url;
         try {
             url = new URL(strURL);

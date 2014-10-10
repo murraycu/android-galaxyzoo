@@ -1,10 +1,11 @@
-package com.murrayc.galaxyzoo.app.provider;
+package com.murrayc.galaxyzoo.app.provider.client;
 
 import android.content.Context;
 import android.util.Base64;
 
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
+import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -33,7 +34,7 @@ public class ZooniverseClient {
     //For instance, buttons appear to be pressed, but their clicked listeners are not called.
     private static final int MAXIMUM_DOWNLOAD_ITEMS = 2;
 
-    ZooniverseClient(final Context context, final String serverBaseUri) {
+    public ZooniverseClient(final Context context, final String serverBaseUri) {
         mContext = context;
         mServerBaseUri = serverBaseUri;
     }
@@ -54,7 +55,7 @@ public class ZooniverseClient {
         return mServerBaseUri + "login";
     }
 
-    LoginUtils.LoginResult loginSync(final String username, final String password) {
+    public LoginUtils.LoginResult loginSync(final String username, final String password) {
         final HttpURLConnection conn = HttpUtils.openConnection(getLoginUri());
         if (conn == null) {
             return null;
@@ -176,7 +177,7 @@ public class ZooniverseClient {
      * @param count
      * @return
      */
-    List<MoreItemsJsonParser.Subject> requestMoreItemsSync(int count) {
+    public List<Subject> requestMoreItemsSync(int count) {
         throwIfNoNetwork();
 
         //Avoid suddenly doing too much network and disk IO
@@ -197,7 +198,7 @@ public class ZooniverseClient {
             return null;
         }
 
-        final List<MoreItemsJsonParser.Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(in);
+        final List<Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(in);
         try {
             in.close();
         } catch (IOException e) {
@@ -219,7 +220,7 @@ public class ZooniverseClient {
         return mContext;
     }
 
-    boolean doUpload(final String authName, final String authApiKey, final List<NameValuePair> nameValuePairs) {
+    public boolean uploadClassificationSync(final String authName, final String authApiKey, final List<NameValuePair> nameValuePairs) {
         final HttpURLConnection conn = HttpUtils.openConnection(getPostUploadUri());
         if (conn == null) {
             return false;
@@ -273,5 +274,13 @@ public class ZooniverseClient {
                 }
             }
         }
+    }
+
+    public static class Subject {
+        public String mId;
+        public String mZooniverseId;
+        public String mLocationStandard;
+        public String mLocationThumbnail;
+        public String mLocationInverted;
     }
 }

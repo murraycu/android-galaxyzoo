@@ -1,4 +1,4 @@
-package com.murrayc.galaxyzoo.app.provider;
+package com.murrayc.galaxyzoo.app.provider.client;
 
 import android.util.JsonReader;
 
@@ -15,8 +15,8 @@ import java.util.List;
  * Created by murrayc on 10/8/14.
  */
 public class MoreItemsJsonParser {
-    public static List<Subject> parseMoreItemsResponseContent(final InputStream content) {
-        final List<Subject> result = new ArrayList<>();
+    public static List<ZooniverseClient.Subject> parseMoreItemsResponseContent(final InputStream content) {
+        final List<ZooniverseClient.Subject> result = new ArrayList<>();
 
         final JsonReader reader;
         try {
@@ -24,7 +24,7 @@ public class MoreItemsJsonParser {
             reader.beginArray();
             while (reader.hasNext()) {
                 while (reader.hasNext()) {
-                    final Subject subject = parseMoreItemsJsonObjectSubject(reader);
+                    final ZooniverseClient.Subject subject = parseMoreItemsJsonObjectSubject(reader);
                     if (subject != null) {
                         result.add(subject);
                     }
@@ -51,10 +51,10 @@ public class MoreItemsJsonParser {
         return result;
     }
 
-    private static Subject parseMoreItemsJsonObjectSubject(final JsonReader reader) throws IOException {
+    private static ZooniverseClient.Subject parseMoreItemsJsonObjectSubject(final JsonReader reader) throws IOException {
         reader.beginObject();
 
-        final Subject result = new Subject();
+        final ZooniverseClient.Subject result = new ZooniverseClient.Subject();
 
         while (reader.hasNext()) {
             final String name = reader.nextName();
@@ -77,7 +77,7 @@ public class MoreItemsJsonParser {
         return result;
     }
 
-    private static void parseMoreItemsJsonObjectSubjectLocation(final JsonReader reader, final Subject result) throws IOException {
+    private static void parseMoreItemsJsonObjectSubjectLocation(final JsonReader reader, final ZooniverseClient.Subject result) throws IOException {
         reader.beginObject();
 
         while (reader.hasNext()) {
@@ -100,11 +100,4 @@ public class MoreItemsJsonParser {
         reader.endObject();
     }
 
-    public static class Subject {
-        public String mId;
-        public String mZooniverseId;
-        public String mLocationStandard;
-        public String mLocationThumbnail;
-        public String mLocationInverted;
-    }
 }

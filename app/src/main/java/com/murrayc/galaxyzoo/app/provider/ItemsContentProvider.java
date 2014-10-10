@@ -44,6 +44,7 @@ import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.R;
 import com.murrayc.galaxyzoo.app.Utils;
+import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -1118,7 +1119,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     //Immediately get some more from the REST server and then try again.
                     //Get one synchronously, for now.
                     try {
-                        final List<MoreItemsJsonParser.Subject> subjects = mClient.requestMoreItemsSync(1);
+                        final List<ZooniverseClient.Subject> subjects = mClient.requestMoreItemsSync(1);
                         addSubjects(subjects, false /* not async - we need it immediately. */);
                     } catch (final HttpUtils.NoNetworkException e) {
                         //Return the empty cursor,
@@ -1415,7 +1416,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
      * @param item
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private void addSubject(final MoreItemsJsonParser.Subject item, boolean asyncFileDownloads) {
+    private void addSubject(final ZooniverseClient.Subject item, boolean asyncFileDownloads) {
         if (subjectIsInDatabase(item.mId)) {
             //It is already in the database.
             //TODO: Update the row?
@@ -1542,7 +1543,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         HttpUtils.throwIfNoNetwork(getContext());
     }
 
-    private void onQueryTaskFinished(final List<MoreItemsJsonParser.Subject> result) {
+    private void onQueryTaskFinished(final List<ZooniverseClient.Subject> result) {
         if (result == null) {
             return;
         }
@@ -1550,7 +1551,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         //Check that we are not adding too many,
         //which can happen if a second request was queued befor we got the result from a
         //first request.
-        List<MoreItemsJsonParser.Subject> listToUse = result;
+        List<ZooniverseClient.Subject> listToUse = result;
         final int missing = getNotDoneNeededForCache();
         if (missing <= 0) {
             return;
@@ -1567,12 +1568,12 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
      * @param subjects
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private void addSubjects(final List<MoreItemsJsonParser.Subject> subjects, boolean asyncFileDownloads) {
+    private void addSubjects(final List<ZooniverseClient.Subject> subjects, boolean asyncFileDownloads) {
         if (subjects == null) {
             return;
         }
 
-        for (final MoreItemsJsonParser.Subject subject : subjects) {
+        for (final ZooniverseClient.Subject subject : subjects) {
             addSubject(subject, asyncFileDownloads);
         }
     }
@@ -1821,9 +1822,9 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         public String itemId;
     }
 
-    private class QueryAsyncTask extends AsyncTask<Integer, Integer, List<MoreItemsJsonParser.Subject>> {
+    private class QueryAsyncTask extends AsyncTask<Integer, Integer, List<ZooniverseClient.Subject>> {
         @Override
-        protected List<MoreItemsJsonParser.Subject> doInBackground(final Integer... params) {
+        protected List<ZooniverseClient.Subject> doInBackground(final Integer... params) {
             if (params.length < 1) {
                 Log.error("QueryAsyncTask: not enough params.");
                 return null;
@@ -1841,7 +1842,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         }
 
         @Override
-        protected void onPostExecute(final List<MoreItemsJsonParser.Subject> result) {
+        protected void onPostExecute(final List<ZooniverseClient.Subject> result) {
             super.onPostExecute(result);
 
             onQueryTaskFinished(result);
@@ -1935,7 +1936,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         c.close();
 
 
-        return mClient.doUpload(authName, authApiKey, nameValuePairs);
+        return mClient.uploadClassificationSync(authName, authApiKey, nameValuePairs);
     }
 
     private class UploadAsyncTask extends AsyncTask<String, Integer, Boolean> {
