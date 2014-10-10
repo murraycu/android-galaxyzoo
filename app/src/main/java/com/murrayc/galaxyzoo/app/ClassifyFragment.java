@@ -153,6 +153,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             //TODO: Is there some more standard method to do this,
             //to trigger the Fragments' onCreate()?
             fragmentSubject.setItemId(getItemId());
+            fragmentSubject.setInverted(false); //Don't stay inverted after a previous classification.
             fragmentSubject.update();
         }
 

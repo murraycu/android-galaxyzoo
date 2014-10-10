@@ -234,7 +234,7 @@ public class SubjectFragment extends ItemFragment
         return mInverted;
     }
 
-    private void setInverted(boolean inverted) {
+    void setInverted(boolean inverted) {
         mInverted = inverted;
     }
 
