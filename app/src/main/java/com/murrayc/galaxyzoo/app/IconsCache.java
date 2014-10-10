@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.LruCache;
 
-import com.murrayc.galaxyzoo.app.provider.Config;
+import com.murrayc.galaxyzoo.app.Config;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 
 import java.io.BufferedReader;
@@ -57,7 +57,7 @@ class IconsCache {
         boolean loadFromNetwork = false;
         if (Utils.getNetworkIsConnected(context)) {
             //Check if the files on the server have changed since we last cached them:
-            final String[] uris = {Config.ICONS_URI, Config.EXAMPLES_URI, Config.ICONS_CSS_URI};
+            final String[] uris = {Config.ICONS_URI, Config.EXAMPLES_URI, com.murrayc.galaxyzoo.app.Config.ICONS_CSS_URI};
             lastModified = HttpUtils.getLatestLastModified(uris);
             final SharedPreferences prefs = Utils.getPreferences(context);
 
@@ -90,7 +90,7 @@ class IconsCache {
         //Get the updated files from the server and re-process them:
         readIconsFileSync(Config.ICONS_URI, CACHE_FILE_WORKFLOW_ICONS);
         readIconsFileSync(Config.EXAMPLES_URI, CACHE_FILE_EXAMPLE_ICONS);
-        readCssFileSync(Config.ICONS_CSS_URI, CACHE_FILE_CSS);
+        readCssFileSync(com.murrayc.galaxyzoo.app.Config.ICONS_CSS_URI, CACHE_FILE_CSS);
 
         //Remember the dates of the files from the server,
         //so we can check again next time.

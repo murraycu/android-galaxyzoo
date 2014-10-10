@@ -17,7 +17,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.murrayc.galaxyzoo.app.provider.Config;
+import com.murrayc.galaxyzoo.app.Config;
 
 
 /**

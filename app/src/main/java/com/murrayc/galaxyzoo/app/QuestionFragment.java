@@ -53,7 +53,6 @@ import android.widget.ToggleButton;
 
 import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
-import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 import java.text.DateFormat;
@@ -523,8 +522,8 @@ public class QuestionFragment extends BaseQuestionFragment
         if (activity == null)
             return;
 
-        if ((TextUtils.equals(questionId, Config.QUESTION_ID_DISCUSS)) &&
-                (TextUtils.equals(answerId, Config.ANSWER_ID_DISCUSS_YES))) {
+        if ((TextUtils.equals(questionId, com.murrayc.galaxyzoo.app.Config.QUESTION_ID_DISCUSS)) &&
+                (TextUtils.equals(answerId, com.murrayc.galaxyzoo.app.Config.ANSWER_ID_DISCUSS_YES))) {
             //Open a link to the discussion page.
             UiUtils.openDiscussionPage(activity, getZooniverseId());
         } else {

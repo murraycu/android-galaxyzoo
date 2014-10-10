@@ -32,8 +32,6 @@ import android.net.Uri;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.murrayc.galaxyzoo.app.provider.Config;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -87,7 +85,7 @@ class UiUtils {
         //final Uri.Builder uriBuilder = new Uri.Builder();
         //uriBuilder.path("http://talk.galaxyzoo.org/#/subjects/");
         //uriBuilder.appendPath(getZooniverseId());
-        final String uriTalk = Config.TALK_URI + zooniverseId;
+        final String uriTalk = com.murrayc.galaxyzoo.app.Config.TALK_URI + zooniverseId;
 
         try {
             final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriTalk));
