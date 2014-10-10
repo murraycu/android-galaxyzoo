@@ -186,10 +186,13 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         sItemsProjectionMap.put(Item.Columns.UPLOADED, DatabaseHelper.ItemsDbColumns.UPLOADED);
         sItemsProjectionMap.put(Item.Columns.SUBJECT_ID, DatabaseHelper.ItemsDbColumns.SUBJECT_ID);
         sItemsProjectionMap.put(Item.Columns.ZOONIVERSE_ID, DatabaseHelper.ItemsDbColumns.ZOONIVERSE_ID);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI_REMOTE, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI_REMOTE);
         sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI);
         sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_DOWNLOADED, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE, DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI_REMOTE);
         sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL_URI, DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI);
         sItemsProjectionMap.put(Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED, DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED);
+        sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_URI_REMOTE, DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI_REMOTE);
         sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_URI, DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI);
         sItemsProjectionMap.put(Item.Columns.LOCATION_INVERTED_DOWNLOADED, DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED);
         sItemsProjectionMap.put(Item.Columns.FAVORITE, DatabaseHelper.ItemsDbColumns.FAVORITE);
@@ -529,9 +532,9 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                 //just to have them in the listFiles items together with the created content uris.
                 final List<CreatedFileUri> listFiles = createFileUrisForImages(valuesComplete,
                         subjectId,
-                        values.getAsString(Item.Columns.LOCATION_STANDARD_URI),
-                        values.getAsString(Item.Columns.LOCATION_THUMBNAIL_URI),
-                        values.getAsString(Item.Columns.LOCATION_INVERTED_URI));
+                        values.getAsString(Item.Columns.LOCATION_STANDARD_URI_REMOTE),
+                        values.getAsString(Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE),
+                        values.getAsString(Item.Columns.LOCATION_INVERTED_URI_REMOTE));
 
                 uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, valuesComplete,
                         sItemsProjectionMap, Item.ITEMS_URI);
@@ -1338,6 +1341,10 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         values.put(DatabaseHelper.ItemsDbColumns.SUBJECT_ID, item.mId);
         values.put(DatabaseHelper.ItemsDbColumns.ZOONIVERSE_ID, item.mZooniverseId);
 
+        values.put(DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI_REMOTE, item.mLocationStandard);
+        values.put(DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI_REMOTE, item.mLocationThumbnail);
+        values.put(DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI_REMOTE, item.mLocationInverted);
+
         //Get (our) local content URIs of cache files instead of the remote URIs for the images:
         final List<CreatedFileUri> listFiles = createFileUrisForImages(values, item.mId, item.mLocationStandard, item.mLocationThumbnail, item.mLocationInverted);
 
@@ -1364,6 +1371,17 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         }
     }
 
+    /**
+     * Create Content URIs that point to local files, so we can download the remote files to those
+     * files as a cache.
+     *
+     * @param values
+     * @param subjectId
+     * @param locationStandard
+     * @param locationThumbnail
+     * @param locationInverted
+     * @return
+     */
     private List<CreatedFileUri> createFileUrisForImages(final ContentValues values, final String subjectId, final String locationStandard, final String locationThumbnail, final String locationInverted) {
         List<CreatedFileUri> listFiles = new ArrayList<>();
 
@@ -1676,7 +1694,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         //After the first official release, try to preserve data when changing this. See onUpgrade()
-        private static final int DATABASE_VERSION = 18;
+        private static final int DATABASE_VERSION = 19;
 
         private static final String DATABASE_NAME = "items.db";
 
@@ -1724,10 +1742,13 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     ItemsDbColumns.UPLOADED + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.SUBJECT_ID + " TEXT, " +
                     ItemsDbColumns.ZOONIVERSE_ID + " TEXT, " +
+                    ItemsDbColumns.LOCATION_STANDARD_URI_REMOTE + " TEXT, " +
                     ItemsDbColumns.LOCATION_STANDARD_URI + " TEXT, " +
                     ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED + " INTEGER DEFAULT 0, " +
+                    ItemsDbColumns.LOCATION_THUMBNAIL_URI_REMOTE + " TEXT, " +
                     ItemsDbColumns.LOCATION_THUMBNAIL_URI + " TEXT, " +
                     ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED + " INTEGER DEFAULT 0, " +
+                    ItemsDbColumns.LOCATION_INVERTED_URI_REMOTE + " TEXT, " +
                     ItemsDbColumns.LOCATION_INVERTED_URI + " TEXT, " +
                     ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.FAVORITE + " INTEGER DEFAULT 0, " +
@@ -1783,14 +1804,18 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             //From the REST API:
             static final String SUBJECT_ID = "subjectId";
             static final String ZOONIVERSE_ID = "zooniverseId";
+            static final String LOCATION_STANDARD_URI_REMOTE = "locationStandardUriRemote"; //The original file on the remote server.
             static final String LOCATION_STANDARD_URI = "locationStandardUri"; //The content URI for a file in the files table.
             static final String LOCATION_STANDARD_DOWNLOADED = "locationStandardDownloaded"; //1 or 0. Whether the file has finished downloading.
+            static final String LOCATION_THUMBNAIL_URI_REMOTE = "locationThumbnailUriRemote"; //The original file on the remote server.
             static final String LOCATION_THUMBNAIL_URI = "locationThumbnailUri"; //The content URI for a file in the files table.
             static final String LOCATION_THUMBNAIL_DOWNLOADED = "locationThumbnailDownloaded"; //1 or 0. Whether the file has finished downloading.
+            static final String LOCATION_INVERTED_URI_REMOTE = "locationInvertedUriRemote"; //The original file on the remote server.
             static final String LOCATION_INVERTED_URI = "locationInvertedUri"; //The content URI for a file in the files table.
             static final String LOCATION_INVERTED_DOWNLOADED = "locationInvertedDownloaded"; //1 or 0. Whether the file has finished downloading.
+//            static final String LOCATIONS_REQUESTED_DATETIME = "locationsRequestedDateTime"; //When we last tried to download the images. An ISO8601 string ("YYYY-MM-DD HH:MM:SS.SSS")
             static final String FAVORITE = "favorite"; //1 or 0. Whether the user has marked this as a favorite.
-            static final String DATETIME_DONE = "dataTimeDone"; //An ISO8601 string ("YYYY-MM-DD HH:MM:SS.SSS").
+            static final String DATETIME_DONE = "dateTimeDone"; //An ISO8601 string ("YYYY-MM-DD HH:MM:SS.SSS").
         }
 
         private static class FilesDbColumns implements BaseColumns {
