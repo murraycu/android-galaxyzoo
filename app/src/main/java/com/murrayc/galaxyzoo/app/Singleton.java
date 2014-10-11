@@ -41,6 +41,7 @@ import java.util.Locale;
 public class Singleton {
 
     private static final String JSON_FILE_EXTENSION = ".json";
+    public static final String ASSET_PATH_DECISION_TREE_DIR = "decision_tree/";
     private static List<Callbacks> mCallbacks = new ArrayList<>();
     private static Singleton ourInstance = null;
     private static boolean initializationInProgress = false;
@@ -63,12 +64,12 @@ public class Singleton {
             inputStreamTranslation = openAsset(context, translationFileName);
             if (inputStreamTranslation == null) {
                 //Try just the language instead:
-                translationFileName = mLocaleDetails.language + JSON_FILE_EXTENSION;
+                translationFileName = ASSET_PATH_DECISION_TREE_DIR + mLocaleDetails.language + JSON_FILE_EXTENSION;
                 inputStreamTranslation = openAsset(context, translationFileName);
             }
         }
 
-        final InputStream inputStreamTree = openAsset(context, "sloan_tree.xml");
+        final InputStream inputStreamTree = openAsset(context, ASSET_PATH_DECISION_TREE_DIR + "sloan_tree.xml");
         if (inputStreamTree == null) {
             Log.error("Singleton: Error parsing decision tree.");
         } else {
