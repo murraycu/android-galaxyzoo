@@ -28,6 +28,9 @@ class IconsCache {
     private static final String CACHE_FILE_EXAMPLE_ICONS = "exampleicons";
     private static final String CACHE_FILE_CSS = "css";
 
+    private static final String ASSET_PATH_ICONS_DIR = "icons/";
+    public static final String ICON_FILE_PREFIX = "icon_";
+
 
     private final DecisionTree mDecisionTree;
     private final File mCacheDir;
@@ -198,14 +201,14 @@ class IconsCache {
     }
 
     private void readIconsFileSync(final String uriStr, final String cacheId) {
-        final String cacheFileUri = getCacheFileUri(cacheId);
+        final String cacheFileUri = createCacheFile(cacheId);
         if(!HttpUtils.cacheUriToFileSync(uriStr, cacheFileUri)) {
             Log.error("readIconsFileSync(): cacheUriToFileSync() failed.");
         }
     }
 
     private void readCssFileSync(final String uriStr, final String cacheId) {
-        final String cacheFileUri = getCacheFileUri(cacheId);
+        final String cacheFileUri = createCacheFile(cacheId);
         if(!HttpUtils.cacheUriToFileSync(uriStr, cacheFileUri)) {
             Log.error("readCssFileSync(): cacheUriToFileSync() failed.");
             //TODO: Try again?
@@ -268,10 +271,19 @@ class IconsCache {
     }
 
     private String getCacheIconFileUri(final String cssName) {
-        return getCacheFileUri("icon_" + cssName);
+        return getCacheFileUri(ICON_FILE_PREFIX + cssName);
+    }
+
+    private String createCacheIconFile(final String cssName) {
+        return createCacheFile(ICON_FILE_PREFIX + cssName);
     }
 
     private String getCacheFileUri(final String cacheId) {
+        final File file = new File(mCacheDir.getPath(), cacheId);
+        return file.getAbsolutePath();
+    }
+
+    private String createCacheFile(final String cacheId) {
         final File file = new File(mCacheDir.getPath(), cacheId);
         try {
             file.createNewFile();
@@ -404,7 +416,7 @@ class IconsCache {
                     //Cache the file locally so we don't need to get it over the network next time:
                     //TODO: Use the cache from the volley library?
                     //See http://blog.wittchen.biz.pl/asynchronous-loading-and-caching-bitmaps-with-volley/
-                    final String cacheFileUri = getCacheIconFileUri(cssName);
+                    final String cacheFileUri = createCacheIconFile(cssName);
                     cacheBitmapToFile(bmapIcon, cacheFileUri);
 
                     //We check for nulls because LruCache throws NullPointerExceptions on null
