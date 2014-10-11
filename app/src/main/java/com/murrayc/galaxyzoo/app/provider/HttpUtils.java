@@ -37,6 +37,7 @@ public class HttpUtils {
         InputStream in = null;
         try {
             //Calling getInputStream() causes the request to actually be sent.
+            //TODO: Specify a sensible timeout?
             in = conn.getInputStream();
 
             if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {

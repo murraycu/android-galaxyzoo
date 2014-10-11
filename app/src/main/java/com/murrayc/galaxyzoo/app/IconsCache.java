@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.LruCache;
 
-import com.murrayc.galaxyzoo.app.Config;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 
 import java.io.BufferedReader;
@@ -16,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -30,6 +30,7 @@ class IconsCache {
 
     private static final String ASSET_PATH_ICONS_DIR = "icons/";
     public static final String ICON_FILE_PREFIX = "icon_";
+    private static long ASSETS_ICONS_TIMESTAMP = 1409922463000L; //Update this when bundling new copies of the files.
 
 
     private final DecisionTree mDecisionTree;
@@ -40,6 +41,7 @@ class IconsCache {
     //http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html#memory-cache
     private final LruCache<String, Bitmap> mWorkflowIcons = new LruCache<>(20);
     private final LruCache<String, Bitmap> mExampleIcons = new LruCache<>(20);
+    private final Context mContext;
     private Bitmap mBmapWorkflowIcons = null;
     private Bitmap mBmapExampleIcons = null;
 
@@ -52,8 +54,13 @@ class IconsCache {
      */
     public IconsCache(final Context context, final DecisionTree decisionTree) {
         this.mDecisionTree = decisionTree;
+        this.mContext = context;
 
         mCacheDir = context.getExternalCacheDir();
+        if (mCacheDir == null) {
+            //This would probably lead to a crash later:
+            Log.error("IconsCache(): Context.getExternalCacheDir() returned null.");
+        }
 
         long lastModified = 0;
 
@@ -61,13 +68,17 @@ class IconsCache {
         if (Utils.getNetworkIsConnected(context)) {
             //Check if the files on the server have changed since we last cached them:
             final String[] uris = {Config.ICONS_URI, Config.EXAMPLES_URI, com.murrayc.galaxyzoo.app.Config.ICONS_CSS_URI};
-            lastModified = HttpUtils.getLatestLastModified(uris);
-            final SharedPreferences prefs = Utils.getPreferences(context);
+            lastModified = 0; //TODO: HttpUtils.getLatestLastModified(uris);
 
-            final long prevLastModified = prefs.getLong(getPrefKeyIconCacheLastMod(context), 0);
-            if ((lastModified == 0) /* Always update if we can't get the last-modified from the server */
-                    || (lastModified > prevLastModified)) {
-                loadFromNetwork = true;
+            //If the bundled icon files are too old, get them from the network and cache them:
+            if(lastModified > ASSETS_ICONS_TIMESTAMP) {
+                final SharedPreferences prefs = Utils.getPreferences(context);
+
+                final long prevLastModified = prefs.getLong(getPrefKeyIconCacheLastMod(context), 0);
+                if ((lastModified == 0) /* Always update if we can't get the last-modified from the server */
+                        || (lastModified > prevLastModified)) {
+                    loadFromNetwork = true;
+                }
             }
         }
 
@@ -173,31 +184,52 @@ class IconsCache {
             return true;
         }
 
+        Bitmap bitmap = null;
+
         final String cacheFileUri = getCacheIconFileUri(cssName);
         if (TextUtils.isEmpty(cacheFileUri)) {
             return false;
         }
 
-        final Bitmap bitmap = BitmapFactory.decodeFile(cacheFileUri);
-        if (bitmap == null) {
-            //The file contents are invalid.
-            //Maybe the download was incomplete or something else odd happened.
-            //Anyway, we should stop trying to use it,
-            //And tell the caller about the failure,
-            //so we can reload it by reloading and reparsing everything.
-            Log.error("IconsCache.reloadIcon(): BitmapFactory.decodeFile() failed for file (now deleting it): ", cacheFileUri);
+        //First get it from the cache, because that would be newer than the bundled asset:
+        final File cacheFile = new File(cacheFileUri);
+        if (cacheFile.exists()) {
+            bitmap = BitmapFactory.decodeFile(cacheFileUri);
+            if (bitmap == null) {
+                //The file contents are invalid.
+                //Maybe the download was incomplete or something else odd happened.
+                //Anyway, we should stop trying to use it,
+                //And tell the caller about the failure,
+                //so we can reload it by reloading and reparsing everything.
+                Log.error("IconsCache.reloadIcon(): BitmapFactory.decodeFile() failed for file (now deleting it): ", cacheFileUri);
 
-            final File file = new File(cacheFileUri);
-            if (!file.delete()) {
-                Log.error("IconsCache.reloadIcon(): Failed to delete invalid cache file.");
-                return false;
+                final File file = new File(cacheFileUri);
+                if (!file.delete()) {
+                    Log.error("IconsCache.reloadIcon(): Failed to delete invalid cache file.");
+                    return false;
+                }
             }
+        }
 
+        if (bitmap == null) {
+            //We bundle the icons with the app,
+            //so fall back to that:
+            final InputStream inputStreamAsset = Utils.openAsset(getContext(), getIconAssetPath(cssName));
+            if(inputStreamAsset != null) {
+                bitmap = BitmapFactory.decodeStream(inputStreamAsset);
+            }
+        }
+
+        if (bitmap == null) {
             return false;
         }
 
         map.put(cssName, bitmap);
         return true;
+    }
+
+    private String getIconAssetPath(String cssName) {
+        return ASSET_PATH_ICONS_DIR + ICON_FILE_PREFIX + cssName;
     }
 
     private void readIconsFileSync(final String uriStr, final String cacheId) {
@@ -475,5 +507,9 @@ class IconsCache {
         }
 
         return result;
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 }

@@ -27,6 +27,8 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 //import org.apache.http.client.utils.URIBuilder;
@@ -113,5 +115,15 @@ public class Utils {
         }
 
         return Integer.parseInt(str);
+    }
+
+    static InputStream openAsset(final Context context, final String filename) {
+        try {
+            return context.getAssets().open(filename);
+        } catch (final IOException e) {
+            //Don't log this because we expect the file to not exist sometimes,
+            //and the caller will just check for a null result to know that.
+            return null;
+        }
     }
 }

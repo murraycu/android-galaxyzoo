@@ -61,15 +61,15 @@ public class Singleton {
         if (!TextUtils.isEmpty(mLocaleDetails.language)) {
             //Try finding a translation for a country-specific form of the language:
             String translationFileName = mLocaleDetails.language + "_" + mLocaleDetails.countryCode + JSON_FILE_EXTENSION;
-            inputStreamTranslation = openAsset(context, translationFileName);
+            inputStreamTranslation = Utils.openAsset(context, translationFileName);
             if (inputStreamTranslation == null) {
                 //Try just the language instead:
                 translationFileName = ASSET_PATH_DECISION_TREE_DIR + mLocaleDetails.language + JSON_FILE_EXTENSION;
-                inputStreamTranslation = openAsset(context, translationFileName);
+                inputStreamTranslation = Utils.openAsset(context, translationFileName);
             }
         }
 
-        final InputStream inputStreamTree = openAsset(context, ASSET_PATH_DECISION_TREE_DIR + "sloan_tree.xml");
+        final InputStream inputStreamTree = Utils.openAsset(context, ASSET_PATH_DECISION_TREE_DIR + "sloan_tree.xml");
         if (inputStreamTree == null) {
             Log.error("Singleton: Error parsing decision tree.");
         } else {
@@ -109,16 +109,6 @@ public class Singleton {
         }
 
         return result;
-    }
-
-    private InputStream openAsset(Context context, String translationFileName) {
-        try {
-            return context.getAssets().open(translationFileName);
-        } catch (final IOException e) {
-            //Don't log this because we expect the file to not exist sometimes,
-            //and the caller will just check for a null result to know that.
-            return null;
-        }
     }
 
     private static void onInitTaskFinished() {
