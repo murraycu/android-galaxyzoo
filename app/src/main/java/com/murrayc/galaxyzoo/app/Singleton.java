@@ -116,10 +116,9 @@ public class Singleton {
             return context.getAssets().open(translationFileName);
         } catch (final IOException e) {
             //Don't log this because we expect the file to not exist sometimes,
-            //and the caller will ust check for a null result to know that.
+            //and the caller will just check for a null result to know that.
+            return null;
         }
-
-        return null;
     }
 
     private static void onInitTaskFinished() {
