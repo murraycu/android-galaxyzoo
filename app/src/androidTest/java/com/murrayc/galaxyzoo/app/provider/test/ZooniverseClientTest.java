@@ -52,7 +52,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
     public void tearDown() {
     }
 
-    public void testMoreItems() throws IOException {
+    public void testMoreItems() throws IOException, InterruptedException {
         final MockWebServer server = new MockWebServer();
 
         final String strResponse = getStringFromStream(
@@ -82,10 +82,17 @@ public class ZooniverseClientTest extends AndroidTestCase {
         assertNotNull(subject.mLocationInverted);
         assertEquals(subject.mLocationInverted, "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/inverted/1237666273680359558.jpg");
 
+
+        //Test what the server received:
+        assertEquals(1, server.getRequestCount());
+        final RecordedRequest request = server.takeRequest();
+        assertEquals("GET", request.getMethod());
+        assertEquals("/groups/50251c3b516bcb6ecb000002/subjects?limit=2", request.getPath());
+
         server.shutdown();
     }
 
-    public void testLoginWithSuccess() throws IOException {
+    public void testLoginWithSuccess() throws IOException, InterruptedException {
         final MockWebServer server = new MockWebServer();
 
         final String strResponse = getStringFromStream(
@@ -101,6 +108,18 @@ public class ZooniverseClientTest extends AndroidTestCase {
         assertNotNull(result);
         assertTrue(result.getSuccess());
         assertEquals(result.getApiKey(), "testapikey");
+
+        //Test what the server received:
+        assertEquals(1, server.getRequestCount());
+        final RecordedRequest request = server.takeRequest();
+        assertEquals("POST", request.getMethod());
+        assertEquals("/login", request.getPath());
+        assertEquals("application/x-www-form-urlencoded", request.getHeader("Content-Type"));
+
+        final byte[] contents = request.getBody();
+        final String strContents = new String(contents, "UTF-8");
+        assertEquals("username=testusername&password=testpassword",
+                strContents);
 
         server.shutdown();
     }
