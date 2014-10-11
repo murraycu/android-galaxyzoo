@@ -25,6 +25,10 @@ import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
+import com.squareup.okhttp.mockwebserver.RecordedRequest;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,6 +36,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -171,6 +176,71 @@ public class ZooniverseClientTest extends AndroidTestCase {
         //Mostly we want to check that it doesn't crash on a bad HTTP response.
         final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
         assertTrue((subjects == null) || (subjects.size() == 0));
+
+        server.shutdown();
+    }
+
+    public void testUploadWithSuccess() throws IOException, InterruptedException {
+        final MockWebServer server = new MockWebServer();
+
+
+        final MockResponse response = new MockResponse();
+        response.setResponseCode(HttpURLConnection.HTTP_CREATED);
+        response.setBody("TODO");
+        server.enqueue(response);
+        server.play();
+
+        final URL mockUrl = server.getUrl("/");
+        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+
+        List<NameValuePair> values = new ArrayList<>();
+        values.add(new BasicNameValuePair("classification[subject_ids][]", "504e4a38c499611ea6010c6a"));
+        values.add(new BasicNameValuePair("classification[favorite][]", "true"));
+        values.add(new BasicNameValuePair("classification[annotations][0][sloan-0]", "a-0"));
+        values.add(new BasicNameValuePair("classification[annotations][1][sloan-7]", "a-1"));
+        values.add(new BasicNameValuePair("classification[annotations][2][sloan-5]", "a-0"));
+        values.add(new BasicNameValuePair("classification[annotations][3][sloan-6]", "x-5"));
+
+        final boolean result = client.uploadClassificationSync("testAuthName",
+                "testAuthApiKey", values);
+        assertTrue(result);
+
+        assertEquals(1, server.getRequestCount());
+
+        //This is really just a regression test,
+        //so we notice if something changes unexpectedly:
+        final RecordedRequest request = server.takeRequest();
+        assertEquals("POST", request.getMethod());
+        assertEquals("/workflows/50251c3b516bcb6ecb000002/classifications", request.getPath());
+        assertNotNull(request.getHeader("Authorization"));
+        assertEquals("application/x-www-form-urlencoded", request.getHeader("Content-Type"));
+
+        final byte[] contents = request.getBody();
+        final String strContents = new String(contents, "UTF-8");
+        assertEquals("classification%5Bsubject_ids%5D%5B%5D=504e4a38c499611ea6010c6a&classification%5Bfavorite%5D%5B%5D=true&classification%5Bannotations%5D%5B0%5D%5Bsloan-0%5D=a-0&classification%5Bannotations%5D%5B1%5D%5Bsloan-7%5D=a-1&classification%5Bannotations%5D%5B2%5D%5Bsloan-5%5D=a-0&classification%5Bannotations%5D%5B3%5D%5Bsloan-6%5D=x-5",
+                strContents);
+
+        server.shutdown();
+    }
+
+    public void testUploadWithFailure() throws IOException {
+        final MockWebServer server = new MockWebServer();
+
+        final MockResponse response = new MockResponse();
+        response.setResponseCode(HttpURLConnection.HTTP_UNAUTHORIZED);
+        response.setBody("test nonsense failure message");
+        server.enqueue(response);
+        server.play();
+
+        final URL mockUrl = server.getUrl("/");
+        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+
+        List<NameValuePair> values = new ArrayList<>();
+        values.add(new BasicNameValuePair("test nonsense", "12345"));
+
+        final boolean result = client.uploadClassificationSync("testAuthName",
+                "testAuthApiKey", values);
+        assertFalse(result);
 
         server.shutdown();
     }
