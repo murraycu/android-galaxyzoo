@@ -90,10 +90,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
     private void addRowForAnswer(Activity activity, TableLayout tableLayout, DecisionTree.Question question, DecisionTree.BaseButton answer) {
         final TableRow row = new TableRow(activity);
-        row.setLayoutParams(
-                new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
-                        TableRow.LayoutParams.WRAP_CONTENT));
-        final TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
+        final TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, UiUtils.getPxForDpResource(activity, R.dimen.standard_large_margin), 0, 0);
         tableLayout.addView(row, params);
@@ -104,15 +101,15 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
         final TextView textViewAnswer = new TextView(activity);
         textViewAnswer.setText(answer.getText());
-        layoutVertical.addView(textViewAnswer);
+        layoutVertical.addView(textViewAnswer,
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         final LinearLayout layoutHorizontal = new LinearLayout(activity);
         layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
-        final LinearLayout.LayoutParams paramsHorizontal = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+        final LinearLayout.LayoutParams paramsHorizontal = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         paramsHorizontal.setMargins(0, UiUtils.getPxForDpResource(activity, R.dimen.standard_margin), 0, 0);
-        layoutHorizontal.setLayoutParams(paramsHorizontal);
-        layoutVertical.addView(layoutHorizontal);
+        layoutVertical.addView(layoutHorizontal, paramsHorizontal);
 
         final BitmapDrawable icon = getIcon(activity, answer);
         final ImageView imageIcon = new ImageView(activity);
@@ -148,7 +145,8 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             layoutHorizontal.addView(imageExample, paramsImage);
         }
 
-        row.addView(layoutVertical);
+        row.addView(layoutVertical,
+                new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
     }
 
     private void onExampleImageClicked(final String iconName) {
