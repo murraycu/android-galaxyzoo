@@ -24,7 +24,6 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 //import android.os.StrictMode;
-import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
@@ -40,6 +39,7 @@ class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .detectAll()
                 .penaltyLog()
@@ -50,6 +50,7 @@ class BaseActivity extends FragmentActivity {
                 .penaltyLog()
                 .penaltyDeath()
                 .build());
+        */
 
 
         //This lets us know what MIME Type to mention in the intent filter in the manifest file,
