@@ -277,7 +277,7 @@ public class ZooniverseClient {
     }
 
     public static class Subject {
-        public String mId;
+        public String mSubjectId;
         public String mZooniverseId;
         public String mLocationStandard;
         public String mLocationThumbnail;

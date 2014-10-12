@@ -71,8 +71,8 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         final ZooniverseClient.Subject subject = subjects.get(0);
         assertNotNull(subject);
-        assertNotNull(subject.mId);
-        assertEquals(subject.mId, "504e6b5dc499611ea6020689");
+        assertNotNull(subject.mSubjectId);
+        assertEquals(subject.mSubjectId, "504e6b5dc499611ea6020689");
         assertNotNull(subject.mZooniverseId);
         assertEquals(subject.mZooniverseId, "AGZ0002ufd");
         assertNotNull(subject.mLocationStandard);

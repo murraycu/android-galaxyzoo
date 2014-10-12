@@ -60,7 +60,7 @@ public class MoreItemsJsonParser {
             final String name = reader.nextName();
             switch (name) {
                 case "id":
-                    result.mId = reader.nextString();
+                    result.mSubjectId = reader.nextString();
                     break;
                 case "zooniverse_id":
                     result.mZooniverseId = reader.nextString();

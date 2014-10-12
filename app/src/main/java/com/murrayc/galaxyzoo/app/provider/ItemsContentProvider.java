@@ -1417,7 +1417,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
     private void addSubject(final ZooniverseClient.Subject item, boolean asyncFileDownloads) {
-        if (subjectIsInDatabase(item.mId)) {
+        if (subjectIsInDatabase(item.mSubjectId)) {
             //It is already in the database.
             //TODO: Update the row?
             return;
@@ -1426,7 +1426,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         final SQLiteDatabase db = getDb();
 
         final ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.ItemsDbColumns.SUBJECT_ID, item.mId);
+        values.put(DatabaseHelper.ItemsDbColumns.SUBJECT_ID, item.mSubjectId);
         values.put(DatabaseHelper.ItemsDbColumns.ZOONIVERSE_ID, item.mZooniverseId);
 
         values.put(DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI_REMOTE, item.mLocationStandard);
@@ -1434,7 +1434,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         values.put(DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI_REMOTE, item.mLocationInverted);
 
         //Get (our) local content URIs of cache files instead of the remote URIs for the images:
-        final List<CreatedFileUri> listFiles = createFileUrisForImages(values, item.mId, item.mLocationStandard, item.mLocationThumbnail, item.mLocationInverted);
+        final List<CreatedFileUri> listFiles = createFileUrisForImages(values, item.mSubjectId, item.mLocationStandard, item.mLocationThumbnail, item.mLocationInverted);
 
         final long rowId = db.insert(DatabaseHelper.TABLE_NAME_ITEMS,
                 DatabaseHelper.ItemsDbColumns._ID, values);
@@ -1443,7 +1443,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     "content values: " + values);
         }
 
-        cacheUrisToFiles(item.mId, listFiles, asyncFileDownloads);
+        cacheUrisToFiles(item.mSubjectId, listFiles, asyncFileDownloads);
 
         notifyRowChangeById(rowId);
     }
