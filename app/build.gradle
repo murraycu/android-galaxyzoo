@@ -27,5 +27,6 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v4:20.0.0'
+    compile 'org.apmem.tools:layouts:1.4'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.0.0'
 }

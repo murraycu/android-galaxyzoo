@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.murrayc.galaxyzoo.app.Config;
 
+import org.apmem.tools.layouts.FlowLayout;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,8 +108,8 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         textViewAnswer.setText(answer.getText());
         layoutVertical.addView(textViewAnswer);
 
-        final LinearLayout layoutHorizontal = new LinearLayout(activity);
-        layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
+        final FlowLayout layoutHorizontal = new FlowLayout(activity);
+        //layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
         final LinearLayout.LayoutParams paramsHorizontal = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         paramsHorizontal.setMargins(0, UiUtils.getPxForDpResource(activity, R.dimen.standard_margin), 0, 0);
