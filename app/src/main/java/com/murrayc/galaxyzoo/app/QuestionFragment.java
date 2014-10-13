@@ -109,7 +109,7 @@ public class QuestionFragment extends BaseQuestionFragment
     private boolean mLoaderFinished = false;
 
     private ClassificationInProgress mClassificationInProgress = new ClassificationInProgress();
-    private ZooLinearLayout mRootView;
+    private QuestionLinearLayout mRootView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -171,7 +171,7 @@ public class QuestionFragment extends BaseQuestionFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = (ZooLinearLayout) inflater.inflate(R.layout.fragment_question, container, false);
+        mRootView = (QuestionLinearLayout) inflater.inflate(R.layout.fragment_question, container, false);
         assert mRootView != null;
 
         setHasOptionsMenu(true);

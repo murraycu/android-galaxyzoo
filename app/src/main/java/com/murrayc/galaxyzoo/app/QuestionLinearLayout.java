@@ -7,10 +7,10 @@ import android.widget.LinearLayout;
 /**
  * Created by murrayc on 10/9/14.
  */
-public class ZooLinearLayout extends LinearLayout {
+public class QuestionLinearLayout extends LinearLayout {
     private int mMaxHeightExperienced = 0;
 
-    public ZooLinearLayout(final Context context, final AttributeSet attrs) {
+    public QuestionLinearLayout(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 

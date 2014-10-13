@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.murrayc.galaxyzoo.app.ZooLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.murrayc.galaxyzoo.app.QuestionLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/table_detail"
     style="?android:attr/textAppearanceLarge"
@@ -31,4 +31,4 @@
     </TableLayout>
 
 
-</com.murrayc.galaxyzoo.app.ZooLinearLayout>
+</com.murrayc.galaxyzoo.app.QuestionLinearLayout>
