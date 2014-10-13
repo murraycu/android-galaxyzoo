@@ -36,7 +36,7 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link com.murrayc.galaxyzoo.app.ClassifyFragment}.
  */
-public class ClassifyActivity extends ItemActivity implements ItemFragment.Callbacks, QuestionFragment.Callbacks {
+public class ClassifyActivity extends ItemActivity implements QuestionFragment.Callbacks {
 
     private int mClassificationsDoneInSession = 0;
 
