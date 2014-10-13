@@ -685,7 +685,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         }
     }
 
-    class CreatedFileUri {
+    private static class CreatedFileUri {
         final String subjectId;
         final ImageType imageType;
         final String remoteUri;
@@ -1826,7 +1826,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         }
     }
 
-    private class UriParts {
+    private static class UriParts {
         public String itemId;
     }
 
