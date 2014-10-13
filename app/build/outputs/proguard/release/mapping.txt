@@ -1899,7 +1899,7 @@ com.murrayc.galaxyzoo.app.QuestionFragment -> com.murrayc.galaxyzoo.app.Question
     java.lang.String mZooniverseId -> W
     boolean mLoaderFinished -> X
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress mClassificationInProgress -> Y
-    com.murrayc.galaxyzoo.app.ZooLinearLayout mRootView -> Z
+    com.murrayc.galaxyzoo.app.QuestionLinearLayout mRootView -> Z
     boolean $assertionsDisabled -> P
     java.lang.String getZooniverseId() -> K
     void setZooniverseId(java.lang.String) -> c
@@ -1915,19 +1915,18 @@ com.murrayc.galaxyzoo.app.QuestionFragment -> com.murrayc.galaxyzoo.app.Question
     void onAttach(android.app.Activity) -> a
     void onDetach() -> q
     void update() -> G
-    java.lang.String getArbitraryIconId() -> M
     android.widget.TableRow addRowToTable(android.app.Activity,android.widget.TableLayout) -> a
     void insertButtonInRow(android.content.Context,android.widget.TableRow,android.view.View) -> a
     void makeButtonTextSmall(android.app.Activity,android.widget.Button) -> a
     android.widget.Button createAnswerButton(android.app.Activity,com.murrayc.galaxyzoo.app.DecisionTree$Answer) -> a
     void onAnswerButtonClicked(java.lang.String,java.lang.String) -> a
-    void finishOrRestartClassification() -> N
+    void finishOrRestartClassification() -> M
     void saveClassification(com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress) -> a
-    java.lang.String getCurrentDateTimeAsIso8601() -> O
-    void updateFromCursor() -> P
+    java.lang.String getCurrentDateTimeAsIso8601() -> N
+    void updateFromCursor() -> O
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    void updateIfReady() -> Q
+    void updateIfReady() -> P
     void onLoaderReset(android.support.v4.content.Loader) -> a
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.QuestionFragment,java.lang.String,java.lang.String) -> a
@@ -1990,6 +1989,12 @@ com.murrayc.galaxyzoo.app.QuestionHelpFragment$1 -> com.murrayc.galaxyzoo.app.al
     java.lang.String val$iconName -> a
     com.murrayc.galaxyzoo.app.QuestionHelpFragment this$0 -> b
     void onClick(android.view.View) -> onClick
+com.murrayc.galaxyzoo.app.QuestionLinearLayout -> com.murrayc.galaxyzoo.app.QuestionLinearLayout:
+    java.util.Map mMaxHeightsExperienced -> b
+    int mCurrentRowsCountForMaxHeight -> a
+    void onLayout(boolean,int,int,int,int) -> onLayout
+    void setRowsCountForMaxHeightExperienced(int) -> setRowsCountForMaxHeightExperienced
+    int getMaximumHeightExperienced(int) -> a
 com.murrayc.galaxyzoo.app.SettingsActivity -> com.murrayc.galaxyzoo.app.SettingsActivity:
     void onCreate(android.os.Bundle) -> onCreate
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
@@ -2126,10 +2131,6 @@ com.murrayc.galaxyzoo.app.ZooFragment -> com.murrayc.galaxyzoo.app.ba:
     void requestLogin() -> H
     void showAbout() -> I
     void showSettings() -> J
-com.murrayc.galaxyzoo.app.ZooLinearLayout -> com.murrayc.galaxyzoo.app.ZooLinearLayout:
-    int mMaxHeightExperienced -> a
-    void onLayout(boolean,int,int,int,int) -> onLayout
-    int getMaximumHeightExperienced() -> getMaximumHeightExperienced
 com.murrayc.galaxyzoo.app.provider.ClassificationAnswer -> com.murrayc.galaxyzoo.app.provider.a:
     android.net.Uri CLASSIFICATION_ANSWERS_URI -> a
     android.net.Uri CONTENT_URI -> b
@@ -2239,7 +2240,6 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$CreatedFileUri -> com.mu
     java.lang.String remoteUri -> c
     android.net.Uri contentUri -> d
     java.lang.String localUri -> e
-    com.murrayc.galaxyzoo.app.provider.ItemsContentProvider this$0 -> f
 com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$DatabaseHelper -> com.murrayc.galaxyzoo.app.provider.j:
     void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
     void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
@@ -2270,7 +2270,6 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$UploadAsyncTask -> com.m
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
 com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$UriParts -> com.murrayc.galaxyzoo.app.provider.n:
     java.lang.String itemId -> a
-    com.murrayc.galaxyzoo.app.provider.ItemsContentProvider this$0 -> b
 com.murrayc.galaxyzoo.app.provider.client.MoreItemsJsonParser -> com.murrayc.galaxyzoo.app.provider.a.a:
     java.util.List parseMoreItemsResponseContent(java.io.InputStream) -> a
     com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject parseMoreItemsJsonObjectSubject(android.util.JsonReader) -> a
@@ -2291,7 +2290,7 @@ com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient -> com.murrayc.galaxy
     android.content.Context getContext() -> e
     boolean uploadClassificationSync(java.lang.String,java.lang.String,java.util.List) -> a
 com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject -> com.murrayc.galaxyzoo.app.provider.a.c:
-    java.lang.String mId -> a
+    java.lang.String mSubjectId -> a
     java.lang.String mZooniverseId -> b
     java.lang.String mLocationStandard -> c
     java.lang.String mLocationThumbnail -> d
