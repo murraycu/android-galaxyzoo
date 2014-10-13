@@ -3,6 +3,7 @@ package com.murrayc.galaxyzoo.app.provider.client;
 import android.util.JsonReader;
 
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +21,7 @@ public class MoreItemsJsonParser {
 
         final JsonReader reader;
         try {
-            reader = new JsonReader(new InputStreamReader(content, "UTF-8"));
+            reader = new JsonReader(new InputStreamReader(content, Utils.STRING_ENCODING));
             reader.beginArray();
             while (reader.hasNext()) {
                 while (reader.hasNext()) {

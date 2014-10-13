@@ -114,7 +114,7 @@ public class DecisionTree {
     private void loadTranslation(final InputStream inputStreamTranslation) {
         final JsonReader reader;
         try {
-            reader = new JsonReader(new InputStreamReader(inputStreamTranslation, "UTF-8"));
+            reader = new JsonReader(new InputStreamReader(inputStreamTranslation, Utils.STRING_ENCODING));
             reader.beginObject();
             while (reader.hasNext()) {
                 if (reader.nextName().equals("questions")) { //We ignore the "zooniverse" and "quiz_questions" objects

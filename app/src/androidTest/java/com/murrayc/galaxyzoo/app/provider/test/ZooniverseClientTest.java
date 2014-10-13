@@ -117,7 +117,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         assertEquals("application/x-www-form-urlencoded", request.getHeader("Content-Type"));
 
         final byte[] contents = request.getBody();
-        final String strContents = new String(contents, "UTF-8");
+        final String strContents = new String(contents, Utils.STRING_ENCODING);
         assertEquals("username=testusername&password=testpassword",
                 strContents);
 
@@ -235,7 +235,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         assertEquals("application/x-www-form-urlencoded", request.getHeader("Content-Type"));
 
         final byte[] contents = request.getBody();
-        final String strContents = new String(contents, "UTF-8");
+        final String strContents = new String(contents, Utils.STRING_ENCODING);
         assertEquals("classification%5Bsubject_ids%5D%5B%5D=504e4a38c499611ea6010c6a&classification%5Bfavorite%5D%5B%5D=true&classification%5Bannotations%5D%5B0%5D%5Bsloan-0%5D=a-0&classification%5Bannotations%5D%5B1%5D%5Bsloan-7%5D=a-1&classification%5Bannotations%5D%5B2%5D%5Bsloan-5%5D=a-0&classification%5Bannotations%5D%5B3%5D%5Bsloan-6%5D=x-5",
                 strContents);
 
@@ -266,7 +266,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
     private String getStringFromStream(final InputStream input) throws IOException {
         //Don't bother with try/catch because we are in a test case anyway.
-        final InputStreamReader isr = new InputStreamReader(input, "UTF-8");
+        final InputStreamReader isr = new InputStreamReader(input, Utils.STRING_ENCODING);
         final BufferedReader bufferedReader =  new BufferedReader(isr);
 
         final StringBuilder sb = new StringBuilder();

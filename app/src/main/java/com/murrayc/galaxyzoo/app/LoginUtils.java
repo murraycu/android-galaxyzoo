@@ -66,7 +66,7 @@ public class LoginUtils {
 
         final JsonReader reader;
         try {
-            reader = new JsonReader(new InputStreamReader(content, "UTF-8"));
+            reader = new JsonReader(new InputStreamReader(content, Utils.STRING_ENCODING));
             reader.beginObject();
             boolean success = false;
             String apiKey = null;
@@ -179,7 +179,7 @@ public class LoginUtils {
         //Get the bytes:
         byte[] inputAsBytes = null;
         try {
-            inputAsBytes = input.getBytes("UTF-8");
+            inputAsBytes = input.getBytes(Utils.STRING_ENCODING);
         } catch (final UnsupportedEncodingException e) {
             Log.error("encryptString(): String.getBytes() failed", e);
             return null;
@@ -204,7 +204,7 @@ public class LoginUtils {
 
         //Put it in a String:
         try {
-            result.encryptedString = new String(inputEncryptedBase64, "UTF-8");
+            result.encryptedString = new String(inputEncryptedBase64, Utils.STRING_ENCODING);
         } catch (final UnsupportedEncodingException e) {
             Log.error("encryptString(): new String() failed", e);
             return null;
@@ -267,7 +267,7 @@ public class LoginUtils {
 
         //Convert it to a string.
         try {
-            return new String(inputDecryptedAsBytes, "UTF-8");
+            return new String(inputDecryptedAsBytes, Utils.STRING_ENCODING);
         } catch (UnsupportedEncodingException e) {
             Log.error("decryptString(): new String() failed", e);
             return null;

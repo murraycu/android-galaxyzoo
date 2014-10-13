@@ -5,6 +5,7 @@ import android.util.Base64;
 
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
+import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 
 import org.apache.http.NameValuePair;
@@ -114,7 +115,7 @@ public class ZooniverseClient {
             BufferedWriter writer = null;
             try {
                 writer = new BufferedWriter(
-                        new OutputStreamWriter(out, "UTF-8"));
+                        new OutputStreamWriter(out, Utils.STRING_ENCODING));
                 writer.write(getPostDataBytes(nameValuePairs));
                 writer.flush();
             } catch (final IOException e) {
@@ -153,9 +154,9 @@ public class ZooniverseClient {
             }
 
             try {
-                result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
+                result.append(URLEncoder.encode(pair.getName(), Utils.STRING_ENCODING));
                 result.append("=");
-                result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+                result.append(URLEncoder.encode(pair.getValue(), Utils.STRING_ENCODING));
             } catch (UnsupportedEncodingException e) {
                 Log.error("getPostDataBytes(): Exception", e);
                 return null;
@@ -171,7 +172,7 @@ public class ZooniverseClient {
         final String str = authName + ":" + authApiKey;
         byte[] asBytes = null;
         try {
-            asBytes = str.getBytes("UTF-8");
+            asBytes = str.getBytes(Utils.STRING_ENCODING);
         } catch (UnsupportedEncodingException e) {
             Log.error("generateAuthorizationHeader(): String.getBytes() failed", e);
             return null;

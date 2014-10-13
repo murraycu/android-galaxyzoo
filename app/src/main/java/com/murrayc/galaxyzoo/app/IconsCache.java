@@ -338,7 +338,7 @@ class IconsCache {
 
             InputStreamReader isr = null;
             try {
-                isr = new InputStreamReader(fis, "UTF-8");
+                isr = new InputStreamReader(fis, Utils.STRING_ENCODING);
 
                 BufferedReader bufferedReader = null;
                 try {
