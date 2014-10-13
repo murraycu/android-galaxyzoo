@@ -4,11 +4,17 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by murrayc on 10/9/14.
  */
 public class QuestionLinearLayout extends LinearLayout {
-    private int mMaxHeightExperienced = 0;
+
+    //A map of number-of-rows-of-icons to max height experienced.
+    private Map<Integer, Integer> mMaxHeightsExperienced = new HashMap<>();
+    int mCurrentRowsCountForMaxHeight = 0;
 
     public QuestionLinearLayout(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -22,14 +28,22 @@ public class QuestionLinearLayout extends LinearLayout {
         //so we can try to always ask for at least that,
         //to avoid the other parts of the UI moving around too much.
         final int measuredHeight = getMeasuredHeight();
-        if ((measuredHeight > 0) && (mMaxHeightExperienced < measuredHeight)) {
-            mMaxHeightExperienced = measuredHeight;
+        if ((measuredHeight > 0) && (getMaximumHeightExperienced(mCurrentRowsCountForMaxHeight) < measuredHeight)) {
+            mMaxHeightsExperienced.put(mCurrentRowsCountForMaxHeight, measuredHeight);
         }
 
         //Log.info("ZooLinearLayout.onLayout(): measuredHeight=" + measuredHeight);
     }
 
-    public int getMaximumHeightExperienced() {
-        return mMaxHeightExperienced;
+    public void setRowsCountForMaxHeightExperienced(int rowsCount) {
+        mCurrentRowsCountForMaxHeight = rowsCount;
+    }
+
+    public int getMaximumHeightExperienced(int rowsCount) {
+        if (!mMaxHeightsExperienced.containsKey(rowsCount)) {
+            return 0;
+        }
+
+        return mMaxHeightsExperienced.get(rowsCount);
     }
 }

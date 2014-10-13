@@ -429,6 +429,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 
+            /* This wastes even more space to be even more consistent:
             //Make sure there are always at least 2 rows,
             //so we request roughly the same amount of space each time:
             if (rows < 2) {
@@ -439,9 +440,15 @@ public class QuestionFragment extends BaseQuestionFragment
                 button.setVisibility(View.INVISIBLE); //It won't be seen, but it's size will be used.
                 insertButtonInRow(activity, row, button);
             }
+            */
+
+
+            //This will be used in a later onLayout(),
+            //so we will know the correct height at least during the second classification,
+            mRootView.setRowsCountForMaxHeightExperienced(rows);
 
             //Try to keep the height consistent, to avoid the user seeing everything moving about.
-            final int min = mRootView.getMaximumHeightExperienced();
+            final int min = mRootView.getMaximumHeightExperienced(rows);
             if (min > 0) {
                 mRootView.setMinimumHeight(min);
             }
