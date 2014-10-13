@@ -686,14 +686,12 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     }
 
     private static class CreatedFileUri {
-        final String subjectId;
         final ImageType imageType;
         final String remoteUri;
         final Uri contentUri;
         final String localUri;
 
-        CreatedFileUri(final String subjectId, final ImageType imageType, final String remoteUri, final Uri contentUri, final String localUri) {
-            this.subjectId = subjectId;
+        CreatedFileUri(final ImageType imageType, final String remoteUri, final Uri contentUri, final String localUri) {
             this.imageType = imageType;
             this.remoteUri = remoteUri;
             this.contentUri = contentUri;
@@ -754,7 +752,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             //TODO? getContext().getContentResolver().notifyChange(fileId, null);
         }
 
-        return new CreatedFileUri(subjectId, imageType, uriOfFileToCache, fileUri, realFileUri);
+        return new CreatedFileUri(imageType, uriOfFileToCache, fileUri, realFileUri);
     }
 
     /**
