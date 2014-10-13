@@ -22,6 +22,7 @@ package com.murrayc.galaxyzoo.app.provider.test;
 import android.test.AndroidTestCase;
 
 import com.murrayc.galaxyzoo.app.LoginUtils;
+import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
