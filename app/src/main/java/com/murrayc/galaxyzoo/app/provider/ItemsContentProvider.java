@@ -552,7 +552,11 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                     final ClipDescription clip = new ClipDescription(null, FILE_MIME_TYPES);
                     return clip.filterMimeTypes(mimeTypeFilter);
                 } else {
-                    return FILE_MIME_TYPES;
+                    //We return a clone rather than the array itself,
+                    //because that would theoretically allow the caller to
+                    //modify the items, which is theoretically a
+                    //security vulnerability.
+                    return FILE_MIME_TYPES.clone();
                 }
             default:
                 throw new IllegalArgumentException("Unknown type: " +
