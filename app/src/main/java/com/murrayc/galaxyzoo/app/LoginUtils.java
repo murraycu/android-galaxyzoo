@@ -11,24 +11,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.JsonReader;
 
-import com.murrayc.galaxyzoo.app.provider.Config;
-import com.murrayc.galaxyzoo.app.provider.HttpUtils;
-import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by murrayc on 10/5/14.

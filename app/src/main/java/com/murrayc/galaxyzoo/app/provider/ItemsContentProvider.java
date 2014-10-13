@@ -32,7 +32,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;

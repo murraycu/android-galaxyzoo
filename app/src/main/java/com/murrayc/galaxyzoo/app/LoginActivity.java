@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.murrayc.galaxyzoo.app.provider.*;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 /**

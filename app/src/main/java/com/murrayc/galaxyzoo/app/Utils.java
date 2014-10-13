@@ -28,13 +28,11 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Base64;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 //import org.apache.http.client.utils.URIBuilder;
 
