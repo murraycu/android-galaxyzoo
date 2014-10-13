@@ -459,27 +459,6 @@ public class QuestionFragment extends BaseQuestionFragment
         }
     }
 
-    /** Get an icon ID just so we can use an invisible icon to make the layout
-     * use an appropriate height on an invisible row.
-     * @return
-     */
-    private String getArbitraryIconId() {
-        final DecisionTree.Question question = getQuestion();
-        if (question == null) {
-            return null;
-        }
-
-        if ((question.answers != null) && (question.answers.size() > 0)) {
-            return question.answers.get(0).getIcon();
-        }
-
-        if ((question.checkboxes != null) && (question.checkboxes.size() > 0)) {
-            return question.checkboxes.get(0).getIcon();
-        }
-
-        return null;
-    }
-
     private static TableRow addRowToTable(final Activity activity, final TableLayout layoutAnswers) {
         final TableRow row = new TableRow(activity);
         layoutAnswers.addView(row,
