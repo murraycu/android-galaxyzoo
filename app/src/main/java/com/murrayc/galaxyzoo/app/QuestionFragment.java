@@ -258,6 +258,7 @@ public class QuestionFragment extends BaseQuestionFragment
                 return true;
             case R.id.option_menu_item_restart: {
                 finishOrRestartClassification();
+                return true;
             }
             default:
                 return super.onOptionsItemSelected(item);
