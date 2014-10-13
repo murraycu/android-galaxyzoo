@@ -718,7 +718,9 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                 //Actually create an empty file there -
                 //otherwise when we try to write to it via openOutputStream()
                 //we will get a FileNotFoundException.
-                realFile.createNewFile();
+                if(!realFile.createNewFile()) {
+                    Log.error("createFileUri(): the file already exists.");
+                }
 
                 realFileUri = realFile.getAbsolutePath();
             }
@@ -1021,7 +1023,9 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             if (c.moveToFirst()) {
                 final String realFileUri = c.getString(0);
                 final File realFile = new File(realFileUri);
-                realFile.delete();
+                if(!realFile.delete()) {
+                    Log.error("removeItem(): File.delete() failed.");
+                }
             }
 
             c.close();
