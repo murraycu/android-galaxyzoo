@@ -169,7 +169,15 @@ public class ZooniverseClient {
         //See the similar code in Zooniverse's user.coffee source code:
         //https://github.com/zooniverse/Zooniverse/blob/master/src/models/user.coffee#L49
         final String str = authName + ":" + authApiKey;
-        return "Basic " + Base64.encodeToString(str.getBytes(), Base64.DEFAULT);
+        byte[] asBytes = null;
+        try {
+            asBytes = str.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Log.error("generateAuthorizationHeader(): String.getBytes() failed", e);
+            return null;
+        }
+
+        return "Basic " + Base64.encodeToString(asBytes, Base64.DEFAULT);
     }
 
     /** This will not always provide as many items as requested.
