@@ -2,18 +2,6 @@
 <resources>
 
     <!-- Keys for SharedPreferences values. -->
-    <string name="pref_key_auth_name" translatable="false">auth_name</string>
-    <string name="pref_key_auth_api_key" translatable="false">auth_api_key</string>
-    <!-- Generated at the app's first start. -->
-    <string name="pref_key_auth_encryption_key" translatable="false">auth_api_encryption_key</string>
-
-    <!-- Every time we use the encryption key to encrypt something, we use (generate) a new initialization vector,
-     which we need to use again to decrupt it. -->
-    <string name="pref_key_auth_name_initialization_vector" translatable="false">auth_name_initialization_vector</string>
-    <string name="pref_key_auth_api_key_initialization_vector" translatable="false">auth_api_key_initialization_vector</string>
-
-
-
     <string name="pref_key_cache_size" translatable="false">cache_size</string>
     <string name="pref_key_keep_count" translatable="false">keep_count</string>
     <!-- <string name="pref_key_icons_cache_last_mod" translatable="false">icons-cache-last-mod</string> -->
