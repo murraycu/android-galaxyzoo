@@ -510,6 +510,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
         final BitmapDrawable icon = getIcon(activity, answer);
         button.setCompoundDrawables(null, icon, null, null);
+        //There is still some padding: button.setCompoundDrawablePadding(0); //UiUtils.getPxForDpResource(activity, R.dimen.standard_margin));
         return button;
     }
 
