@@ -52,7 +52,7 @@
             android:src="@drawable/ic_small_accept"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_gravity="bottom|right" />
+            android:layout_gravity="bottom|right|end" />
 
 
         <ImageView
@@ -67,7 +67,7 @@
             android:src="@drawable/ic_small_upload"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_gravity="bottom|right" />
+            android:layout_gravity="bottom|right|end" />
 
         <ImageView
             android:id="@+id/item_checkboxFavorite"

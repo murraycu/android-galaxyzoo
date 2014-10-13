@@ -63,7 +63,7 @@
                 android:id="@+id/textViewForgot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="right|end"
                 android:text="@string/forgot_password_button_text"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -71,7 +71,7 @@
                 android:id="@+id/textViewRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="right|end"
                 android:text="@string/register_button_text"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
