@@ -417,11 +417,7 @@ public class ItemsContentProvider extends ContentProvider {
                 final ContentValues valuesComplete = new ContentValues(values);
 
                 //This doesn't actually get any data from the locations.
-                createFileUrisForImages(valuesComplete,
-                        subjectId,
-                        values.getAsString(Item.Columns.LOCATION_STANDARD_URI_REMOTE),
-                        values.getAsString(Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE),
-                        values.getAsString(Item.Columns.LOCATION_INVERTED_URI_REMOTE));
+                createFileUrisForImages(valuesComplete);
 
                 uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, valuesComplete,
                         sItemsProjectionMap, Item.ITEMS_URI);
@@ -502,12 +498,9 @@ public class ItemsContentProvider extends ContentProvider {
     }
     */
 
-    /** This returns both the content URI and the local URI, just to avoid the caller needing to
-     * look the local one up again.
-     *
-     * @param uriOfFileToCache This may be null if the new file should be empty.
+    /** Get a the content URI of a new file, whose data will actually be on the local system.
      */
-    private Uri createFileUri(final String uriOfFileToCache, final String subjectId, final ImageType imageType) {
+    private Uri createFileUri() {
         //Log.info("createFileUri(): subject id=" + subjectId + ", imageType=" + imageType);
 
         final SQLiteDatabase db = getDb();
@@ -1006,24 +999,20 @@ public class ItemsContentProvider extends ContentProvider {
      * files as a cache.
      *
      * @param values
-     * @param subjectId
-     * @param locationStandard
-     * @param locationThumbnail
-     * @param locationInverted
      * @return
      */
-    private void createFileUrisForImages(final ContentValues values, final String subjectId, final String locationStandard, final String locationThumbnail, final String locationInverted) {
-        Uri fileUri = createFileUri(locationStandard, subjectId, ImageType.STANDARD);
+    private void createFileUrisForImages(final ContentValues values) {
+        Uri fileUri = createFileUri();
         if (fileUri != null) {
             values.put(DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI, fileUri.toString());
         }
 
-        fileUri = createFileUri(locationThumbnail, subjectId, ImageType.THUMBNAIL);
+        fileUri = createFileUri();
         if (fileUri != null) {
             values.put(DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI, fileUri.toString());
         }
 
-        fileUri = createFileUri(locationInverted, subjectId, ImageType.INVERTED);
+        fileUri = createFileUri();
         if (fileUri != null) {
             values.put(DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI, fileUri.toString());
         }
