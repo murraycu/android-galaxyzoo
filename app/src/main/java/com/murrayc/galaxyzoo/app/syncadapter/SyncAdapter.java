@@ -39,7 +39,7 @@ import java.util.Map;
  * Created by murrayc on 10/4/14.
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
-    public static final String COUNT_AS_COUNT = "COUNT(*) AS count";
+    private static final String COUNT_AS_COUNT = "COUNT(*) AS count";
     private int mUploadsInProgress = 0;
 
     private boolean mRequestMoreItemsAsyncInProgress = false;
