@@ -59,13 +59,13 @@ public class Item {
         public static final String ZOONIVERSE_ID = "zooniverseId";
         public static final String LOCATION_STANDARD_URI_REMOTE = "locationStandardUriRemote";
         public static final String LOCATION_STANDARD_URI = "locationStandardUri";
-        public static final String LOCATION_STANDARD_DOWNLOADED = "locationStandardDone"; //Integer boolean (1 or 0)
+        public static final String LOCATION_STANDARD_DOWNLOADED = "locationStandardDownloaded"; //Integer boolean (1 or 0)
         public static final String LOCATION_THUMBNAIL_URI_REMOTE = "locationThumbnailUriRemote";
         public static final String LOCATION_THUMBNAIL_URI = "locationThumbnailUri";
-        public static final String LOCATION_THUMBNAIL_DOWNLOADED = "locationThumbnailDone"; //Integer boolean (1 or 0)
+        public static final String LOCATION_THUMBNAIL_DOWNLOADED = "locationThumbnailDownloaded"; //Integer boolean (1 or 0)
         public static final String LOCATION_INVERTED_URI_REMOTE = "locationInvertedUriRemote";
         public static final String LOCATION_INVERTED_URI = "locationInvertedUri";
-        public static final String LOCATION_INVERTED_DOWNLOADED = "locationInvertedDone"; //Integer boolean (1 or 0)
+        public static final String LOCATION_INVERTED_DOWNLOADED = "locationInvertedDownloaded"; //Integer boolean (1 or 0)
         public static final String FAVORITE = "favorite"; //Integer boolean (1 or 0)
         public static final String DATETIME_DONE = "dateTimeDone"; //An ISO8601 string ("YYYY-MM-DD HH:MM:SS.SSS").
 
