@@ -502,21 +502,6 @@ public class ItemsContentProvider extends ContentProvider {
     }
     */
 
-
-    private static class CreatedFileUri {
-        final ImageType imageType;
-        final String remoteUri;
-        final Uri contentUri;
-        final String localUri;
-
-        CreatedFileUri(final ImageType imageType, final String remoteUri, final Uri contentUri, final String localUri) {
-            this.imageType = imageType;
-            this.remoteUri = remoteUri;
-            this.contentUri = contentUri;
-            this.localUri = localUri;
-        }
-    }
-
     /** This returns both the content URI and the local URI, just to avoid the caller needing to
      * look the local one up again.
      *
@@ -1042,33 +1027,6 @@ public class ItemsContentProvider extends ContentProvider {
         if (fileUri != null) {
             values.put(DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI, fileUri.toString());
         }
-    }
-
-    private void notifyRowChangeBySubjectId(final String subjectID) {
-        final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
-        builder.appendWhere(Item.Columns.SUBJECT_ID + " = ?"); //We use ? to avoid SQL Injection.
-        final String[] projection = {DatabaseHelper.ItemsDbColumns._ID};
-        final String[] selectionArgs = {subjectID}; //TODO: locale-independent?
-        final Cursor c = builder.query(getDb(), projection,
-                null, selectionArgs,
-                null, null, null);
-
-        long itemId = 0;
-        if (c.moveToFirst()) {
-            itemId = c.getLong(0);
-        }
-
-        c.close();
-
-        notifyRowChangeById(itemId);
-    }
-
-    private void notifyRowChangeById(long rowId) {
-        final Uri insertUri =
-                ContentUris.withAppendedId(
-                        Item.ITEMS_URI, rowId);
-        getContext().getContentResolver().notifyChange(insertUri, null);
     }
 
     /**

@@ -41,14 +41,7 @@ import java.io.InputStream;
  */
 public class Utils {
 
-
     public static final String STRING_ENCODING = "UTF-8";
-
-    public static SharedPreferences getPreferences(final Context context) {
-        //TODO: Use the application name, or the full domain here?
-        //However, changing it now would lose existing preferences, including the login.
-        return context.getSharedPreferences("android-galaxyzoo", Context.MODE_PRIVATE);
-    }
 
     public static boolean getNetworkIsConnected(final Context context) {
         boolean connected = false;

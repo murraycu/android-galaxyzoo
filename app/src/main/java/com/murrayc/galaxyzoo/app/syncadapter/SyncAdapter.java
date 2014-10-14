@@ -41,8 +41,6 @@ import java.util.Map;
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public static final String COUNT_AS_COUNT = "COUNT(*) AS count";
     private int mUploadsInProgress = 0;
-    private boolean mAlreadyQueuedRegularTasks = false;
-    private boolean mRequeue = false;
 
     private boolean mRequestMoreItemsAsyncInProgress = false;
 
@@ -537,22 +535,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         if (affected != 1) {
             Log.error("markItemAsUploaded(): Unexpected affected rows: " + affected);
-        }
-    }
-
-    private static class CreatedFileUri {
-        final String subjectId;
-        final ImageType imageType;
-        final String remoteUri;
-        final Uri contentUri;
-        final String localUri;
-
-        CreatedFileUri(final String subjectId, final ImageType imageType, final String remoteUri, final Uri contentUri, final String localUri) {
-            this.subjectId = subjectId;
-            this.imageType = imageType;
-            this.remoteUri = remoteUri;
-            this.contentUri = contentUri;
-            this.localUri = localUri;
         }
     }
 
