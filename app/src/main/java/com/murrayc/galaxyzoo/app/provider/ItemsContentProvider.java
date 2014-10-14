@@ -1629,7 +1629,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         //After the first official release, try to preserve data when changing this. See onUpgrade()
-        private static final int DATABASE_VERSION = 19;
+        private static final int DATABASE_VERSION = 20;
 
         private static final String DATABASE_NAME = "items.db";
 
@@ -1766,7 +1766,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
         private static class ClassificationCheckboxesDbColumns implements BaseColumns {
 
-            private static final String ITEM_ID = "classificationId";
+            private static final String ITEM_ID = "itemId";
             private static final String SEQUENCE = "sequence";
             private static final String QUESTION_ID = "questionId";
             private static final String CHECKBOX_ID = "checkboxId";
