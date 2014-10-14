@@ -72,10 +72,14 @@ class UiUtils {
     }
 
     static void warnAboutNoNetworkConnection(final Activity activity) {
-        final Toast toast = Toast.makeText(activity, "No Network Connection", Toast.LENGTH_LONG);
+        final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_network), Toast.LENGTH_LONG);
         toast.show();
     }
 
+    static void warnAboutNoItemsToDo(final Activity activity) {
+        final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_subjects), Toast.LENGTH_LONG);
+        toast.show();
+    }
 
     static void openDiscussionPage(final Context context, final String zooniverseId) {
         //Todo: Find a way to use Uri.Builder with a URI with # in it.
@@ -96,7 +100,7 @@ class UiUtils {
     }
 
     static void showLoggedInToast(final Context context) {
-        final Toast toast = Toast.makeText(context, "Logged In", Toast.LENGTH_LONG);
+        final Toast toast = Toast.makeText(context, context.getString(R.string.message_logged_in), Toast.LENGTH_LONG);
         toast.show();
     }
 

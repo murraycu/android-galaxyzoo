@@ -109,8 +109,16 @@
     <string name="error_incorrect_password">This password is incorrect</string>
 
     <!-- An error message. -->
-
     <string name="error_field_required">This field is required</string>
+
+    <!-- An error message. We show this when we cannot continue because there is no network connection. -->
+    <string name="error_no_network">No Network Connection</string>
+
+    <!-- An error message. We show this when we cannot continue because there is no network connection. -->
+    <string name="error_no_subjects">Cannot download new subjects to classify</string>
+
+    <!-- An informative message. This lets the user know that they are already logged in to the system. -->
+    <string name="message_logged_in">Logged In</string>
 
 
     <!-- The title of the Settings screen to show or change the app preferences. -->
