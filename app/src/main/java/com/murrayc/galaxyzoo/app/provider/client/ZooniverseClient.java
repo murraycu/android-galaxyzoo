@@ -33,7 +33,7 @@ public class ZooniverseClient {
     //that the system does, because even when using a Thread (with Thread.MIN_PRIORITY) instead of
     //AsyncTask, the UI is non responsive during this work.
     //For instance, buttons appear to be pressed, but their clicked listeners are not called.
-    private static final int MAXIMUM_DOWNLOAD_ITEMS = 2;
+    private static final int MAXIMUM_DOWNLOAD_ITEMS = 10;
 
     public ZooniverseClient(final Context context, final String serverBaseUri) {
         mContext = context;
