@@ -465,7 +465,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                         prependIdToSelection(selection),
                         prependToArray(selectionArgs, uriParts.itemId)
                 );
-                //TODO: Delete the associated files too.
                 break;
             }
 
@@ -485,7 +484,6 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                         prependIdToSelection(selection),
                         prependToArray(selectionArgs, uriParts.itemId)
                 );
-                //TODO: Delete the associated files too.
                 break;
             }
 
