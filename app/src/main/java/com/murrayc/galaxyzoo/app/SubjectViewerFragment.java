@@ -186,8 +186,9 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
             // This doesn't seem to work: http://stackoverflow.com/questions/13551219/handle-cursorloader-exceptions/13753313#13753313
             if (!Utils.getNetworkIsConnected(activity)) {
                 UiUtils.warnAboutNoNetworkConnection(activity);
-                return;
             }
+
+            return;
         }
 
         mCursor.moveToFirst(); //There should only be one anyway.

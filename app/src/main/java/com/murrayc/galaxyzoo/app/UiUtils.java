@@ -72,6 +72,7 @@ class UiUtils {
         return true;
     }
 
+    //TODO: Put these in strings.xml:
     static void warnAboutNoNetworkConnection(final Activity activity) {
         final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_network), Toast.LENGTH_LONG);
         toast.show();

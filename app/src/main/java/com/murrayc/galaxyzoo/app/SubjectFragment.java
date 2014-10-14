@@ -189,6 +189,9 @@ public class SubjectFragment extends ItemFragment
         if (mCursor.getCount() <= 0) { //In case the query returned no rows.
             Log.error("SubjectFragment.updateFromCursor(): The ContentProvider query returned no rows.");
 
+            //Wipe the image instead of keeping whatever might be showing already:
+            mImageView.setImageDrawable(null);
+
             //Check for this possible cause.
             // TODO: Is there any simpler way to just catch the
             // ItemsContentProvider.NoNetworkConnection exception in the CursorLoader?
@@ -215,6 +218,12 @@ public class SubjectFragment extends ItemFragment
         final Activity activity = getActivity();
         if (activity == null)
             return;
+
+        //Avoid a crash in the unusual case that the ContentProvider
+        //didn't provide an item.
+        if (mCursor.getCount() > 0 && mCursor.getColumnCount() > 0) {
+            return;
+        }
 
         //Avoid a crash in the unusual case that the ContentProvider
         //didn't provide an item.
