@@ -1,6 +1,8 @@
 package com.murrayc.galaxyzoo.app.provider;
 
 import android.content.Context;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
@@ -107,17 +109,17 @@ public class HttpUtils {
         return conn;
     }
 
-    public static boolean cacheUriToFileSync(final String uriFileToCache, final String cacheFileUri) {
+    public static boolean cacheUriToContentUriFileSync(final Context context, final String uriFileToCache, final String cacheFileUri) {
         final InputStream in = HttpUtils.httpGetRequest(uriFileToCache);
         if (in == null) {
             return false;
         }
 
-        final boolean result = parseGetFileResponseContent(in, cacheFileUri);
+        final boolean result = parseGetFileResponseContent(context, in, cacheFileUri);
         try {
             in.close();
         } catch (IOException e) {
-            Log.error("cacheUriToFileSync(): Can't close input stream", e);
+            Log.error("cacheUriToContentUriFileSync(): Can't close input stream", e);
         }
 
         return result;
@@ -167,11 +169,15 @@ public class HttpUtils {
         connection.setRequestProperty(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
     }
 
-    private static boolean parseGetFileResponseContent(final InputStream in, final String cacheFileUr) {
+    private static boolean parseGetFileResponseContent(final Context context, final InputStream in, final String cacheFileContentUri) {
         //Write the content to the file:
         FileOutputStream fout = null;
         try {
-            fout = new FileOutputStream(cacheFileUr);
+            //FileOutputStream doesn't seem to understand content provider URIs:
+            final ParcelFileDescriptor pfd = context.getContentResolver().
+                    openFileDescriptor(Uri.parse(cacheFileContentUri), "w");
+
+            fout = new FileOutputStream(pfd.getFileDescriptor());
             // TODO: Find a way to use writeTo(), instead of looping ourselves,
             // while also having optional ungzipping?
             //response.getEntity().writeTo(fout);

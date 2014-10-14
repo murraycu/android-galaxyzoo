@@ -19,12 +19,17 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 /**
@@ -38,6 +43,40 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  */
 public class ClassifyActivity extends ItemActivity implements QuestionFragment.Callbacks {
 
+    public class ItemsContentProviderObserver extends ContentObserver {
+
+        /**
+         * Creates a content observer.
+         *
+         * @param handler The handler to run {@link #onChange} on, or null if none.
+         */
+        public ItemsContentProviderObserver(final Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+
+            requestSync();
+        }
+
+        @Override
+        public void onChange(boolean selfChange, final Uri changeUri) {
+            //super.onChange(selfChange, changeUri);
+
+            requestSync();
+        }
+    }
+
+    private void requestSync() {
+        final Bundle extras = new Bundle();
+        extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+
+        //Ask the framework to run our SyncAdapter.
+        ContentResolver.requestSync(null, Item.AUTHORITY, extras);
+    }
+
     private int mClassificationsDoneInSession = 0;
 
     // The authority for the sync adapter's content provider
@@ -50,6 +89,23 @@ public class ClassifyActivity extends ItemActivity implements QuestionFragment.C
         if (TextUtils.isEmpty(getItemId())) {
             setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
         }
+
+        /*
+         * Create a content observer object.
+         * Its code does not mutate the provider, so set
+         * selfChange to "false"
+         */
+        ItemsContentProviderObserver observer = new ItemsContentProviderObserver(new Handler());
+
+        requestSync();
+
+        /*
+         * Register the observer for the data table. The table's path
+         * and any of its subpaths trigger the observer.
+         */
+        ContentResolver resolver = getContentResolver();
+        resolver.registerContentObserver(Item.ITEMS_URI, true, observer);
+
 
         setContentView(R.layout.activity_classify);
 
