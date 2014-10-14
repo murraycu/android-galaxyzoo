@@ -652,7 +652,7 @@ public class QuestionFragment extends BaseQuestionFragment
             return;
 
         if (mCursor.getCount() <= 0) { //In case the query returned no rows.
-            Log.error("The ContentProvider query returned no rows.");
+            Log.error("QuestionFragment.updateFromCursor(): The ContentProvider query returned no rows.");
 
             //Check for this possible cause.
             // TODO: Is there any simpler way to just catch the
