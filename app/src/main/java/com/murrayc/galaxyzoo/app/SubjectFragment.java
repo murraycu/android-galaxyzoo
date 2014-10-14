@@ -221,7 +221,7 @@ public class SubjectFragment extends ItemFragment
 
         //Avoid a crash in the unusual case that the ContentProvider
         //didn't provide an item.
-        if (mCursor.getCount() > 0 && mCursor.getColumnCount() > 0) {
+        if (mCursor.getCount() < 1 || mCursor.getColumnCount() < 1) {
             return;
         }
 
