@@ -193,7 +193,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
@@ -250,14 +249,12 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             if (mExistingAccountIsAnonymous) {
                 //Remove the existing account so we can add the new one.
                 //TODO: Find a way to just change the name,
-                //so we don't lose data.
+                //though we don't lose any ItemsContentProvider data when we delete an Account.
                 LoginUtils.removeAnonymousAccount(this);
                 addingAccount = true;
             } else if(!TextUtils.equals(mExistingAccountName, result.getName())) {
                 //Remove any existing account so we can add the new one.
                 //TODO: Find a way to just change the name,
-                //so we don't lose data.
-                //TODO: Is there any way to just change the name?
                 if (!TextUtils.isEmpty(mExistingAccountName)) {
                     LoginUtils.removeAccount(this, mExistingAccountName);
                 }
