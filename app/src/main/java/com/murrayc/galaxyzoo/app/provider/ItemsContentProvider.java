@@ -485,19 +485,6 @@ public class ItemsContentProvider extends ContentProvider {
         return null;
     }
 
-    /* TODO: Put this in SyncAdapter?
-    @Override
-    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        final Context context = getContext();
-
-        //Changes to these preferences would need us to do some work:
-        if (TextUtils.equals(key, context.getString(R.string.pref_key_cache_size)) ||
-                TextUtils.equals(key,  context.getString(R.string.pref_key_keep_count))) {
-            queueRegularTasks();
-        }
-    }
-    */
-
     /** Get a the content URI of a new file, whose data will actually be on the local system.
      */
     private Uri createFileUri() {
@@ -570,15 +557,6 @@ public class ItemsContentProvider extends ContentProvider {
         //so you will see "the file already exists" errors in the log,
         //but we will then just reuse the files.
         //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
-
-        /* TODO: Put this in the SyncAdapter?
-        try {
-            PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
-        } catch (final UnsupportedOperationException e) {
-            //This happens during our test case, because the MockContext doesn't support this,
-            //so ignore this.
-        }
-        */
 
         return true;
     }

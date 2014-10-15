@@ -6,11 +6,13 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
@@ -38,7 +40,7 @@ import java.util.Map;
 /**
  * Created by murrayc on 10/4/14.
  */
-public class SyncAdapter extends AbstractThreadedSyncAdapter {
+public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String COUNT_AS_COUNT = "COUNT(*) AS count";
     private int mUploadsInProgress = 0;
 
@@ -54,6 +56,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize);
 
         mClient = new ZooniverseClient(context, Config.SERVER);
+
+        try {
+            PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
+        } catch (final UnsupportedOperationException e) {
+            //This happens during our test case, because the MockContext doesn't support this,
+            //so ignore this.
+        }
     }
 
     @Override
@@ -816,4 +825,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private void throwIfNoNetwork() {
         HttpUtils.throwIfNoNetwork(getContext());
     }
+
+    @Override
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        final Context context = getContext();
+
+        //Changes to these preferences would need us to do some work:
+        if (TextUtils.equals(key, context.getString(R.string.pref_key_cache_size)) ||
+                TextUtils.equals(key, context.getString(R.string.pref_key_keep_count))) {
+            doRegularTasks();
+        }
+    }
+
 }
