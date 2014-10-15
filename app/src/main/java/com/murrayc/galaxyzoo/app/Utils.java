@@ -19,13 +19,19 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
+
+import com.murrayc.galaxyzoo.app.provider.Item;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -124,6 +130,17 @@ public class Utils {
             //Don't log this because we expect the file to not exist sometimes,
             //and the caller will just check for a null result to know that.
             return null;
+        }
+    }
+
+    public static void abandonItem(final Context context, final String itemId) {
+        final Uri itemUri = ContentUris.withAppendedId(
+                Item.ITEMS_URI, Integer.parseInt(itemId));
+
+        final ContentResolver resolver = context.getContentResolver();
+        final int affected = resolver.delete(itemUri, null, null);
+        if (affected != 1) {
+            Log.error("abandonItem(): Unexpected number of rows affected: " + affected);
         }
     }
 }

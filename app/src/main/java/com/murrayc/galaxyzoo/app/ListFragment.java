@@ -53,6 +53,12 @@ import com.murrayc.galaxyzoo.app.provider.Item;
 public class ListFragment extends ZooFragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
+    // (actually a SQliteDatabase cursor returned
+    // from our ContentProvider) only knows about the underlying SQLite database column names,
+    // not our ContentProvider's column names. That seems like a design error in the Android API.
+    //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
+    static final int COLUMN_INDEX_ID = 0;
     static final int COLUMN_INDEX_LOCATION_THUMBNAIL_URI = 1;
     static final int COLUMN_INDEX_LOCATION_THUMBNAIL_DOWNLOADED = 2;
     static final int COLUMN_INDEX_DONE = 3;
@@ -60,12 +66,7 @@ public class ListFragment extends ZooFragment
     static final int COLUMN_INDEX_FAVOURITE = 5;
     private static final int URL_LOADER = 0;
 
-    // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
-    // (actually a SQliteDatabase cursor returned
-    // from our ContentProvider) only knows about the underlying SQLite database column names,
-    // not our ContentProvider's column names. That seems like a design error in the Android API.
-    //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
-    private static final int COLUMN_INDEX_ID = 0;
+
 
     /**
      * The serialization (saved instance state) Bundle key representing the

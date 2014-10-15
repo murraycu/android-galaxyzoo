@@ -41,4 +41,9 @@ public class ItemActivity extends BaseActivity implements ItemFragment.Callbacks
         final Intent intent = new Intent(this, ListActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void abandonItem() {
+       //Overriden in ClassifyActivity().
+    }
 }

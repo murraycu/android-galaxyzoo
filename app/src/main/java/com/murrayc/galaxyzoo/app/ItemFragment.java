@@ -21,7 +21,10 @@ public class ItemFragment extends ZooFragment {
      */
     private static final Callbacks sDummyCallbacks = new Callbacks() {
         public void navigateToList() {
+        }
 
+        @Override
+        public void abandonItem() {
         }
     };
     /**
@@ -151,5 +154,15 @@ public class ItemFragment extends ZooFragment {
      */
     static interface Callbacks {
         public void navigateToList();
+
+        /** This is called when the fragment found something about the item
+         * that means we should just give up and try another one.
+         */
+        public void abandonItem();
+    }
+
+    void abandonItem() {
+        Utils.abandonItem(getActivity(), getItemId());
+        mCallbacks.abandonItem();
     }
 }

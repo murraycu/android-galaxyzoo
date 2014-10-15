@@ -40,10 +40,10 @@ import java.io.InputStream;
  */
 class UiUtils {
 
-    static void fillImageViewFromContentUri(final Context context, final String imageUriStr, final ImageView imageView) {
+    static boolean fillImageViewFromContentUri(final Context context, final String imageUriStr, final ImageView imageView) {
         if (imageUriStr == null) {
             Log.error("fillImageViewFromContentUri(): imageUriStr is null.");
-            return;
+            return false;
         }
 
         final ContentResolver contentResolver = context.getContentResolver();
@@ -57,7 +57,7 @@ class UiUtils {
             bMap = BitmapFactory.decodeStream(stream);
         } catch (final IOException e) {
             Log.error("fillImageViewFromContentUri(): BitmapFactory.decodeStream() failed.", e);
-            return;
+            return false;
         } finally {
             if (stream != null) {
                 try {
@@ -69,6 +69,7 @@ class UiUtils {
         }
 
         imageView.setImageBitmap(bMap);
+        return true;
     }
 
     static void warnAboutNoNetworkConnection(final Activity activity) {

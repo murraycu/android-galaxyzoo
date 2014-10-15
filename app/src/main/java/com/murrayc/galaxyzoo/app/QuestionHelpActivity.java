@@ -87,4 +87,8 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
         final Intent intent = new Intent(this, ListActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void abandonItem() {
+    }
 }

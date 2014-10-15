@@ -51,7 +51,7 @@ class ListCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        //final String subjectId = cursor.getString(ListFragment.COLUMN_INDEX_SUBJECT_ID);
+        final String itemId = cursor.getString(ListFragment.COLUMN_INDEX_ID);
         final String imageUriStr = cursor.getString(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_URI);
         final boolean thumbnailDownloaded = (cursor.getInt(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_DOWNLOADED) == 1);
         final boolean done = (cursor.getInt(ListFragment.COLUMN_INDEX_DONE) == 1);
@@ -73,9 +73,16 @@ class ListCursorAdapter extends CursorAdapter {
         if (!TextUtils.isEmpty(imageUriStr)) {
             final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.imageProgressBar);
 
+            boolean imageShown = false;
             if (thumbnailDownloaded) {
                 final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);
-                UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
+                imageShown = UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
+                if (!imageShown) {
+                    Utils.abandonItem(context, itemId);
+                }
+            }
+
+            if (imageShown) {
                 progressBar.setVisibility(View.GONE);
             } else {
                 progressBar.setVisibility(View.VISIBLE);

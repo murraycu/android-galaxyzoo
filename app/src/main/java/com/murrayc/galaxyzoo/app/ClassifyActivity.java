@@ -127,10 +127,19 @@ public class ClassifyActivity extends ItemActivity implements QuestionFragment.C
         }
         mClassificationsDoneInSession++;
 
+        startNextClassification();
+    }
+
+    private void startNextClassification() {
         //Start another classification:
         setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
         final ClassifyFragment fragmentClassify = (ClassifyFragment) getSupportFragmentManager().findFragmentById(R.id.container);
         fragmentClassify.setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
         fragmentClassify.update();
+    }
+
+    @Override
+    public void abandonItem() {
+        startNextClassification();
     }
 }

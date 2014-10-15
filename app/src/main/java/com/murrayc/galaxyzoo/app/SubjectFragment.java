@@ -20,6 +20,9 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +38,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.murrayc.galaxyzoo.app.provider.ImageType;
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 /**
@@ -227,9 +231,19 @@ public class SubjectFragment extends ItemFragment
             }
         }
 
-        if (!TextUtils.isEmpty(imageUriStr)) {
-            UiUtils.fillImageViewFromContentUri(activity, imageUriStr, mImageView);
-        } else {
+        boolean imageShown = false;
+        if (TextUtils.isEmpty(imageUriStr)) {
+            imageShown = UiUtils.fillImageViewFromContentUri(activity, imageUriStr, mImageView);
+
+            if(!imageShown) {
+                //Something was wrong with the (cached) image,
+                //so just abandon this whole item.
+                //That seems safer and simpler than trying to recover just one of the 3 images.
+                abandonItem();
+            }
+        }
+
+        if(!imageShown) {
             //Make it blank,
             //to avoid still showing the picture from the previous subject:
             mImageView.setImageResource(android.R.color.transparent);
