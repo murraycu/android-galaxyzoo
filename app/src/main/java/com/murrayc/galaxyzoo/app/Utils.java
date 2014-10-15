@@ -97,4 +97,10 @@ public class Utils {
             Log.error("abandonItem(): Unexpected number of rows affected: " + affected);
         }
     }
+
+    public static Uri getItemUri(final String itemId) {
+        final Uri.Builder uriBuilder = Item.ITEMS_URI.buildUpon();
+        uriBuilder.appendPath(itemId);
+        return uriBuilder.build();
+    }
 }

@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,19 +22,14 @@ import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
 import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
-import com.murrayc.galaxyzoo.app.provider.ImageType;
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by murrayc on 10/4/14.
@@ -46,16 +40,19 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPr
 
     private boolean mRequestMoreItemsAsyncInProgress = false;
 
-    /* A map of remote URIs to the last dates that we tried to download them.
-     */
-    private final Map<String, Date> mImageDownloadsInProgress = new HashMap<>();
+    //This communicates with the remote server:
 
     private ZooniverseClient mClient = null;
+
+    //This does some of the work to communicate with the itemsContentProvider
+    //and download image files to the local cache.
+    private SubjectAdder mSubjectAdder = null;
 
     public SyncAdapter(final Context context, boolean autoInitialize) {
         super(context, autoInitialize);
 
         mClient = new ZooniverseClient(context, Config.SERVER);
+        mSubjectAdder = new SubjectAdder(context);
 
         try {
             PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
@@ -99,64 +96,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPr
      * @return Return true if we know for sure that no further downloading is currently necessary.
      */
     private boolean downloadMissingImages() {
-        boolean noWorkNeeded = true;
 
         //Get all the items that have an image that is not yet fully downloaded:
-        final ContentResolver resolver = getContentResolver();
-
-        final String[] projection = {Item.Columns._ID,
-                Item.Columns.LOCATION_STANDARD_URI_REMOTE,
-                Item.Columns.LOCATION_STANDARD_URI,
-                Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE,
-                Item.Columns.LOCATION_THUMBNAIL_URI,
-                Item.Columns.LOCATION_INVERTED_URI_REMOTE,
-                Item.Columns.LOCATION_INVERTED_URI};
-        final Cursor c = resolver.query(Item.ITEMS_URI, projection,
-                getWhereClauseForDownloadNotDone(), new String[]{}, null);
 
         //Find out if the image is currently being downloaded:
-        while (c.moveToNext()) {
-            final String itemId = c.getString(0);
-            if (TextUtils.isEmpty(itemId)) {
-                continue;
-            }
 
-            final Uri itemUri = getItemUri(itemId);
-
-            //Restart any downloads that seem to have failed before, or have been interrupted:
-            final String uriStandardRemote = c.getString(1);
-            if (!mImageDownloadsInProgress.containsKey(uriStandardRemote)) {
-                final String uriStandard = c.getString(2);
-                downloadMissingImage(uriStandardRemote, uriStandard, itemUri, ImageType.STANDARD);
-                noWorkNeeded = false;
-            }
-
-            final String uriThumbnailRemote = c.getString(3);
-            if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
-                final String uriThumbnail = c.getString(4);
-                downloadMissingImage(uriThumbnailRemote, uriThumbnail, itemUri, ImageType.THUMBNAIL);
-                noWorkNeeded = false;
-            }
-
-            final String uriInvertedRemote = c.getString(5);
-            if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
-                final String uriInverted = c.getString(6);
-                downloadMissingImage(uriInvertedRemote, uriInverted, itemUri, ImageType.INVERTED);
-                noWorkNeeded = false;
-            }
-        }
-
-        c.close();
-
-        return noWorkNeeded;
-    }
-
-    private void downloadMissingImage(final String uriRemote, final String uriContent, final Uri itemUri, ImageType imageType) {
-        try {
-            cacheUriToFile(uriRemote, uriContent, itemUri, imageType, true /* async */);
-        } catch (final HttpUtils.NoNetworkException e) {
-            Log.info("downloadMissingImages(): No network connection.");
-        }
+        return mSubjectAdder.downloadMissingImages();
     }
 
     private ContentResolver getContentResolver() {
@@ -318,15 +263,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPr
         final ContentResolver resolver = getContentResolver();
 
         //ItemsContentProvider takes care of deleting related files, classification answers, etc:
-        if(resolver.delete(getItemUri(itemId), null, null) < 1) {
+        if(resolver.delete(Utils.getItemUri(itemId), null, null) < 1) {
             Log.error("removeItem(): No item rows were removed.");
         }
-    }
-
-    private Uri getItemUri(final String itemId) {
-        final Uri.Builder uriBuilder = Item.ITEMS_URI.buildUpon();
-        uriBuilder.appendPath(itemId);
-        return uriBuilder.build();
     }
 
     private class QueryAsyncTask extends AsyncTask<Integer, Integer, List<ZooniverseClient.Subject>> {
@@ -337,13 +276,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPr
                 return null;
             }
 
-            Log.info("QueryAsyncTask.doInBackground()");
-
             //TODO: Why not just set these in the constructor?
             //That seems to be allowed:
             //See Memory observability here:
             //http://developer.android.com/reference/android/os/AsyncTask.html
             final int count = params[0];
+
+            Log.info("QueryAsyncTask.doInBackground(): count=" + count);
 
             try {
                 return mClient.requestMoreItemsSync(count);
@@ -376,7 +315,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPr
         //Mark it as a favorite if necessary:
         {
             final String[] projection = {Item.Columns.FAVORITE};
-            final Cursor c = resolver.query(getItemUri(itemId),
+            final Cursor c = resolver.query(Utils.getItemUri(itemId),
                     projection, null, new String[]{}, null);
 
             if (c.moveToFirst()) {
@@ -499,30 +438,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPr
         if (missing < size) {
             listToUse = result.subList(0, missing);
         }
-        addSubjects(listToUse, true /* async */);
+        mSubjectAdder.addSubjects(listToUse, true /* async */);
     }
-
-    /**
-     * @param subjects
-     * @param asyncFileDownloads Get the image data asynchronously if this is true.
-     */
-    private void addSubjects(final List<ZooniverseClient.Subject> subjects, boolean asyncFileDownloads) {
-        if (subjects == null) {
-            return;
-        }
-
-        for (final ZooniverseClient.Subject subject : subjects) {
-            addSubject(subject, asyncFileDownloads);
-        }
-    }
-
-    /*
-    private File getFile(long id) {
-        return new File(getContext().getExternalFilesDir(null), Long
-                .toString(id)
-                + ".glom");
-    }
-    */
 
     private void onUploadTaskFinished(boolean result, final String itemId) {
         if (result) {
@@ -539,7 +456,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPr
         values.put(Item.Columns.UPLOADED, 1);
 
         final ContentResolver resolver = getContentResolver();
-        final int affected = resolver.update(getItemUri(itemId),
+        final int affected = resolver.update(Utils.getItemUri(itemId),
                 values, null, null);
 
         if (affected != 1) {
@@ -547,256 +464,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPr
         }
     }
 
-    /**
-     * Download bytes from a url and store them in a file, optionally asynchronously in spawned thread.
-     *
-     * @param asyncFileDownloads Get the image data asynchronously if this is true.
-     */
-    private boolean cacheUriToFile(final String uriFileToCache, final String cacheFileUri, final Uri itemUri, final ImageType imageType, boolean asyncFileDownloads) {
-        if (TextUtils.isEmpty(uriFileToCache)) {
-            return false;
-        }
-
-        if (TextUtils.isEmpty(cacheFileUri)) {
-            return false;
-        }
-
-        //Don't attempt it if it is already in progress.
-        if (mImageDownloadsInProgress.containsKey(uriFileToCache)) {
-            //TODO: Check the actual date?
-            return false;
-        }
-
-        throwIfNoNetwork();
-
-        final Date now = new Date();
-        mImageDownloadsInProgress.put(uriFileToCache, now);
-
-        if (asyncFileDownloads) {
-            final FileCacheAsyncTask task = new FileCacheAsyncTask(this, itemUri, imageType);
-            task.execute(uriFileToCache, cacheFileUri);
-            return true;
-        } else {
-            final boolean downloaded = HttpUtils.cacheUriToContentUriFileSync(getContext(), uriFileToCache, cacheFileUri);
-            markImageDownloadAsNotInProgress(uriFileToCache);
-
-            if (downloaded) {
-                return markImageAsDownloaded(itemUri, imageType, uriFileToCache);
-            } else {
-                //doRegularTasks() will try again later.
-                Log.error("cacheUriToFile(): cacheUriToContentUriFileSync(): failed.");
-                return false;
-            }
-        }
-    }
-
-    private void markImageDownloadAsNotInProgress(final String uriFileToCache) {
-        mImageDownloadsInProgress.remove(uriFileToCache);
-    }
-
-    private boolean markImageAsDownloaded(final Uri itemUri, final ImageType imageType, final String uriFileToCache) {
-
-        //Don't try downloading this again later:
-        //Actually the caller should already have removed this,
-        //regardless of the download's success or failure.
-        //but let's be sure:
-        markImageDownloadAsNotInProgress(uriFileToCache);
-
-        //Let users of the ContentProvider API know that the image has been fully downloaded
-        //so it's safe to use it:
-        String fieldName = null;
-        switch (imageType) {
-            case STANDARD:
-                fieldName = Item.Columns.LOCATION_STANDARD_DOWNLOADED;
-                break;
-            case THUMBNAIL:
-                fieldName = Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED;
-                break;
-            case INVERTED:
-                fieldName = Item.Columns.LOCATION_INVERTED_DOWNLOADED;
-                break;
-            default:
-                Log.error("markImageAsDownloaded(): Unexpected imageType.");
-                return false;
-        }
-
-        final ContentResolver resolver = getContentResolver();
-
-        final ContentValues values = new ContentValues();
-        values.put(fieldName, 1);
-
-        final int affected = resolver.update(itemUri, values,
-                null, null);
-        if (affected != 1) {
-            Log.error("markImageAsDownloaded(): Failed to mark image download as done.");
-            return false;
-        } else {
-            //Let the ListView (or other UI) know that there is more to display.
-            //TODO? notifyRowChangeBySubjectId(subjectId);
-        }
-
-        return true;
-    }
-
-    /**
-     * @param item
-     * @param asyncFileDownloads Get the image data asynchronously if this is true.
-     */
-    private void addSubject(final ZooniverseClient.Subject item, boolean asyncFileDownloads) {
-        if (subjectIsInDatabase(item.mSubjectId)) {
-            //It is already in the database.
-            //TODO: Update the row?
-            return;
-        }
-
-        final ContentResolver resolver = getContentResolver();
-
-        final ContentValues values = new ContentValues();
-        values.put(Item.Columns.SUBJECT_ID, item.mSubjectId);
-        values.put(Item.Columns.ZOONIVERSE_ID, item.mZooniverseId);
-
-        //The ItemsContentProvider will take care of creating local file URIs for the remote URis,
-        //and this SyncAdapter will request that the remote image files are downloaded into those local file URIs.
-        values.put(Item.Columns.LOCATION_STANDARD_URI_REMOTE, item.mLocationStandard);
-        values.put(Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE, item.mLocationThumbnail);
-        values.put(Item.Columns.LOCATION_INVERTED_URI_REMOTE, item.mLocationInverted);
-
-        final Uri itemUri = resolver.insert(Item.ITEMS_URI, values);
-        if (itemUri == null) {
-            throw new IllegalStateException("could not insert " +
-                    "content values: " + values);
-        }
-
-        cacheUrisToFiles(itemUri, asyncFileDownloads);
-
-        //TODO: notifyRowChangeById(rowId);
-    }
-
-    private void cacheUrisToFiles(final Uri itemUri, boolean asyncFileDownloads) {
-
-        final ContentResolver resolver = getContentResolver();
-
-        //Actually cache the URIs' data in the local files:
-        //This will mark the data as fully downloaded by setting the *Downloaded boolean fields,
-        //so we do this only after creating the items record.
-
-        final String[] projection = {
-                Item.Columns.LOCATION_STANDARD_URI_REMOTE,
-                Item.Columns.LOCATION_STANDARD_URI,
-                Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE,
-                Item.Columns.LOCATION_THUMBNAIL_URI,
-                Item.Columns.LOCATION_INVERTED_URI_REMOTE,
-                Item.Columns.LOCATION_INVERTED_URI,
-        };
-        final Cursor c = resolver.query(itemUri, projection,
-                null, new String[]{}, null);
-        while (c.moveToNext()) {
-            final String uriStandardRemote = c.getString(0);
-            final String uriStandard = c.getString(1);
-            final String uriThumbnailRemote = c.getString(2);
-            final String uriThumbnail = c.getString(3);
-            final String uriInvertedRemote = c.getString(4);
-            final String uriInverted = c.getString(5);
-
-            if (!(cacheUriToFile(uriStandardRemote, uriStandard, itemUri, ImageType.STANDARD, asyncFileDownloads))) {
-                Log.error("cacheUrisToFiles(): cacheUriToFile() failed for standard image.");
-            }
-
-            if (!(cacheUriToFile(uriThumbnailRemote, uriThumbnail, itemUri, ImageType.THUMBNAIL, asyncFileDownloads))) {
-                Log.error("cacheUrisToFiles(): cacheUriToFile() failed for thumbnail image.");
-            }
-
-            if (!(cacheUriToFile(uriInvertedRemote, uriInverted, itemUri, ImageType.INVERTED, asyncFileDownloads))) {
-                Log.error("cacheUrisToFiles(): cacheUriToFile() failed for inverted image.");
-            }
-        }
-
-        c.close();
-    }
-
-    public static class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
-
-        private final Uri itemUri;
-        private final ImageType imageType;
-        private String uriFileToCache = null;
-        private final WeakReference<SyncAdapter> syncAdapterReference;
-
-        public FileCacheAsyncTask(final SyncAdapter syncAdapter, final Uri itemUri, ImageType imageType) {
-            this.itemUri = itemUri;
-            this.imageType = imageType;
-            this.syncAdapterReference = new WeakReference<>(syncAdapter);
-        }
-
-        @Override
-        protected Boolean doInBackground(final String... params) {
-            if (params.length < 2) {
-                Log.error("FileCacheAsyncTask: not enough params.");
-                return false;
-            }
-
-            Log.info("FileCacheAsyncTask.doInBackground()");
-
-            //TODO: Just set these in the constructor?
-            uriFileToCache = params[0];
-            final String cacheFileUri = params[1];
-
-            final SyncAdapter syncAdapter = getSyncAdapter();
-            if(syncAdapter == null) {
-                Log.error("FileCacheAsyncTask(): donBackground(): syncAdapter is null.");
-                return false;
-            }
-
-            return HttpUtils.cacheUriToContentUriFileSync(syncAdapter.getContext(), uriFileToCache, cacheFileUri);
-        }
-
-        private SyncAdapter getSyncAdapter() {
-            if (syncAdapterReference == null) {
-                return null;
-            }
-
-            return syncAdapterReference.get();
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            final SyncAdapter syncAdapter = getSyncAdapter();
-            if (syncAdapter == null) {
-                Log.error("FileCacheAsyncTask.onPostExecute(): SyncAdapter is null.");
-                return;
-            }
-
-            syncAdapter.markImageDownloadAsNotInProgress(uriFileToCache);
-
-            if (result) {
-                if (!syncAdapter.markImageAsDownloaded(itemUri, imageType, uriFileToCache)) {
-                    Log.error("FileCacheAsyncTask(): onPostExecute(): markImageAsDownloaded() failed.");
-                }
-            } else {
-                //doRegularTasks() will try again later.
-                Log.error("FileCacheAsyncTask(): cacheUriToContentUriFileSync(): failed.");
-            }
-
-            super.onPostExecute(result);
-        }
-    }
-
-
-    private String getWhereClauseForNotDone() {
+    private static String getWhereClauseForNotDone() {
         return Item.Columns.DONE + " != 1";
     }
 
-    private String getWhereClauseForUploaded() {
+    private static String getWhereClauseForUploaded() {
         return Item.Columns.UPLOADED + " == 1";
-    }
-
-    private String getWhereClauseForDownloadNotDone() {
-        return "(" +
-                Item.Columns.LOCATION_STANDARD_DOWNLOADED + " != 1" +
-                ") OR (" +
-                Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED + " != 1" +
-                ") OR (" +
-                Item.Columns.LOCATION_INVERTED_DOWNLOADED + " != 1" +
-                ")";
     }
 
     private int getMinCacheSize() {
@@ -805,25 +478,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPr
 
     private int getKeepCount() {
         return Utils.getIntPref(getContext(), R.string.pref_key_keep_count);
-    }
-
-
-    private boolean subjectIsInDatabase(final String subjectId) {
-        //TODO: Use COUNT_AS_COUNT ?
-        final ContentResolver resolver = getContentResolver();
-
-        final String[] projection = {Item.Columns.SUBJECT_ID};
-        final String whereClause = Item.Columns.SUBJECT_ID + " = ?"; //We use ? to avoid SQL Injection.
-        final String[] selectionArgs = {subjectId};
-        final Cursor c = resolver.query(Item.ITEMS_URI, projection,
-                whereClause, selectionArgs, null);
-        final boolean result = c.getCount() > 0;
-        c.close();
-        return result;
-    }
-
-    private void throwIfNoNetwork() {
-        HttpUtils.throwIfNoNetwork(getContext());
     }
 
     @Override

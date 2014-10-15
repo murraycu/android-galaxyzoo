@@ -37,6 +37,8 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
+import com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -201,6 +203,11 @@ public class ItemsContentProvider extends ContentProvider {
 
 
     private DatabaseHelper mOpenDbHelper;
+
+    //These are only used in the rare case that we need to explicitly get a "next" item,
+    //and block on the result, if the SyncAdapter hasn't done that for us.
+    private ZooniverseClient mZooniverseClient = null;
+    private SubjectAdder mSubjectAdder = null;
 
     public ItemsContentProvider() {
     }
@@ -512,7 +519,7 @@ public class ItemsContentProvider extends ContentProvider {
                     //This can happen while debugging, if we wipe the database but don't wipe the cached files.
                     //You can do that by uninstalling the app.
                     //When this happens we just reuse the file.
-                    Log.error("createFileUri(): subject id=" + subjectId + ", the file already exists: " + realFile.getAbsolutePath());
+                    Log.error("createFileUri():  The file already exists: " + realFile.getAbsolutePath());
                 }
                 /*
                 else {
@@ -560,6 +567,9 @@ public class ItemsContentProvider extends ContentProvider {
         //so you will see "the file already exists" errors in the log,
         //but we will then just reuse the files.
         //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
+
+        mZooniverseClient = new ZooniverseClient(getContext(), Config.SERVER);
+        mSubjectAdder = new SubjectAdder(getContext());
 
         return true;
     }
@@ -624,9 +634,24 @@ public class ItemsContentProvider extends ContentProvider {
 
                 final int count = c.getCount();
                 if (count < 1) {
-                    c.close();
+                    //Immediately get some more from the REST server and then try again.
+                    //Get one synchronously, for now.
+                    //This is a (small) duplicate of what SyncProvider does.
+                    //TODO: Find a way to ask the SyncProvider to do exactly this and no more,
+                    //and block until it has finished?
+                    try {
+                        final List<ZooniverseClient.Subject> subjects = mZooniverseClient.requestMoreItemsSync(1);
+                        mSubjectAdder.addSubjects(subjects, false /* not async - we need it immediately. */);
+                    } catch (final HttpUtils.NoNetworkException e) {
+                        //Return the empty cursor,
+                        //and let the caller guess at the cause.
+                        //If we let the exception be thrown by this query() method then
+                        //it will causes an app crash in AsyncTask.done(), as used by CursorLoader.
+                        //TODO: Find a better way to respond to errors when using CursorLoader?
+                        return c;
+                    }
 
-                    //TODO: Ask SyncAdapter to get one item.
+                    c.close();
                     c = queryItemNext(projection, selection, selectionArgs, orderBy);
                 }
 
