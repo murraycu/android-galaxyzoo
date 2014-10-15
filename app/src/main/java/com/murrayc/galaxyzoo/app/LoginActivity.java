@@ -45,7 +45,8 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private boolean mRequestNewAccount = false;
+    private String mExistingAccountName = null;
+    private boolean mExistingAccountIsAnonymous = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,15 +59,11 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
 
-        //Get the name that was succeeded last time, if any:
-        String authName = null;
+        //Get the name that was successful last time, if any:
         final Intent intent = getIntent();
         if (intent != null) {
-            authName = intent.getStringExtra(ARG_USERNAME);
+            mExistingAccountName = intent.getStringExtra(ARG_USERNAME);
         }
-
-        mRequestNewAccount = TextUtils.isEmpty(authName);
-
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -135,15 +132,15 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
     void onExistingLoginRetrieved(final LoginUtils.LoginDetails loginDetails) {
 
-        String authName = null;
+        mExistingAccountName = null;
         if (loginDetails == null) {
-            Log.error("uploadOutstandingClassifications(): getAccountLoginDetails() returned null");
+            Log.error("LoginActivity.onExistingLoginRetrieved(): getAccountLoginDetails() returned null");
         } else {
-            authName = loginDetails.name;
+            mExistingAccountName = loginDetails.name; //The anonymous name will never be here. Instead see LoginDetails.isAnonymous.
         }
 
-        mUsernameView.setText(authName);
-        mRequestNewAccount = TextUtils.isEmpty(authName);
+        mUsernameView.setText(mExistingAccountName);
+        mExistingAccountIsAnonymous = loginDetails.isAnonymous;
     }
 
     /**
@@ -248,8 +245,29 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
         if (loggedIn) {
             final AccountManager accountManager = AccountManager.get(this);
+
+            boolean addingAccount = false;
+            if (mExistingAccountIsAnonymous) {
+                //Remove the existing account so we can add the new one.
+                //TODO: Find a way to just change the name,
+                //so we don't lose data.
+                LoginUtils.removeAnonymousAccount(this);
+                addingAccount = true;
+            } else if(!TextUtils.equals(mExistingAccountName, result.getName())) {
+                //Remove any existing account so we can add the new one.
+                //TODO: Find a way to just change the name,
+                //so we don't lose data.
+                //TODO: Is there any way to just change the name?
+                if (!TextUtils.isEmpty(mExistingAccountName)) {
+                    LoginUtils.removeAccount(this, mExistingAccountName);
+                }
+
+                addingAccount = true;
+            }
+
+            //TODO: Get the existing Account instance?
             final Account account = new Account(result.getName(), LoginUtils.ACCOUNT_TYPE);
-            if (mRequestNewAccount) {
+            if (addingAccount) {
                 accountManager.addAccountExplicitly(account, null, null);
             }
 

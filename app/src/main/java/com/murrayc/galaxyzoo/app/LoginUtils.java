@@ -27,6 +27,11 @@ public class LoginUtils {
     //This is an arbitrary string, because Accountmanager.setAuthToken() needs something non-null
     public static final String ACCOUNT_AUTHTOKEN_TYPE = "authApiKey";
 
+    //Because the Account must have a name.
+    //TODO: Stop this string from appearing in the general Settings->Accounts UI,
+    //or at least show a translatable "Anonymous" there instead.
+    private static final String ACCOUNT_NAME_ANONYMOUS = "anonymous";
+
     //TODO: Ask the provider instead of using this hack which uses too much internal knowledge.
     public static boolean getLoggedIn(final Context context) {
         final LoginDetails loginDetails = getAccountLoginDetails(context);
@@ -89,17 +94,31 @@ public class LoginUtils {
         return result;
     }
 
+    /**
+     * This returns null if there is no account (not even an anonymous account).
+     *
+     * @param context
+     * @return
+     */
     public static LoginDetails getAccountLoginDetails(final Context context) {
         final AccountManager mgr = AccountManager.get(context);
         final Account[] accts = mgr.getAccountsByType(ACCOUNT_TYPE);
         if((accts == null) || (accts.length < 1)) {
-            Log.error("getAccountLoginDetails(): getAccountsByType() return no account.");
+            //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
             return null;
         }
 
         final LoginDetails result = new LoginDetails();
 
         final Account account = accts[0];
+
+        //Avoid showing our anonymous account name in the UI.
+        //Also, an anonymous account never has an auth_api_key.
+        result.isAnonymous = TextUtils.equals(account.name, ACCOUNT_NAME_ANONYMOUS);
+        if (result.isAnonymous) {
+            return result; //Return a mostly-empty empty (but not null) LoginDetails.
+        }
+
         result.name = account.name;
 
         final AccountManagerFuture<Bundle> response = mgr.getAuthToken(account, ACCOUNT_AUTHTOKEN_TYPE, null, null, null, null);
@@ -119,9 +138,26 @@ public class LoginUtils {
         }
     }
 
+    public static void addAnonymousAccount(final Context context) {
+        final AccountManager accountManager = AccountManager.get(context);
+        final Account account = new Account(ACCOUNT_NAME_ANONYMOUS, LoginUtils.ACCOUNT_TYPE);
+        accountManager.addAccountExplicitly(account, null, null);
+    }
+
+    public static void removeAnonymousAccount(final Context context) {
+        removeAccount(context, ACCOUNT_NAME_ANONYMOUS);
+    }
+
+    public static void removeAccount(final Context context, final String accountName) {
+        final AccountManager accountManager = AccountManager.get(context);
+        final Account account = new Account(accountName, LoginUtils.ACCOUNT_TYPE);
+        accountManager.removeAccount(account, null, null);
+    }
+
     public static class LoginDetails {
         public String name = null;
         public String authApiKey = null;
+        public boolean isAnonymous = false;
     }
 
     /**

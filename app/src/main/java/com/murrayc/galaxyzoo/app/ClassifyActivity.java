@@ -19,6 +19,8 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -155,7 +157,14 @@ public class ClassifyActivity extends ItemActivity implements QuestionFragment.C
     }
 
     private void onExistingLoginRetrieved(final LoginUtils.LoginDetails loginDetails) {
-        if ((loginDetails != null) && !TextUtils.isEmpty(loginDetails.authApiKey)) {
+        if (loginDetails == null) {
+            //Add an anonymous Account,
+            //because our SyncAdapter will not run if there is no associated Account,
+            //and we want it to run to get the items to classify, and to upload
+            //anonymous classifications.
+            LoginUtils.addAnonymousAccount(this);
+            requestSync(); //In case sync has not happened before because of this.
+        } else if (!TextUtils.isEmpty(loginDetails.authApiKey)) {
             //Tell the user that we are logged in,
             //reassuring them that their classifications will be part of their profile:
             //TODO: Is there a better way to do this?
@@ -163,6 +172,7 @@ public class ClassifyActivity extends ItemActivity implements QuestionFragment.C
             //and graying it out would be against the Android design guidelines.
             UiUtils.showLoggedInToast(this);
         }
+
     }
 
 
