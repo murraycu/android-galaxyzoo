@@ -20,6 +20,9 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +38,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.murrayc.galaxyzoo.app.provider.ImageType;
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
@@ -244,7 +248,7 @@ public class SubjectFragment extends ItemFragment
         }
 
         boolean imageShown = false;
-        if (!TextUtils.isEmpty(imageUriStr)) {
+        if (TextUtils.isEmpty(imageUriStr)) {
             imageShown = UiUtils.fillImageViewFromContentUri(activity, imageUriStr, mImageView);
 
             if(!imageShown) {
