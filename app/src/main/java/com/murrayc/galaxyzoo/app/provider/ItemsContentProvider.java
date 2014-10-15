@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app.provider;
 
 import android.content.ClipDescription;
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -30,6 +31,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
@@ -423,6 +425,7 @@ public class ItemsContentProvider extends ContentProvider {
                         sItemsProjectionMap, Item.ITEMS_URI);
 
                 //The caller (SyncAdapter) will do this: cacheUrisToFiles(subjectId, listFiles, true /* async */);
+                requestSync();
 
                 break;
             }
@@ -627,6 +630,10 @@ public class ItemsContentProvider extends ContentProvider {
                     c = queryItemNext(projection, selection, selectionArgs, orderBy);
                 }
 
+                //Make sure we have enough soon enough
+                //by getting the rest asynchronously:
+                requestSync();
+
                 c.setNotificationUri(getContext().getContentResolver(),
                         Item.CONTENT_URI); //TODO: More precise?
                 break;
@@ -816,6 +823,7 @@ public class ItemsContentProvider extends ContentProvider {
             case MATCHER_ID_ITEMS:
                 affected = updateMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, values, sItemsProjectionMap,
                         selection, selectionArgs);
+                requestSync();
                 break;
 
             case MATCHER_ID_ITEM: {
@@ -826,6 +834,7 @@ public class ItemsContentProvider extends ContentProvider {
                 affected = updateMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, values, sItemsProjectionMap,
                         prependIdToSelection(selection),
                         prependToArray(selectionArgs, uriParts.itemId));
+                requestSync();
                 break;
             }
 
@@ -1153,6 +1162,17 @@ public class ItemsContentProvider extends ContentProvider {
             private static final String QUESTION_ID = "questionId";
             private static final String CHECKBOX_ID = "checkboxId";
         }
+    }
+
+    /** Ask the SyncAdapter to do its work.
+     * We call this when we think it's likely that some work is necessary.
+     */
+    private void requestSync() {
+        final Bundle extras = new Bundle();
+        extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+
+        //Ask the framework to run our SyncAdapter.
+        ContentResolver.requestSync(null, Item.AUTHORITY, extras);
     }
 
     private static class UriParts {
