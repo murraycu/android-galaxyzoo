@@ -229,7 +229,6 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             setItemId(itemId);
         }
 
-        //TODO: Just update them.
         addOrUpdateChildFragments();
     }
 
