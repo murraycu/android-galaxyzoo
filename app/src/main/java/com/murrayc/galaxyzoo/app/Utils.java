@@ -19,7 +19,6 @@
 
 package com.murrayc.galaxyzoo.app;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
