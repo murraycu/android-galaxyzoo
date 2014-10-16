@@ -106,14 +106,14 @@
     <string name="action_sign_in_short">Iniciar sesión</string>
 
     <!-- An error message. -->
-    <string name="error_invalid_password">La contraseña es demasiado corta</string>
+    <string name="error_invalid_password">La contraseña es demasiado corta.</string>
 
     <!-- An error message. -->
-    <string name="error_incorrect_password">La contraseña es incorrecta</string>
+    <string name="error_incorrect_password">La contraseña es incorrecta.</string>
 
     <!-- An error message. -->
 
-    <string name="error_field_required">El campo es obligatorio</string>
+    <string name="error_field_required">El campo es obligatorio.</string>
 
 
     <!-- The title of the Settings screen to show or change the app preferences. -->

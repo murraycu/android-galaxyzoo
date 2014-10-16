@@ -91,7 +91,7 @@
     <string name="title_activity_login">Accedi</string>
 
     <!-- Some text to encourage the user to login. -->
-    <string name="login_hint">Accedi o crea un account per ricevere riconoscimento per il tuo lavoro</string>
+    <string name="login_hint">Accedi o crea un account per ricevere riconoscimento per il tuo lavoro.</string>
 
     <!-- The description of the username field when logging in.. -->
     <string name="prompt_username">Nome utente</string>
@@ -106,14 +106,13 @@
     <string name="action_sign_in_short">Accedo</string>
 
     <!-- An error message. -->
-    <string name="error_invalid_password">La password inserita è troppo corta</string>
+    <string name="error_invalid_password">La password inserita è troppo corta.</string>
 
     <!-- An error message. -->
-    <string name="error_incorrect_password">La password inserita non è corretta</string>
+    <string name="error_incorrect_password">La password inserita non è corretta.</string>
 
     <!-- An error message. -->
-
-    <string name="error_field_required">Campo obbligatorio</string>
+    <string name="error_field_required">Campo obbligatorio.</string>
 
 
     <!-- The title of the Settings screen to show or change the app preferences. -->
