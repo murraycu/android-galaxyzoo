@@ -114,7 +114,7 @@
     <!-- An error message. We show this when we cannot continue because there is no network connection. -->
     <string name="error_no_network">No Network Connection.</string>
 
-    <!-- An error message. We show this when we cannot continue because there is no network connection. -->
+    <!-- An error message. We show this when we cannot continue because something is wrong with the network connection. -->
     <string name="error_no_subjects">Cannot download new subjects to classify.</string>
 
     <!-- An informative message. This lets the user know that they are already logged in to the system. -->
