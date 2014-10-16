@@ -244,7 +244,7 @@ public class SubjectFragment extends ItemFragment
         }
 
         boolean imageShown = false;
-        if (TextUtils.isEmpty(imageUriStr)) {
+        if (!TextUtils.isEmpty(imageUriStr)) {
             imageShown = UiUtils.fillImageViewFromContentUri(activity, imageUriStr, mImageView);
 
             if(!imageShown) {
