@@ -19,16 +19,10 @@
 
 package com.murrayc.galaxyzoo.app;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.ContentObserver;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
@@ -50,31 +44,31 @@ public class ClassifyActivity extends ItemActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener,
             ItemFragment.Callbacks, QuestionFragment.Callbacks{
 
-    public class ItemsContentProviderObserver extends ContentObserver {
-
-        /**
-         * Creates a content observer.
-         *
-         * @param handler The handler to run {@link #onChange} on, or null if none.
-         */
-        public ItemsContentProviderObserver(final Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-
-            requestSync();
-        }
-
-        @Override
-        public void onChange(boolean selfChange, final Uri changeUri) {
-            //super.onChange(selfChange, changeUri);
-
-            requestSync();
-        }
-    }
+//    public class ItemsContentProviderObserver extends ContentObserver {
+//
+//        /**
+//         * Creates a content observer.
+//         *
+//         * @param handler The handler to run {@link #onChange} on, or null if none.
+//         */
+//        public ItemsContentProviderObserver(final Handler handler) {
+//            super(handler);
+//        }
+//
+//        @Override
+//        public void onChange(boolean selfChange) {
+//            super.onChange(selfChange);
+//
+//            requestSync();
+//        }
+//
+//        @Override
+//        public void onChange(boolean selfChange, final Uri changeUri) {
+//            //super.onChange(selfChange, changeUri);
+//
+//            requestSync();
+//        }
+//    }
 
     private void requestSync() {
         final Bundle extras = new Bundle();
@@ -111,14 +105,18 @@ public class ClassifyActivity extends ItemActivity
          * Ask the SyncProvider to update whenever anything in the ItemContentProvider's
          * Items table changes. This seems excessive, but maybe we can trust
          * the SyncAdapater framework to not try to do too much work.
-         * 
+         *
          * Register the observer for the data table. The table's path
          * and any of its subpaths trigger the observer.
          */
-        ItemsContentProviderObserver observer = new ItemsContentProviderObserver(new Handler());
+        /* Disabled for now. Instead the ItemsContentProvider calls its requestSync()
+         * when it is necessary.
+        final ItemsContentProviderObserver observer = new ItemsContentProviderObserver(new Handler());
         ContentResolver resolver = getContentResolver();
         resolver.registerContentObserver(Item.ITEMS_URI, true, observer);
+        */
 
+        //Make sure that the SyncAdapter starts to download items as soon as possible:
         requestSync();
 
 
