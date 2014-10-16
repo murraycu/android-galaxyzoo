@@ -107,21 +107,19 @@ public class ClassifyActivity extends ItemActivity
             //so ignore this.
         }
 
-        /*
-         * Create a content observer object.
-         * Its code does not mutate the provider, so set
-         * selfChange to "false"
-         */
-        ItemsContentProviderObserver observer = new ItemsContentProviderObserver(new Handler());
-
-        requestSync();
-
-        /*
+        /**
+         * Ask the SyncProvider to update whenever anything in the ItemContentProvider's
+         * Items table changes. This seems excessive, but maybe we can trust
+         * the SyncAdapater framework to not try to do too much work.
+         * 
          * Register the observer for the data table. The table's path
          * and any of its subpaths trigger the observer.
          */
+        ItemsContentProviderObserver observer = new ItemsContentProviderObserver(new Handler());
         ContentResolver resolver = getContentResolver();
         resolver.registerContentObserver(Item.ITEMS_URI, true, observer);
+
+        requestSync();
 
 
         setContentView(R.layout.activity_classify);
