@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 
 public class AuthenticatorService extends Service {
-    private Authenticator mAuthenticator;
+    private final Authenticator mAuthenticator;
 
     public AuthenticatorService() {
         mAuthenticator = new Authenticator(this);

@@ -18,7 +18,7 @@ import com.murrayc.galaxyzoo.app.LoginUtils;
  */
 public class Authenticator extends AbstractAccountAuthenticator {
 
-    private Context mContext;
+    private final Context mContext;
 
     public Authenticator(final Context context) {
         super(context);
