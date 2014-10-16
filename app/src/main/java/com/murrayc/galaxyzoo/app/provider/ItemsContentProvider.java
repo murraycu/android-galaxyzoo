@@ -703,6 +703,8 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
      * @param uriOfFileToCache This may be null if the new file should be empty.
      */
     private CreatedFileUri createFileUri(final String uriOfFileToCache, final String subjectId, final ImageType imageType) {
+        //Log.info("createFileUri(): subject id=" + subjectId + ", imageType=" + imageType);
+
         final SQLiteDatabase db = getDb();
         final long fileId = db.insertOrThrow(DatabaseHelper.TABLE_NAME_FILES,
                 DatabaseHelper.FilesDbColumns.FILE_DATA, null);
@@ -719,8 +721,16 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                 //otherwise when we try to write to it via openOutputStream()
                 //we will get a FileNotFoundException.
                 if(!realFile.createNewFile()) {
-                    Log.error("createFileUri(): the file already exists.");
+                    //This can happen while debugging, if we wipe the database but don't wipe the cached files.
+                    //You can do that by uninstalling the app.
+                    //When this happens we just reuse the file.
+                    Log.error("createFileUri(): subject id=" + subjectId + ", the file already exists: " + realFile.getAbsolutePath());
                 }
+                /*
+                else {
+                    Log.info("createFileUri(): subject id=" + subjectId +", file created: " + realFile.getAbsolutePath());
+                }
+                */
 
                 realFileUri = realFile.getAbsolutePath();
             }
@@ -840,7 +850,11 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         mClient = new ZooniverseClient(getContext(), Config.SERVER);
 
         mOpenDbHelper = new DatabaseHelper(getContext());
+
         //This is useful to wipe the database when testing.
+        //Note that the cached image files in files/ will not be deleted
+        //so you will see "the file already exists" errors in the log,
+        //but we will then just reuse the files.
         //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
 
         //Download enough subjects:
