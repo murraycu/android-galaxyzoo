@@ -6,7 +6,6 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -34,7 +33,7 @@ import java.util.List;
 /**
  * Created by murrayc on 10/4/14.
  */
-public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String COUNT_AS_COUNT = "COUNT(*) AS count";
     private int mUploadsInProgress = 0;
 
@@ -54,12 +53,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPr
         mClient = new ZooniverseClient(context, Config.SERVER);
         mSubjectAdder = new SubjectAdder(context);
 
-        try {
-            PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
-        } catch (final UnsupportedOperationException e) {
-            //This happens during our test case, because the MockContext doesn't support this,
-            //so ignore this.
-        }
+        //We don't listen for the SharedPreferences changes here because it doesn't currently
+        //work across processes, so our listener would never be called.
     }
 
     @Override
@@ -480,15 +475,5 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SharedPr
         return Utils.getIntPref(getContext(), R.string.pref_key_keep_count);
     }
 
-    @Override
-    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        final Context context = getContext();
-
-        //Changes to these preferences would need us to do some work:
-        if (TextUtils.equals(key, context.getString(R.string.pref_key_cache_size)) ||
-                TextUtils.equals(key, context.getString(R.string.pref_key_keep_count))) {
-            doRegularTasks();
-        }
-    }
 
 }

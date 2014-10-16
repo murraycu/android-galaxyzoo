@@ -22,11 +22,14 @@ package com.murrayc.galaxyzoo.app;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -43,7 +46,9 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link com.murrayc.galaxyzoo.app.ClassifyFragment}.
  */
-public class ClassifyActivity extends ItemActivity implements QuestionFragment.Callbacks {
+public class ClassifyActivity extends ItemActivity
+        implements SharedPreferences.OnSharedPreferenceChangeListener,
+            ItemFragment.Callbacks, QuestionFragment.Callbacks{
 
     public class ItemsContentProviderObserver extends ContentObserver {
 
@@ -90,6 +95,16 @@ public class ClassifyActivity extends ItemActivity implements QuestionFragment.C
 
         if (TextUtils.isEmpty(getItemId())) {
             setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
+        }
+
+        //Make the SyncAdapter respond to preferences changes.
+        //The SyncAdapater can't do this itself, because SharedPreferences
+        //doesn't work across processes.
+        try {
+            PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+        } catch (final UnsupportedOperationException e) {
+            //This happens during our test case, because the MockContext doesn't support this,
+            //so ignore this.
         }
 
         /*
@@ -223,5 +238,17 @@ public class ClassifyActivity extends ItemActivity implements QuestionFragment.C
     @Override
     public void abandonItem() {
         startNextClassification();
+    }
+
+
+    @Override
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        Log.info("SyncAdapter: onSharedPreferenceChanged().");
+
+        //Changes to these preferences would need us to do some work:
+        if (TextUtils.equals(key, getString(R.string.pref_key_cache_size)) ||
+                TextUtils.equals(key, getString(R.string.pref_key_keep_count))) {
+            requestSync();
+        }
     }
 }
