@@ -218,6 +218,9 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
                 UiUtils.warnAboutNoNetworkConnection(activity);
             }
 
+            //Warn that there is some other network problem.
+            //For instance, this happens if the network is apparently connected but not working properly:
+            UiUtils.warnAboutNoItemsToDo(activity);
             return;
         }
 
