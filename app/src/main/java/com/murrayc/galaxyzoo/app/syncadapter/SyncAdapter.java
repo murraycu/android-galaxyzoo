@@ -10,7 +10,6 @@ import android.content.SyncResult;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;

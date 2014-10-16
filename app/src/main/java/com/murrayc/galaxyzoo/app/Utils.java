@@ -19,7 +19,6 @@
 
 package com.murrayc.galaxyzoo.app;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -29,8 +28,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-
-import com.murrayc.galaxyzoo.app.provider.Item;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
