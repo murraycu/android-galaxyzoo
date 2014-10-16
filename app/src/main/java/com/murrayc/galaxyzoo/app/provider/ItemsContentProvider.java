@@ -1273,8 +1273,19 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
                 null, null, orderByToUse, Integer.toString(getMinCacheSize() + 1)); //TODO: Is Integer.toString locale-dependent?
     }
 
+    //A where clause to find all the subjects that have not yet been classified,
+    //and which are ready to be classified.
     private String getWhereClauseForNotDone() {
-        return DatabaseHelper.ItemsDbColumns.DONE + " != 1";
+        return "(" +
+                DatabaseHelper.ItemsDbColumns.DONE + " != 1" +
+                ") AND (" +
+                DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED + " == 1" +
+                ") AND (" +
+                DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED + " == 1" +
+                ") AND (" +
+                DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED + " == 1" +
+                ")";
+
     }
 
     private String getWhereClauseForUploaded() {
@@ -1693,6 +1704,9 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             createIndex(sqLiteDatabase, TABLE_NAME_ITEMS, ItemsDbColumns.UPLOADED);
             createIndex(sqLiteDatabase, TABLE_NAME_ITEMS, ItemsDbColumns.DONE);
             createIndex(sqLiteDatabase, TABLE_NAME_ITEMS, ItemsDbColumns.DATETIME_DONE);
+            createIndex(sqLiteDatabase, TABLE_NAME_ITEMS, ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED);
+            createIndex(sqLiteDatabase, TABLE_NAME_ITEMS, ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED);
+            createIndex(sqLiteDatabase, TABLE_NAME_ITEMS, ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED);
 
 
             qs = "CREATE TABLE " + TABLE_NAME_FILES + " (" +
