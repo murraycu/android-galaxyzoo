@@ -54,6 +54,7 @@ import android.widget.ToggleButton;
 import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
 import com.murrayc.galaxyzoo.app.provider.Item;
+import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -562,6 +563,12 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     private void saveClassification(final ClassificationInProgress classificationInProgress) {
+        final String itemId = getItemId();
+        if (itemId == ItemsContentProvider.URI_PART_ITEM_ID_NEXT) {
+            Log.error("QuestionFragment.saveClassification(): Attempting to save with the 'next' ID.");
+            return;
+        }
+
         final Activity activity = getActivity();
         if (activity == null)
             return;
@@ -575,7 +582,6 @@ public class QuestionFragment extends BaseQuestionFragment
         // before we have finished adding it.
         final ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
-        final String itemId = getItemId();
         int sequence = 0;
         final List<ClassificationInProgress.QuestionAnswer> answers = classificationInProgress.getAnswers();
         if (answers != null) {
@@ -626,7 +632,7 @@ public class QuestionFragment extends BaseQuestionFragment
         try {
             resolver.applyBatch(ClassificationAnswer.AUTHORITY, ops);
         } catch (RemoteException | OperationApplicationException e) {
-            e.printStackTrace();
+            Log.error("QuestionFragment. saveClassification(): Exception from applyBatch()", e);
         }
 
         //The ItemsContentProvider will upload the classification later.
