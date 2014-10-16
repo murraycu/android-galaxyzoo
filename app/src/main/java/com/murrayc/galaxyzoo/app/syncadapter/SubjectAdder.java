@@ -27,7 +27,7 @@ public class SubjectAdder {
 
     /* A map of remote URIs to the last dates that we tried to download them.
      */
-    private final Map<String, Date> mImageDownloadsInProgress = new HashMap<String, Date>();
+    private final Map<String, Date> mImageDownloadsInProgress = new HashMap<>();
 
     public SubjectAdder(final Context context) {
         this.mContext = context;
@@ -304,7 +304,7 @@ public class SubjectAdder {
         public FileCacheAsyncTask(final SubjectAdder parent, final Uri itemUri, ImageType imageType) {
             this.itemUri = itemUri;
             this.imageType = imageType;
-            this.parentReference = new WeakReference<SubjectAdder>(parent);
+            this.parentReference = new WeakReference<>(parent);
         }
 
         @Override
