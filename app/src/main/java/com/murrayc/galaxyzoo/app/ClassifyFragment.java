@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
@@ -60,6 +61,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     private View mLoadingView;
 
     private View mRootView;
+    private AlertDialog mAlertDialog = null;
 
 
     /**
@@ -67,6 +69,49 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      * fragment (e.g. upon screen orientation changes).
      */
     public ClassifyFragment() {
+    }
+
+    private AlertDialog warnAboutNetworkProblemWithRetry(final Activity activity, final String message) {
+        //Dismiss any existing dialog:
+        if (mAlertDialog != null) {
+            mAlertDialog.dismiss();;
+            mAlertDialog = null;
+        }
+
+        //Show the new one:
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        // http://developer.android.com/design/building-blocks/dialogs.html
+        // says "Most alerts don't need titles.":
+        // builder.setTitle(activity.getString(R.string.error_title_connection_problem));
+
+        builder.setMessage(message);
+
+        builder.setPositiveButton(activity.getString(R.string.error_button_retry), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                onClickListenerRetry();
+            }
+        });
+
+        builder.setNegativeButton(activity.getString(R.string.error_button_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dialog.dismiss();
+                mAlertDialog = null;
+            }
+        });
+
+        mAlertDialog = builder.create();
+        mAlertDialog.show();
+        return mAlertDialog;
     }
 
     @Override
@@ -219,6 +264,17 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(TextUtils.equals(getItemId(), ItemsContentProvider.URI_PART_ITEM_ID_NEXT)) {
+            //We are probably resuming again after a previous failure to get new items
+            //from the network, so try again:
+            update();
+        }
+    }
+
     private void updateFromCursor() {
         if (mCursor == null) {
             Log.error("mCursor is null.");
@@ -243,22 +299,12 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             // ItemsContentProvider.NoNetworkConnection exception in the CursorLoader?
             // This doesn't seem to work: http://stackoverflow.com/questions/13551219/handle-cursorloader-exceptions/13753313#13753313
             if (!Utils.getNetworkIsConnected(activity)) {
-                UiUtils.warnAboutNoNetworkConnection(activity, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, int which) {
-                        onClickListenerRetry();
-                    }
-                });
+                warnAboutNetworkProblemWithRetry(activity, activity.getString(R.string.error_no_network));
             }
 
             //Warn that there is some other network problem.
             //For instance, this happens if the network is apparently connected but not working properly:
-            UiUtils.warnAboutNoItemsToDoWithRetry(activity, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(final DialogInterface dialog, int which) {
-                    onClickListenerRetry();
-                }
-            });
+            warnAboutNetworkProblemWithRetry(activity, activity.getString(R.string.error_no_subjects));
 
             return;
         }
