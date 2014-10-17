@@ -77,7 +77,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
         //Show the progress spinner while we are waiting for the subject to load,
         //particularly during first start when we are waiting to get the first data in our cache.
-        showLoadingView(true);
+        showLoadingInProgress(true);
 
         initializeSingleton();
 
@@ -98,13 +98,38 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         update();
     }
 
+    /** Show either the loading view (progress)
+     * or the child fragments, but not both,
+     * and not nothing.
+     * @param loadingInProgress
+     */
+    private void showLoadingInProgress(boolean loadingInProgress) {
+        showLoadingView(loadingInProgress);
+        showChildFragments(loadingInProgress);
+    }
+
+    /** Hide both the loading (progress) view and the child fragments.
+     */
+    private void hideAll() {
+        showLoadingView(false);
+        showChildFragments(false);
+    }
+
+    /** Show,, or hide, the progress spinner.
+     *
+     * @param show
+     */
     private void showLoadingView(boolean show) {
         if (mLoadingView == null) {
             mLoadingView = mRootView.findViewById(R.id.loading_spinner);
         }
 
         mLoadingView.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
 
+    /** Show, or hide, the child fragments.
+     */
+    private void showChildFragments(boolean show) {
         //If we are showing the loading view then we should hide the other fragments,
         //and vice-versa.
         final FragmentManager fragmentManager = getChildFragmentManager();
@@ -131,7 +156,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     }
 
     private void addOrUpdateChildFragments() {
-        showLoadingView(false);
+        showLoadingInProgress(false);
 
         final Bundle arguments = new Bundle();
         //TODO? arguments.putString(ARG_USER_ID,
@@ -207,9 +232,11 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         if (mCursor.getCount() <= 0) { //In case the query returned no rows.
             Log.error("ClassifyFragment.updateFromCursor(): The ContentProvider query returned no rows.");
 
-            //Hide any UI that would need an actual ID:
-            //TODO: This is not ideal - it suggest that we are doing something.
-            showLoadingView(true);
+            //Hide any UI that would need an actual ID,
+            //and don't pretend that we are still loading.
+            //If the user retries, of if we retry automatically later,
+            //we will show the loading view (progress) again.
+            hideAll();
 
             //Check for this possible cause.
             // TODO: Is there any simpler way to just catch the
@@ -236,7 +263,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             return;
         }
 
-        showLoadingView(false);
+        showLoadingInProgress(false);
 
         mCursor.moveToFirst(); //There should only be one anyway.
 
@@ -280,7 +307,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
         builder.appendPath(itemId);
 
-        showLoadingView(true);
+        showLoadingInProgress(true);
 
         return new CursorLoader(
                 activity,
