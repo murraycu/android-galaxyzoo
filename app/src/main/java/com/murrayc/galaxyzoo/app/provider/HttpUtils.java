@@ -117,6 +117,7 @@ public class HttpUtils {
         return result;
     }
 
+    /*
     public static long getLatestLastModified(final String[] urls) {
         long latest = 0;
         for (final String url : urls) {
@@ -128,6 +129,7 @@ public class HttpUtils {
 
         return latest;
     }
+    */
 
     private static long getUriLastModified(final String strUrl) {
         final URL url;
