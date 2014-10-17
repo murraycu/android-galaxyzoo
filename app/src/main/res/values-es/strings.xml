@@ -125,5 +125,7 @@
     <!-- The title of the preference that controls how many old items should stay on the device. -->
     <string name="pref_title_keep_count">Conservar</string>
     <string name="error_button_cancel">Cancelar</string>
+    <string name="error_button_retry">Reintentar</string>
+    <string name="error_no_network">Sin conexión de red.</string>
 
 </resources>
