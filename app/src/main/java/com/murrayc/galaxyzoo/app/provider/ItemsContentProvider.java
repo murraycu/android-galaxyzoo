@@ -519,7 +519,7 @@ public class ItemsContentProvider extends ContentProvider {
                     //This can happen while debugging, if we wipe the database but don't wipe the cached files.
                     //You can do that by uninstalling the app.
                     //When this happens we just reuse the file.
-                    Log.error("createFileUri():  The file already exists: " + realFile.getAbsolutePath());
+                    Log.error("createFileUri(): The file already exists: " + realFile.getAbsolutePath());
                 }
                 /*
                 else {
