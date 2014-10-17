@@ -71,7 +71,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     public ClassifyFragment() {
     }
 
-    private AlertDialog warnAboutNetworkProblemWithRetry(final Activity activity, final String message) {
+    private void warnAboutNetworkProblemWithRetry(final Activity activity, final String message) {
         //Dismiss any existing dialog:
         if (mAlertDialog != null) {
             mAlertDialog.dismiss();;
@@ -111,7 +111,6 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
         mAlertDialog = builder.create();
         mAlertDialog.show();
-        return mAlertDialog;
     }
 
     @Override
