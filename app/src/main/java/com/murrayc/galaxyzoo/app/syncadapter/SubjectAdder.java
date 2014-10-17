@@ -81,7 +81,7 @@ public class SubjectAdder {
             final String uriInvertedRemote = c.getString(5);
             if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
                 final String uriInverted = c.getString(6);
-                downloadMissingImage(uriInvertedRemote, uriInverted, itemUri, ImageType.INVERTED);;
+                downloadMissingImage(uriInvertedRemote, uriInverted, itemUri, ImageType.INVERTED);
                 noWorkNeeded = false;
             }
         }
@@ -93,10 +93,33 @@ public class SubjectAdder {
 
     private void downloadMissingImage(final String uriRemote, final String uriContent, final Uri itemUri, ImageType imageType) {
         try {
-            cacheUriToFile(uriRemote, uriContent, itemUri, imageType, true /* async */);
+            final String localFileUri = getLocalFileuriForContentUri(uriInverted);
+            cacheUriToFile(uriRemote, localFileUri, itemUri, imageType, true /* async */);
         } catch (final HttpUtils.NoNetworkException e) {
             Log.info("downloadMissingImages(): No network connection.");
         }
+
+    private String getLocalFileuriForContentUri(final String uriContent) {
+        final Uri uri = Uri.parse(uriContent);
+        final UriParts uriParts = parseContentUri(uri);
+        final String fileId = uriParts.itemId;
+
+        final String[] projection = {DatabaseHelper.FilesDbColumns.FILE_DATA};
+        final String whereClause = DatabaseHelper.FilesDbColumns._ID + " = ?"; //We use ? to avoid SQL Injection.
+        final String[] selectionArgs = {fileId};
+
+        final Cursor c = getDb().query(DatabaseHelper.TABLE_NAME_FILES, projection,
+                whereClause, selectionArgs, null, null, null);
+
+        String result = null;
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            result = c.getString(0);
+        }
+
+        c.close();
+
+        return result;
     }
 
     /**
