@@ -125,5 +125,6 @@
     <string name="pref_title_keep_count">Mantieni</string>
     <string name="error_button_cancel">Annulla</string>
     <string name="error_no_network">Nessuna connessione di rete.</string>
+    <string name="error_button_retry">Riprova</string>
 
 </resources>

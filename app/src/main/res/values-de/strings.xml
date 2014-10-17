@@ -44,4 +44,5 @@
     <string name="error_no_subjects">Cannot download new subjects to classify.</string>
     <string name="message_logged_in">Logged In.</string>
     <string name="error_button_cancel">Abbrechen</string>
+    <string name="error_button_retry">Wiederholen</string>
 </resources>
