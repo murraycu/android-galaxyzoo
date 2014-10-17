@@ -378,21 +378,24 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             final String uriStandardRemote = c.getString(1);
             if (!mImageDownloadsInProgress.containsKey(uriStandardRemote)) {
                 final String uriStandard = c.getString(2);
-                cacheUriToFile(uriStandardRemote, uriStandard, subjectId, ImageType.STANDARD, true /* async */);
+                final String localFileUri = getLocalFileuriForContentUri(uriStandard);
+                cacheUriToFile(uriStandardRemote, localFileUri, subjectId, ImageType.STANDARD, true /* async */);
                 noWorkNeeded = false;
             }
 
             final String uriThumbnailRemote = c.getString(3);
             if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
                 final String uriThumbnail = c.getString(4);
-                cacheUriToFile(uriThumbnailRemote, uriThumbnail, subjectId, ImageType.THUMBNAIL, true /* async */);
+                final String localFileUri = getLocalFileuriForContentUri(uriThumbnail);
+                cacheUriToFile(uriThumbnailRemote, localFileUri, subjectId, ImageType.THUMBNAIL, true /* async */);
                 noWorkNeeded = false;
             }
 
             final String uriInvertedRemote = c.getString(5);
             if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
                 final String uriInverted = c.getString(6);
-                cacheUriToFile(uriInvertedRemote, uriInverted, subjectId, ImageType.INVERTED, true /* async */);
+                final String localFileUri = getLocalFileuriForContentUri(uriInverted);
+                cacheUriToFile(uriInvertedRemote, localFileUri, subjectId, ImageType.INVERTED, true /* async */);
                 noWorkNeeded = false;
             }
         }
@@ -400,6 +403,29 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         c.close();
 
         return noWorkNeeded;
+    }
+
+    private String getLocalFileuriForContentUri(final String uriContent) {
+        final Uri uri = Uri.parse(uriContent);
+        final UriParts uriParts = parseContentUri(uri);
+        final String fileId = uriParts.itemId;
+
+        final String[] projection = {DatabaseHelper.FilesDbColumns.FILE_DATA};
+        final String whereClause = DatabaseHelper.FilesDbColumns._ID + " = ?"; //We use ? to avoid SQL Injection.
+        final String[] selectionArgs = {fileId};
+
+        final Cursor c = getDb().query(DatabaseHelper.TABLE_NAME_FILES, projection,
+                whereClause, selectionArgs, null, null, null);
+
+        String result = null;
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            result = c.getString(0);
+        }
+
+        c.close();
+
+        return result;
     }
 
     /**
