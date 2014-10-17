@@ -21,9 +21,11 @@ package com.murrayc.galaxyzoo.app;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -80,6 +82,32 @@ class UiUtils {
     static void warnAboutNoItemsToDo(final Activity activity) {
         final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_subjects), Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    static void warnAboutNoNetworkConnection(final Activity activity, final DialogInterface.OnClickListener listener) {
+        warnAboutNoNetworkGenericWithRetry(activity, activity.getString(R.string.error_no_network), listener);
+    }
+
+    static void warnAboutNoItemsToDoWithRetry(final Activity activity, final DialogInterface.OnClickListener listener) {
+        warnAboutNoNetworkGenericWithRetry(activity, activity.getString(R.string.error_no_subjects), listener);
+    }
+
+    static private void warnAboutNoNetworkGenericWithRetry(final Activity activity, final String message, final DialogInterface.OnClickListener listener) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        // http://developer.android.com/design/building-blocks/dialogs.html
+        // says "Most alerts don't need titles.":
+        // builder.setTitle(activity.getString(R.string.error_title_connection_problem));
+
+        builder.setMessage(message);
+        builder.setPositiveButton(activity.getString(R.string.error_button_retry), listener);
+        builder.setNegativeButton(activity.getString(R.string.error_button_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 
     static void openDiscussionPage(final Context context, final String zooniverseId) {

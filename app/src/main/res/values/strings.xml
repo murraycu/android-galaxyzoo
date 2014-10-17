@@ -112,10 +112,16 @@
     <string name="error_field_required">This field is required.</string>
 
     <!-- An error message. We show this when we cannot continue because there is no network connection. -->
-    <string name="error_no_network">No Network Connection.</string>
+    <string name="error_no_network">No network connection.</string>
 
     <!-- An error message. We show this when we cannot continue because something is wrong with the network connection. -->
     <string name="error_no_subjects">Cannot download new subjects to classify.</string>
+
+    <!-- We offer this button when showing the alert dialog about a network connection problem. -->
+    <string name="error_button_retry">Retry</string>
+
+    <!-- We offer this button when showing the alert dialog about a network connection problem. -->
+    <string name="error_button_cancel">Cancel</string>
 
     <!-- An informative message. This lets the user know that they are already logged in to the system. -->
     <string name="message_logged_in">Logged In.</string>

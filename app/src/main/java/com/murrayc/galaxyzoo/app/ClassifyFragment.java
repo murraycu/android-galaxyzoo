@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -215,12 +216,23 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             // ItemsContentProvider.NoNetworkConnection exception in the CursorLoader?
             // This doesn't seem to work: http://stackoverflow.com/questions/13551219/handle-cursorloader-exceptions/13753313#13753313
             if (!Utils.getNetworkIsConnected(activity)) {
-                UiUtils.warnAboutNoNetworkConnection(activity);
+                UiUtils.warnAboutNoNetworkConnection(activity, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, int which) {
+                        onClickListenerRetry();
+                    }
+                });
             }
 
             //Warn that there is some other network problem.
             //For instance, this happens if the network is apparently connected but not working properly:
-            UiUtils.warnAboutNoItemsToDo(activity);
+            UiUtils.warnAboutNoItemsToDoWithRetry(activity, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(final DialogInterface dialog, int which) {
+                    onClickListenerRetry();
+                }
+            });
+
             return;
         }
 
@@ -240,6 +252,13 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         }
 
         addOrUpdateChildFragments();
+    }
+
+    private void onClickListenerRetry() {
+        //Try to get the next item again.
+        //It should succeed if we have a working network connection,
+        //or fail again with the same message.
+        update();
     }
 
     //We only bother using this when we have asked for the "next" item,
