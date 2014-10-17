@@ -227,7 +227,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
     /* A map of remote URIs to the last dates that we tried to download them.
      */
-    private Map<String, Date> mImageDownloadsInProgress = new HashMap<>();
+    private final Map<String, Date> mImageDownloadsInProgress = new HashMap<>();
 
     private ZooniverseClient mClient = null;
 
