@@ -194,6 +194,10 @@ public class HttpUtils {
         return true;
     }
 
+    /**
+     * This is a RuntimeException because only RuntimeExceptions may be thrown by
+     * a ContentProvider.
+     */
     public static class NoNetworkException extends RuntimeException {
         public NoNetworkException() {
         }

@@ -378,24 +378,21 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             final String uriStandardRemote = c.getString(1);
             if (!mImageDownloadsInProgress.containsKey(uriStandardRemote)) {
                 final String uriStandard = c.getString(2);
-                final String localFileUri = getLocalFileuriForContentUri(uriStandard);
-                cacheUriToFile(uriStandardRemote, localFileUri, subjectId, ImageType.STANDARD, true /* async */);
+                downloadMissingImage(subjectId, uriStandardRemote, uriStandard, ImageType.STANDARD);
                 noWorkNeeded = false;
             }
 
             final String uriThumbnailRemote = c.getString(3);
             if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
                 final String uriThumbnail = c.getString(4);
-                final String localFileUri = getLocalFileuriForContentUri(uriThumbnail);
-                cacheUriToFile(uriThumbnailRemote, localFileUri, subjectId, ImageType.THUMBNAIL, true /* async */);
+                downloadMissingImage(subjectId, uriThumbnailRemote, uriThumbnail, ImageType.THUMBNAIL);
                 noWorkNeeded = false;
             }
 
             final String uriInvertedRemote = c.getString(5);
             if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
                 final String uriInverted = c.getString(6);
-                final String localFileUri = getLocalFileuriForContentUri(uriInverted);
-                cacheUriToFile(uriInvertedRemote, localFileUri, subjectId, ImageType.INVERTED, true /* async */);
+                downloadMissingImage(subjectId, uriInvertedRemote, uriInverted, ImageType.INVERTED);
                 noWorkNeeded = false;
             }
         }
@@ -403,6 +400,15 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
         c.close();
 
         return noWorkNeeded;
+    }
+
+    private void downloadMissingImage(final String subjectId, final String uriRemote, final String uriContent, ImageType imageType) {
+        final String localFileUri = getLocalFileuriForContentUri(uriContent);
+        try {
+            cacheUriToFile(uriRemote, localFileUri, subjectId, imageType, true /* async */);
+        } catch (final HttpUtils.NoNetworkException e) {
+            Log.info("downloadMissingImages(): No network connection.");
+        }
     }
 
     private String getLocalFileuriForContentUri(final String uriContent) {
@@ -1896,7 +1902,12 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             //http://developer.android.com/reference/android/os/AsyncTask.html
             final int count = params[0];
 
-            return mClient.requestMoreItemsSync(count);
+            try {
+                return mClient.requestMoreItemsSync(count);
+            } catch (final HttpUtils.NoNetworkException e) {
+                Log.info("QueryAsyncTask.doInBackground(): No network connection.", e);
+                return null;
+            }
         }
 
         @Override
