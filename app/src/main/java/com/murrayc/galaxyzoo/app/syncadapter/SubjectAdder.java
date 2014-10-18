@@ -194,6 +194,12 @@ public class SubjectAdder {
             return false;
         }
 
+        //Don't attempt it if it is already in progress.
+        if (mImageDownloadsInProgress.containsKey(uriFileToCache)) {
+            //TODO: Check the actual date?
+            return false;
+        }
+
         throwIfNoNetwork();
 
         final Date now = new Date();
