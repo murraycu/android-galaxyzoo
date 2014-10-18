@@ -98,6 +98,7 @@ public class SubjectAdder {
         } catch (final HttpUtils.NoNetworkException e) {
             Log.info("downloadMissingImages(): No network connection.");
         }
+    }
 
     private String getLocalFileuriForContentUri(final String uriContent) {
         final Uri uri = Uri.parse(uriContent);
