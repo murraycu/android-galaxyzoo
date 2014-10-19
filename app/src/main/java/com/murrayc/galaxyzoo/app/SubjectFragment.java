@@ -36,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
+import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 /**
  * A fragment representing a single subject.
@@ -163,14 +164,20 @@ public class SubjectFragment extends ItemFragment
         if (activity == null)
             return;
 
-        /*
-         * Initializes the CursorLoader. The URL_LOADER value is eventually passed
-         * to onCreateLoader().
-         * We use restartLoader(), instead of initLoader(),
-         * so we can refresh this fragment to show a different subject,
-         * even when using the same query ("next") to do that.
-         */
-        getLoaderManager().restartLoader(URL_LOADER, null, this);
+        //If the item is the next ID, then wait for the parent (ClassifyFragment) fragment
+        //to discover the real ID, after which it will update this fragment with the real ID.
+        //Otherwise, we will quickly ask for two next items at almost the same time,
+        //resulting in a longer wait for the first item (at first app start) to be ready.
+        if(!TextUtils.equals(getItemId(), ItemsContentProvider.URI_PART_ITEM_ID_NEXT)) {
+            /*
+             * Initializes the CursorLoader. The URL_LOADER value is eventually passed
+             * to onCreateLoader().
+             * We use restartLoader(), instead of initLoader(),
+             * so we can refresh this fragment to show a different subject,
+             * even when using the same query ("next") to do that.
+             */
+            getLoaderManager().restartLoader(URL_LOADER, null, this);
+        }
     }
 
     private void updateFromCursor() {
