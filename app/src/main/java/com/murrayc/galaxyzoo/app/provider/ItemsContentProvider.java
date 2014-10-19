@@ -825,20 +825,31 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
             task.execute(uriFileToCache, cacheFileUri);
             return true;
         } else {
-            if (HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri)) {
+
+            final boolean downloaded = HttpUtils.cacheUriToFileSync(uriFileToCache, cacheFileUri);
+            markImageDownloadAsNotInProgress(uriFileToCache);
+
+            if(downloaded) {
                 return markImageAsDownloaded(subjectId, imageType, uriFileToCache);
             } else {
                 //doRegularTasks() will try again later.
-                Log.error("cacheUriToFile(): cacheUriToFileSync(): failed.");
+                Log.error("cacheUriToFile(): cacheUriToFileSync(): failed");
                 return false;
             }
         }
     }
 
+    private void markImageDownloadAsNotInProgress(final String uriFileToCache) {
+        mImageDownloadsInProgress.remove(uriFileToCache);
+    }
+
     private boolean markImageAsDownloaded(final String subjectId, final ImageType imageType, final String uriFileToCache) {
 
-        //Don't try downloading this again later:
-        mImageDownloadsInProgress.remove(uriFileToCache);
+        //Don't try downloading this again later.
+        //Actually the caller should already have removed this,
+        //regardless of the download's success or failure.
+        //but let's be sure:
+        markImageDownloadAsNotInProgress(uriFileToCache);
 
         //Let users of the ContentProvider API know that the image has been fully downloaded
         //so it's safe to use it:
@@ -1870,14 +1881,22 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
 
         @Override
         protected void onPostExecute(Boolean result) {
+            if (providerReference == null) {
+                Log.error("FileCacheAsyncTask.onPostExcecute(): providerReference is null.");
+                return;
+            }
+
+            final ItemsContentProvider provider = providerReference.get();
+            if (provider == null) {
+                Log.error("FileCacheAsyncTask.onPostExcecute(): ItemsContentProvider is null.");
+                return;
+            }
+
+            provider.markImageDownloadAsNotInProgress(uriFileToCache);
+
             if (result) {
-                if (providerReference != null) {
-                    final ItemsContentProvider provider = providerReference.get();
-                    if (provider != null) {
-                        if (!provider.markImageAsDownloaded(subjectId, imageType, uriFileToCache)) {
-                            Log.error("FileCacheAsyncTask(): onPostExecute(): markImageAsDownloaded() failed.");
-                        }
-                    }
+                if (!provider.markImageAsDownloaded(subjectId, imageType, uriFileToCache)) {
+                    Log.error("FileCacheAsyncTask(): onPostExecute(): markImageAsDownloaded() failed.");
                 }
             } else {
                 //doRegularTasks() will try again later.
