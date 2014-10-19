@@ -62,6 +62,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
     private View mRootView;
     private AlertDialog mAlertDialog = null;
+    private boolean mGetNextInProgress = false;
 
 
     /**
@@ -255,8 +256,15 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
              * We use restartLoader(), instead of initLoader(),
              * so we can refresh this fragment to show a different subject,
              * even when using the same query ("next") to do that.
+             *
+             * However, we don't start another "next" request when one is already in progress,
+             * because then we would waste the first one and slow both down.
+             * This can happen during resume.
              */
-            getLoaderManager().restartLoader(URL_LOADER, null, this);
+            if(!mGetNextInProgress) {
+                mGetNextInProgress = true;
+                getLoaderManager().restartLoader(URL_LOADER, null, this);
+            }
         } else {
             //Add, or update, the child fragments already, because we know the Item IDs:
             addOrUpdateChildFragments();
@@ -367,6 +375,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         mCursor = cursor;
+        mGetNextInProgress = false;
 
         updateFromCursor();
 
