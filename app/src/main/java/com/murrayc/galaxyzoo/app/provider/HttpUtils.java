@@ -19,6 +19,7 @@ public class HttpUtils {
 
     private static final String HTTP_REQUEST_HEADER_PARAM_USER_AGENT = "User-Agent";
     private static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";
+    public static final int TIMEOUT_MILLIS = 20000; //20 seconds. Long but not too short for GPRS connections and not endless.
 
     /**
      * Callers should use throwIfNoNetwork() before calling this.
@@ -37,7 +38,6 @@ public class HttpUtils {
         InputStream in = null;
         try {
             //Calling getInputStream() causes the request to actually be sent.
-            //TODO: Specify a sensible timeout?
             in = conn.getInputStream();
 
             if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
@@ -97,6 +97,12 @@ public class HttpUtils {
 
             return null;
         }
+
+        //Set a reasonable timeout.
+        //Otherwise there is not timeout so we might never know if it fails,
+        //so never have the chance to try again.
+        conn.setConnectTimeout(TIMEOUT_MILLIS);
+        conn.setReadTimeout(TIMEOUT_MILLIS);
 
         return conn;
     }
