@@ -230,6 +230,7 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     private final Map<String, Date> mImageDownloadsInProgress = new HashMap<>();
 
     private ZooniverseClient mClient = null;
+    private boolean mRequestMoreItemsAsyncInProgress = false;
 
     public ItemsContentProvider() {
     }
@@ -966,6 +967,15 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     }
 
     private void requestMoreItemsAsync(int count) {
+        if(mRequestMoreItemsAsyncInProgress) {
+            //Do just one of these at a time,
+            //to avoid requesting more while we are processing the results from a first one.
+            //Then we get more than we really want and everything is slower.
+            return;
+        }
+
+        mRequestMoreItemsAsyncInProgress = true;
+
         final QueryAsyncTask task = new QueryAsyncTask();
         task.execute(count);
     }
@@ -1622,6 +1632,8 @@ public class ItemsContentProvider extends ContentProvider implements SharedPrefe
     }
 
     private void onQueryTaskFinished(final List<ZooniverseClient.Subject> result) {
+        mRequestMoreItemsAsyncInProgress = false;
+
         if (result == null) {
             return;
         }
