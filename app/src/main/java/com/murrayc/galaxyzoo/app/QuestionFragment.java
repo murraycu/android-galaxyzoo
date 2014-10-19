@@ -564,7 +564,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
     private void saveClassification(final ClassificationInProgress classificationInProgress) {
         final String itemId = getItemId();
-        if (itemId == ItemsContentProvider.URI_PART_ITEM_ID_NEXT) {
+        if (TextUtils.equals(itemId, ItemsContentProvider.URI_PART_ITEM_ID_NEXT)) {
             Log.error("QuestionFragment.saveClassification(): Attempting to save with the 'next' ID.");
             return;
         }
