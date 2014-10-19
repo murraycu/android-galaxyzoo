@@ -217,7 +217,9 @@ public class SubjectAdder {
 
             return true;
         } else {
-            if (HttpUtils.cacheUriToContentUriFileSync(getContext(), uriFileToCache, cacheFileUri)) {
+            final boolean downloaded = HttpUtils.cacheUriToContentUriFileSync(uriFileToCache, cacheFileUri);
+            markImageDownloadAsNotInProgress(uriFileToCache);
+            if (downloaded) {
                 return markImageAsDownloaded(itemUri, imageType, uriFileToCache);
             } else {
                 //doRegularTasks() will try again later.
@@ -235,10 +237,19 @@ public class SubjectAdder {
         HttpUtils.throwIfNoNetwork(getContext());
     }
 
+
+    private void markImageDownloadAsNotInProgress(final String uriFileToCache) {
+        mImageDownloadsInProgress.remove(uriFileToCache);
+    }
+
     boolean markImageAsDownloaded(final Uri itemUri, final ImageType imageType, final String uriFileToCache) {
 
         //Don't try downloading this again later:
-        mImageDownloadsInProgress.remove(uriFileToCache);
+
+        //Actually the caller should already have removed this,
+        //regardless of the download's success or failure.
+        //but let's be sure:
+        markImageDownloadAsNotInProgress(uriFileToCache);
 
         //Let users of the ContentProvider API know that the image has been fully downloaded
         //so it's safe to use it:
@@ -369,12 +380,22 @@ public class SubjectAdder {
 
         @Override
         protected void onPostExecute(Boolean result) {
+            if (parentReference == null) {
+                Log.error("FileCacheAsyncTask.onPostExcecute(): parentReference is null.");
+                return;
+            }
+
+            final SubjectAdder parent = parentReference.get();
+            if (parent == null) {
+                Log.error("FileCacheAsyncTask.onPostExcecute(): parent is null.");
+                return;
+            }
+
+            parent.markImageDownloadAsNotInProgress(uriFileToCache);
+
             if (result) {
-                final SubjectAdder parent = getParent();
-                if (parent != null) {
-                    if (!parent.markImageAsDownloaded(itemUri, imageType, uriFileToCache)) {
-                        Log.error("FileCacheAsyncTask(): onPostExecute(): markImageAsDownloaded() failed.");
-                    }
+                if (!parent.markImageAsDownloaded(subjectId, imageType, uriFileToCache)) {
+                    Log.error("FileCacheAsyncTask(): onPostExecute(): markImageAsDownloaded() failed.");
                 }
             } else {
                 //doRegularTasks() will try again later.
