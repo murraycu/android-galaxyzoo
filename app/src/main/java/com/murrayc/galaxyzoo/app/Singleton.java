@@ -23,7 +23,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import java.io.IOException;
@@ -52,8 +51,7 @@ public class Singleton {
     private Singleton(final Context context) {
         //This needs to be done as soon as the app opens.
         //See http://developer.android.com/guide/topics/ui/settings.html#Fragment
-        PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
-
+        Utils.initDefaultPrefs(context);
 
         //Try to find a translation file:
         InputStream inputStreamTranslation = null;

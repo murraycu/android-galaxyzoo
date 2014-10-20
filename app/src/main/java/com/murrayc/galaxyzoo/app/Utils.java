@@ -24,14 +24,17 @@ import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 //import org.apache.http.client.utils.URIBuilder;
 
@@ -131,6 +134,29 @@ public class Utils {
             return;
         }
 
+        copyPrefToAccount(mgr, account, key, value);
+    }
+
+    static void copyPrefToAccount(final AccountManager mgr, final Account account, final String key, final String value) {
         mgr.setUserData(account, key, value);
+    }
+
+    static void copyPrefsToAccount(final Context context, final AccountManager accountManager, final Account account) {
+        //Copy the preferences into the account.
+        //See also SettingsFragment.onSharedPreferenceChanged()
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final Map<String, ?> keys = prefs.getAll();
+        for(final Map.Entry<String, ?> entry : keys.entrySet()) {
+            final Object value =  entry.getValue();
+            if ((value == null) || !(value instanceof String)) {
+                continue;
+            }
+
+            copyPrefToAccount(accountManager, account, entry.getKey(), (String) value);
+        }
+    }
+
+    static void initDefaultPrefs(final Context context) {
+        PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
     }
 }

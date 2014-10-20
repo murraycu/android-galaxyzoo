@@ -143,6 +143,15 @@ public class LoginUtils {
         final AccountManager accountManager = AccountManager.get(context);
         final Account account = new Account(ACCOUNT_NAME_ANONYMOUS, LoginUtils.ACCOUNT_TYPE);
         accountManager.addAccountExplicitly(account, null, null);
+
+        //In case it has not been called yet.
+        //This has no effect the second time.
+        Utils.initDefaultPrefs(context);
+
+        //Give the new account the existing (probably default) preferences,
+        //so the SyncAdapter can use them.
+        //See SettingsFragment.onSharedPreferenceChanged().
+        Utils.copyPrefsToAccount(context, accountManager, account);
     }
 
     public static void removeAnonymousAccount(final Context context) {
