@@ -137,7 +137,7 @@ public class Utils {
         copyPrefToAccount(mgr, account, key, value);
     }
 
-    static void copyPrefToAccount(final AccountManager mgr, final Account account, final String key, final String value) {
+    private static void copyPrefToAccount(final AccountManager mgr, final Account account, final String key, final String value) {
         mgr.setUserData(account, key, value);
     }
 

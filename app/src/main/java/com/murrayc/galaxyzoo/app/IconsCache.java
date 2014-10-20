@@ -18,7 +18,7 @@ class IconsCache {
     */
 
     private static final String ASSET_PATH_ICONS_DIR = "icons/";
-    public static final String ICON_FILE_PREFIX = "icon_";
+    private static final String ICON_FILE_PREFIX = "icon_";
     //private static long ASSETS_ICONS_TIMESTAMP = 1409922463000L; //Update this when bundling new copies of the files.
 
 
@@ -513,7 +513,7 @@ class IconsCache {
         return result;
     }
 
-    public Context getContext() {
+    Context getContext() {
         return mContext;
     }
 }

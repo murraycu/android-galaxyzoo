@@ -40,7 +40,7 @@ import java.util.Locale;
 public class Singleton {
 
     private static final String JSON_FILE_EXTENSION = ".json";
-    public static final String ASSET_PATH_DECISION_TREE_DIR = "decision_tree/";
+    private static final String ASSET_PATH_DECISION_TREE_DIR = "decision_tree/";
     private static List<Callbacks> mCallbacks = new ArrayList<>();
     private static Singleton ourInstance = null;
     private static boolean initializationInProgress = false;
@@ -198,7 +198,7 @@ public class Singleton {
      * Find out whether the context's locale is different enough to the one used when
      * this instance was created.
      */
-    public boolean localeIsDifferent(final Context context) {
+    boolean localeIsDifferent(final Context context) {
         //This doesn't care about whether there is really a country-specific
         //translation available. So this will sometimes lead to
         //an unnecessary reload if the country (but not the language)
