@@ -1,0 +1,21 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="General Settings" />
+
+    <!-- Android's Settings app will show a line with the title and summary under the
+    account, and clicking that line will take the user to the SettingsActivity. -->
+    <!-- The intent needs to be in a second-level PreferenceScreen -->
+    <PreferenceScreen
+        android:key="account_settings"
+        android:title="@string/action_settings"
+        android:summary="@string/description_settings">
+
+        <!-- The android:action here should match the action:name in an intent-filter for SettingsActivity in AndroidManifest.xml -->
+        <intent
+            android:action="com.murrayc.galaxyzoo.app.SettingsActivity.MAIN"
+            android:targetPackage="com.murrayc.galaxyzoo.app"
+            android:targetClass="com.murrayc.galaxyzoo.app.SettingsActivity" />
+    </PreferenceScreen>
+
+</PreferenceScreen>

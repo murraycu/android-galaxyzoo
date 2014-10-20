@@ -34,8 +34,11 @@
     <!-- An action. Shown on a button or menu item. -->
     <string name="action_next">Classify</string>
 
-    <!-- Shown on a menu item to open the application's settings (preferences). -->
+    <!-- Shown on a menu item (and in the system's accounts list) to open the application's settings (preferences). -->
     <string name="action_settings">Settings</string>
+
+    <!-- Shown in the system's accounts list to describe the application's settings (preferences).. -->
+    <string name="description_settings">How many to download in advance, etc.</string>
 
     <!-- Shown on a menu item to view the application's description. -->
     <string name="action_about">About</string>

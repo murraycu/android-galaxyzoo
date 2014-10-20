@@ -84,7 +84,10 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/title_activity_settings">
+            <intent-filter>
+                <action android:name="com.murrayc.galaxyzoo.app.SettingsActivity.MAIN" />
+            </intent-filter>
         </activity>
 
         <provider
