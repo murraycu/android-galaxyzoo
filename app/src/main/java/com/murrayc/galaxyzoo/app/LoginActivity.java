@@ -9,9 +9,11 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
@@ -24,6 +26,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
+
+import java.util.Map;
 
 /**
  * A login screen that offers login via username/password.
@@ -266,6 +270,19 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             final Account account = new Account(result.getName(), LoginUtils.ACCOUNT_TYPE);
             if (addingAccount) {
                 accountManager.addAccountExplicitly(account, null, null);
+
+                //Copy the preferences into the account.
+                //See also SettingsFragment.onSharedPreferenceChanged()
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                final Map<String, ?> keys = prefs.getAll();
+                for(final Map.Entry<String, ?> entry : keys.entrySet()) {
+                    final Object value =  entry.getValue();
+                    if ((value == null) || !(value instanceof String)) {
+                        continue;
+                    }
+
+                    Utils.copyPrefToAccount(this, entry.getKey(), (String)value);
+                }
             }
 
             //TODO? ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true)

@@ -78,6 +78,13 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if (connectionPref instanceof ListPreference) {
             showUserDescriptionAsSummary(connectionPref);
         }
+
+        //Copy the preference to the Account:
+        //This is an awful hack. Hopefully there is some other way to use preferences per-account.
+        //If not, maybe we need to reimplement this fragment without using PreferencesFragment.
+        final ListPreference listPref = (ListPreference) connectionPref;
+        final String value = listPref.getValue();
+        Utils.copyPrefToAccount(getActivity(), key, value);
     }
 
     private void showUserDescriptionAsSummary(final Preference preference) {

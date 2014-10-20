@@ -19,15 +19,14 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.preference.PreferenceManager;
-import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
@@ -62,19 +61,33 @@ public class Utils {
     }
 
     public static int getIntPref(final Context context, final int prefKeyResId) {
-        final String prefKey = context.getString(prefKeyResId);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        //Android's PreferencesScreen XMl has no way to specify an integer rather than a string,
-        //so we parse it here.
-        final String str = prefs.getString(prefKey, null);
-
-        //Avoid a NumberFormatException
-        if (TextUtils.isEmpty(str)) {
+        final AccountManager mgr = AccountManager.get(context);
+        final Account account = getAccount(mgr);
+        if (account == null) {
             return 0;
         }
 
-        return Integer.parseInt(str);
+        final String value =
+                mgr.getUserData(account, context.getString(prefKeyResId));
+        if (value == null) {
+            return 0;
+        }
+
+        try {
+            return Integer.parseInt(value);
+        } catch (final NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private static Account getAccount(final AccountManager mgr) {
+        final Account[] accts = mgr.getAccountsByType(LoginUtils.ACCOUNT_TYPE);
+        if((accts == null) || (accts.length < 1)) {
+            //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
+            return null;
+        }
+
+        return accts[0];
     }
 
     static InputStream openAsset(final Context context, final String filename) {
@@ -102,5 +115,22 @@ public class Utils {
         final Uri.Builder uriBuilder = Item.ITEMS_URI.buildUpon();
         uriBuilder.appendPath(itemId);
         return uriBuilder.build();
+    }
+
+    static void copyPrefToAccount(final Context context, final String key, final String value) {
+        //Copy the preference to the Account:
+        final AccountManager mgr = AccountManager.get(context);
+        final Account[] accts = mgr.getAccountsByType(LoginUtils.ACCOUNT_TYPE);
+        if((accts == null) || (accts.length < 1)) {
+            //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
+            return;
+        }
+
+        final Account account = accts[0];
+        if (account == null) {
+            return;
+        }
+
+        mgr.setUserData(account, key, value);
     }
 }

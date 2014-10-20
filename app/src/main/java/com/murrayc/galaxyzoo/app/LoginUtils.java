@@ -108,9 +108,10 @@ public class LoginUtils {
             return null;
         }
 
+        final Account account = accts[0];
+
         final LoginDetails result = new LoginDetails();
 
-        final Account account = accts[0];
 
         //Avoid showing our anonymous account name in the UI.
         //Also, an anonymous account never has an auth_api_key.
