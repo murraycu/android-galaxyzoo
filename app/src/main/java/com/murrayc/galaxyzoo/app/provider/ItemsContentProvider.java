@@ -1201,6 +1201,10 @@ public class ItemsContentProvider extends ContentProvider {
         extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 
         //Ask the framework to run our SyncAdapter.
+        //We call this far too often,
+        //but we trust the SyncAdapter system to not actually do the sync too often.
+        //That seems to work fine as long as the SyncAdapter is in its own process.
+        //See android:process=":sync" in AndroidManifest.xml
         ContentResolver.requestSync(null, Item.AUTHORITY, extras);
     }
 
