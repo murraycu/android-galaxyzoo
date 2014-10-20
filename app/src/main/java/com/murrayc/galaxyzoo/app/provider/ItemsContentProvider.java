@@ -951,6 +951,10 @@ public class ItemsContentProvider extends ContentProvider {
 
         //Get the cached image files, delete them, and forget them:
         for (final String contentUri : imageUris) {
+            if (contentUri == null) {
+                continue;
+            }
+
             //Get the real local URI for the file:
             final Uri uri = Uri.parse(contentUri);
             final long fileId = ContentUris.parseId(uri);
