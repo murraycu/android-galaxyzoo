@@ -67,21 +67,21 @@ public class SubjectAdder {
             final String uriStandardRemote = c.getString(1);
             if (!mImageDownloadsInProgress.containsKey(uriStandardRemote)) {
                 final String uriStandard = c.getString(2);
-                downloadMissingImage(uriStandardRemote, uriStandard, itemUri, ImageType.STANDARD);
+                downloadMissingImage(itemUri, uriStandardRemote, uriStandard, ImageType.STANDARD);
                 noWorkNeeded = false;
             }
 
             final String uriThumbnailRemote = c.getString(3);
             if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
                 final String uriThumbnail = c.getString(4);
-                downloadMissingImage(uriThumbnailRemote, uriThumbnail, itemUri, ImageType.THUMBNAIL);
+                downloadMissingImage(itemUri, uriThumbnailRemote, uriThumbnail, ImageType.THUMBNAIL);
                 noWorkNeeded = false;
             }
 
             final String uriInvertedRemote = c.getString(5);
             if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
                 final String uriInverted = c.getString(6);
-                downloadMissingImage(uriInvertedRemote, uriInverted, itemUri, ImageType.INVERTED);
+                downloadMissingImage(itemUri, uriInvertedRemote, uriInverted, ImageType.INVERTED);
                 noWorkNeeded = false;
             }
         }
@@ -91,36 +91,12 @@ public class SubjectAdder {
         return noWorkNeeded;
     }
 
-    private void downloadMissingImage(final String uriRemote, final String uriContent, final Uri itemUri, ImageType imageType) {
+    private void downloadMissingImage(final Uri itemUri, final String uriRemote, final String uriContent, ImageType imageType) {
         try {
-            final String localFileUri = getLocalFileuriForContentUri(uriInverted);
-            cacheUriToFile(uriRemote, localFileUri, itemUri, imageType, true /* async */);
+            cacheUriToFile(uriRemote, uriContent, itemUri, imageType, true /* async */);
         } catch (final HttpUtils.NoNetworkException e) {
-            Log.info("downloadMissingImages(): No network connection.");
+            Log.info("downloadMissingImage(): No network connection.");
         }
-    }
-
-    private String getLocalFileuriForContentUri(final String uriContent) {
-        final Uri uri = Uri.parse(uriContent);
-        final UriParts uriParts = parseContentUri(uri);
-        final String fileId = uriParts.itemId;
-
-        final String[] projection = {DatabaseHelper.FilesDbColumns.FILE_DATA};
-        final String whereClause = DatabaseHelper.FilesDbColumns._ID + " = ?"; //We use ? to avoid SQL Injection.
-        final String[] selectionArgs = {fileId};
-
-        final Cursor c = getDb().query(DatabaseHelper.TABLE_NAME_FILES, projection,
-                whereClause, selectionArgs, null, null, null);
-
-        String result = null;
-        if (c.getCount() > 0) {
-            c.moveToFirst();
-            result = c.getString(0);
-        }
-
-        c.close();
-
-        return result;
     }
 
     /**
@@ -217,7 +193,7 @@ public class SubjectAdder {
 
             return true;
         } else {
-            final boolean downloaded = HttpUtils.cacheUriToContentUriFileSync(uriFileToCache, cacheFileUri);
+            final boolean downloaded = HttpUtils.cacheUriToContentUriFileSync(getContext(), uriFileToCache, cacheFileUri);
             markImageDownloadAsNotInProgress(uriFileToCache);
             if (downloaded) {
                 return markImageAsDownloaded(itemUri, imageType, uriFileToCache);
@@ -394,7 +370,7 @@ public class SubjectAdder {
             parent.markImageDownloadAsNotInProgress(uriFileToCache);
 
             if (result) {
-                if (!parent.markImageAsDownloaded(subjectId, imageType, uriFileToCache)) {
+                if (!parent.markImageAsDownloaded(itemUri, imageType, uriFileToCache)) {
                     Log.error("FileCacheAsyncTask(): onPostExecute(): markImageAsDownloaded() failed.");
                 }
             } else {
