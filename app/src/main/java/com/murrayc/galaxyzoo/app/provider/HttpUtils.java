@@ -137,7 +137,6 @@ public class HttpUtils {
 
         return latest;
     }
-    */
 
     private static long getUriLastModified(final String strUrl) {
         final URL url;
@@ -164,6 +163,8 @@ public class HttpUtils {
         con.disconnect(); //Otherwise StrictMode says (with an exception) that we leak.
         return result;
     }
+    */
+
 
     private static void setConnectionUserAgent(final HttpURLConnection connection) {
         connection.setRequestProperty(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
