@@ -48,6 +48,8 @@ public class SubjectViewerActivity extends ItemActivity {
 
         setContentView(R.layout.activity_classify);
 
+        Utils.showToolbar(this);
+
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
         // (e.g. when rotating the screen from portrait to landscape).
