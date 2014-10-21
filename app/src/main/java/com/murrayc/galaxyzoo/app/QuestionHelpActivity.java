@@ -41,6 +41,8 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
 
         setContentView(R.layout.activity_question_help);
 
+        Utils.showToolbar(this);
+
         final Intent intent = getIntent();
         setQuestionId(intent.getStringExtra(BaseQuestionFragment.ARG_QUESTION_ID));
 

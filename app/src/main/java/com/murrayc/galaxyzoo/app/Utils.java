@@ -29,6 +29,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
@@ -159,4 +161,15 @@ public class Utils {
     static void initDefaultPrefs(final Context context) {
         PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
     }
+
+    protected static void showToolbar(final ActionBarActivity activity) {
+        //The layout XML should include our toolbar.xml,
+        //which we use instead of an ActionBar,
+        //See also our use of <item name="windowActionBar">false</item> in styles.xml.
+        final Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            activity.setSupportActionBar(toolbar);
+        }
+    }
+ 
 }

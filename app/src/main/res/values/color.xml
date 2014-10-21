@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The name of the app -->
+    <color name="color_primary">#c1ea00</color>
+    <!-- <color name="color_primary_dark">#ff0000</color> -->
+    <color name="color_accent">#c1ea00</color>
+    <!-- <color name="text_color_primary">#000000</color> -->
+    <color name="color_window_background">#000000</color>
+    <!-- <color name="color_toolbar_title_text">#000000</color> -->
+
+
+
+</resources>

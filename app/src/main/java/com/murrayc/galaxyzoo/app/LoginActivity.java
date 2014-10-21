@@ -6,13 +6,12 @@ import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
@@ -26,11 +25,16 @@ import android.widget.TextView;
 
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
+//TODO: Use the toolbar, but we cannot derive from ActionBarActivity from AppCompat.
 /**
  * A login screen that offers login via username/password.
  */
-
 public class LoginActivity extends AccountAuthenticatorActivity {
+
+    /** The Intent extra to store username. */
+    public static final String ARG_USERNAME = "username";
+
+    private ZooniverseClient mClient = null;
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -49,9 +53,9 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mClient = new ZooniverseClient(this, com.murrayc.galaxyzoo.app.provider.Config.SERVER);
-
         setContentView(R.layout.activity_login);
+
+        //TODO: Utils.showToolbar(this);
 
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
@@ -93,7 +97,8 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         mProgressView = findViewById(R.id.login_progress);
 
         // Show the Up button in the action bar.
-        final ActionBar actionBar = getSupportActionBar();
+        //TODO: final ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getActionBar();
         if (actionBar == null)
             return;
 

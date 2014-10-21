@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <!-- Use app:titleTextAppearance="@style/toolbarTitleTextAppearance
+    to specify a specific title color.
+     We use app:theme="@style/Theme.AppCompat.Light" to get the standard
+     dark title color and the dark overflow icon,
+     though it also gives us a light menu.-->
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_primary"
+    app:theme="@style/Theme.AppCompat.Light" />
