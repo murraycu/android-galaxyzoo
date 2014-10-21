@@ -87,6 +87,7 @@
     <orderEntry type="library" exported="" scope="TEST" name="okio-1.0.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="okhttp-2.0.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="mockwebserver-2.0.0" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-21.0.0" level="project" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">
