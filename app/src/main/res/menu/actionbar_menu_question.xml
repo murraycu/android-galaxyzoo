@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/option_menu_item_favorite"
@@ -11,13 +13,13 @@
     <item
         android:id="@+id/option_menu_item_examples"
         android:icon="@drawable/ic_action_help"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/action_examples"
         android:orderInCategory="4" />
     <item
         android:id="@+id/option_menu_item_restart"
         android:icon="@drawable/ic_action_undo"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/action_restart"
         android:orderInCategory="5" />
 </menu>

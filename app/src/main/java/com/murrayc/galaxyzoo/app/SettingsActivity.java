@@ -19,15 +19,15 @@
 
 package com.murrayc.galaxyzoo.app;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 /**
  * An activity showing the preferences.
  */
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class SettingsActivity extends Activity {
                 .commit();
 
         // Show the Up button in the action bar.
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar == null)
             return;
 

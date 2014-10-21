@@ -1,12 +1,12 @@
 package com.murrayc.galaxyzoo.app;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 
 
-public class ExampleViewerActivity extends FragmentActivity {
+public class ExampleViewerActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class ExampleViewerActivity extends FragmentActivity {
         }
 
         // Show the Up button in the action bar.
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar == null)
             return;
 

@@ -20,12 +20,12 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 //import android.os.StrictMode;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
@@ -34,7 +34,7 @@ import android.view.MenuItem;
  */
 @SuppressLint("Registered")
 //This is a base class for other Activities.
-class BaseActivity extends FragmentActivity {
+class BaseActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +89,7 @@ class BaseActivity extends FragmentActivity {
 
     void showUpButton() {
         // Show the Up button in the action bar.
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar == null)
             return;
 
