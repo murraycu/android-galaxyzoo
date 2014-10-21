@@ -3,6 +3,70 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
+
+        <!-- colorPrimary is used for the default action bar background. -->
+        <!-- <item name="colorPrimary">@color/color_primary</item> -->
+
+        <!-- textColorPrimary is in the action bar.
+             But it also changes large text for normal -->
+        <!-- <item name="android:textColorPrimary">@color/text_color_primary</item> -->
+
+        <!-- colorPrimaryDark is used for the status bar (with the battery, clock, etc).
+             Do we want to change that?-->
+        <!-- <item name="colorPrimaryDark">@color/color_primary_dark</item> -->
+
+        <!-- colorAccent is used as the default value for colorControlActivated
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/color_accent</item>
+
+        <!-- windowBackground is the color for the background. -->
+        <item name="android:windowBackground">@color/text_color_primary</item>
+
+        <item name="android:actionBarStyle">@style/GalaxyZooActionBarStyle</item>
+        <!-- Again, without the android: prefix for AppCompat compatibility:
+        See https://developer.android.com/training/basics/actionbar/styling.html-->
+        <item name="actionBarStyle">@style/GalaxyZooActionBarStyle</item>
+
+        <!--
+        <item name="android:actionOverflowButtonStyle">@style/GalaxyZooButtonOverflow</item>
+        <item name="actionOverflowButtonStyle">@style/GalaxyZooButtonOverflow</item>
+        -->
+
+
+
     </style>
+
+    <!-- TODO: Even though we use the Light variant here, we still don't get the dark overflow
+    (three vertical dots) icon.
+    We do get the dark icon if our whole style derives from Theme.AppCompat.Light instead of
+    Theme.AppCompat, but then we would need to customize lots of other colors to be dark. -->
+    <style name="GalaxyZooActionBarStyle"
+        parent="@style/Widget.AppCompat.Light.ActionBar">
+        <item name="android:background">@color/color_primary</item>
+
+        <!-- Again, without the android: prefix for AppCompat compatibility:
+        See https://developer.android.com/training/basics/actionbar/styling.html-->
+        <item name="background">@color/color_primary</item>
+
+        <item name="android:titleTextStyle">@style/GalaxyZooActionBarStyle.Text</item>
+
+        <!-- Again, without the android: prefix for AppCompat compatibility:
+        See https://developer.android.com/training/basics/actionbar/styling.html-->
+        <item name="titleTextStyle">@style/GalaxyZooActionBarStyle.Text</item>
+
+    </style>
+
+    <style name="GalaxyZooActionBarStyle.Text"
+        parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/color_action_bar_text</item>
+    </style>
+
+
+    <!--
+    <style name="GalaxyZooButtonOverflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">android:drawable/ic_menu_moreoverflow_normal_holo_dark</item>
+    </style>
+    -->
+
 
 </resources>
