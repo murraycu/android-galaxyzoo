@@ -1,7 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="AppTheme.Base" />
+
+    <!-- Base application theme.
+     Defining this lets values-v2/styles.xml reuse it with changes. -->
+    <style name="AppTheme.Base" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
 
         <!-- Use the Toolbar instead (new in API 21 (and AppCompat). -->
