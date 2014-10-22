@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -37,6 +38,17 @@ import java.lang.ref.WeakReference;
  */
 class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolder> {
 
+    private class CursorObserver extends DataSetObserver {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            //TODO: Be more specific?
+            notifyDataSetChanged();
+        }
+    }
+
+    private CursorObserver mDataSetObserver = new CursorObserver();
+
     public Cursor getItem(int position) {
         //TODO Clone or copy it somehow?
         //What does CursorAdapter (for ListView and GridView) do?
@@ -49,13 +61,13 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
     }
 
     private final Context mContext;
-    private Cursor mCursor;
+    private Cursor mCursor = null;
     private OnItemClickedListener mListener;
 
     ListCursorAdapter(final Context context, final Cursor cursor, final OnItemClickedListener listener) {
         mContext = context;
-        mCursor = cursor;
         mListener = listener;
+        changeCursor(cursor);
     }
 
     @Override
@@ -123,11 +135,25 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
     }
 
     public void changeCursor(final Cursor cursor) {
+        final boolean changed = (mCursor != cursor);
+
+        //TODO: our CursorObserver.onChanged() method never seems to be called
+        //but RecyclerView seems to call our getCount() every now and then anyway.
+        if (mCursor != null ) {
+            mCursor.unregisterDataSetObserver(mDataSetObserver);
+        }
+
         mCursor = cursor;
+
+        if (mCursor != null) {
+            mCursor.registerDataSetObserver(mDataSetObserver);
+        }
 
         //TODO: Can we use the more specific methods.
         //See https://developer.android.com/reference/android/support/v7/widget/RecyclerView.Adapter.html#notifyDataSetChanged%28%29
-        notifyDataSetChanged();
+        if (changed) {
+            notifyDataSetChanged();
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
