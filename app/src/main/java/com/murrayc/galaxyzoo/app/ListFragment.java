@@ -78,7 +78,7 @@ public class ListFragment extends ZooFragment
      */
     private static final Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(final String itemId, boolean done) {
+        public void onItemSelected(final String itemId, boolean done, final View sharedElementView) {
         }
 
         @Override
@@ -200,8 +200,8 @@ public class ListFragment extends ZooFragment
                 null /* No cursor yet */,
                 new ListCursorAdapter.OnItemClickedListener() {
                     @Override
-                    public void onItemClicked(int position) {
-                        onGridItemClicked(position);
+                    public void onItemClicked(int position, final View sharedElementView) {
+                        onGridItemClicked(position, sharedElementView);
                     }
                 });
 
@@ -249,7 +249,7 @@ public class ListFragment extends ZooFragment
         mCallbacks = sDummyCallbacks;
     }
 
-    private void onGridItemClicked(int position) {
+    private void onGridItemClicked(int position, final View sharedElementView) {
         final RecyclerView gridView = getGridView();
         RecyclerView.Adapter adapter = gridView.getAdapter();
 
@@ -286,7 +286,7 @@ public class ListFragment extends ZooFragment
         final String itemId = cursor.getString(COLUMN_INDEX_ID);
         final boolean done = (cursor.getInt(COLUMN_INDEX_DONE) == 1);
 
-        mCallbacks.onItemSelected(itemId, done);
+        mCallbacks.onItemSelected(itemId, done, sharedElementView);
     }
 
     RecyclerView getGridView() {
@@ -312,7 +312,7 @@ public class ListFragment extends ZooFragment
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(final String itemId, boolean done);
+        public void onItemSelected(final String itemId, boolean done, final View sharedElementView);
 
         public void navigateToNextAvailable();
     }

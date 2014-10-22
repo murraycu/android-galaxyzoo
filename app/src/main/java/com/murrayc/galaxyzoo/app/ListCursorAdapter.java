@@ -57,7 +57,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
     }
 
     public static interface OnItemClickedListener {
-        public void onItemClicked(int position);
+        public void onItemClicked(int position, final View sharedElementView);
     }
 
     private final Context mContext;
@@ -195,7 +195,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
                 return;
             }
 
-            parent.mListener.onItemClicked(getPosition());
+            parent.mListener.onItemClicked(getPosition(), imageView);
         }
     }
 

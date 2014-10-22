@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.os.Bundle;
+import android.view.View;
 
 
 /**
@@ -56,12 +57,12 @@ public class ListActivity extends BaseActivity
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(final String itemId, boolean done) {
-        navigate(itemId, done);
+    public void onItemSelected(final String itemId, boolean done, final View sharedElementView) {
+        navigate(itemId, done, sharedElementView);
     }
 
     @Override
     public void navigateToNextAvailable() {
-        navigate(null, false /* not done */); //null means next.
+        navigate(null, false /* not done */, null); //null means next for itemId
     }
 }
