@@ -23,11 +23,14 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 //import android.os.StrictMode;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 
 /**
  * Created by murrayc on 2/7/14.
@@ -60,9 +63,12 @@ class BaseActivity extends ActionBarActivity {
     }
 
     /**
-     * Navigate to the item,
+     *
+     * @param itemId
+     * @param done
+     * @param sharedElementView A shared element for use with a transition animation.
      */
-    void navigate(final String itemId, final boolean done) {
+    void navigate(final String itemId, final boolean done, final View sharedElementView) {
         // Start the detail activity
         // for the selected item ID.
         final Intent intent = new Intent(this,
@@ -71,7 +77,18 @@ class BaseActivity extends ActionBarActivity {
             intent.putExtra(ItemFragment.ARG_ITEM_ID, itemId);
         }
 
-        startActivity(intent);
+        // get the common element for the transition in this activity
+        if (sharedElementView != null) {
+
+            //"subjectImageTransition" is also specified as transitionName="subjectImageTransition"
+            //on the ImageView in both gridview_cell_fragment_list.xml and fragment_subject.xml.
+            //TODO: Why do we need to specify it again here?
+            final ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElementView, "subjectImageTransition");
+            ActivityCompat.startActivity(this, intent, options.toBundle());
+        } else {
+            startActivity(intent);
+        }
     }
 
     @Override
