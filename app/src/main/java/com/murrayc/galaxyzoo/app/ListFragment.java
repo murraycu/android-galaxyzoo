@@ -26,16 +26,14 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.CursorAdapter;
-import android.widget.GridView;
-import android.widget.ListAdapter;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
@@ -97,10 +95,6 @@ public class ListFragment extends ZooFragment
             Item.Columns.DONE, Item.Columns.UPLOADED, Item.Columns.FAVORITE};
     private View mRootView;
     private ListCursorAdapter mAdapter;
-    /**
-     * The current activated item position. Only used on tablets.
-     */
-    private int mActivatedPosition = GridView.INVALID_POSITION;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -163,14 +157,6 @@ public class ListFragment extends ZooFragment
         mRootView = inflater.inflate(R.layout.fragment_list, container, false);
         assert mRootView != null;
 
-        getGridView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                final GridView gridView = (GridView) parent;
-                onGridItemClicked(gridView, position);
-            }
-        });
-
-
         setHasOptionsMenu(true);
 
         update();
@@ -211,10 +197,27 @@ public class ListFragment extends ZooFragment
 
         mAdapter = new ListCursorAdapter(
                 activity,
-                null /* No cursor yet */);
+                null /* No cursor yet */,
+                new ListCursorAdapter.OnItemClickedListener() {
+                    @Override
+                    public void onItemClicked(int position) {
+                        onGridItemClicked(position);
+                    }
+                });
+
+        final RecyclerView gridView = getGridView();
+        //TODO: Can we specify the layout manager in the layout XML?
+        gridView.setLayoutManager(
+                new GridLayoutManager(activity, 3));
+
+        //This is apparently already the default:
+        //gridView.setItemAnimator(new DefaultItemAnimator());
+
+        //For performance, because all our items are the same size:
+        gridView.setHasFixedSize(true);
 
         try {
-            getGridView().setAdapter(mAdapter);
+            gridView.setAdapter(mAdapter);
         } catch (final Exception e) {
             Log.error("glom", "setListAdapter() failed for query  with exception: " + e.getMessage());
         }
@@ -224,17 +227,6 @@ public class ListFragment extends ZooFragment
          * to onCreateLoader().
          */
         getLoaderManager().initLoader(URL_LOADER, null, this);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // Restore the previously serialized activated item position.
-        if (savedInstanceState != null
-                && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-            setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
-        }
     }
 
     @Override
@@ -257,31 +249,9 @@ public class ListFragment extends ZooFragment
         mCallbacks = sDummyCallbacks;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mActivatedPosition != GridView.INVALID_POSITION) {
-            // Serialize and persist the activated item position.
-            outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
-        }
-    }
-
-    private void setActivatedPosition(int position) {
-        final GridView gridView = getGridView();
-        if (gridView == null)
-            return;
-
-        if (position == GridView.INVALID_POSITION) {
-            gridView.setItemChecked(mActivatedPosition, false);
-        } else {
-            gridView.setItemChecked(position, true);
-        }
-
-        mActivatedPosition = position;
-    }
-
-    private void onGridItemClicked(GridView gridView, int position) {
-        ListAdapter adapter = gridView.getAdapter();
+    private void onGridItemClicked(int position) {
+        final RecyclerView gridView = getGridView();
+        RecyclerView.Adapter adapter = gridView.getAdapter();
 
         /*
         //When a ListView has header views, our adaptor will be wrapped by HeaderViewListAdapter:
@@ -291,15 +261,15 @@ public class ListFragment extends ZooFragment
         }
         */
 
-        if (!(adapter instanceof CursorAdapter)) {
+        if (!(adapter instanceof ListCursorAdapter)) {
             Log.error("Unexpected Adapter class: " + adapter.getClass().toString());
             return;
         }
 
         // CursorAdapter.getItem() returns a  Cursor but that seems to be completely undocumented:
         // https://code.google.com/p/android/issues/detail?id=69973&thanks=69973&ts=1400841331
-        final CursorAdapter cursorAdapter = (CursorAdapter) adapter;
-        final Cursor cursor = (Cursor) cursorAdapter.getItem(position /* -1 if we we have a header */);
+        final ListCursorAdapter cursorAdapter = (ListCursorAdapter) adapter;
+        final Cursor cursor =  cursorAdapter.getItem(position /* -1 if we we have a header */);
         if (cursor == null) {
             Log.error("cursorAdapter.getItem() returned null.");
             return;
@@ -319,8 +289,8 @@ public class ListFragment extends ZooFragment
         mCallbacks.onItemSelected(itemId, done);
     }
 
-    GridView getGridView() {
-        final GridView gridView = (GridView) mRootView.findViewById(R.id.gridView);
+    RecyclerView getGridView() {
+        final RecyclerView gridView = (RecyclerView) mRootView.findViewById(R.id.gridView);
         if (gridView == null) {
             Log.error("gridView is null.");
         }

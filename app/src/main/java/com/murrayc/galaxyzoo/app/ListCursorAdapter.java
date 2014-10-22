@@ -21,47 +21,60 @@ package com.murrayc.galaxyzoo.app;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by murrayc on 5/16/14.
  */
-class ListCursorAdapter extends CursorAdapter {
+class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolder> {
 
-    private final LayoutInflater mLayoutInflater;
+    public Cursor getItem(int position) {
+        //TODO Clone or copy it somehow?
+        //What does CursorAdapter (for ListView and GridView) do?
+        mCursor.moveToPosition(position);
+        return mCursor;
+    }
 
-    public ListCursorAdapter(Context context, Cursor c) {
-        super(context, c, 0 /* seems reasonable */);
+    public static interface OnItemClickedListener {
+        public void onItemClicked(int position);
+    }
 
-        mLayoutInflater = LayoutInflater.from(context);
+    private final Context mContext;
+    private Cursor mCursor;
+    private OnItemClickedListener mListener;
+
+    ListCursorAdapter(final Context context, final Cursor cursor, final OnItemClickedListener listener) {
+        mContext = context;
+        mCursor = cursor;
+        mListener = listener;
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return mLayoutInflater.inflate(R.layout.gridview_cell_fragment_list, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        final View v = LayoutInflater.from(viewGroup.getContext()).
+                inflate(R.layout.gridview_cell_fragment_list, null);
+        return new ViewHolder(v, this);
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+        mCursor.moveToPosition(i);
 
-        final String itemId = cursor.getString(ListFragment.COLUMN_INDEX_ID);
-        final String imageUriStr = cursor.getString(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_URI);
-        final boolean thumbnailDownloaded = (cursor.getInt(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_DOWNLOADED) == 1);
-        final boolean done = (cursor.getInt(ListFragment.COLUMN_INDEX_DONE) == 1);
-        final boolean uploaded = (cursor.getInt(ListFragment.COLUMN_INDEX_UPLOADED) == 1);
-        final boolean favorite = (cursor.getInt(ListFragment.COLUMN_INDEX_FAVOURITE) == 1);
-
-
-        /**
-         * Next set the title of the entry.
-         */
+        final String itemId = mCursor.getString(ListFragment.COLUMN_INDEX_ID);
+        final String imageUriStr = mCursor.getString(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_URI);
+        final boolean thumbnailDownloaded = (mCursor.getInt(ListFragment.COLUMN_INDEX_LOCATION_THUMBNAIL_DOWNLOADED) == 1);
+        final boolean done = (mCursor.getInt(ListFragment.COLUMN_INDEX_DONE) == 1);
+        final boolean uploaded = (mCursor.getInt(ListFragment.COLUMN_INDEX_UPLOADED) == 1);
+        final boolean favorite = (mCursor.getInt(ListFragment.COLUMN_INDEX_FAVOURITE) == 1);
 
         /*
         final TextView textView = (TextView) view.findViewById(R.id.item_text);
@@ -71,40 +84,92 @@ class ListCursorAdapter extends CursorAdapter {
         */
 
         if (!TextUtils.isEmpty(imageUriStr)) {
-            final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.imageProgressBar);
-
             boolean imageShown = false;
             if (thumbnailDownloaded) {
-                final ImageView imageView = (ImageView) view.findViewById(R.id.item_image);
-                imageShown = UiUtils.fillImageViewFromContentUri(context, imageUriStr, imageView);
+                imageShown = UiUtils.fillImageViewFromContentUri(mContext, imageUriStr, viewHolder.imageView);
                 if (!imageShown) {
-                    Utils.abandonItem(context, itemId);
+                    Utils.abandonItem(mContext, itemId);
                 }
             }
 
             if (imageShown) {
-                progressBar.setVisibility(View.GONE);
+                viewHolder.progressBar.setVisibility(View.GONE);
             } else {
-                progressBar.setVisibility(View.VISIBLE);
+                viewHolder.progressBar.setVisibility(View.VISIBLE);
                 //TODO: Make sure it gets updated later?
             }
 
-            final LinearLayout iconsPanel = (LinearLayout) view.findViewById(R.id.itemIconsPanel);
 
             if (!favorite && !done && !uploaded) {
-                iconsPanel.setVisibility(View.GONE);
+                viewHolder.iconsPanel.setVisibility(View.GONE);
             } else {
-                iconsPanel.setVisibility(View.VISIBLE);
-
-                final ImageView checkboxFavorite = (ImageView) view.findViewById(R.id.item_checkboxFavorite);
-                checkboxFavorite.setVisibility(favorite ? View.VISIBLE : View.GONE);
-
-                final ImageView checkboxClassified = (ImageView) view.findViewById(R.id.item_checkboxClassified);
-                checkboxClassified.setVisibility(done ? View.VISIBLE : View.GONE);
-
-                final ImageView checkboxUploaded = (ImageView) view.findViewById(R.id.item_checkboxUploaded);
-                checkboxUploaded.setVisibility(uploaded ? View.VISIBLE : View.GONE);
+                viewHolder.iconsPanel.setVisibility(View.VISIBLE);
+                viewHolder.checkboxFavorite.setVisibility(favorite ? View.VISIBLE : View.GONE);
+                viewHolder.checkboxClassified.setVisibility(done ? View.VISIBLE : View.GONE);
+                viewHolder.checkboxUploaded.setVisibility(uploaded ? View.VISIBLE : View.GONE);
             }
+        }
+
+        //holder.itemView.setTag(item);
+    }
+
+    @Override
+    public int getItemCount() {
+        if(mCursor == null) {
+            return 0;
+        }
+
+        return mCursor.getCount();
+    }
+
+    public void changeCursor(final Cursor cursor) {
+        mCursor = cursor;
+
+        //TODO: Can we use the more specific methods.
+        //See https://developer.android.com/reference/android/support/v7/widget/RecyclerView.Adapter.html#notifyDataSetChanged%28%29
+        notifyDataSetChanged();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private WeakReference<ListCursorAdapter> refParent;
+        public ImageView imageView;
+        final LinearLayout iconsPanel;
+        final ImageView checkboxFavorite;
+        final ImageView checkboxClassified;
+        final ImageView checkboxUploaded;
+        final ProgressBar progressBar;
+
+        public ViewHolder(final View v, final ListCursorAdapter parent) {
+            super(v);
+
+            refParent = new WeakReference<>(parent);
+
+            imageView = (ImageView) v.findViewById(R.id.item_image);
+            iconsPanel = (LinearLayout) v.findViewById(R.id.itemIconsPanel);
+            checkboxFavorite = (ImageView) v.findViewById(R.id.item_checkboxFavorite);
+            checkboxClassified = (ImageView) v.findViewById(R.id.item_checkboxClassified);
+            checkboxUploaded = (ImageView) v.findViewById(R.id.item_checkboxUploaded);
+            progressBar = (ProgressBar) v.findViewById(R.id.imageProgressBar);
+
+            imageView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(final View v) {
+            if (refParent == null) {
+                return;
+            }
+
+            final ListCursorAdapter parent = refParent.get();
+            if (parent == null) {
+                return;
+            }
+
+            if (parent.mListener == null) {
+                return;
+            }
+
+            parent.mListener.onItemClicked(getPosition());
         }
     }
 
