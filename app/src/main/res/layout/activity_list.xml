@@ -2,7 +2,8 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.murrayc.galaxyzoo.app.ClassifyActivity"
+    tools:context="com.murrayc.galaxyzoo.app.ListActivity"
+    tools:layout="@android:layout/list_content"
     tools:ignore="MergeRootFrame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,13 +11,10 @@
 
     <include layout="@layout/toolbar" />
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <fragment
         android:id="@+id/table_nav"
         android:name="com.murrayc.galaxyzoo.app.ListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.murrayc.galaxyzoo.app.ListActivity"
-        tools:layout="@android:layout/list_content" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
