@@ -45,7 +45,7 @@ public class LoginActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Utils.showToolbar(this);
+        UiUtils.showToolbar(this);
 
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
