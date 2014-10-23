@@ -12,6 +12,12 @@
     We should use the 700 color for the darker areas such as the status bar.-->
     <color name="color_primary_dark">#afb42b</color> -->
 
+    <!-- The Lime 100 color from here:
+    http://www.google.de/design/spec/style/color.html#color-ui-color-palette
+    We should use the 100 color for the TODO: what?.
+    There is no corresponding colorPrimaryLight in Theme.AppCompat.-->
+    <color name="color_primary_light">#f0f4c3</color> -->
+
     <!-- The Blue 750 color from here:
     http://www.google.de/design/spec/style/color.html#color-ui-color-palette
     We should use a second 500 color for the accent.-->

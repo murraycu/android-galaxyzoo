@@ -6,4 +6,8 @@
     <!-- See http://developer.android.com/design/style/metrics-grids.html -->
     <dimen name="standard_margin">4dp</dimen>
     <dimen name="standard_large_margin">8dp</dimen>
+
+    <!-- Avoid using this unless it's really necessary.
+    The layout grid should align to 4dp and this is very small.-->
+    <dimen name="small_margin">2dp</dimen>
 </resources>

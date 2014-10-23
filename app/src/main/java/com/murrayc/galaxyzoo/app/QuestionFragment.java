@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -474,27 +475,37 @@ public class QuestionFragment extends BaseQuestionFragment
         //will usually get extra space from the TableLayout anyway,
         //but we want to avoid ugly line-breaks when the text is long (such as in translations).
 
+        //Space around the inside of the buttons:
         //When we use smaller dp values, there seems to be no padding at the sides at all,
         //probably because the edges of the button are actually dependent on the standard background
         //image for buttons.
         //2 * standard_margin is nicer, but there is usually more, because the buttons expand
         //and a too-small margin is better than splitting a word across lines.
-        final int padding = UiUtils.getPxForDpResource(context, R.dimen.standard_margin);
+        final int padding = UiUtils.getPxForDpResource(context, R.dimen.small_margin);
         button.setPadding(padding, button.getPaddingTop(), padding, button.getPaddingBottom());
 
         //TODO: A margin of 0 still seems to leave a visible margin.
-        //if(row.getChildCount() > 0) {
-            //final int margin = UiUtils.getPxForDpResource(context, R.dimen.standard_margin);
-            //This reduces the space caused by the standard background drawable,
-            //but negative margins are unmaintainable voodoo: params.setMargins(-4=, 0, -4, 0);
-        //}
-
+        if(row.getChildCount() > 0) {
+            //Space between the buttons:
+            final int margin = UiUtils.getPxForDpResource(context, R.dimen.small_margin);
+            params.setMargins(margin, 0, 0, 0);
+            // When using the standard background drawable (not our custom background color
+            // which replaces it) This reduces the space caused by the standard background drawable,
+            // but negative margins are unmaintainable voodoo:
+            // params.setMargins(-4, 0, -4, 0);
+        }
 
         row.addView(button, params);
     }
 
     private void makeButtonTextSmall(final Activity activity, final Button button) {
         button.setTextAppearance(activity, android.R.style.TextAppearance_Small);
+
+        //Set a background color.
+        //Otherwise we get the default background drawable,
+        //with its fake and unavoidable margins.
+        button.setBackgroundColor(Color.TRANSPARENT);
+        //button.setBackgroundColor(getResources().getColor(R.color.color_primary_light));
     }
 
     private Button createAnswerButton(Activity activity, DecisionTree.Answer answer) {
