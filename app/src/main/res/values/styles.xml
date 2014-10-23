@@ -11,12 +11,13 @@
         <!-- Use the Toolbar instead (new in API 21 (and AppCompat). -->
         <item name="windowActionBar">false</item>
 
-        <!-- colorPrimary is used for the default ActionBar/Toolbar background, for insstance,
-             though we specify that instead in toolbar.xml. -->
+        <!-- colorPrimary is used, for instance, for the default ActionBar (but not Toolbar) background.
+             We specify the same color as the toolbar background in toolbar.xml. -->
         <item name="colorPrimary">@color/color_primary</item>
 
         <!-- textColorPrimary is in the action bar.
-             But it also changes large text for normal -->
+             But it also changes large text for normal,
+             so we only change this in the toolbar-specific theme. -->
         <!-- <item name="android:textColorPrimary">@color/text_color_primary</item> -->
 
         <!-- colorPrimaryDark is used for the status bar (with the battery, clock, etc). -->
@@ -36,7 +37,7 @@
 
     </style>
 
-    <!-- Instead of this, we use app:theme="@style/Theme.AppCompat.Light" on the toolbar instead,
+    <!-- Instead of this, we our custom theme on the toolbar instead,
     to get both the dark text and the dark overflow icon.
     <style name="toolbarTitleTextAppearance"
         parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
@@ -44,11 +45,24 @@
     </style>
     -->
 
-    <!--
-    <style name="GalaxyZooButtonOverflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:src">android:drawable/ic_menu_moreoverflow_normal_holo_dark</item>
-    </style>
-    -->
+    <style name="GalaxyZooThemeToolbarDarkOverflow" parent="AppTheme">
 
+        <!-- android:textColorPrimary is the  color of the title text in the Toolbar,
+        in the Theme.AppCompat theme:  -->
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
+
+        <!-- android:textColorPrimaryInverse is the  color of the title text in the Toolbar,
+        in the Theme.AppCompat.Light theme:  -->
+        <!-- <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item> -->
+
+        <!-- android:textColorSecondary is the color of the menu overflow icon (three vertical dots) -->
+        <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
+
+        <!-- Set the toolbar's background color: -->
+        <!-- But setting this also changes the popup menu's background,
+        even if we define popupTheme for our <Toolbar>
+        <item name="android:background">@color/color_primary</item> -->
+
+    </style>
 
 </resources>

@@ -4,7 +4,7 @@
     to specify a specific title color.
      We use app:theme="@style/Theme.AppCompat.Light" to get the standard
      dark title color and the dark overflow icon,
-     though it also gives us a light menu.-->
+     and app:popupTheme to get the dark popup menu back again..-->
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,4 +12,5 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/color_primary"
-    app:theme="@style/Theme.AppCompat.Light" />
+    app:theme="@style/GalaxyZooThemeToolbarDarkOverflow"
+    app:popupTheme="@style/Theme.AppCompat" />
