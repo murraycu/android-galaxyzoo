@@ -6,7 +6,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.MarginLayoutParamsCompat;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import com.murrayc.galaxyzoo.app.Config;
 
 
 /**
@@ -128,6 +129,10 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             imageExample.setPadding(0, 0, 0, 0);
             imageExample.setImageDrawable(iconExample);
 
+            //Needed to make the image expand as a transition into the SubjectViewerActivity,
+            //which uses the same name in fragment_subject.xml
+            ViewCompat.setTransitionName(imageExample, SubjectFragment.TRANSITION_NAME_SUBJECT_IMAGE);
+
             final LinearLayout.LayoutParams paramsImage = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -138,7 +143,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             imageExample.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     // Perform action on click
-                    onExampleImageClicked(iconName);
+                    onExampleImageClicked(v, iconName);
                 }
             });
 
@@ -149,7 +154,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
                 new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
     }
 
-    private void onExampleImageClicked(final String iconName) {
+    private void onExampleImageClicked(final View imageButton, final String iconName) {
         //These images are not cached,
         //so we will need a network connection.
         final Activity activity = getActivity();
@@ -161,9 +166,15 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         final String uri = Config.FULL_EXAMPLE_URI + iconName + ".jpg";
 
         try {
-            final Intent intent = new Intent(getActivity(), ExampleViewerActivity.class);
+            final Intent intent = new Intent(activity, ExampleViewerActivity.class);
             intent.putExtra(ExampleViewerFragment.ARG_EXAMPLE_URL, uri);
-            startActivity(intent);
+
+            //"subjectImageTransition" is also specified as transitionName="subjectImageTransition"
+            //on the ImageButton here (when we created it) and in fragment_subject.xml.
+            //TODO: Why do we need to specify it again here?
+            final ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(activity, imageButton, SubjectFragment.TRANSITION_NAME_SUBJECT_IMAGE);
+            ActivityCompat.startActivity(activity, intent, options.toBundle());
         } catch (final ActivityNotFoundException e) {
             Log.error("Could not open the example image URI.", e);
         }
