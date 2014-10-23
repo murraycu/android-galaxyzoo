@@ -38,7 +38,7 @@ public class SettingsActivity extends ActionBarActivity {
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
 
-        Utils.showToolbar(this);
+        UiUtils.showToolbar(this);
 
         // Show the Up button in the action bar.
         final ActionBar actionBar = getSupportActionBar();

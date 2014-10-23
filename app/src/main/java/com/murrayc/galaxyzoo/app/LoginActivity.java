@@ -55,7 +55,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
         setContentView(R.layout.activity_login);
 
-        //TODO: Utils.showToolbar(this);
+        //TODO: UiUtils.showToolbar(this);
 
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);

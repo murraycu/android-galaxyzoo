@@ -29,6 +29,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -111,5 +113,15 @@ class UiUtils {
     static int getPxForDpResource(final Context context, int resourceId) {
         final Resources r = context.getResources();
         return r.getDimensionPixelSize(resourceId);
+    }
+
+    protected static void showToolbar(final ActionBarActivity activity) {
+        //The layout XML should include our toolbar.xml,
+        //which we use instead of an ActionBar,
+        //See also our use of <item name="windowActionBar">false</item> in styles.xml.
+        final Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            activity.setSupportActionBar(toolbar);
+        }
     }
 }

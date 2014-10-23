@@ -13,7 +13,7 @@ public class ExampleViewerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_example_viewer);
 
-        Utils.showToolbar(this);
+        UiUtils.showToolbar(this);
 
         final Intent intent = getIntent();
         final String uriStr = intent.getStringExtra(ExampleViewerFragment.ARG_EXAMPLE_URL);

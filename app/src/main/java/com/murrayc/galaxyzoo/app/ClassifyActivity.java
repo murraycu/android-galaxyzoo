@@ -122,7 +122,7 @@ public class ClassifyActivity extends ItemActivity
 
         setContentView(R.layout.activity_classify);
 
-        Utils.showToolbar(this);
+        UiUtils.showToolbar(this);
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
