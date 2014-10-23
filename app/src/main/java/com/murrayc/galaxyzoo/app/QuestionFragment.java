@@ -469,20 +469,27 @@ public class QuestionFragment extends BaseQuestionFragment
 
     private static void insertButtonInRow(final Context context, final TableRow row, final View button) {
         final TableRow.LayoutParams params =
-                new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1f);
+                new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1f /* weight */);
         //Use as little padding as possible at the left and right because the button
         //will usually get extra space from the TableLayout anyway,
         //but we want to avoid ugly line-breaks when the text is long (such as in translations).
 
-        //TODO: When we use smaller dp values, there seems to be no padding at the sides at all.
-        final int padding = UiUtils.getPxForDpResource(context, R.dimen.standard_margin) * 2;
+        //When we use smaller dp values, there seems to be no padding at the sides at all,
+        //probably because the edges of the button are actually dependent on the standard background
+        //image for buttons.
+        //2 * standard_margin is nicer, but there is usually more, because the buttons expand
+        //and a too-small margin is better than splitting a word across lines.
+        final int padding = UiUtils.getPxForDpResource(context, R.dimen.standard_margin);
         button.setPadding(padding, button.getPaddingTop(), padding, button.getPaddingBottom());
 
         //TODO: A margin of 0 still seems to leave a visible margin.
         //if(row.getChildCount() > 0) {
             //final int margin = UiUtils.getPxForDpResource(context, R.dimen.standard_margin);
-            //params.setMargins(0, 0, 0, 0);
+            //This reduces the space caused by the standard background drawable,
+            //but negative margins are unmaintainable voodoo: params.setMargins(-4=, 0, -4, 0);
         //}
+
+
         row.addView(button, params);
     }
 
