@@ -19,7 +19,8 @@
         android:layout_gravity="top"
         android:scaleType="fitStart"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:transitionName="subjectImageTransition" />
 
     <include layout="@layout/progress" />
 
