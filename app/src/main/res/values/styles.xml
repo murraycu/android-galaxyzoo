@@ -11,16 +11,16 @@
         <!-- Use the Toolbar instead (new in API 21 (and AppCompat). -->
         <item name="windowActionBar">false</item>
 
-        <!-- colorPrimary is used for the default action bar background. -->
-        <!-- <item name="colorPrimary">@color/color_primary</item> -->
+        <!-- colorPrimary is used for the default ActionBar/Toolbar background, for insstance,
+             though we specify that instead in toolbar.xml. -->
+        <item name="colorPrimary">@color/color_primary</item>
 
         <!-- textColorPrimary is in the action bar.
              But it also changes large text for normal -->
         <!-- <item name="android:textColorPrimary">@color/text_color_primary</item> -->
 
-        <!-- colorPrimaryDark is used for the status bar (with the battery, clock, etc).
-             Do we want to change that?-->
-        <!-- <item name="colorPrimaryDark">@color/color_primary_dark</item> -->
+        <!-- colorPrimaryDark is used for the status bar (with the battery, clock, etc). -->
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
 
         <!-- colorAccent is used as the default value for colorControlActivated
              which is used to tint widgets -->
