@@ -47,7 +47,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
         }
     }
 
-    private CursorObserver mDataSetObserver = new CursorObserver();
+    private final CursorObserver mDataSetObserver = new CursorObserver();
 
     public Cursor getItem(int position) {
         //TODO Clone or copy it somehow?
@@ -62,7 +62,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
 
     private final Context mContext;
     private Cursor mCursor = null;
-    private OnItemClickedListener mListener;
+    private final OnItemClickedListener mListener;
 
     ListCursorAdapter(final Context context, final Cursor cursor, final OnItemClickedListener listener) {
         mContext = context;
@@ -157,8 +157,8 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private WeakReference<ListCursorAdapter> refParent;
-        public ImageView imageView;
+        private final WeakReference<ListCursorAdapter> refParent;
+        public final ImageView imageView;
         final LinearLayout iconsPanel;
         final ImageView checkboxFavorite;
         final ImageView checkboxClassified;
