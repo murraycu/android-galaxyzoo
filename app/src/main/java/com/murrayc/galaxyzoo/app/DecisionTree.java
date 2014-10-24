@@ -229,7 +229,7 @@ public class DecisionTree {
         return null;
     }
 
-    public Question getFirstQuestion() {
+    private Question getFirstQuestion() {
         if (questionsMap == null) {
             return null;
         }
