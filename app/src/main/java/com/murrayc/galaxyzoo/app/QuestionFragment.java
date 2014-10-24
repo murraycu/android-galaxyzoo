@@ -258,7 +258,7 @@ public class QuestionFragment extends BaseQuestionFragment
                 mClassificationInProgress.setFavorite(checked);
                 return true;
             case R.id.option_menu_item_restart: {
-                finishOrRestartClassification();
+                restartClassification();
                 return true;
             }
             default:
@@ -550,16 +550,23 @@ public class QuestionFragment extends BaseQuestionFragment
             //TODO: Prevent the user from being able to press the button again between now
             //and the new subject being shown.
             saveClassification(mClassificationInProgress);
-            finishOrRestartClassification();
+
+            //Finish the classification:
+            wipeClassification();
+
+            //TODO: Do something else for tablet UIs that share the activity.
+            mCallbacks.onClassificationFinished();
         }
     }
 
-    private void finishOrRestartClassification() {
+    private void wipeClassification() {
         mClassificationInProgress = new ClassificationInProgress();
         setQuestionId(null);
+    }
 
-        //TODO: Do something else for tablet UIs that share the activity.
-        mCallbacks.onClassificationFinished();
+    private void restartClassification() {
+        wipeClassification();
+        update();
     }
 
     private void saveClassification(final ClassificationInProgress classificationInProgress) {
