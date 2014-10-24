@@ -6,19 +6,19 @@
 
     <item
         android:id="@+id/option_menu_item_favorite"
-        android:icon="@drawable/ic_action_favorite"
+        android:icon="@drawable/ic_tinted_action_favorite"
         android:title="@string/action_favorite"
         android:checkable="true"
         android:orderInCategory="1" />
     <item
         android:id="@+id/option_menu_item_examples"
-        android:icon="@drawable/ic_action_help"
+        android:icon="@drawable/ic_tinted_action_help"
         app:showAsAction="ifRoom"
         android:title="@string/action_examples"
         android:orderInCategory="4" />
     <item
         android:id="@+id/option_menu_item_restart"
-        android:icon="@drawable/ic_action_undo"
+        android:icon="@drawable/ic_tinted_action_undo"
         app:showAsAction="ifRoom"
         android:title="@string/action_restart"
         android:orderInCategory="5" />
