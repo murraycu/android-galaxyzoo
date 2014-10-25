@@ -13,8 +13,8 @@
    height="320px"
    id="svg2985"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="icon_invert.svg">
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="ic_action_invert.svg">
   <defs
      id="defs2987" />
   <sodipodi:namedview
@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="214.61364"
-     inkscape:cy="118.30078"
+     inkscape:zoom="2.0000001"
+     inkscape:cx="214.11324"
+     inkscape:cy="155.78358"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -74,6 +74,14 @@
        orientation="1,0"
        position="230,300.0625"
        id="guide3032" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="297.49999,259.99999"
+       id="guide3803" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="259.99999,291.74999"
+       id="guide3805" />
   </sodipodi:namedview>
   <metadata
      id="metadata2990">
@@ -91,15 +99,18 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
     <rect
-       style="fill:none;stroke:#000000;stroke-width:20.06285477;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:none;stroke:#000000;stroke-width:20.06299973000000136;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3001-9"
        width="219.73802"
        height="219.59071"
        x="50.04213"
-       y="50.104137" />
+       y="50.104137"
+       ry="10.14587"
+       rx="9.7801609" />
     <path
        style="fill:#000000;fill-opacity:1;stroke:none"
-       d="M 49.5 50 L 49.5 268.9375 L 160.28125 268.9375 L 160.28125 229.84375 C 160.23927 229.84382 160.19825 229.84375 160.15625 229.84375 C 121.49434 229.84375 90.15625 198.50565 90.15625 159.84375 C 90.15625 121.18185 121.49434 89.84375 160.15625 89.84375 C 160.19825 89.84375 160.23927 89.843676 160.28125 89.84375 L 160.28125 50 L 49.5 50 z M 160.28125 89.84375 L 160.28125 229.84375 C 198.88525 229.77576 230.15625 198.46366 230.15625 159.84375 C 230.15625 121.22384 198.88525 89.911735 160.28125 89.84375 z "
-       id="rect2993" />
+       d="m 49.21875,50.15625 0,218.9375 110.78125,0 L 160,230 c -0.042,7e-5 -0.083,0 -0.125,0 -38.66191,0 -70,-31.3381 -70,-70 0,-38.6619 31.33809,-70 70,-70 0.042,0 0.083,-7e-5 0.125,0 l 0,-39.84375 -110.78125,0 z M 160,90 l 0,140 c 38.604,-0.068 69.875,-31.38009 69.875,-70 0,-38.61991 -31.271,-69.93202 -69.875,-70 z"
+       id="rect2993"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>
