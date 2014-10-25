@@ -55,19 +55,21 @@ public class MoreItemsJsonParser {
     private static ZooniverseClient.Subject parseMoreItemsJsonObjectSubject(final JsonReader reader) throws IOException {
         reader.beginObject();
 
-        final ZooniverseClient.Subject result = new ZooniverseClient.Subject();
+        String subjectId = null;
+        String zooniverseId = null;
+        Locations locations = null;
 
         while (reader.hasNext()) {
             final String name = reader.nextName();
             switch (name) {
                 case "id":
-                    result.mSubjectId = reader.nextString();
+                    subjectId = reader.nextString();
                     break;
                 case "zooniverse_id":
-                    result.mZooniverseId = reader.nextString();
+                    zooniverseId = reader.nextString();
                     break;
                 case "location":
-                    parseMoreItemsJsonObjectSubjectLocation(reader, result);
+                    locations = parseMoreItemsJsonObjectSubjectLocation(reader);
                     break;
                 default:
                     reader.skipValue();
@@ -75,23 +77,56 @@ public class MoreItemsJsonParser {
         }
 
         reader.endObject();
-        return result;
+
+        return new ZooniverseClient.Subject(subjectId, zooniverseId,
+                locations.getLocationStandard(), locations.getLocationThumbnail(), locations.getLocationInverted());
     }
 
-    private static void parseMoreItemsJsonObjectSubjectLocation(final JsonReader reader, final ZooniverseClient.Subject result) throws IOException {
+    /**
+     * This is meant to be immutable.
+     */
+    final static class Locations {
+        private final String mLocationStandard;
+        private final String mLocationThumbnail;
+        private final String mLocationInverted;
+
+        Locations(final String locationStandard, final String locationThumbnail, final String locationInverted) {
+            this.mLocationStandard = locationStandard;
+            this.mLocationThumbnail = locationThumbnail;
+            this.mLocationInverted = locationInverted;
+        }
+
+        public String getLocationStandard() {
+            return mLocationStandard;
+        }
+
+        public String getLocationThumbnail() {
+            return mLocationThumbnail;
+        }
+
+        public String getLocationInverted() {
+            return mLocationInverted;
+        }
+    }
+
+    private static Locations parseMoreItemsJsonObjectSubjectLocation(final JsonReader reader) throws IOException {
         reader.beginObject();
+
+        String locationStandard = null;
+        String locationThumbnail = null;
+        String locationInverted = null;
 
         while (reader.hasNext()) {
             final String name = reader.nextName();
             switch (name) {
                 case "standard":
-                    result.mLocationStandard = reader.nextString();
+                    locationStandard = reader.nextString();
                     break;
                 case "thumbnail":
-                    result.mLocationThumbnail= reader.nextString();
+                    locationThumbnail = reader.nextString();
                     break;
                 case "inverted":
-                    result.mLocationInverted = reader.nextString();
+                    locationInverted = reader.nextString();
                     break;
                 default:
                     reader.skipValue();
@@ -99,6 +134,8 @@ public class MoreItemsJsonParser {
         }
 
         reader.endObject();
+
+        return new Locations(locationStandard, locationThumbnail, locationInverted);
     }
 
 }

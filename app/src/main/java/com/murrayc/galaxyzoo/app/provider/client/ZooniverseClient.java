@@ -285,11 +285,44 @@ public class ZooniverseClient {
         }
     }
 
-    public static class Subject {
-        public String mSubjectId;
-        public String mZooniverseId;
-        public String mLocationStandard;
-        public String mLocationThumbnail;
-        public String mLocationInverted;
+    /**
+     * This class is meant to be immutable.
+     * It only returns references to immutable Strings.
+     */
+    public final static class Subject {
+        private final String mSubjectId;
+        private final String mZooniverseId;
+        private final String mLocationStandard;
+        private final String mLocationThumbnail;
+        private final String mLocationInverted;
+
+        public Subject(final String subjectId, final String zooniverseId, final String locationStandard, final String locationThumbnail, final String locationInverted) {
+            this.mSubjectId = subjectId;
+            this.mZooniverseId = zooniverseId;
+            this.mLocationStandard = locationStandard;
+            this.mLocationThumbnail = locationThumbnail;
+            this.mLocationInverted = locationInverted;
+        }
+
+        public String getSubjectId() {
+            return mSubjectId;
+        }
+
+        public String getZooniverseId() {
+            return mZooniverseId;
+        }
+
+        public String getLocationStandard() {
+            return mLocationStandard;
+        }
+
+        public String getLocationThumbnail() {
+            return mLocationThumbnail;
+        }
+
+        public String getLocationInverted() {
+            return mLocationInverted;
+        }
+
     }
 }

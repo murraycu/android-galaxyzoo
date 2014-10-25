@@ -268,7 +268,7 @@ public class SubjectAdder {
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
     void addSubject(final ZooniverseClient.Subject item, boolean asyncFileDownloads) {
-        if (subjectIsInDatabase(item.mSubjectId)) {
+        if (subjectIsInDatabase(item.getSubjectId())) {
             //It is already in the database.
             //TODO: Update the row?
             return;
@@ -277,14 +277,14 @@ public class SubjectAdder {
         final ContentResolver resolver = getContext().getContentResolver();
 
         final ContentValues values = new ContentValues();
-        values.put(Item.Columns.SUBJECT_ID, item.mSubjectId);
-        values.put(Item.Columns.ZOONIVERSE_ID, item.mZooniverseId);
+        values.put(Item.Columns.SUBJECT_ID, item.getSubjectId());
+        values.put(Item.Columns.ZOONIVERSE_ID, item.getZooniverseId());
 
         //The ItemsContentProvider will take care of creating local file URIs for the remote URis,
         //and this SyncAdapter will request that the remote image files are downloaded into those local file URIs.
-        values.put(Item.Columns.LOCATION_STANDARD_URI_REMOTE, item.mLocationStandard);
-        values.put(Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE, item.mLocationThumbnail);
-        values.put(Item.Columns.LOCATION_INVERTED_URI_REMOTE, item.mLocationInverted);
+        values.put(Item.Columns.LOCATION_STANDARD_URI_REMOTE, item.getLocationStandard());
+        values.put(Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE, item.getLocationThumbnail());
+        values.put(Item.Columns.LOCATION_INVERTED_URI_REMOTE, item.getLocationInverted());
 
         final Uri itemUri = resolver.insert(Item.ITEMS_URI, values);
         if (itemUri == null) {

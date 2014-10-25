@@ -72,16 +72,19 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         final ZooniverseClient.Subject subject = subjects.get(0);
         assertNotNull(subject);
-        assertNotNull(subject.mSubjectId);
-        assertEquals(subject.mSubjectId, "504e6b5dc499611ea6020689");
-        assertNotNull(subject.mZooniverseId);
-        assertEquals(subject.mZooniverseId, "AGZ0002ufd");
-        assertNotNull(subject.mLocationStandard);
-        assertEquals(subject.mLocationStandard, "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/1237666273680359558.jpg");
-        assertNotNull(subject.mLocationThumbnail);
-        assertEquals(subject.mLocationThumbnail, "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/1237666273680359558.jpg");
-        assertNotNull(subject.mLocationInverted);
-        assertEquals(subject.mLocationInverted, "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/inverted/1237666273680359558.jpg");
+        assertNotNull(subject.getSubjectId());
+        assertEquals(subject.getSubjectId(), "504e6b5dc499611ea6020689");
+        assertNotNull(subject.getZooniverseId());
+        assertEquals(subject.getZooniverseId(), "AGZ0002ufd");
+        assertNotNull(subject.getLocationStandard());
+        assertEquals(subject.getLocationStandard(),
+                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/1237666273680359558.jpg");
+        assertNotNull(subject.getLocationThumbnail());
+        assertEquals(subject.getLocationThumbnail(),
+                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/1237666273680359558.jpg");
+        assertNotNull(subject.getLocationInverted());
+        assertEquals(subject.getLocationInverted(),
+                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/inverted/1237666273680359558.jpg");
 
 
         //Test what the server received:
