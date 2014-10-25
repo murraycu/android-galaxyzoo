@@ -91,7 +91,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         assertEquals(1, server.getRequestCount());
         final RecordedRequest request = server.takeRequest();
         assertEquals("GET", request.getMethod());
-        assertEquals("/groups/50251c3b516bcb6ecb000002/subjects?limit=2", request.getPath());
+        assertEquals("/groups/50251c3b516bcb6ecb000002/subjects?limit=5", request.getPath());
 
         server.shutdown();
     }
