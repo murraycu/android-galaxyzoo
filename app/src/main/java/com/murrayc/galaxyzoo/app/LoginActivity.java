@@ -1,17 +1,17 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.accounts.Account;
-import android.accounts.AccountAuthenticatorActivity;
+//import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
@@ -26,10 +26,17 @@ import android.widget.TextView;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 //TODO: Use the toolbar, but we cannot derive from ActionBarActivity from AppCompat.
+//Android's standard AccountAuthenticatorActivity doesn't let us use the toolbar,
+//because it doesn't deried from ActionBarActivity,
+//and it apparently will never have a usable version in AppCompat,
+//so we have to copy the whole class to create ZooAccountAuthenticatorActivity
+//and derive from that instead.
+//See https://chris.banes.me/2014/10/17/appcompat-v21/#comment-1652981836
+
 /**
  * A login screen that offers login via username/password.
  */
-public class LoginActivity extends AccountAuthenticatorActivity {
+public class LoginActivity extends ZooAccountAuthenticatorActivity {
 
     /** The Intent extra to store username. */
     public static final String ARG_USERNAME = "username";
@@ -55,7 +62,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
         setContentView(R.layout.activity_login);
 
-        //TODO: UiUtils.showToolbar(this);
+        UiUtils.showToolbar(this);
 
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
@@ -97,8 +104,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         mProgressView = findViewById(R.id.login_progress);
 
         // Show the Up button in the action bar.
-        //TODO: final ActionBar actionBar = getSupportActionBar();
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar == null)
             return;
 
