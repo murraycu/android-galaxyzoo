@@ -29,8 +29,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -123,5 +126,11 @@ class UiUtils {
         if (toolbar != null) {
             activity.setSupportActionBar(toolbar);
         }
+    }
+
+    public static Bundle getTransitionOptionsBundle(final Activity activity, final View sharedElementView) {
+        final ActivityOptionsCompat options =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharedElementView, activity.getString(R.string.transition_subject_image));
+        return options.toBundle();
     }
 }

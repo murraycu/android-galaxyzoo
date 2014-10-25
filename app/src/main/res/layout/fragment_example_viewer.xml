@@ -20,7 +20,7 @@
         android:scaleType="fitStart"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:transitionName="subjectImageTransition" />
+        android:transitionName="@string/transition_subject_image" />
 
     <include layout="@layout/progress" />
 

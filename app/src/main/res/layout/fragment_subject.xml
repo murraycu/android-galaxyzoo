@@ -18,6 +18,6 @@
         android:clickable="true"
         android:contentDescription="@string/description_standard_image"
         android:scaleType="fitStart"
-        android:transitionName="subjectImageTransition" />
+        android:transitionName="@string/transition_subject_image" />
 
 </RelativeLayout>

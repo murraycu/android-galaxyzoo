@@ -140,4 +140,9 @@
     <string name="pref_title_keep_count">Keep</string>
     <string name="pref_default_keep_count" translatable="false">50</string>
 
+    //The android:transitionName used for the ImageView that shows the subject.
+    //Activities can use the same transitionName on small versions of the image,
+    //when specifying a transition when starting an activity that contains this SubjectFragment.
+    <string name="transition_subject_image" translatable="false">transition_subject_image</string>
+
 </resources>

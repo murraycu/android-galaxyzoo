@@ -47,12 +47,6 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 public class SubjectFragment extends ItemFragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-
-    //The android:transitionName used for the ImageView that shows the subject.
-    //Activities can use the same transitionName on small versions of the image,
-    //when specifying a transition when starting an activity that contains this SubjectFragment.
-    public static final String TRANSITION_NAME_SUBJECT_IMAGE = "subjectImageTransition";
-
     private static final int URL_LOADER = 0;
     private static final String ARG_INVERTED = "inverted";
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor

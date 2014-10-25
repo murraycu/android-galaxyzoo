@@ -83,9 +83,7 @@ class BaseActivity extends ActionBarActivity {
             //"subjectImageTransition" is also specified as transitionName="subjectImageTransition"
             //on the ImageView in both gridview_cell_fragment_list.xml and fragment_subject.xml.
             //TODO: Why do we need to specify it again here?
-            final ActivityOptionsCompat options =
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElementView, SubjectFragment.TRANSITION_NAME_SUBJECT_IMAGE);
-            ActivityCompat.startActivity(this, intent, options.toBundle());
+            ActivityCompat.startActivity(this, intent, UiUtils.getTransitionOptionsBundle(this, sharedElementView));
         } else {
             startActivity(intent);
         }

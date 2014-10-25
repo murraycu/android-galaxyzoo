@@ -132,7 +132,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
             //Needed to make the image expand as a transition into the SubjectViewerActivity,
             //which uses the same name in fragment_subject.xml
-            ViewCompat.setTransitionName(imageExample, SubjectFragment.TRANSITION_NAME_SUBJECT_IMAGE);
+            ViewCompat.setTransitionName(imageExample, getString(R.string.transition_subject_image));
 
             final LinearLayout.LayoutParams paramsImage = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -173,9 +173,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             //"subjectImageTransition" is also specified as transitionName="subjectImageTransition"
             //on the ImageButton here (when we created it) and in fragment_subject.xml.
             //TODO: Why do we need to specify it again here?
-            final ActivityOptionsCompat options =
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(activity, imageButton, SubjectFragment.TRANSITION_NAME_SUBJECT_IMAGE);
-            ActivityCompat.startActivity(activity, intent, options.toBundle());
+            ActivityCompat.startActivity(activity, intent, UiUtils.getTransitionOptionsBundle(activity, imageButton));
         } catch (final ActivityNotFoundException e) {
             Log.error("Could not open the example image URI.", e);
         }
