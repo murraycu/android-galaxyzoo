@@ -566,7 +566,7 @@ public class ItemsContentProvider extends ContentProvider {
         //Note that the cached image files in files/ will not be deleted
         //so you will see "the file already exists" errors in the log,
         //but we will then just reuse the files.
-        mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
+        //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
 
         mZooniverseClient = new ZooniverseClient(getContext(), Config.SERVER);
         mSubjectAdder = new SubjectAdder(getContext());
