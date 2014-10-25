@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="?android:attr/textAppearanceLarge"
+    style="@style/TextAppearance.AppCompat.Large"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
@@ -14,7 +14,8 @@
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
             android:id="@+id/textViewExamples"
@@ -23,7 +24,7 @@
             android:layout_below="@+id/textView"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text="@string/title_examples"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:layout_marginBottom="@dimen/standard_large_margin" />
 
         <TableLayout

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/table_detail"
-    style="?android:attr/textAppearanceLarge"
+    style="@style/TextAppearance.AppCompat.Large"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -23,13 +23,13 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:singleLine="true"
             android:text="@string/title_zooniverse_id"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <TextView
             android:id="@+id/textViewZooniverseId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
     </LinearLayout>
 
     <LinearLayout

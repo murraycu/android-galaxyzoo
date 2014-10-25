@@ -56,7 +56,7 @@
             android:focusableInTouchMode="false"
             android:src="@drawable/ic_small_accept"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:layout_gravity="bottom|right|end" />
 
 
@@ -71,7 +71,7 @@
             android:focusableInTouchMode="false"
             android:src="@drawable/ic_small_upload"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:layout_gravity="bottom|right|end" />
 
         <ImageView
@@ -84,7 +84,7 @@
             android:focusableInTouchMode="false"
             android:src="@drawable/ic_small_favorite"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:layout_gravity="bottom" />
     </LinearLayout>
 

@@ -499,7 +499,7 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     private void makeButtonTextSmall(final Activity activity, final Button button) {
-        button.setTextAppearance(activity, android.R.style.TextAppearance_Small);
+        button.setTextAppearance(activity, R.style.TextAppearance_AppCompat_Small);
 
         //Set a background color.
         //Otherwise we get the default background drawable,
