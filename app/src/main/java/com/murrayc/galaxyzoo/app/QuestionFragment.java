@@ -348,7 +348,7 @@ public class QuestionFragment extends BaseQuestionFragment
         int col = 1;
         int rows = 0;
         TableRow row = null;
-        for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
+        for (final DecisionTree.Checkbox checkbox : question.getCheckboxes()) {
             //Start a new row if necessary:
             if (row == null) {
                 row = addRowToTable(activity, layoutAnswers);
@@ -392,7 +392,7 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         //Answers:
-        for (final DecisionTree.Answer answer : question.answers) {
+        for (final DecisionTree.Answer answer : question.getAnswers()) {
             //Start a new row if necessary:
             if (row == null) {
                 row = addRowToTable(activity, layoutAnswers);
@@ -524,7 +524,7 @@ public class QuestionFragment extends BaseQuestionFragment
             final DecisionTree.Question question = tree.getQuestion(questionId);
             if (question.hasCheckboxes()) {
                 checkboxes = new ArrayList<>();
-                for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
+                for (final DecisionTree.Checkbox checkbox : question.getCheckboxes()) {
                     final String checkboxId = checkbox.getId();
                     final ToggleButton button = mCheckboxButtons.get(checkboxId);
                     if ((button != null) && button.isChecked()) {

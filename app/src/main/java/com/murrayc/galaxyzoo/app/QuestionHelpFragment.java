@@ -79,11 +79,11 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         }
 
         tableLayout.removeAllViews();
-        for (final DecisionTree.Answer answer : question.answers) {
+        for (final DecisionTree.Answer answer : question.getAnswers()) {
             addRowForAnswer(activity, tableLayout, question, answer);
         }
 
-        for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
+        for (final DecisionTree.Checkbox checkbox : question.getCheckboxes()) {
             addRowForAnswer(activity, tableLayout, question, checkbox);
         }
     }

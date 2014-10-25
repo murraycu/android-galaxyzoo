@@ -133,7 +133,7 @@ class IconsCache {
     }
 
     private boolean reloadIconsForQuestion(final DecisionTree.Question question) {
-        for (final DecisionTree.Answer answer : question.answers) {
+        for (final DecisionTree.Answer answer : question.getAnswers()) {
             //Get the icon for the answer:
             if (!reloadIcon(answer.getIcon(), mWorkflowIcons)) {
                 return false;
@@ -144,7 +144,7 @@ class IconsCache {
             }
         }
 
-        for (final DecisionTree.Checkbox checkbox : question.checkboxes) {
+        for (final DecisionTree.Checkbox checkbox : question.getCheckboxes()) {
             if (!reloadIcon(checkbox.getIcon(), mWorkflowIcons)) {
                 return false;
             }

@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -164,11 +165,11 @@ public class DecisionTree {
                     question.setHelp(reader.nextString());
                     break;
                 case "answers": {
-                    readJsonAnswers(reader, question.answers);
+                    readJsonAnswers(reader, question);
                     break;
                 }
                 case "checkboxes": {
-                    readJsonCheckboxes(reader, question.checkboxes);
+                    readJsonCheckboxes(reader, question);
                     break;
                 }
                 default:
@@ -178,11 +179,14 @@ public class DecisionTree {
         reader.endObject();
     }
 
-    private void readJsonAnswers(final JsonReader reader, final List<Answer> answers) throws IOException {
+    private void readJsonAnswers(final JsonReader reader, final Question question) throws IOException {
+        final List<Answer> answers = question.answers;
+
         reader.beginObject();
         while (reader.hasNext()) {
             final String answerId = reader.nextName();
 
+            //Get the previously created answer from the decision tree and add the translated text:
             final Answer answer = getAnswerWithId(answers, answerId);
             if (answer != null) {
                 answer.setText(reader.nextString());
@@ -193,11 +197,14 @@ public class DecisionTree {
         reader.endObject();
     }
 
-    private void readJsonCheckboxes(final JsonReader reader, final List<Checkbox> checkboxes) throws IOException {
+    private void readJsonCheckboxes(final JsonReader reader, final Question question) throws IOException {
+        final List<Checkbox> checkboxes = question.checkboxes;
+
         reader.beginObject();
         while (reader.hasNext()) {
             final String answerId = reader.nextName();
 
+            //Get the previously created checkbox from the decision tree and add the translated text:
             final Checkbox checkbox = getCheckboxWithId(checkboxes, answerId);
             if (checkbox != null) {
                 checkbox.setText(reader.nextString());
@@ -371,7 +378,7 @@ public class DecisionTree {
 
             final Element element = (Element) node;
             final Checkbox checkbox = loadCheckbox(element);
-            result.checkboxes.add(checkbox);
+            result.addCheckbox(checkbox);
         }
 
         final List<Node> listAnswers = getChildrenByTagName(questionNode, NODE_ANSWER);
@@ -405,7 +412,11 @@ public class DecisionTree {
                 Integer.parseInt(answerNode.getAttribute("examplesCount")));
     }
 
-    static class BaseButton {
+    /** This class is meant to be immutable,
+     * because that's generally nice when it's possible.
+     * It returns and takes String references, but String is immutable too.
+     */
+    static abstract class BaseButton {
         private final String id;
         private String text;
         private final String icon;
@@ -426,6 +437,8 @@ public class DecisionTree {
             return text;
         }
 
+
+        //TODO: Remove this to make the class really immutable.
         public void setText(final String text) {
             this.text = text;
         }
@@ -443,16 +456,28 @@ public class DecisionTree {
         }
     }
 
-    //These are multiple-selection.
-    static class Checkbox extends BaseButton {
+    /**
+     * These are multiple-selection.
+     *
+     * This class is meant to be immutable,
+     * because that's generally nice when it's possible.
+     * It returns and takes String references, but String is immutable too.
+     */
+    static final class Checkbox extends BaseButton {
         Checkbox(final String id, final String text, final String icon, int examplesCount) {
             super(id, text, icon, examplesCount);
         }
     }
 
-    //These are single selection.
-    //Sometimes it's just "Done" to accept the checkbox selections.
-    static class Answer extends BaseButton {
+    /**
+     * These are single selection.
+     * Sometimes it's just "Done" to accept the checkbox selections.
+     *
+     * This class is meant to be immutable,
+     * because that's generally nice when it's possible.
+     * It returns and take String references, but String is immutable too.
+     */
+    static final class Answer extends BaseButton {
         private final String leadsToQuestionId;
 
         Answer(final String id, final String text, final String icon, final String leadsToQuestionId, int examplesCount) {
@@ -461,9 +486,17 @@ public class DecisionTree {
         }
     }
 
-    public static class Question {
-        public final List<Checkbox> checkboxes = new ArrayList<>();
-        public final List<Answer> answers = new ArrayList<>();
+    /**
+     * A question from the Decision Tree,
+     * with associated answers and checkboxes.
+     *
+     * This class is meant to be immutable,
+     * because that's generally nice when it's possible.
+     * It returns and takes references, but only to objects that are immutable too.
+     */
+    public static final class Question {
+        private final List<Checkbox> checkboxes = new ArrayList<>();
+        private final List<Answer> answers = new ArrayList<>();
         private final String id;
         private String title;
         private String text;
@@ -492,6 +525,7 @@ public class DecisionTree {
             return text;
         }
 
+        //TODO: Remove this to make the class really immutable.
         public void setText(final String text) {
             this.text = text;
         }
@@ -500,6 +534,7 @@ public class DecisionTree {
             return help;
         }
 
+        //TODO: Remove this to make the class really immutable.
         public void setHelp(final String help) {
             this.help = help;
         }
@@ -514,6 +549,18 @@ public class DecisionTree {
             }
 
             return true;
+        }
+
+        public void addCheckbox(final Checkbox checkbox) {
+            checkboxes.add(checkbox);
+        }
+
+        public List<Checkbox> getCheckboxes() {
+            return Collections.unmodifiableList(checkboxes);
+        }
+
+        public List<Answer> getAnswers() {
+            return Collections.unmodifiableList(answers);
         }
     }
 }
