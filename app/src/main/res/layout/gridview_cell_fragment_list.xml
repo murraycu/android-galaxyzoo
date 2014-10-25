@@ -43,7 +43,8 @@
         android:paddingBottom="@dimen/standard_margin"
         android:paddingLeft="@dimen/standard_margin"
         android:paddingRight="@dimen/standard_margin"
-        android:id="@+id/itemIconsPanel">
+        android:id="@+id/itemIconsPanel"
+        android:elevation="2dp">
 
         <ImageView
             android:id="@+id/item_checkboxClassified"
@@ -57,7 +58,8 @@
             android:src="@drawable/ic_small_accept"
             android:text=""
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:layout_gravity="bottom|right|end" />
+            android:layout_gravity="bottom|right|end"
+            android:elevation="4dp" />
 
 
         <ImageView
@@ -72,7 +74,8 @@
             android:src="@drawable/ic_small_upload"
             android:text=""
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:layout_gravity="bottom|right|end" />
+            android:layout_gravity="bottom|right|end"
+            android:elevation="4dp" />
 
         <ImageView
             android:id="@+id/item_checkboxFavorite"
@@ -85,7 +88,8 @@
             android:src="@drawable/ic_small_favorite"
             android:text=""
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:layout_gravity="bottom" />
+            android:layout_gravity="bottom"
+            android:elevation="4dp" />
     </LinearLayout>
 
 </RelativeLayout>
