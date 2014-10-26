@@ -19,6 +19,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
@@ -36,6 +37,7 @@ import android.support.v7.app.ActionBarActivity;
  * is never set or if it is set to null then error {@link AccountManager#ERROR_CODE_CANCELED}
  * will be called on the response.
  */
+@SuppressLint("Registered")
 public class ZooAccountAuthenticatorActivity extends ActionBarActivity {
     private AccountAuthenticatorResponse mAccountAuthenticatorResponse = null;
     private Bundle mResultBundle = null;
