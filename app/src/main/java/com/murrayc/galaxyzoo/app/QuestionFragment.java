@@ -46,6 +46,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -374,14 +375,14 @@ public class QuestionFragment extends BaseQuestionFragment
 
             mCheckboxButtons.put(checkbox.getId(), button);
 
-            /*
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
+
+            button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     // Perform action on click
-                    onAnswerButtonClicked(checkbox.getId());
+                    final ToggleButton toggleButton = (ToggleButton) buttonView;
+                    onCheckBoxButtonClicked(toggleButton, isChecked);
                 }
             });
-            */
 
             if (col < COL_COUNT) {
                 col++;
@@ -460,10 +461,28 @@ public class QuestionFragment extends BaseQuestionFragment
         }
     }
 
+    private void onCheckBoxButtonClicked(final ToggleButton toggleButton, boolean isChecked) {
+        if (isChecked) {
+            toggleButton.setBackgroundColor(getResources().getColor(R.color.color_accent));
+        } else {
+            toggleButton.setBackgroundColor(Color.TRANSPARENT);
+        }
+    }
+
     private static TableRow addRowToTable(final Activity activity, final TableLayout layoutAnswers) {
         final TableRow row = new TableRow(activity);
-        layoutAnswers.addView(row,
-                new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT));
+
+        final TableLayout.LayoutParams params =
+                new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
+                        TableLayout.LayoutParams.MATCH_PARENT);
+
+        //Add a top margin between this row and any row above it:
+        if (layoutAnswers.getChildCount() > 0) {
+            final int margin = UiUtils.getPxForDpResource(activity, R.dimen.small_margin);
+            params.setMargins(0, margin, 0, 0);
+        }
+
+        layoutAnswers.addView(row, params);
         return row;
     }
 
