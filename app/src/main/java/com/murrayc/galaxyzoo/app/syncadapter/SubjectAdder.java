@@ -200,6 +200,7 @@ public class SubjectAdder {
                         @Override
                         public void onErrorResponse(final VolleyError error) {
                             Log.error("cacheUriToFile.onErrorResponse()", error);
+                            onImageDownloadDone(false, uriFileToCache, itemUri, imageType);
                         }
                     });
             mRequestQueue.add(request);
@@ -217,10 +218,8 @@ public class SubjectAdder {
                 response = futureListener.get(HttpUtils.TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             } catch (final InterruptedException | ExecutionException e) {
                 Log.error("cacheUriToFile(): Exception from request.", e);
-                return false;
             } catch (TimeoutException e) {
                 Log.error("cacheUriToFile(): Timeout Exception from request.", e);
-                return false;
             }
 
             return onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
