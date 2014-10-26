@@ -148,6 +148,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     @Override
                     public void onErrorResponse(final VolleyError error) {
                         Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", error);
+                        mRequestMoreItemsTaskInProgress = false;
                     }
                 });
     }
