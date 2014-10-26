@@ -509,7 +509,13 @@ public class ItemsContentProvider extends ContentProvider {
         try {
             final Context context = getContext();
             if (context != null) {
-                final File realFile = new File(context.getExternalFilesDir(null),
+                final File extDir = context.getExternalFilesDir(null);
+                if (extDir == null) {
+                    Log.error("createFileUri(): getExternalFilesDir returned null.");
+                    return null;
+                }
+
+                final File realFile = new File(extDir,
                         Long.toString(fileId)); //TODO: Is toString() affected by the locale?
 
                 //Actually create an empty file there -
@@ -535,9 +541,9 @@ public class ItemsContentProvider extends ContentProvider {
             //so at least the other functionality can be tested.
             //TODO: Find a way to let it succeed.
             realFileUri = "testuri";
-            Log.error("Unsupported operation", e);
+            Log.error("createFileUri(): Unsupported operation", e);
         } catch (final IOException e) {
-            Log.error("IOException", e);
+            Log.error("createFileUri(): IOException", e);
             return null;
         }
 
