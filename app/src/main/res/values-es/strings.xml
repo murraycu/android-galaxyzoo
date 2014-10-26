@@ -36,6 +36,8 @@
     <!-- Shown on a menu item to open the application's settings (preferences). -->
     <string name="action_settings">Ajustes</string>
 
+    <string name="description_settings">How many to download in advance, etc.</string>
+
     <!-- Shown on a menu item to view the application's description. -->
     <string name="action_about">Acerca de</string>
 
