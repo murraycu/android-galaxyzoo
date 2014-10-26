@@ -240,7 +240,7 @@ public class ZooniverseClient {
             conn.setDoOutput(true);
             conn.setDoInput(true);
         } catch (final IOException e) {
-            Log.error("UploadAsyncTask.doInBackground(): exception during HTTP connection", e);
+            Log.error("uploadClassificationSync: exception during HTTP connection", e);
 
             return false;
         }
@@ -265,13 +265,13 @@ public class ZooniverseClient {
             in = conn.getInputStream();
             final int responseCode = conn.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_CREATED) {
-                Log.error("UploadAsyncTask.doInBackground(): Did not receive the 201 Created status code: " + conn.getResponseCode());
+                Log.error("uploadClassificationSync: Did not receive the 201 Created status code: " + conn.getResponseCode());
                 return false;
             }
 
             return true;
         } catch (final IOException e) {
-            Log.error("UploadAsyncTask.doInBackground(): exception during HTTP connection", e);
+            Log.error("uploadClassificationSync: exception during HTTP connection", e);
 
             return false;
         } finally {
@@ -279,7 +279,7 @@ public class ZooniverseClient {
                 try {
                     in.close();
                 } catch (final IOException e) {
-                    Log.error("UploadAsyncTask.doInBackground(): exception while closing in", e);
+                    Log.error("uploadClassificationSync: exception while closing in", e);
                 }
             }
         }
