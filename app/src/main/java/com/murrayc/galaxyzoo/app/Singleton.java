@@ -24,6 +24,11 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.LruCache;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.Volley;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +49,8 @@ public class Singleton {
     private static List<Callbacks> mCallbacks = new ArrayList<>();
     private static Singleton ourInstance = null;
     private static boolean initializationInProgress = false;
+    private final RequestQueue mRequestQueue;
+    private final ImageLoader mImageLoader;
     private IconsCache mIconsCache = null;
     private DecisionTree mDecisionTree = null;
     private LocaleDetails mLocaleDetails = null;
@@ -52,6 +59,21 @@ public class Singleton {
         //This needs to be done as soon as the app opens.
         //See http://developer.android.com/guide/topics/ui/settings.html#Fragment
         Utils.initDefaultPrefs(context);
+
+        //Initialize the shared (with cache) ImageLoader that we use with Volley:
+        mRequestQueue = Volley.newRequestQueue(context);
+        mImageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
+            private final LruCache<String, Bitmap> mCache = new LruCache<>(10);
+
+            public void putBitmap(final String url, final Bitmap bitmap) {
+                mCache.put(url, bitmap);
+            }
+
+            public Bitmap getBitmap(final String url) {
+                return mCache.get(url);
+            }
+        });
+
 
         //Try to find a translation file:
         InputStream inputStreamTranslation = null;
@@ -205,6 +227,10 @@ public class Singleton {
         //changes, but that is rare enough not to be a problem.
         final LocaleDetails newDetails = getLocaleDetails(context);
         return !newDetails.equals(mLocaleDetails);
+    }
+
+    public ImageLoader getVolleyImageLoader() {
+       return mImageLoader;
     }
 
     public static interface Callbacks {
