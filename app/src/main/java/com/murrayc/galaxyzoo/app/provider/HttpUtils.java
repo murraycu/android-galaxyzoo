@@ -172,10 +172,11 @@ public class HttpUtils {
 
     private static boolean parseGetFileResponseContent(final Context context, final InputStream in, final String cacheFileContentUri) {
         //Write the content to the file:
+        ParcelFileDescriptor pfd = null;
         FileOutputStream fout = null;
         try {
             //FileOutputStream doesn't seem to understand content provider URIs:
-            final ParcelFileDescriptor pfd = context.getContentResolver().
+            pfd = context.getContentResolver().
                     openFileDescriptor(Uri.parse(cacheFileContentUri), "w");
 
             fout = new FileOutputStream(pfd.getFileDescriptor());
@@ -200,6 +201,14 @@ public class HttpUtils {
                     fout.close();
                 } catch (final IOException e) {
                     Log.error("parseGetFileResponseContent(): Exception while closing fout", e);
+                }
+            }
+
+            if (pfd != null) {
+                try {
+                    pfd.close();
+                } catch (final IOException e) {
+                    Log.error("parseGetFileResponseContent(): Exception while closing pfd", e);
                 }
             }
         }
