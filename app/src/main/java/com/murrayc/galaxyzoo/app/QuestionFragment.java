@@ -349,6 +349,7 @@ public class QuestionFragment extends BaseQuestionFragment
         int col = 1;
         int rows = 0;
         TableRow row = null;
+        final LayoutInflater inflater = LayoutInflater.from(activity);
         for (final DecisionTree.Checkbox checkbox : question.getCheckboxes()) {
             //Start a new row if necessary:
             if (row == null) {
@@ -356,9 +357,7 @@ public class QuestionFragment extends BaseQuestionFragment
                 rows++;
             }
 
-            final ToggleButton button = new ToggleButton(activity);
-            makeButtonTextSmall(activity, button);
-
+            final ToggleButton button = (ToggleButton)inflater.inflate(R.layout.question_answer_checkbox, null);
 
             //Use just the highlighting (line, color, etc) to show that it's selected,
             //instead of On/Off, so we don't need a separate label.
@@ -498,20 +497,10 @@ public class QuestionFragment extends BaseQuestionFragment
         row.addView(button, params);
     }
 
-    private void makeButtonTextSmall(final Activity activity, final Button button) {
-        button.setTextAppearance(activity, R.style.TextAppearance_AppCompat_Small);
-
-        //Set a background color.
-        //Otherwise we get the default background drawable,
-        //with its fake and unavoidable margins.
-        button.setBackgroundColor(Color.TRANSPARENT);
-        //button.setBackgroundColor(getResources().getColor(R.color.color_primary_light));
-    }
-
     private Button createAnswerButton(Activity activity, DecisionTree.Answer answer) {
-        final Button button = new Button(activity);
+        final LayoutInflater inflater = LayoutInflater.from(activity);
+        final Button button = (Button)inflater.inflate(R.layout.question_answer_button, null);
         button.setText(answer.getText());
-        makeButtonTextSmall(activity, button);
 
         final BitmapDrawable icon = getIcon(activity, answer);
         button.setCompoundDrawables(null, icon, null, null);
