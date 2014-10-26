@@ -60,6 +60,8 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mClient = new ZooniverseClient(this, com.murrayc.galaxyzoo.app.provider.Config.SERVER);
+
         setContentView(R.layout.activity_login);
 
         UiUtils.showToolbar(this);
