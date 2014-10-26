@@ -185,52 +185,6 @@ public class HttpUtils {
         return true;
     }
 
-    private static boolean parseGetFileResponseContent(final Context context, final InputStream in, final String cacheFileContentUri) {
-        //Write the content to the file:
-        ParcelFileDescriptor pfd = null;
-        FileOutputStream fout = null;
-        try {
-            //FileOutputStream doesn't seem to understand content provider URIs:
-            pfd = context.getContentResolver().
-                    openFileDescriptor(Uri.parse(cacheFileContentUri), "w");
-
-            fout = new FileOutputStream(pfd.getFileDescriptor());
-            // TODO: Find a way to use writeTo(), instead of looping ourselves,
-            // while also having optional ungzipping?
-            //response.getEntity().writeTo(fout);
-
-            byte[] bytes = new byte[256];
-            int r;
-            do {
-                r = in.read(bytes);
-                if (r >= 0) {
-                    fout.write(bytes, 0, r);
-                }
-            } while (r >= 0);
-        } catch (final IOException e) {
-            Log.error("parseGetFileResponseContent(): Exception while writing to FileOutputStream", e);
-            return false;
-        } finally {
-            if (fout != null) {
-                try {
-                    fout.close();
-                } catch (final IOException e) {
-                    Log.error("parseGetFileResponseContent(): Exception while closing fout", e);
-                }
-            }
-
-            if (pfd != null) {
-                try {
-                    pfd.close();
-                } catch (final IOException e) {
-                    Log.error("parseGetFileResponseContent(): Exception while closing pfd", e);
-                }
-            }
-        }
-
-        return true;
-    }
-
     /**
      * This is a RuntimeException because only RuntimeExceptions may be thrown by
      * a ContentProvider.

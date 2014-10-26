@@ -250,30 +250,6 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    private String getLocalFileuriForContentUri(final String uriContent) {
-        final Uri uri = Uri.parse(uriContent);
-        final UriParts uriParts = parseContentUri(uri);
-        final String fileId = uriParts.itemId;
-
-        final String[] projection = {DatabaseHelper.FilesDbColumns.FILE_DATA};
-        final String whereClause = DatabaseHelper.FilesDbColumns._ID + " = ?"; //We use ? to avoid SQL Injection.
-        final String[] selectionArgs = {fileId};
-
-        final Cursor c = getDb().query(DatabaseHelper.TABLE_NAME_FILES, projection,
-                whereClause, selectionArgs, null, null, null);
-
-        String result = null;
-        if (c.getCount() > 0) {
-            c.moveToFirst();
-            result = c.getString(0);
-        }
-
-        c.close();
-
-        return result;
-    }
-
-
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         final int match = sUriMatcher.match(uri);
