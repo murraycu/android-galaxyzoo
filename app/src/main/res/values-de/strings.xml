@@ -42,6 +42,7 @@
     <string name="progress_loading_text">Ladevorgang…</string>
     <string name="about_version_text_format">Version: %s</string>
     <string name="error_no_network">No Network connection.</string>
+    <string name="error_could_not_connect">Cannot connect to the server.</string>
     <string name="error_no_subjects">Cannot download new subjects to classify.</string>
     <string name="message_logged_in">Logged In.</string>
     <string name="error_button_cancel">Abbrechen</string>

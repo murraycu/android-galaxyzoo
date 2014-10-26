@@ -127,6 +127,7 @@
     <string name="pref_title_keep_count">Mantieni</string>
     <string name="error_button_cancel">Annulla</string>
     <string name="error_no_network">Nessuna connessione di rete.</string>
+    <string name="error_could_not_connect">Cannot connect to the server.</string>
     <string name="error_button_retry">Riprova</string>
     <string name="error_no_subjects">Cannot download new subjects to classify.</string>
     <string name="message_logged_in">Logged In.</string>
