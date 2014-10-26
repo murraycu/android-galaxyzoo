@@ -29,5 +29,6 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.0'
     compile 'com.android.support:appcompat-v7:21.0.0'
     compile 'com.android.support:recyclerview-v7:21.0.0'
+    compile 'com.mcxiaoke.volley:library:1.0.7'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.0.0'
 }
