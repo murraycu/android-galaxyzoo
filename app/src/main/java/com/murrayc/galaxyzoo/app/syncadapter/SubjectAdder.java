@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
@@ -23,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class SubjectAdder {
     private final Context mContext;
@@ -192,20 +195,31 @@ public class SubjectAdder {
                         public void onResponse(Boolean response) {
                             onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
                         }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(final VolleyError error) {
+                            Log.error("cacheUriToFile.onErrorResponse()", error);
+                        }
                     });
             mRequestQueue.add(request);
             return true;
         } else {
             final RequestFuture<Boolean> futureListener = RequestFuture.newFuture();
             final Request<Boolean> request = new HttpUtils.FileCacheRequest(getContext(), uriFileToCache, cacheFileUri,
-                    futureListener);
+                    futureListener, futureListener);
             mRequestQueue.add(request);
 
             boolean response = false;
             try {
-                response = futureListener.get();
+                //Note: If we don't provider the RequestFuture as the errorListener too,
+                //then this won't return until after the timeout, even if an error happen earlier.
+                response = futureListener.get(HttpUtils.TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             } catch (final InterruptedException | ExecutionException e) {
                 Log.error("cacheUriToFile(): Exception from request.", e);
+                return false;
+            } catch (TimeoutException e) {
+                Log.error("cacheUriToFile(): Timeout Exception from request.", e);
                 return false;
             }
 

@@ -29,6 +29,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by murrayc on 10/10/14.
@@ -210,29 +212,32 @@ public class ZooniverseClient {
         // Request a string response from the provided URL.
         // TODO: Use HttpUrlConnection directly instead of trying to use Volley synchronously?
         final RequestFuture<String> futureListener = RequestFuture.newFuture();
-        requestMoreItemsAsync(count, futureListener,
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(final VolleyError error) {
-                        Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", error);
-                    }
-                });
+        requestMoreItemsAsync(count, futureListener, futureListener);
 
         String response = null;
         try {
-            response = futureListener.get();
+            //Note: If we don't provider the RequestFuture as the errorListener too,
+            //then this won't return until after the timeout, even if an error happen earlier.
+            response = futureListener.get(HttpUtils.TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
         } catch (final InterruptedException | ExecutionException e) {
             Log.error("cacheUriToFile(): Exception from request.", e);
+            return null;
+        } catch (TimeoutException e) {
+            Log.error("cacheUriToFile(): Timeout Exception from request.", e);
+        }
+
+        //Presumably this happens when onErrorResponse() is called.
+        if (response == null) {
             return null;
         }
 
         return MoreItemsJsonParser.parseMoreItemsResponseContent(response);
     }
 
-    public void requestMoreItemsAsync(int count, final Response.Listener<String> futureListener, final Response.ErrorListener errorListener) {
+    public void requestMoreItemsAsync(int count, final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
         final Request request = new StringRequest(Request.Method.GET,
                 getQueryUri(count),
-                futureListener,
+                listener,
                 errorListener);
 
         // Add the request to the RequestQueue.

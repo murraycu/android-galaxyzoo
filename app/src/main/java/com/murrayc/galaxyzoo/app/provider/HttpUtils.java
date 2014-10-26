@@ -26,7 +26,7 @@ public class HttpUtils {
 
     private static final String HTTP_REQUEST_HEADER_PARAM_USER_AGENT = "User-Agent";
     private static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";
-    private static final int TIMEOUT_MILLIS = 20000; //20 seconds. Long but not too short for GPRS connections and not endless.
+    public static final int TIMEOUT_MILLIS = 20000; //20 seconds. Long but not too short for GPRS connections and not endless.
 
     public static void throwIfNoNetwork(final Context context) {
         if (!Utils.getNetworkIsConnected(context)) {
@@ -70,13 +70,8 @@ public class HttpUtils {
         private final WeakReference<Context> mContext;
         private final Response.Listener<Boolean> mListener;
 
-        public FileCacheRequest(final Context context, final String uriFileToCache, final String cacheFileUri, final Response.Listener<Boolean> listener) {
-            super(Method.GET, uriFileToCache, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.error("FileCacheRequest.onErrorResponse()", error);
-                }
-            });
+        public FileCacheRequest(final Context context, final String uriFileToCache, final String cacheFileUri, final Response.Listener<Boolean> listener, final Response.ErrorListener errorListener) {
+            super(Method.GET, uriFileToCache, errorListener);
 
             mCacheFileUri = cacheFileUri;
             mContext = new WeakReference<>(context);
