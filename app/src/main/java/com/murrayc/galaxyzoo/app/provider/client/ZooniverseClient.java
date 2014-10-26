@@ -3,6 +3,13 @@ package com.murrayc.galaxyzoo.app.provider.client;
 import android.content.Context;
 import android.util.Base64;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
@@ -21,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by murrayc on 10/10/14.
@@ -34,10 +42,12 @@ public class ZooniverseClient {
     //AsyncTask, the UI is non responsive during this work.
     //For instance, buttons appear to be pressed, but their clicked listeners are not called.
     private static final int MAXIMUM_DOWNLOAD_ITEMS = 10;
+    private final RequestQueue mQueue;
 
     public ZooniverseClient(final Context context, final String serverBaseUri) {
         mContext = context;
         mServerBaseUri = serverBaseUri;
+        mQueue = Volley.newRequestQueue(context);
     }
 
     private String getQueryMoreItemsUri() {
@@ -195,26 +205,36 @@ public class ZooniverseClient {
             count = MAXIMUM_DOWNLOAD_ITEMS;
         }
 
-        //TODO: Can we use Java 7's try-with-resources to automatically close()
-        //the InputStream even though none of the code here should throw an
-        //exception?
-        //Not that the server often won't give us as many as we want,
-        //so a subsequent request might be needed to get all of them.
-        //We don't need to check how many we get, and ask again,
-        //because we already just call queueRegularTasks() again if necessary.
-        final InputStream in = HttpUtils.httpGetRequest(getQueryUri(count));
-        if (in == null) {
+        // Request a string response from the provided URL.
+        // TODO: Use HttpUrlConnection directly instead of trying to use Volley synchronously?
+        final RequestFuture<String> futureListener = RequestFuture.newFuture();
+        requestMoreItemsAsync(count, futureListener,
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(final VolleyError error) {
+                        Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", error);
+                    }
+                });
+
+        String response = null;
+        try {
+            response = futureListener.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            Log.error("cacheUriToFile(): Exception from request.", e);
             return null;
         }
 
-        final List<Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(in);
-        try {
-            in.close();
-        } catch (IOException e) {
-            Log.error("requestMoreItemsSync(): Can't close input stream", e);
-        }
+        return MoreItemsJsonParser.parseMoreItemsResponseContent(response);
+    }
 
-        return result;
+    public void requestMoreItemsAsync(int count, final Response.Listener<String> futureListener, final Response.ErrorListener errorListener) {
+        final Request request = new StringRequest(Request.Method.GET,
+                getQueryUri(count),
+                futureListener,
+                errorListener);
+
+        // Add the request to the RequestQueue.
+        mQueue.add(request);
     }
 
     private String getQueryUri(final int count) {
@@ -283,6 +303,10 @@ public class ZooniverseClient {
                 }
             }
         }
+    }
+
+    public RequestQueue getRequestQueue() {
+        return mQueue;
     }
 
     /**

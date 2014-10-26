@@ -3,11 +3,9 @@ package com.murrayc.galaxyzoo.app.provider.client;
 import android.util.JsonReader;
 
 import com.murrayc.galaxyzoo.app.Log;
-import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +14,12 @@ import java.util.List;
  * Created by murrayc on 10/8/14.
  */
 public class MoreItemsJsonParser {
-    public static List<ZooniverseClient.Subject> parseMoreItemsResponseContent(final InputStream content) {
+    public static List<ZooniverseClient.Subject> parseMoreItemsResponseContent(final String content) {
         final List<ZooniverseClient.Subject> result = new ArrayList<>();
 
         final JsonReader reader;
         try {
-            reader = new JsonReader(new InputStreamReader(content, Utils.STRING_ENCODING));
+            reader = new JsonReader(new StringReader(content));
             reader.beginArray();
             while (reader.hasNext()) {
                 while (reader.hasNext()) {

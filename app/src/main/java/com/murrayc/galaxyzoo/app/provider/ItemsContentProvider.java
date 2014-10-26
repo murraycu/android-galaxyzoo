@@ -569,7 +569,7 @@ public class ItemsContentProvider extends ContentProvider {
         //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
 
         mZooniverseClient = new ZooniverseClient(getContext(), Config.SERVER);
-        mSubjectAdder = new SubjectAdder(getContext());
+        mSubjectAdder = new SubjectAdder(getContext(), mZooniverseClient.getRequestQueue());
 
         return true;
     }

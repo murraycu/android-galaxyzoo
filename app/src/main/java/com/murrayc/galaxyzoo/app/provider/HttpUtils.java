@@ -4,12 +4,18 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,56 +28,6 @@ public class HttpUtils {
     private static final String HTTP_REQUEST_HEADER_PARAM_USER_AGENT = "User-Agent";
     private static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";
     private static final int TIMEOUT_MILLIS = 20000; //20 seconds. Long but not too short for GPRS connections and not endless.
-
-    /**
-     * Callers should use throwIfNoNetwork() before calling this.
-     */
-    public static InputStream httpGetRequest(final String strUri) {
-        final HttpURLConnection conn = openConnection(strUri);
-        if (conn == null) {
-            return null;
-        }
-
-        // This is the default: conn.setRequestMethod("GET");
-
-        //We don't use Java 7's try-with-resources,
-        //because we want to return the InputStream, but try-with-resources would
-        //presumably close it as we returned it. TODO: Is this true?
-        InputStream in = null;
-        try {
-            //Calling getInputStream() causes the request to actually be sent.
-            in = conn.getInputStream();
-
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.error("httpGetRequest(): response code: " + conn.getResponseCode());
-                in.close();
-                return null;
-            }
-
-            //HTTPUrlConnection seems to (request and) handle gzip encoding automatically,
-            //so we don't need to do it here:
-            /*
-            //Ungzip it if necessary:
-            //For instance, HTML and CSS files may often be gzipped.
-            final Header contentEncoding = response.getFirstHeader("Content-Encoding");
-            if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
-                in = new GZIPInputStream(in);
-            }
-            */
-
-            return in;
-        } catch (final IOException e) {
-            Log.error("httpGetRequest(): exception during HTTP connection", e);
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException e1) {
-                Log.error("httpGetRequest(): cannot close InputStream.", e);
-            }
-            return null;
-        }
-    }
 
     public static void throwIfNoNetwork(final Context context) {
         if (!Utils.getNetworkIsConnected(context)) {
@@ -109,20 +65,44 @@ public class HttpUtils {
         return conn;
     }
 
-    public static boolean cacheUriToContentUriFileSync(final Context context, final String uriFileToCache, final String cacheFileUri) {
-        final InputStream in = HttpUtils.httpGetRequest(uriFileToCache);
-        if (in == null) {
-            return false;
+    public static class FileCacheRequest extends Request<Boolean> {
+
+        private final String mCacheFileUri;
+        private final WeakReference<Context> mContext;
+        private final Response.Listener<Boolean> mListener;
+
+        public FileCacheRequest(final Context context, final String uriFileToCache, final String cacheFileUri, final Response.Listener<Boolean> listener) {
+            super(Method.GET, uriFileToCache, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.error("FileCacheRequest.onErrorResponse()", error);
+                }
+            });
+
+            mCacheFileUri = cacheFileUri;
+            mContext = new WeakReference<>(context);
+            mListener = listener;
         }
 
-        final boolean result = parseGetFileResponseContent(context, in, cacheFileUri);
-        try {
-            in.close();
-        } catch (IOException e) {
-            Log.error("cacheUriToContentUriFileSync(): Can't close input stream", e);
+        @Override
+        protected Response<Boolean> parseNetworkResponse(final NetworkResponse response) {
+            boolean result = false;
+            if (mContext != null) {
+                final Context context = mContext.get();
+                if (context != null) {
+                    result = parseGetFileResponseContent(context, response.data, mCacheFileUri);
+                } else {
+                    Log.error("parseNetworkResponse(): context is null.");
+                }
+            }
+
+            return Response.success(result, HttpHeaderParser.parseCacheHeaders(response));
         }
 
-        return result;
+        @Override
+        protected void deliverResponse(final Boolean response) {
+            mListener.onResponse(response);
+        }
     }
 
     /*
@@ -168,6 +148,41 @@ public class HttpUtils {
 
     private static void setConnectionUserAgent(final HttpURLConnection connection) {
         connection.setRequestProperty(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
+    }
+
+    private static boolean parseGetFileResponseContent(final Context context, final byte[] data, final String cacheFileContentUri) {
+        //Write the content to the file:
+        ParcelFileDescriptor pfd = null;
+        FileOutputStream fout = null;
+        try {
+            //FileOutputStream doesn't seem to understand content provider URIs:
+            pfd = context.getContentResolver().
+                    openFileDescriptor(Uri.parse(cacheFileContentUri), "w");
+
+            fout = new FileOutputStream(pfd.getFileDescriptor());
+            fout.write(data);
+        } catch (final IOException e) {
+            Log.error("parseGetFileResponseContent(): Exception while writing to FileOutputStream", e);
+            return false;
+        } finally {
+            if (fout != null) {
+                try {
+                    fout.close();
+                } catch (final IOException e) {
+                    Log.error("parseGetFileResponseContent(): Exception while closing fout", e);
+                }
+            }
+
+            if (pfd != null) {
+                try {
+                    pfd.close();
+                } catch (final IOException e) {
+                    Log.error("parseGetFileResponseContent(): Exception while closing pfd", e);
+                }
+            }
+        }
+
+        return true;
     }
 
     private static boolean parseGetFileResponseContent(final Context context, final InputStream in, final String cacheFileContentUri) {

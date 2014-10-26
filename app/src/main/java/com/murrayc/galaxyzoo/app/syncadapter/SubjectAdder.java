@@ -5,10 +5,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.RequestFuture;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
@@ -16,24 +18,23 @@ import com.murrayc.galaxyzoo.app.provider.ImageType;
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
-import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ExecutionException;
 
 public class SubjectAdder {
     private final Context mContext;
-    private final Handler mHandler;
 
     /* A map of remote URIs to the last dates that we tried to download them.
      */
     private final Map<String, Date> mImageDownloadsInProgress = new HashMap<>();
+    private final RequestQueue mRequestQueue;
 
-    public SubjectAdder(final Context context) {
+    public SubjectAdder(final Context context, final RequestQueue requestQueue) {
         this.mContext = context;
-        this.mHandler = new Handler(Looper.getMainLooper());
+        this.mRequestQueue = requestQueue;
     }
 
     /**
@@ -185,27 +186,41 @@ public class SubjectAdder {
         mImageDownloadsInProgress.put(uriFileToCache, now);
 
         if (asyncFileDownloads) {
-            final FileCacheTask task = new FileCacheTask(this, itemUri, imageType, uriFileToCache, cacheFileUri);
+            final Request<Boolean> request = new HttpUtils.FileCacheRequest(getContext(), uriFileToCache, cacheFileUri,
+                    new Response.Listener<Boolean>() {
+                        @Override
+                        public void onResponse(Boolean response) {
+                            onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
+                        }
+                    });
+            mRequestQueue.add(request);
+            return true;
+        } else {
+            final RequestFuture<Boolean> futureListener = RequestFuture.newFuture();
+            final Request<Boolean> request = new HttpUtils.FileCacheRequest(getContext(), uriFileToCache, cacheFileUri,
+                    futureListener);
+            mRequestQueue.add(request);
+
+            boolean response = false;
             try {
-                final Thread thread = new Thread(task);
-                thread.start();
-            } catch (final RejectedExecutionException e) {
-                //This happened once (when we were using AsyncTask) because >128 were running.
-                Log.error("cacheUriToFile(): Couldn't execute FileCacheAsyncTask()", e);
+                response = futureListener.get();
+            } catch (final InterruptedException | ExecutionException e) {
+                Log.error("cacheUriToFile(): Exception from request.", e);
                 return false;
             }
 
-            return true;
+            return onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
+        }
+    }
+
+    private boolean onImageDownloadDone(boolean success, final String uriFileToCache, final Uri itemUri, ImageType imageType) {
+        markImageDownloadAsNotInProgress(uriFileToCache);
+        if (success) {
+            return markImageAsDownloaded(itemUri, imageType, uriFileToCache);
         } else {
-            final boolean downloaded = HttpUtils.cacheUriToContentUriFileSync(getContext(), uriFileToCache, cacheFileUri);
-            markImageDownloadAsNotInProgress(uriFileToCache);
-            if (downloaded) {
-                return markImageAsDownloaded(itemUri, imageType, uriFileToCache);
-            } else {
-                //doRegularTasks() will try again later.
-                Log.error("cacheUriToFile(): cacheUriToContentUriFileSync(): failed.");
-                return false;
-            }
+            //doRegularTasks() will try again later.
+            Log.error("onImageDownloadDone(): cacheUriToContentUriFileSync(): failed.");
+            return false;
         }
     }
 
@@ -313,78 +328,6 @@ public class SubjectAdder {
         final boolean result = c.getCount() > 0;
         c.close();
         return result;
-    }
-
-    private class FileCacheTask implements Runnable {
-
-        private final Uri itemUri;
-        private final ImageType imageType;
-        private final String uriFileToCache;
-        private final String cacheFileUri;
-        private final WeakReference<SubjectAdder> parentReference;
-
-        public FileCacheTask(final SubjectAdder parent, final Uri itemUri, ImageType imageType, final String uriFileTocache, final String cacheFileUri) {
-            this.itemUri = itemUri;
-            this.imageType = imageType;
-            this.uriFileToCache = uriFileTocache;
-            this.cacheFileUri = cacheFileUri;
-            this.parentReference = new WeakReference<>(parent);
-        }
-
-        @Override
-        public void run() {
-
-            Log.info("FileCacheTask.run()");
-
-            boolean result = false;
-
-            final SubjectAdder parent = getParent();
-            if (parent == null) {
-                Log.error("FileCacheTask(): run(): parent is null.");
-            } else {
-                result = HttpUtils.cacheUriToContentUriFileSync(parent.getContext(), uriFileToCache, cacheFileUri);
-            }
-
-            //Call onPostExecute in the main thread:
-            final boolean resultToPost = result;
-            mHandler.post(new Runnable() {
-                public void run() {
-                    onPostExecute(resultToPost);
-                }
-            });
-        }
-
-        private SubjectAdder getParent() {
-            if (parentReference == null) {
-                return null;
-            }
-
-            return parentReference.get();
-        }
-
-        protected void onPostExecute(boolean result) {
-            if (parentReference == null) {
-                Log.error("FileCacheTask.onPostExcecute(): parentReference is null.");
-                return;
-            }
-
-            final SubjectAdder parent = parentReference.get();
-            if (parent == null) {
-                Log.error("FileCacheTask.onPostExcecute(): parent is null.");
-                return;
-            }
-
-            parent.markImageDownloadAsNotInProgress(uriFileToCache);
-
-            if (result) {
-                if (!parent.markImageAsDownloaded(itemUri, imageType, uriFileToCache)) {
-                    Log.error("FileCacheTask(): onPostExecute(): markImageAsDownloaded() failed.");
-                }
-            } else {
-                //doRegularTasks() will try again later.
-                Log.error("FileCacheTask(): cacheUriToContentUriFileSync(): failed.");
-            }
-        }
     }
 
     private static String getWhereClauseForDownloadNotDone() {

@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.R;
@@ -20,8 +22,8 @@ import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
 import com.murrayc.galaxyzoo.app.provider.Config;
-import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.Item;
+import com.murrayc.galaxyzoo.app.provider.client.MoreItemsJsonParser;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 import org.apache.http.NameValuePair;
@@ -52,11 +54,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     public SyncAdapter(final Context context, boolean autoInitialize) {
         super(context, autoInitialize);
-
         mHandler = new Handler(Looper.getMainLooper());
 
         mClient = new ZooniverseClient(context, Config.SERVER);
-        mSubjectAdder = new SubjectAdder(context);
+        mSubjectAdder = new SubjectAdder(context, mClient.getRequestQueue());
 
         //We don't listen for the SharedPreferences changes here because it doesn't currently
         //work across processes, so our listener would never be called.
@@ -134,9 +135,21 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         mRequestMoreItemsTaskInProgress = true;
 
-        final QueryTask task = new QueryTask(count);
-        final Thread thread = new Thread(task);
-        thread.start();
+        mClient.requestMoreItemsAsync(count,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String response) {
+                        final List<ZooniverseClient.Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(response);
+                        onQueryTaskFinished(result);
+                        mRequestMoreItemsTaskInProgress = false;
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(final VolleyError error) {
+                        Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", error);
+                    }
+                });
     }
 
     private int getNotDoneNeededForCache() {
@@ -267,38 +280,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         //ItemsContentProvider takes care of deleting related files, classification answers, etc:
         if(resolver.delete(Utils.getItemUri(itemId), null, null) < 1) {
             Log.error("removeItem(): No item rows were removed.");
-        }
-    }
-
-    private class QueryTask implements Runnable {
-        private final int mCount;
-
-        public QueryTask(int count) {
-            mCount = count;
-        }
-
-        @Override
-        public void run() {
-            Log.info("QueryTask.run(): mCount=" + mCount);
-
-            List<ZooniverseClient.Subject> result = null;
-            try {
-                result = mClient.requestMoreItemsSync(mCount);
-            } catch (final HttpUtils.NoNetworkException e) {
-                Log.info("QueryTask.run(): No network connection.", e);
-            }
-
-            //Call onPostExecute in the main thread:
-            final List<ZooniverseClient.Subject> resultToPost = result;
-            mHandler.post(new Runnable() {
-                public void run() {
-                    onPostExecute(resultToPost);
-                }
-            });
-        }
-
-        protected void onPostExecute(final List<ZooniverseClient.Subject> result) {
-            onQueryTaskFinished(result);
         }
     }
 
