@@ -182,9 +182,9 @@ public class SubjectAdder {
         mImageDownloadsInProgress.put(uriFileToCache, now);
 
         if (asyncFileDownloads) {
-            final FileCacheAsyncTask task = new FileCacheAsyncTask(this, itemUri, imageType);
+            final FileCacheAsyncTask task = new FileCacheAsyncTask(this, itemUri, imageType, uriFileToCache, cacheFileUri);
             try {
-                task.execute(uriFileToCache, cacheFileUri);
+                task.execute();
             } catch (final RejectedExecutionException e) {
                 //This happened once because >128 were running.
                 Log.error("cacheUriToFile(): Couldn't execute FileCacheAsyncTask()", e);
@@ -311,31 +311,30 @@ public class SubjectAdder {
         return result;
     }
 
-    static class FileCacheAsyncTask extends AsyncTask<String, Integer, Boolean> {
+    static class FileCacheAsyncTask extends AsyncTask<Void, Integer, Boolean> {
 
         private final Uri itemUri;
         private final ImageType imageType;
-        private String uriFileToCache = null;
+        private final String uriFileToCache;
+        private final String cacheFileUri;
         private final WeakReference<SubjectAdder> parentReference;
 
-        public FileCacheAsyncTask(final SubjectAdder parent, final Uri itemUri, ImageType imageType) {
+        public FileCacheAsyncTask(final SubjectAdder parent, final Uri itemUri, ImageType imageType, final String uriFileTocache, final String cacheFileUri) {
+            //Although most example code passes parameters to execute(),
+            //it seems to be OK to provide them to the constructor:
+            //See Memory observability here:
+            //http://developer.android.com/reference/android/os/AsyncTask.html
             this.itemUri = itemUri;
             this.imageType = imageType;
+            this.uriFileToCache = uriFileTocache;
+            this.cacheFileUri = cacheFileUri;
             this.parentReference = new WeakReference<>(parent);
         }
 
         @Override
-        protected Boolean doInBackground(final String... params) {
-            if (params.length < 2) {
-                Log.error("FileCacheAsyncTask: not enough params.");
-                return false;
-            }
+        protected Boolean doInBackground(final Void... params) {
 
             Log.info("FileCacheAsyncTask.doInBackground()");
-
-            //TODO: Just set these in the constructor?
-            uriFileToCache = params[0];
-            final String cacheFileUri = params[1];
 
             final SubjectAdder parent = getParent();
             if (parent == null) {

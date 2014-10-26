@@ -128,8 +128,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         mRequestMoreItemsAsyncInProgress = true;
 
-        final QueryAsyncTask task = new QueryAsyncTask();
-        task.execute(count);
+        final QueryAsyncTask task = new QueryAsyncTask(count);
+        task.execute();
     }
 
     private int getNotDoneNeededForCache() {
@@ -199,8 +199,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             final String subjectId = c.getString(1);
 
             mUploadsInProgress++;
-            final UploadAsyncTask task = new UploadAsyncTask();
-            task.execute(itemId, subjectId, loginDetails.name, loginDetails.authApiKey);
+            final UploadAsyncTask task = new UploadAsyncTask(itemId, subjectId, loginDetails.name, loginDetails.authApiKey);
+            task.execute();
         }
 
         c.close();
@@ -262,24 +262,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private class QueryAsyncTask extends AsyncTask<Integer, Integer, List<ZooniverseClient.Subject>> {
-        @Override
-        protected List<ZooniverseClient.Subject> doInBackground(final Integer... params) {
-            if (params.length < 1) {
-                Log.error("QueryAsyncTask: not enough params.");
-                return null;
-            }
+    private class QueryAsyncTask extends AsyncTask<Void, Integer, List<ZooniverseClient.Subject>> {
+        private final int mCount;
 
-            //TODO: Why not just set these in the constructor?
-            //That seems to be allowed:
+        public QueryAsyncTask(int count) {
+            //Although most example code passes parameters to execute(),
+            //it seems to be OK to provide them to the constructor:
             //See Memory observability here:
             //http://developer.android.com/reference/android/os/AsyncTask.html
-            final int count = params[0];
+            mCount = count;
+        }
 
-            Log.info("QueryAsyncTask.doInBackground(): count=" + count);
+        @Override
+        protected List<ZooniverseClient.Subject> doInBackground(final Void... params) {
+            Log.info("QueryAsyncTask.doInBackground(): mCount=" + mCount);
 
             try {
-                return mClient.requestMoreItemsSync(count);
+                return mClient.requestMoreItemsSync(mCount);
             } catch (final HttpUtils.NoNetworkException e) {
                 Log.info("QueryAsyncTask.doInBackground(): No network connection.", e);
                 return null;
@@ -377,31 +376,27 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         return mClient.uploadClassificationSync(authName, authApiKey, nameValuePairs);
     }
 
-    private class UploadAsyncTask extends AsyncTask<String, Integer, Boolean> {
+    private class UploadAsyncTask extends AsyncTask<Void, Integer, Boolean> {
+        private final String mItemId ;
+        private final String mSubjectId;
+        private final String mAuthName;
+        private final String mAuthApiKey;
 
-        private String mItemId = null;
-
-        @Override
-        protected Boolean doInBackground(final String... params) {
-            if (params.length < 4) {
-                Log.error("UploadAsyncTask: not enough params.");
-                return false;
-            }
-
-            Log.info("UploadAsyncTask.doInBackground()");
-
-            //TODO: Why not just set these in the constructor?
-            //That seems to be allowed:
+        public UploadAsyncTask(final String itemId, final String subjectId, final String authName, final String authApiKey) {
+            //Although most example code passes parameters to execute(),
+            //it seems to be OK to provide them to the constructor:
             //See Memory observability here:
             //http://developer.android.com/reference/android/os/AsyncTask.html
-            mItemId = params[0];
-            final String subjectId = params[1];
+            mItemId = itemId;
+            mSubjectId = subjectId;
+            mAuthName = authName;
+            mAuthApiKey = authApiKey;
+        }
 
-            final String authName = params[2];
-            final String authApiKey = params[3];
-
-
-            return doUploadSync(mItemId, subjectId, authName, authApiKey);
+        @Override
+        protected Boolean doInBackground(final Void... params) {
+            Log.info("UploadAsyncTask.doInBackground()");
+            return doUploadSync(mItemId, mSubjectId, mAuthName, mAuthApiKey);
         }
 
         @Override
