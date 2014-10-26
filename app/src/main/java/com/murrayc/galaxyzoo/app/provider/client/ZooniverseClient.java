@@ -67,6 +67,8 @@ public class ZooniverseClient {
     }
 
     public LoginUtils.LoginResult loginSync(final String username, final String password) {
+        throwIfNoNetwork();
+
         final HttpURLConnection conn = HttpUtils.openConnection(getLoginUri());
         if (conn == null) {
             return null;

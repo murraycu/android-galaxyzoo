@@ -22,6 +22,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
@@ -339,13 +340,22 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             mAuthTask = null;
             showProgress(false);
 
-            if ((result != null) && result.getSuccess()) {
-                finishWithResult(result);
-            } else {
+            // A null result means that we didn't even get a response from the server for some reason:
+            if (result == null) {
                 if (!Utils.getNetworkIsConnected(LoginActivity.this)) {
                     UiUtils.warnAboutNoNetworkConnection(LoginActivity.this);
-                    return;
+                } else {
+                    final Toast toast = Toast.makeText(LoginActivity.this, getString(R.string.error_could_not_connect), Toast.LENGTH_LONG);
+                    toast.show();
                 }
+
+                return;
+            }
+
+            if (result.getSuccess()) {
+                finishWithResult(result);
+            } else {
+
 
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

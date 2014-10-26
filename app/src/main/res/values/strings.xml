@@ -113,8 +113,13 @@
 
     <!-- An error message. -->
     <string name="error_field_required">This field is required.</string>
+
     <!-- An error message. We show this when we cannot continue because there is no network connection. -->
     <string name="error_no_network">No network connection.</string>
+
+    <!-- TODO: Make this clearer for people who don't know what an (Internet) server is? -->
+    <!-- An error message. We show this when we cannot continue because something is wrong with the network connection. -->
+    <string name="error_could_not_connect">Cannot connect to the server.</string>
 
     <!-- An error message. We show this when we cannot continue because something is wrong with the network connection. -->
     <string name="error_no_subjects">Cannot download new subjects to classify.</string>
