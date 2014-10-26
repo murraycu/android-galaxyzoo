@@ -8,8 +8,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
@@ -36,7 +37,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String COUNT_AS_COUNT = "COUNT(*) AS count";
     private int mUploadsInProgress = 0;
 
-    private boolean mRequestMoreItemsAsyncInProgress = false;
+    private boolean mRequestMoreItemsTaskInProgress = false;
 
     //This communicates with the remote server:
 
@@ -44,10 +45,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     //This does some of the work to communicate with the itemsContentProvider
     //and download image files to the local cache.
-    private SubjectAdder mSubjectAdder = null;
+    private final SubjectAdder mSubjectAdder;
+
+    //Out Runnable tasks use this to post results back to our main thread.
+    private final Handler mHandler;
 
     public SyncAdapter(final Context context, boolean autoInitialize) {
         super(context, autoInitialize);
+
+        mHandler = new Handler(Looper.getMainLooper());
 
         mClient = new ZooniverseClient(context, Config.SERVER);
         mSubjectAdder = new SubjectAdder(context);
@@ -118,7 +124,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void requestMoreItemsAsync(int count) {
-        if(mRequestMoreItemsAsyncInProgress) {
+        if(mRequestMoreItemsTaskInProgress) {
             //Do just one of these at a time,
             //to avoid requesting more while we are processing the results from a first one.
             //Then we get more than we really want and everything is slower.
@@ -126,10 +132,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
 
-        mRequestMoreItemsAsyncInProgress = true;
+        mRequestMoreItemsTaskInProgress = true;
 
-        final QueryAsyncTask task = new QueryAsyncTask(count);
-        task.execute();
+        final QueryTask task = new QueryTask(count);
+        final Thread thread = new Thread(task);
+        thread.start();
     }
 
     private int getNotDoneNeededForCache() {
@@ -199,8 +206,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             final String subjectId = c.getString(1);
 
             mUploadsInProgress++;
-            final UploadAsyncTask task = new UploadAsyncTask(itemId, subjectId, loginDetails.name, loginDetails.authApiKey);
-            task.execute();
+            final UploadTask task = new UploadTask(itemId, subjectId, loginDetails.name, loginDetails.authApiKey);
+            final Thread thread = new Thread(task);
+            thread.start();
         }
 
         c.close();
@@ -262,38 +270,39 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private class QueryAsyncTask extends AsyncTask<Void, Integer, List<ZooniverseClient.Subject>> {
+    private class QueryTask implements Runnable {
         private final int mCount;
 
-        public QueryAsyncTask(int count) {
-            //Although most example code passes parameters to execute(),
-            //it seems to be OK to provide them to the constructor:
-            //See Memory observability here:
-            //http://developer.android.com/reference/android/os/AsyncTask.html
+        public QueryTask(int count) {
             mCount = count;
         }
 
         @Override
-        protected List<ZooniverseClient.Subject> doInBackground(final Void... params) {
-            Log.info("QueryAsyncTask.doInBackground(): mCount=" + mCount);
+        public void run() {
+            Log.info("QueryTask.run(): mCount=" + mCount);
 
+            List<ZooniverseClient.Subject> result = null;
             try {
-                return mClient.requestMoreItemsSync(mCount);
+                result = mClient.requestMoreItemsSync(mCount);
             } catch (final HttpUtils.NoNetworkException e) {
-                Log.info("QueryAsyncTask.doInBackground(): No network connection.", e);
-                return null;
+                Log.info("QueryTask.run(): No network connection.", e);
             }
+
+            //Call onPostExecute in the main thread:
+            final List<ZooniverseClient.Subject> resultToPost = result;
+            mHandler.post(new Runnable() {
+                public void run() {
+                    onPostExecute(resultToPost);
+                }
+            });
         }
 
-        @Override
         protected void onPostExecute(final List<ZooniverseClient.Subject> result) {
-            super.onPostExecute(result);
-
             onQueryTaskFinished(result);
         }
     }
 
-    private Boolean doUploadSync(final String itemId, final String subjectId, final String authName, final String authApiKey) {
+    private boolean doUploadSync(final String itemId, final String subjectId, final String authName, final String authApiKey) {
 
         final String PARAM_PART_CLASSIFICATION = "classification";
 
@@ -376,17 +385,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         return mClient.uploadClassificationSync(authName, authApiKey, nameValuePairs);
     }
 
-    private class UploadAsyncTask extends AsyncTask<Void, Integer, Boolean> {
+    private class UploadTask implements Runnable {
         private final String mItemId ;
         private final String mSubjectId;
         private final String mAuthName;
         private final String mAuthApiKey;
 
-        public UploadAsyncTask(final String itemId, final String subjectId, final String authName, final String authApiKey) {
-            //Although most example code passes parameters to execute(),
-            //it seems to be OK to provide them to the constructor:
-            //See Memory observability here:
-            //http://developer.android.com/reference/android/os/AsyncTask.html
+        public UploadTask(final String itemId, final String subjectId, final String authName, final String authApiKey) {
             mItemId = itemId;
             mSubjectId = subjectId;
             mAuthName = authName;
@@ -394,21 +399,25 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
 
         @Override
-        protected Boolean doInBackground(final Void... params) {
-            Log.info("UploadAsyncTask.doInBackground()");
-            return doUploadSync(mItemId, mSubjectId, mAuthName, mAuthApiKey);
+        public void run() {
+            Log.info("UploadTask.run()");
+            final boolean result = doUploadSync(mItemId, mSubjectId, mAuthName, mAuthApiKey);
+
+            //Call onPostExecute in the main thread:
+            mHandler.post(new Runnable() {
+                public void run() {
+                    onPostExecute(result);
+                }
+            });
         }
 
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
+        protected void onPostExecute(boolean result) {
             onUploadTaskFinished(result, mItemId);
         }
     }
 
     private void onQueryTaskFinished(final List<ZooniverseClient.Subject> result) {
-        mRequestMoreItemsAsyncInProgress = false;
+        mRequestMoreItemsTaskInProgress = false;
 
         if (result == null) {
             return;

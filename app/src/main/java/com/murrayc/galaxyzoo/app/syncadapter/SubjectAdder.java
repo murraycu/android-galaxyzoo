@@ -5,7 +5,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
@@ -24,6 +25,7 @@ import java.util.concurrent.RejectedExecutionException;
 
 public class SubjectAdder {
     private final Context mContext;
+    private final Handler mHandler;
 
     /* A map of remote URIs to the last dates that we tried to download them.
      */
@@ -31,6 +33,7 @@ public class SubjectAdder {
 
     public SubjectAdder(final Context context) {
         this.mContext = context;
+        this.mHandler = new Handler(Looper.getMainLooper());
     }
 
     /**
@@ -182,11 +185,12 @@ public class SubjectAdder {
         mImageDownloadsInProgress.put(uriFileToCache, now);
 
         if (asyncFileDownloads) {
-            final FileCacheAsyncTask task = new FileCacheAsyncTask(this, itemUri, imageType, uriFileToCache, cacheFileUri);
+            final FileCacheTask task = new FileCacheTask(this, itemUri, imageType, uriFileToCache, cacheFileUri);
             try {
-                task.execute();
+                final Thread thread = new Thread(task);
+                thread.start();
             } catch (final RejectedExecutionException e) {
-                //This happened once because >128 were running.
+                //This happened once (when we were using AsyncTask) because >128 were running.
                 Log.error("cacheUriToFile(): Couldn't execute FileCacheAsyncTask()", e);
                 return false;
             }
@@ -311,7 +315,7 @@ public class SubjectAdder {
         return result;
     }
 
-    static class FileCacheAsyncTask extends AsyncTask<Void, Integer, Boolean> {
+    private class FileCacheTask implements Runnable {
 
         private final Uri itemUri;
         private final ImageType imageType;
@@ -319,11 +323,7 @@ public class SubjectAdder {
         private final String cacheFileUri;
         private final WeakReference<SubjectAdder> parentReference;
 
-        public FileCacheAsyncTask(final SubjectAdder parent, final Uri itemUri, ImageType imageType, final String uriFileTocache, final String cacheFileUri) {
-            //Although most example code passes parameters to execute(),
-            //it seems to be OK to provide them to the constructor:
-            //See Memory observability here:
-            //http://developer.android.com/reference/android/os/AsyncTask.html
+        public FileCacheTask(final SubjectAdder parent, final Uri itemUri, ImageType imageType, final String uriFileTocache, final String cacheFileUri) {
             this.itemUri = itemUri;
             this.imageType = imageType;
             this.uriFileToCache = uriFileTocache;
@@ -332,17 +332,26 @@ public class SubjectAdder {
         }
 
         @Override
-        protected Boolean doInBackground(final Void... params) {
+        public void run() {
 
-            Log.info("FileCacheAsyncTask.doInBackground()");
+            Log.info("FileCacheTask.run()");
+
+            boolean result = false;
 
             final SubjectAdder parent = getParent();
             if (parent == null) {
-                Log.error("FileCacheAsyncTask(): doInBackground(): parent is null.");
-                return false;
+                Log.error("FileCacheTask(): run(): parent is null.");
+            } else {
+                result = HttpUtils.cacheUriToContentUriFileSync(parent.getContext(), uriFileToCache, cacheFileUri);
             }
 
-            return HttpUtils.cacheUriToContentUriFileSync(parent.getContext(), uriFileToCache, cacheFileUri);
+            //Call onPostExecute in the main thread:
+            final boolean resultToPost = result;
+            mHandler.post(new Runnable() {
+                public void run() {
+                    onPostExecute(resultToPost);
+                }
+            });
         }
 
         private SubjectAdder getParent() {
@@ -353,16 +362,15 @@ public class SubjectAdder {
             return parentReference.get();
         }
 
-        @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(boolean result) {
             if (parentReference == null) {
-                Log.error("FileCacheAsyncTask.onPostExcecute(): parentReference is null.");
+                Log.error("FileCacheTask.onPostExcecute(): parentReference is null.");
                 return;
             }
 
             final SubjectAdder parent = parentReference.get();
             if (parent == null) {
-                Log.error("FileCacheAsyncTask.onPostExcecute(): parent is null.");
+                Log.error("FileCacheTask.onPostExcecute(): parent is null.");
                 return;
             }
 
@@ -370,14 +378,12 @@ public class SubjectAdder {
 
             if (result) {
                 if (!parent.markImageAsDownloaded(itemUri, imageType, uriFileToCache)) {
-                    Log.error("FileCacheAsyncTask(): onPostExecute(): markImageAsDownloaded() failed.");
+                    Log.error("FileCacheTask(): onPostExecute(): markImageAsDownloaded() failed.");
                 }
             } else {
                 //doRegularTasks() will try again later.
-                Log.error("FileCacheAsyncTask(): cacheUriToContentUriFileSync(): failed.");
+                Log.error("FileCacheTask(): cacheUriToContentUriFileSync(): failed.");
             }
-
-            super.onPostExecute(result);
         }
     }
 
