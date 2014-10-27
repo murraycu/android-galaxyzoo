@@ -51,6 +51,13 @@
         in the Theme.AppCompat theme:  -->
         <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
 
+        <!-- android:textColorPrimary is the color of the text of action (menu) items in the Toolbar,
+        at least in the Theme.AppCompat theme.
+        For some reason, they already get the textColorPrimary when running on API 21,
+        but not on older versions of Android, so this is only necessary for older
+        Android versions.-->
+        <item name="actionMenuTextColor">@color/abc_primary_text_material_light</item>
+
         <!-- android:textColorPrimaryInverse is the  color of the title text in the Toolbar,
         in the Theme.AppCompat.Light theme:  -->
         <!-- <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item> -->
