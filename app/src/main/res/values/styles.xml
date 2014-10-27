@@ -65,4 +65,22 @@
 
     </style>
 
+    <!-- If we were using the Material theme, we could use
+         parent="@android:style/Widget.Material.Button.Borderless -->
+    <style name="GalaxyZooButtonStyle" parent="@android:style/Widget.Button">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+    </style>
+
+    <!-- We don't use parent="@android:style/Widget.Material.Button.Toggle"
+         (available if we were using the Material theme) because
+         we want to color the whole area when it is selected, not just a line at the bottom. -->
+    <style name="GalaxyZooToggleButtonStyle" parent="GalaxyZooButtonStyle">
+        <item name="android:background">@drawable/question_answer_checkbox_background</item>
+    </style>
+
+    <!--
+    <style name="GalaxyZooAnswerButtonStyle" parent="GalaxyZooButtonStyle">
+    </style>
+    -->
+
 </resources>
