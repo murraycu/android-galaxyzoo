@@ -25,6 +25,10 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
 
+    <style name="GalaxyZooToggleButtonStyle" parent="GalaxyZooButtonStyle">
+        <item name="android:background">@drawable/question_answer_checkbox_ripple</item>
+    </style>
+
 
 
 </resources>
