@@ -239,6 +239,9 @@ public class ZooniverseClient {
                 listener,
                 errorListener);
 
+        //Identical requests for more items should get different results each time.
+        request.setShouldCache(false);
+
         // Add the request to the RequestQueue.
         mQueue.add(request);
     }

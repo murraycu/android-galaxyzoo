@@ -203,13 +203,15 @@ public class SubjectAdder {
                             onImageDownloadDone(false, uriFileToCache, itemUri, imageType);
                         }
                     });
-            mRequestQueue.add(request);
+
+            //We won't request the same image again if it succeeded once:
+            addRequestToQueue(request);
             return true;
         } else {
             final RequestFuture<Boolean> futureListener = RequestFuture.newFuture();
             final Request<Boolean> request = new HttpUtils.FileCacheRequest(getContext(), uriFileToCache, cacheFileUri,
                     futureListener, futureListener);
-            mRequestQueue.add(request);
+            addRequestToQueue(request);
 
             boolean response = false;
             try {
@@ -224,6 +226,15 @@ public class SubjectAdder {
 
             return onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
         }
+    }
+
+    private void addRequestToQueue(final Request<Boolean> request) {
+        //We won't request the same image again if it succeeded once,
+        //so don't waste memory or storage caching it.
+        //(We are downloading it to our own cache, of course.)
+        request.setShouldCache(false);
+
+        mRequestQueue.add(request);
     }
 
     private boolean onImageDownloadDone(boolean success, final String uriFileToCache, final Uri itemUri, ImageType imageType) {
