@@ -485,9 +485,9 @@ public class ItemsContentProvider extends ContentProvider {
         try {
             final Context context = getContext();
             if (context != null) {
-                final File extDir = context.getExternalFilesDir(null);
+                final File extDir = context.getExternalCacheDir();
                 if (extDir == null) {
-                    Log.error("createFileUri(): getExternalFilesDir returned null.");
+                    Log.error("createFileUri(): getExternalCacheDir returned null.");
                     return null;
                 }
 
