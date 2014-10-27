@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Strangely, we need to use android:drawable, not android:color even when specifying
+    a color. -->
+    <item android:state_checked="true"
+        android:drawable="@color/color_accent" />
+
+    <!-- Default State -->
+    <item android:drawable="@android:color/transparent" />
+</selector>

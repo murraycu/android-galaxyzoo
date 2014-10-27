@@ -375,15 +375,6 @@ public class QuestionFragment extends BaseQuestionFragment
 
             mCheckboxButtons.put(checkbox.getId(), button);
 
-
-            button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    // Perform action on click
-                    final ToggleButton toggleButton = (ToggleButton) buttonView;
-                    onCheckBoxButtonClicked(toggleButton, isChecked);
-                }
-            });
-
             if (col < COL_COUNT) {
                 col++;
             } else {
@@ -458,14 +449,6 @@ public class QuestionFragment extends BaseQuestionFragment
             //Ignore any previously-set minimum height,
             //to stop the portrait-mode's layout from affecting the layout-mode's layout:
             mRootView.setMinimumHeight(0);
-        }
-    }
-
-    private void onCheckBoxButtonClicked(final ToggleButton toggleButton, boolean isChecked) {
-        if (isChecked) {
-            toggleButton.setBackgroundColor(getResources().getColor(R.color.color_accent));
-        } else {
-            toggleButton.setBackgroundColor(Color.TRANSPARENT);
         }
     }
 

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ToggleButton xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+<ToggleButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     style="?android:attr/borderlessButtonStyle"
+    android:background="@drawable/question_answer_checkbox_background"
     android:textAppearance="@style/TextAppearance.AppCompat.Small">
 
 </ToggleButton>
