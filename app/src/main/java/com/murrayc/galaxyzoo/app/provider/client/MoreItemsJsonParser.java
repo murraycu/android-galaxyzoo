@@ -5,6 +5,9 @@ import android.util.JsonReader;
 import com.murrayc.galaxyzoo.app.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -15,11 +18,36 @@ import java.util.List;
  */
 public class MoreItemsJsonParser {
     public static List<ZooniverseClient.Subject> parseMoreItemsResponseContent(final String content) {
+        final Reader reader = new StringReader(content);
+        final List<ZooniverseClient.Subject> result = parseMoreItemsResponseContent(reader);
+
+        try {
+            reader.close();
+        } catch (final IOException e) {
+            Log.error("MoreItemsJsonParser.parseMoreItemsResponseContent(): StringReader.close() failed", e);
+        }
+
+        return result;
+    }
+
+    public static List<ZooniverseClient.Subject> parseMoreItemsResponseContent(final InputStream content) {
+        final Reader reader = new InputStreamReader(content);
+        final List<ZooniverseClient.Subject> result = parseMoreItemsResponseContent(reader);
+
+        try {
+            reader.close();
+        } catch (final IOException e) {
+            Log.error("MoreItemsJsonParser.parseMoreItemsResponseContent(): InputStreamReader.close() failed", e);
+        }
+
+        return result;    }
+
+    private static List<ZooniverseClient.Subject> parseMoreItemsResponseContent(final Reader contentReader) {
         final List<ZooniverseClient.Subject> result = new ArrayList<>();
 
         final JsonReader reader;
         try {
-            reader = new JsonReader(new StringReader(content));
+            reader = new JsonReader(contentReader);
             reader.beginArray();
             while (reader.hasNext()) {
                 while (reader.hasNext()) {
