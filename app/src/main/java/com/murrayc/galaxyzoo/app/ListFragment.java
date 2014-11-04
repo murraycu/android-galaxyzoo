@@ -64,14 +64,6 @@ public class ListFragment extends ZooFragment
     static final int COLUMN_INDEX_FAVOURITE = 5;
     private static final int URL_LOADER = 0;
 
-
-
-    /**
-     * The serialization (saved instance state) Bundle key representing the
-     * activated item position. Only used on tablets.
-     */
-    private static final String STATE_ACTIVATED_POSITION = "activated_position";
-
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.

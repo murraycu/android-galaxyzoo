@@ -54,7 +54,7 @@ public class SubjectFragment extends ItemFragment
     // from our ContentProvider) only knows about the underlying SQLite database column names,
     // not our ContentProvider's column names. That seems like a design error in the Android API.
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
-    private static final int COLUMN_INDEX_ID = 0;
+    /* private static final int COLUMN_INDEX_ID = 0; */
     private static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 1;
     private static final int COLUMN_INDEX_LOCATION_STANDARD_DOWNLOADED = 2;
     private static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 3;

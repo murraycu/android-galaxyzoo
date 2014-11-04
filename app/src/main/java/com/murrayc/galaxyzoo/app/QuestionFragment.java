@@ -84,7 +84,7 @@ public class QuestionFragment extends BaseQuestionFragment
     // from our ContentProvider) only knows about the underlying SQLite database column names,
     // not our ContentProvider's column names. That seems like a design error in the Android API.
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
-    private static final int COLUMN_INDEX_ID = 0;
+    /* private static final int COLUMN_INDEX_ID = 0; */
     private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
 
     /**
