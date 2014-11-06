@@ -5,6 +5,7 @@
     a color. -->
     <item android:state_checked="true"
         android:drawable="@color/color_accent" />
+
     <!-- Default State -->
-    <item android:drawable="@android:color/transparent" />
+    <item android:drawable="@color/color_button_background" />
 </selector>

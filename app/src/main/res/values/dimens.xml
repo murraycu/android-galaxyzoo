@@ -10,4 +10,8 @@
     <!-- Avoid using this unless it's really necessary.
     The layout grid should align to 4dp and this is very small.-->
     <dimen name="small_margin">2dp</dimen>
+
+    <!-- Avoid using this unless it's really necessary.
+The layout grid should align to 4dp and this is very small.-->
+    <dimen name="tiny_gap">1dp</dimen>
 </resources>

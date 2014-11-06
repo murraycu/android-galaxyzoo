@@ -2,7 +2,7 @@
 
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    style="?android:attr/borderlessButtonStyle"
+    android:background="@drawable/question_answer_checkbox_background"
     android:textAppearance="@style/TextAppearance.AppCompat.Small">
 
 </Button>

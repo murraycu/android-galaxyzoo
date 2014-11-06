@@ -459,7 +459,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
         //Add a top margin between this row and any row above it:
         if (layoutAnswers.getChildCount() > 0) {
-            final int margin = UiUtils.getPxForDpResource(activity, R.dimen.small_margin);
+            final int margin = UiUtils.getPxForDpResource(activity, R.dimen.tiny_gap);
             params.setMargins(0, margin, 0, 0);
         }
 
@@ -481,12 +481,11 @@ public class QuestionFragment extends BaseQuestionFragment
         //2 * standard_margin is nicer, but there is usually more, because the buttons expand
         //and a too-small margin is better than splitting a word across lines.
         final int padding = UiUtils.getPxForDpResource(context, R.dimen.small_margin);
-        button.setPadding(padding, button.getPaddingTop(), padding, button.getPaddingBottom());
+        button.setPadding(padding, button.getPaddingTop(), padding, padding);
 
-        //TODO: A margin of 0 still seems to leave a visible margin.
         if(row.getChildCount() > 0) {
             //Space between the buttons:
-            final int margin = UiUtils.getPxForDpResource(context, R.dimen.small_margin);
+            final int margin = UiUtils.getPxForDpResource(context, R.dimen.tiny_gap);
             params.setMargins(margin, 0, 0, 0);
             // When using the standard background drawable (not our custom background color
             // which replaces it) This reduces the space caused by the standard background drawable,
