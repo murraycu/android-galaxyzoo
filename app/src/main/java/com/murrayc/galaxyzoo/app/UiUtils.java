@@ -31,6 +31,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -126,6 +127,15 @@ class UiUtils {
         if (toolbar != null) {
             activity.setSupportActionBar(toolbar);
         }
+
+        //Remove the title text from the app bar (toolbar/actionbar)
+        //because we instead use an icon that shows the title.
+        //See toolbar.xml.
+        final ActionBar actionBar = activity.getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
+
     }
 
     public static Bundle getTransitionOptionsBundle(final Activity activity, final View sharedElementView) {
