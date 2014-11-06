@@ -120,6 +120,11 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
                 viewHolder.checkboxClassified.setVisibility(done ? View.VISIBLE : View.GONE);
                 viewHolder.checkboxUploaded.setVisibility(uploaded ? View.VISIBLE : View.GONE);
             }
+
+            //Don't allow the item to be selected (for viewing or classifying)
+            //if it is not done yet, so the user cannot skip ahead to classify
+            //only interesting images:
+            viewHolder.imageView.setEnabled(done);
         }
 
         //holder.itemView.setTag(item);

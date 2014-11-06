@@ -77,6 +77,7 @@ public class ListFragment extends ZooFragment
         public void navigateToNextAvailable() {
         }
     };
+
     /**
      * The fragment's current callback object, which is notified of list item
      * clicks.
@@ -278,7 +279,13 @@ public class ListFragment extends ZooFragment
         final String itemId = cursor.getString(COLUMN_INDEX_ID);
         final boolean done = (cursor.getInt(COLUMN_INDEX_DONE) == 1);
 
-        mCallbacks.onItemSelected(itemId, done, sharedElementView);
+        //Disable the ability to classify a not-yet-done item by selecting it from
+        //the list.
+        //See also ListCursorAdapter.onBindViewHolder(), where we prevent clicks anyway.
+        //TODO: Remove the done parameter from onItemSelected if we keep this disabled.
+        if (done) {
+            mCallbacks.onItemSelected(itemId, done, sharedElementView);
+        }
     }
 
     RecyclerView getGridView() {
