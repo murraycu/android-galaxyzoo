@@ -19,13 +19,6 @@
 
     </style>
 
-    <!-- We override this style for v21 so we can use
-         parent="@android:style/Widget.Material.Button.Borderless" -->
-    <style name="GalaxyZooButtonStyle" parent="@android:style/Widget.Material.Button.Borderless">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
-    </style>
-
-
 
 </resources>
 
