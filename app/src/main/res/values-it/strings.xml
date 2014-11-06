@@ -9,6 +9,9 @@
     <!-- This shows the version number of the app. -->
     <string name="about_version_text_format">Versione: %s</string>
 
+    <!-- The accessibility description of the word mark icon in the toolbar. -->
+    <string name="content_description_toolbar_icon">Galaxy Zoo</string>
+
     <!-- This is shown while the app is first starting. -->
     <string name="progress_loading_text">Caricamento in corso…</string>
 

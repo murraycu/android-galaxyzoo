@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Galaxy Zoo</string>
+    <string name="content_description_toolbar_icon">Galaxy Zoo</string>
     <string name="action_examples">Beispiele</string>
     <string name="action_list">Liste</string>
     <string name="action_next">Klassifizieren</string>
