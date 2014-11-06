@@ -119,7 +119,7 @@ class UiUtils {
         return r.getDimensionPixelSize(resourceId);
     }
 
-    protected static void showToolbar(final ActionBarActivity activity) {
+    static void showToolbar(final ActionBarActivity activity) {
         //The layout XML should include our toolbar.xml,
         //which we use instead of an ActionBar,
         //See also our use of <item name="windowActionBar">false</item> in styles.xml.
