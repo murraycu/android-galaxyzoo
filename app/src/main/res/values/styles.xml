@@ -76,6 +76,13 @@
     <!-- If we were using the Material theme, we could use
          parent="@android:style/Widget.Material.Button.Borderless -->
     <style name="GalaxyZooButtonStyle" parent="@android:style/Widget.Button">
+        <!-- Let the color and size in the textAppearance take precedence.
+             This only seems to be necessary when running on API versions less than 21.
+             Otherwise, older Android versions will show black text on the black background,
+             making the text invisible. -->
+        <item name="android:textColor">@null</item>
+        <item name="android:textSize">@null</item>
+
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
 
