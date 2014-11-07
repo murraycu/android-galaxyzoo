@@ -39,6 +39,8 @@ public class ListActivityTest
     protected void setUp() throws Exception {
         super.setUp();
 
+        TestUtils.setTheme(this);
+
         startActivity(new Intent(getInstrumentation().getTargetContext(), ListActivity.class), null, null);
 
         mActivity = getActivity();

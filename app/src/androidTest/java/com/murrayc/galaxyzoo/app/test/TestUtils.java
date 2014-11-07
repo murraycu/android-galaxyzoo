@@ -19,35 +19,19 @@
 
 package com.murrayc.galaxyzoo.app.test;
 
-import android.content.Intent;
 import android.test.ActivityUnitTestCase;
+import android.view.ContextThemeWrapper;
 
-import com.murrayc.galaxyzoo.app.LoginActivity;
+import com.murrayc.galaxyzoo.app.R;
 
 /**
- * Created by murrayc on 5/26/14.
+ * Created by murrayc on 11/7/14.
  */
-public class LoginActivityTest
-        extends ActivityUnitTestCase<LoginActivity> {
-
-    private LoginActivity mActivity;
-
-    public LoginActivityTest() {
-        super(LoginActivity.class);
-    }
-
-    protected void setUp() throws Exception {
-        super.setUp();
-
-        TestUtils.setTheme(this);
-
-        startActivity(new Intent(getInstrumentation().getTargetContext(), LoginActivity.class), null, null);
-
-        mActivity = getActivity();
-        assertNotNull(mActivity);
-    }
-
-    public void testExists() {
-        assertNotNull(mActivity);
+public class TestUtils {
+    static void setTheme(final ActivityUnitTestCase<?> testCase) {
+        //Avoid this exception:
+        //java.lang.IllegalStateException: You need to use a Theme.AppCompat theme (or descendant) with this activity.
+        final ContextThemeWrapper context = new ContextThemeWrapper(testCase.getInstrumentation().getTargetContext(), R.style.AppTheme);
+        testCase.setActivityContext(context);
     }
 }

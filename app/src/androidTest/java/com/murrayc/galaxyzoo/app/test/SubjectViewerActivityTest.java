@@ -39,6 +39,8 @@ public class SubjectViewerActivityTest
     protected void setUp() throws Exception {
         super.setUp();
 
+        TestUtils.setTheme(this);
+
         startActivity(new Intent(getInstrumentation().getTargetContext(), SubjectViewerActivity.class), null, null);
 
         mActivity = getActivity();
