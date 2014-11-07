@@ -564,6 +564,11 @@ public class ItemsContentProvider extends ContentProvider {
         mZooniverseClient = new ZooniverseClient(getContext(), Config.SERVER);
         mSubjectAdder = new SubjectAdder(getContext(), mZooniverseClient.getRequestQueue());
 
+        //This isn't necessary when using the private getExternalCacheDir():
+        //Make sure that the .nomedia file exists,
+        //to prevent the media indexer from checking or listing our files.
+        //createCacheFile(".nomedia");
+
         return true;
     }
 
