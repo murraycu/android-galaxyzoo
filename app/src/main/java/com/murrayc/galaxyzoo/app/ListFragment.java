@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -198,10 +199,22 @@ public class ListFragment extends ZooFragment
                     }
                 });
 
-        final RecyclerView gridView = getGridView();
         //TODO: Can we specify the layout manager in the layout XML?
+        int gridSpan = 3; //A suitable default for the error case.
+        final Resources resources = getResources();
+        if (resources != null) {
+            //This is different depending on the screen width:
+            final int resourcesGridSpan = resources.getInteger(R.integer.list_grid_span);
+
+            //A sanity check:
+            if (resourcesGridSpan > 0) {
+                gridSpan = resourcesGridSpan;
+            }
+        }
+
+        final RecyclerView gridView = getGridView();
         gridView.setLayoutManager(
-                new GridLayoutManager(activity, 3));
+                new GridLayoutManager(activity, gridSpan));
 
         //This is apparently already the default:
         //gridView.setItemAnimator(new DefaultItemAnimator());
