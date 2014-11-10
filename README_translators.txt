@@ -10,6 +10,10 @@ https://github.com/murraycu/android-galaxyzoo/tree/master/app/src/main/res/value
 You could submit them as a github pull request, or just email them if you find that too difficult.
 
 
+There are some sample screenshots here to help you to understand the context:
+https://github.com/murraycu/android-galaxyzoo/tree/master/screenshots_for_translators
+
+
 *** Translating the website, to complete the app translation
 
 The questions are not in the app itself. You can provide a translation of the Galaxy Zoo website that the app will then use.
