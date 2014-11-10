@@ -1,7 +1,8 @@
 android-galaxyzoo
 ============
 
-This Android app lets you classify Galaxy Zoo subjects. It is not at all official, but it works.
+This Android app lets you classify Galaxy Zoo subjects.
+It is official and approved by the Zooniverse project.
 
 Feedback and source code pull requests (or patches) are very welcome.
 
