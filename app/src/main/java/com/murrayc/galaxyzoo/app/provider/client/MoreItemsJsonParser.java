@@ -22,6 +22,7 @@ package com.murrayc.galaxyzoo.app.provider.client;
 import android.util.JsonReader;
 
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,7 +51,14 @@ public class MoreItemsJsonParser {
     }
 
     public static List<ZooniverseClient.Subject> parseMoreItemsResponseContent(final InputStream content) {
-        final Reader reader = new InputStreamReader(content);
+        Reader reader = null;
+        try {
+            reader = new InputStreamReader(content, Utils.STRING_ENCODING);
+        } catch (final UnsupportedEncodingException e) {
+            Log.error("MoreItemsJsonParser.parseMoreItemsResponseContent(): unsupported  encoding exception", e);
+            return null;
+        }
+
         final List<ZooniverseClient.Subject> result = parseMoreItemsResponseContent(reader);
 
         try {
@@ -59,7 +67,8 @@ public class MoreItemsJsonParser {
             Log.error("MoreItemsJsonParser.parseMoreItemsResponseContent(): InputStreamReader.close() failed", e);
         }
 
-        return result;    }
+        return result;
+    }
 
     private static List<ZooniverseClient.Subject> parseMoreItemsResponseContent(final Reader contentReader) {
         final List<ZooniverseClient.Subject> result = new ArrayList<>();
