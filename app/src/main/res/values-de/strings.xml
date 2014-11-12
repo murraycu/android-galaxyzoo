@@ -6,7 +6,7 @@
     <string name="action_list">Liste</string>
     <string name="action_next">Klassifizieren</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="description_settings">How many to download in advance, etc.</string>
+    <string name="description_settings">Im Voraus zu herunterladende Menge, usw.</string>
     <string name="action_about">Info</string>
     <string name="title_examples">Beispiele</string>
     <string name="prompt_password">Passwort</string>
@@ -23,28 +23,29 @@
     <string name="error_incorrect_password">Dieses Passwort ist nicht korrekt.</string>
     <string name="error_invalid_password">Dieses Passwort ist zu kurz.</string>
     <string name="description_thumbnail">Miniaturbild</string>
-    <string name="content_description_example_image">Beispielbild</string>
+    <string name="content_description_example_image">Beispielbild.</string>
     <string name="description_standard_image">Standard Bild</string>
     <string name="action_invert">Invertieren</string>
     <string name="title_zooniverse_id">Zooniverse ID:</string>
     <string name="button_title_discuss">Diskutieren</string>
-    <string name="about_text">An android app for classifying <a href="http://www.galaxyzoo.org/">Galaxy Zoo</a> subjects. This is an official Zooniverse and Galaxy Zoo app.\n\nThis android app was developed by <a href="http://murrayc.com/">Murray Cumming</a>.\n\nThis app uses the <a href="https://android.googlesource.com/platform/frameworks/volley">Volley</a> library, under the Apache License version 2.0.\n\nThe answer icons and example images are from the Zooniverse\'s <a href="https://github.com/zooniverse/Galaxy-Zoo">web UI for Galaxy-Zoo</a>, under the Apache License version 2.0.\n\nSubject images from the <a href="http://www.sdss3.org/">Sloan Digital Sky Survey</a> are used under their <a href="http://www.sdss3.org/collaboration/imageuse.php">non-commercial licence</a>.\n\nSubject images from the <a href="http://hubblesite.org/">Hubble Space Telescope</a> are from NASA and STScI and used under their <a href="http://hubblesite.org/about_us/copyright.php">public domain license</a>.</string>    <string name="action_favorite">Favorit</string>
+    <string name="about_text">Dies ist eine Android App zur Klassifierung von <a href="http://www.galaxyzoo.org/">Galaxy Zoo</a> Objekten. Dies ist eine offiziele Zooniverse und Galaxy Zoo App.\n\nDiese Android App wurde von <a href="http://murrayc.com/">Murray Cumming</a> entwickelt.\n\nDiese App benutzt die <a href="https://android.googlesource.com/platform/frameworks/volley">Volley</a> Bibliothek, unter der Apache License version 2.0.\n\nDie Antwort Symbole und die Beispiel Bilder sind von der <a href="https://github.com/zooniverse/Galaxy-Zoo">Web-basierten Benutzeroberfläche für Galaxy-Zoo</a> von Zooniverse, unter der Apache License Version 2.0.\n\nObjekt Bilder von der <a href="http://www.sdss3.org/">Sloan Digital Sky Survey</a> werden unter der <a href="http://www.sdss3.org/collaboration/imageuse.php">non-commercial licence</a> benutzt.\n\nObjekt Bilder vom <a href="http://hubblesite.org/">Hubble Space Teleskop</a> sind von der NASA und der STScI und werden unter ihrer <a href="http://hubblesite.org/about_us/copyright.php">public domain license</a> benutzt.</string>
+    <string name="action_favorite">Favorit</string>
     <string name="action_restart">Erneut anfangen</string>
     <string name="button_title_examine">Anschauen</string>
-    <string name="content_description_classified">Whether the subject has been classified.</string>
-    <string name="content_description_favorite">Whether the subject is a favorite.</string>
-    <string name="content_description_uploaded">Whether the subject has been uploaded.</string>
-    <string name="login_hint">Login or create an account to receive credit for your work.</string>
+    <string name="content_description_favorite">Anzeige ob das Objekt ein Favorit ist.</string>
+    <string name="content_description_uploaded">Anzeige ob das Objekt hochgeladen ist.</string>
+    <string name="content_description_classified">Anzeige ob das Objekt bereits klassifiziert ist.</string>
+    <string name="login_hint">Loggen Sie sich ein oder erstellen Sie ein Konto um Anerkennung für ihre Arbeit zu erhalten.</string>
     <string name="title_activity_subject_viewer">Objekt</string>
-    <string name="pref_title_cache_size">Download in advance</string>
-    <string name="pref_title_keep_count">Keep</string>
+    <string name="pref_title_keep_count">Behalte</string>
+    <string name="pref_title_cache_size">Im Voraus herunterladen</string>
     <string name="title_activity_settings">Einstellungen</string>
     <string name="progress_loading_text">Ladevorgang…</string>
     <string name="about_version_text_format">Version: %s</string>
-    <string name="error_no_network">No Network connection.</string>
-    <string name="error_could_not_connect">Cannot connect to the server.</string>
-    <string name="error_no_subjects">Cannot download new subjects to classify.</string>
-    <string name="message_logged_in">Logged In.</string>
+    <string name="error_no_network">Keine Netzwerk Verbindung.</string>
+    <string name="error_could_not_connect">Kann keine Verbindung zum Server herstellen.</string>
+    <string name="error_no_subjects">Kann keine neue Objekte zum Klassifizieren herunterladen.</string>
+    <string name="message_logged_in">Eingeloggt.</string>
     <string name="error_button_cancel">Abbrechen</string>
     <string name="error_button_retry">Wiederholen</string>
 </resources>

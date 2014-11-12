@@ -8,9 +8,9 @@
     </string-array>
 
     <string-array name="pref_keep_count_entries">
-    <item>5 classified Objekte</item>
-    <item>10 classified Objekte</item>
-    <item>20 classified Objekte</item>
-    <item>50 classified Objekte</item>
+    <item>5 klassifizierte Objekte</item>
+    <item>10 klassifizierte Objekte</item>
+    <item>20 klassifizierte Objekte</item>
+    <item>50 klassifizierte Objekte</item>
     </string-array>
 </resources>
