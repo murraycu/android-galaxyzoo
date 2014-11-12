@@ -15,11 +15,4 @@
     app:theme="@style/GalaxyZooThemeToolbarDarkOverflow"
     app:popupTheme="@style/Theme.AppCompat">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_toolbar_icon"
-        android:contentDescription="@string/content_description_toolbar_icon"/>
-
-
 </android.support.v7.widget.Toolbar>

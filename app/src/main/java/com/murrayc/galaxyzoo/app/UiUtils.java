@@ -136,6 +136,8 @@ class UiUtils {
             actionBar.setDisplayShowTitleEnabled(false);
         }
 
+        //TODO: Why can't we specify this via android:logo in the XML:
+        toolbar.setLogo(R.drawable.ic_toolbar_icon);
     }
 
     public static Bundle getTransitionOptionsBundle(final Activity activity, final View sharedElementView) {
