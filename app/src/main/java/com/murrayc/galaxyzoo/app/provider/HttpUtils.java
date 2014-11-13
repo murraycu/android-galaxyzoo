@@ -25,8 +25,10 @@ import android.os.ParcelFileDescriptor;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.RequestFuture;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 
@@ -36,6 +38,9 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by murrayc on 8/25/14.
@@ -80,6 +85,31 @@ public class HttpUtils {
         conn.setReadTimeout(TIMEOUT_MILLIS);
 
         return conn;
+    }
+
+    public static boolean cacheUriToFileSync(final Context context, final RequestQueue requestQueue, final String uriFileToCache, final String cacheFileUri) {
+        final RequestFuture<Boolean> futureListener = RequestFuture.newFuture();
+        final Request<Boolean> request = new FileCacheRequest(context, uriFileToCache, cacheFileUri,
+                futureListener, futureListener);
+
+        //We won't request the same image again if it succeeded once,
+        //so don't waste memory or storage caching it.
+        //(We are downloading it to our own cache, of course.)
+        request.setShouldCache(false);
+
+        requestQueue.add(request);
+
+        boolean response = false;
+        try {
+            //Note: If we don't provider the RequestFuture as the errorListener too,
+            //then this won't return until after the timeout, even if an error happen earlier.
+            response = futureListener.get(TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        } catch (final InterruptedException | ExecutionException e) {
+            Log.error("cacheUriToFile(): Exception from request.", e);
+        } catch (TimeoutException e) {
+            Log.error("cacheUriToFile(): Timeout Exception from request.", e);
+        }
+        return response;
     }
 
     public static class FileCacheRequest extends Request<Boolean> {

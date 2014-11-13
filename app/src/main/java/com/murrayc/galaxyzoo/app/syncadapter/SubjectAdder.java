@@ -30,7 +30,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.RequestFuture;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
@@ -42,9 +41,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class SubjectAdder {
     private final Context mContext;
@@ -227,22 +223,7 @@ public class SubjectAdder {
             addRequestToQueue(request);
             return true;
         } else {
-            final RequestFuture<Boolean> futureListener = RequestFuture.newFuture();
-            final Request<Boolean> request = new HttpUtils.FileCacheRequest(getContext(), uriFileToCache, cacheFileUri,
-                    futureListener, futureListener);
-            addRequestToQueue(request);
-
-            boolean response = false;
-            try {
-                //Note: If we don't provider the RequestFuture as the errorListener too,
-                //then this won't return until after the timeout, even if an error happen earlier.
-                response = futureListener.get(HttpUtils.TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-            } catch (final InterruptedException | ExecutionException e) {
-                Log.error("cacheUriToFile(): Exception from request.", e);
-            } catch (TimeoutException e) {
-                Log.error("cacheUriToFile(): Timeout Exception from request.", e);
-            }
-
+            final boolean response = HttpUtils.cacheUriToFileSync(getContext(), mRequestQueue, uriFileToCache, cacheFileUri);
             return onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
         }
     }
