@@ -126,18 +126,17 @@ class UiUtils {
         final Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
         if (toolbar != null) {
             activity.setSupportActionBar(toolbar);
-        }
 
-        //Remove the title text from the app bar (toolbar/actionbar)
-        //because we instead use an icon that shows the title.
-        //See toolbar.xml.
-        final ActionBar actionBar = activity.getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
+            //Remove the title text from the app bar (toolbar/actionbar)
+            //because we instead use an icon that shows the title.
+            final ActionBar actionBar = activity.getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayShowTitleEnabled(false);
+            }
 
-        //TODO: Why can't we specify this via android:logo in the XML:
-        toolbar.setLogo(R.drawable.ic_toolbar_icon);
+            //TODO: Why can't we specify this via android:logo in the XML:
+            toolbar.setLogo(R.drawable.ic_toolbar_icon);
+        }
     }
 
     public static Bundle getTransitionOptionsBundle(final Activity activity, final View sharedElementView) {
