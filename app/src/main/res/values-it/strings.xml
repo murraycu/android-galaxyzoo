@@ -125,6 +125,10 @@
 
     <!-- The title of the preference that controls how many old items should stay on the device. -->
     <string name="pref_title_keep_count">Mantieni</string>
+
+    <string name="pref_title_wifi_only">Scarica solo tramite Wi-Fi</string>
+    <string name="pref_description_wifi_only">Per ridurre i costi applicati dall'operatore per i dati, non scaricare tramite reti mobili.</string>
+
     <string name="error_button_cancel">Annulla</string>
     <string name="error_no_network">Nessuna connessione di rete.</string>
     <string name="error_could_not_connect">Cannot connect to the server.</string>

@@ -50,5 +50,8 @@
     <string name="pref_title_cache_size">Im Voraus herunterladen</string>
     <string name="pref_title_keep_count">Behalte</string>
 
+    <string name="pref_title_wifi_only">Nur über WLAN herunterladen</string>
+    <string name="pref_description_wifi_only">Downloads über Mobilfunknetze vermeiden, um Kosten für die Datenübertragung zu senken.</string>
+
 
 </resources>

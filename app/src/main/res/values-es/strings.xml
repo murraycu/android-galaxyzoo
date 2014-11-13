@@ -126,6 +126,10 @@
 
     <!-- The title of the preference that controls how many old items should stay on the device. -->
     <string name="pref_title_keep_count">Conservar</string>
+
+    <string name="pref_title_wifi_only">Descargar solo con Wi-Fi</string>
+    <string name="pref_description_wifi_only">No descargar contenido en redes móviles para reducir los cargos de datos del operador.</string>
+
     <string name="error_button_cancel">Cancelar</string>
     <string name="error_button_retry">Reintentar</string>
     <string name="error_no_network">Sin conexión de red.</string>
