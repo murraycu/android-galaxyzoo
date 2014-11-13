@@ -52,7 +52,9 @@ public class HttpUtils {
     public static final int TIMEOUT_MILLIS = 20000; //20 seconds. Long but not too short for GPRS connections and not endless.
 
     public static void throwIfNoNetwork(final Context context) {
-        if (!Utils.getNetworkIsConnected(context)) {
+        final Utils.NetworkConnected networkConnected =
+                Utils.getNetworkIsConnected(context, Utils.getUseWifiOnly(context));
+        if (!networkConnected.connected) {
             //Throw an exception so the caller knows.
             throw new NoNetworkException();
         }

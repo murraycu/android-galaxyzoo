@@ -78,9 +78,13 @@ class UiUtils {
         return true;
     }
 
-    //TODO: Put these in strings.xml:
     static void warnAboutNoNetworkConnection(final Activity activity) {
         final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_network), Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    static void warnAboutNoWifiNetworkConnection(final Activity activity) {
+        final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_wifi_network), Toast.LENGTH_LONG);
         toast.show();
     }
 
@@ -143,5 +147,41 @@ class UiUtils {
         final ActivityOptionsCompat options =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharedElementView, activity.getString(R.string.transition_subject_image));
         return options.toBundle();
+    }
+
+    /**
+     * Use this instead of the one with the wifiOnly parameter,
+     * when we are sure that the request should work even on wi-fi even if
+     * wifi-only is set.
+     *
+     * @param activity
+     * @return
+     */
+    static boolean warnAboutMissingNetwork(final Activity activity) {
+        return warnAboutMissingNetwork(activity, Utils.getUseWifiOnly(activity));
+    }
+
+    /**
+     * Return true if a suitable warning was shown, if a possible cause was found.
+     *
+     * @param activity
+     * @return
+     */
+    static boolean warnAboutMissingNetwork(final Activity activity, boolean wifiOnly) {
+        //Check for this possible cause.
+        // TODO: Avoid copy/pasting with QuestionFragment
+        // TODO: Is there any simpler way to just catch the
+        // ItemsContentProvider.NoNetworkConnection exception in the CursorLoader?
+        final Utils.NetworkConnected networkConnected = Utils.getNetworkIsConnected(activity,
+                wifiOnly);
+        if (networkConnected.notConnectedBecauseNotOnWifi) {
+            warnAboutNoWifiNetworkConnection(activity);
+            return true;
+        } else if (!networkConnected.connected) {
+            warnAboutNoNetworkConnection(activity);
+            return true;
+        }
+
+        return false;
     }
 }

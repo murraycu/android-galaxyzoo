@@ -43,14 +43,28 @@ public class Utils {
 
     public static final String STRING_ENCODING = "UTF-8";
 
-    public static boolean getNetworkIsConnected(final Context context) {
+    public static boolean getUseWifiOnly(final Context context) {
+        return getBooleanPref(context, R.string.pref_key_wifi_only);
+    }
+
+    public final static class NetworkConnected {
+        public final boolean connected;
+        public final boolean notConnectedBecauseNotOnWifi;
+
+        NetworkConnected(boolean connected, boolean notConnectedBecauseNotOnWifi) {
+            this.connected = connected;
+            this.notConnectedBecauseNotOnWifi = notConnectedBecauseNotOnWifi;
+        }
+    }
+
+    public static NetworkConnected getNetworkIsConnected(final Context context, final boolean wifiOnly) {
         boolean connected = false;
         ConnectivityManager connMgr = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connMgr == null) {
             //This happens during our test case, probably because the MockContext doesn't support
             //this, so let's ignore it.
-            return false;
+            return new NetworkConnected(false, false);
         }
 
         final NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -58,18 +72,29 @@ public class Utils {
             connected = true;
         }
 
-        return connected;
+        if (!connected) {
+            return new NetworkConnected(false, false);
+        }
+
+        //Consider us not connected if we should use only wi-fi but don't have wi-fi:
+        if (wifiOnly && (networkInfo.getType() != ConnectivityManager.TYPE_WIFI)) {
+            return new NetworkConnected(false, true);
+        }
+
+        return new NetworkConnected(true, false);
+    }
+
+    public static boolean getBooleanPref(final Context context, final int prefKeyResId) {
+        final String value = getStringPref(context, prefKeyResId);
+        if (value == null) {
+            return false;
+        }
+
+        return Boolean.parseBoolean(value);
     }
 
     public static int getIntPref(final Context context, final int prefKeyResId) {
-        final AccountManager mgr = AccountManager.get(context);
-        final Account account = getAccount(mgr);
-        if (account == null) {
-            return 0;
-        }
-
-        final String value =
-                mgr.getUserData(account, context.getString(prefKeyResId));
+        final String value = getStringPref(context, prefKeyResId);
         if (value == null) {
             return 0;
         }
@@ -79,6 +104,16 @@ public class Utils {
         } catch (final NumberFormatException e) {
             return 0;
         }
+    }
+
+    private static String getStringPref(Context context, int prefKeyResId) {
+        final AccountManager mgr = AccountManager.get(context);
+        final Account account = getAccount(mgr);
+        if (account == null) {
+            return null;
+        }
+
+        return mgr.getUserData(account, context.getString(prefKeyResId));
     }
 
     private static Account getAccount(final AccountManager mgr) {

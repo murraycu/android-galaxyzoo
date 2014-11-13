@@ -253,6 +253,8 @@ public class ZooniverseClient {
     }
 
     public void requestMoreItemsAsync(int count, final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
+        throwIfNoNetwork();
+
         final Request request = new StringRequest(Request.Method.GET,
                 getQueryUri(count),
                 listener,
@@ -278,6 +280,8 @@ public class ZooniverseClient {
     }
 
     public boolean uploadClassificationSync(final String authName, final String authApiKey, final List<NameValuePair> nameValuePairs) {
+        throwIfNoNetwork();
+
         final HttpURLConnection conn = HttpUtils.openConnection(getPostUploadUri());
         if (conn == null) {
             return false;

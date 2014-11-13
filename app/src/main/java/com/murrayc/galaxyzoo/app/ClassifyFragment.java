@@ -301,17 +301,11 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             //we will show the loading view (progress) again.
             hideAll();
 
-            //Check for this possible cause.
-            // TODO: Is there any simpler way to just catch the
-            // ItemsContentProvider.NoNetworkConnection exception in the CursorLoader?
-            // This doesn't seem to work: http://stackoverflow.com/questions/13551219/handle-cursorloader-exceptions/13753313#13753313
-            if (!Utils.getNetworkIsConnected(activity)) {
-                warnAboutNetworkProblemWithRetry(activity, activity.getString(R.string.error_no_network));
+            if(!UiUtils.warnAboutMissingNetwork(activity)) {
+                //Warn that there is some other network problem.
+                //For instance, this happens if the network is apparently connected but not working properly:
+                warnAboutNetworkProblemWithRetry(activity, activity.getString(R.string.error_no_subjects));
             }
-
-            //Warn that there is some other network problem.
-            //For instance, this happens if the network is apparently connected but not working properly:
-            warnAboutNetworkProblemWithRetry(activity, activity.getString(R.string.error_no_subjects));
 
             return;
         }

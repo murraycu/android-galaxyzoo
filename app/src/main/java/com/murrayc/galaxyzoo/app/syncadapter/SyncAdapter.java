@@ -41,6 +41,7 @@ import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.ClassificationAnswer;
 import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
 import com.murrayc.galaxyzoo.app.provider.Config;
+import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.client.MoreItemsJsonParser;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
@@ -93,21 +94,25 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      *
      * @return Return true if we know for sure that no further work is currently necessary.
      */
-    private boolean doRegularTasks() {
+    private void doRegularTasks() {
         Log.info("doRegularTasks() start");
         //Do the download first, to avoid the UI having to wait for new subjects to classify.
-        final boolean noDownloadNecessary = downloadMinimumSubjectsAsync();
-        final boolean noDownloadMissingImagesNecessary = downloadMissingImages();
 
-        //Do less urgent things next:
-        final boolean noUploadNecessary = uploadOutstandingClassifications();
-        final boolean noRemovalNecessary = removeOldSubjects();
+        try {
+            downloadMinimumSubjectsAsync();
+            downloadMissingImages();
 
+            //Do less urgent things next:
+            uploadOutstandingClassifications();
+        } catch (final HttpUtils.NoNetworkException e) {
+            //Ignore this - it is normal if wifi-only is set in the settings
+            //and if we are then not on a wi-fi connection.
+            Log.info("SyncAdapter.doRegularTasks(): Ignoring NoNetworkException.");
+        }
+
+        removeOldSubjects();
 
         Log.info("doRegularTasks() end");
-
-        return noDownloadNecessary && noDownloadMissingImagesNecessary && noUploadNecessary
-                && noRemovalNecessary;
     }
 
     /**
@@ -151,6 +156,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             //TODO: This may be unnecessary with the SyncAdapter.
             return;
         }
+
+
 
         mRequestMoreItemsTaskInProgress = true;
 

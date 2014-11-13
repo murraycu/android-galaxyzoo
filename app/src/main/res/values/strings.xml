@@ -117,6 +117,9 @@
     <!-- An error message. We show this when we cannot continue because there is no network connection. -->
     <string name="error_no_network">No network connection.</string>
 
+    <!-- An error message. We show this when we cannot continue because there is no wi-fi network connection. -->
+    <string name="error_no_wifi_network">No Wi-Fi network connection.</string>
+
     <!-- TODO: Make this clearer for people who don't know what an (Internet) server is? -->
     <!-- An error message. We show this when we cannot continue because something is wrong with the network connection. -->
     <string name="error_could_not_connect">Cannot connect to the server.</string>
@@ -144,6 +147,10 @@
     <!-- The title of the preference that controls how many old items should stay on the device. -->
     <string name="pref_title_keep_count">Keep</string>
     <string name="pref_default_keep_count" translatable="false">50</string>
+
+    <string name="pref_title_wifi_only">Download via Wi-Fi only</string>
+    <string name="pref_description_wifi_only">To reduce carrier data charges, don\'t download over mobile networks.</string>
+
 
     //The android:transitionName used for the ImageView that shows the subject.
     //Activities can use the same transitionName on small versions of the image,

@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -82,8 +83,15 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         //Copy the preference to the Account:
         //This is an awful hack. Hopefully there is some other way to use preferences per-account.
         //If not, maybe we need to reimplement this fragment without using PreferencesFragment.
-        final ListPreference listPref = (ListPreference) connectionPref;
-        final String value = listPref.getValue();
+        String value = null;
+        if (connectionPref instanceof ListPreference) {
+            final ListPreference listPref = (ListPreference) connectionPref;
+            value = listPref.getValue();
+        } else if (connectionPref instanceof CheckBoxPreference) {
+            final CheckBoxPreference checkboxPref = (CheckBoxPreference) connectionPref;
+            value = checkboxPref.isChecked() ? "true" : ""; //See Boolean.parseBoolean().
+        }
+
         Utils.copyPrefToAccount(getActivity(), key, value);
     }
 

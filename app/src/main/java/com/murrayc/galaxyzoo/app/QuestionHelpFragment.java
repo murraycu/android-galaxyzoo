@@ -177,8 +177,8 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         //These images are not cached,
         //so we will need a network connection.
         final Activity activity = getActivity();
-        if (!Utils.getNetworkIsConnected(activity)) {
-            UiUtils.warnAboutNoNetworkConnection(activity);
+        final boolean requireWiFi = false; //This is an explicit request. But TODO: Ask for confirmation if wifi-only is on.
+        if(UiUtils.warnAboutMissingNetwork(activity, requireWiFi)) {
             return;
         }
 

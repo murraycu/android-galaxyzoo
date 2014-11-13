@@ -191,13 +191,7 @@ public class SubjectFragment extends ItemFragment
             //Wipe the image instead of keeping whatever might be showing already:
             mImageView.setImageDrawable(null);
 
-            //Check for this possible cause.
-            // TODO: Is there any simpler way to just catch the
-            // ItemsContentProvider.NoNetworkConnection exception in the CursorLoader?
-            final Activity activity = getActivity();
-            if (!Utils.getNetworkIsConnected(activity)) {
-                UiUtils.warnAboutNoNetworkConnection(activity);
-            }
+            UiUtils.warnAboutMissingNetwork(getActivity());
 
             return;
         }

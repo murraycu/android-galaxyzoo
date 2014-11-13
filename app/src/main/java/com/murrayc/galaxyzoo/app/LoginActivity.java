@@ -361,9 +361,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
 
             // A null result means that we didn't even get a response from the server for some reason:
             if (result == null) {
-                if (!Utils.getNetworkIsConnected(LoginActivity.this)) {
-                    UiUtils.warnAboutNoNetworkConnection(LoginActivity.this);
-                } else {
+                if (!UiUtils.warnAboutMissingNetwork(LoginActivity.this)) {
                     final Toast toast = Toast.makeText(LoginActivity.this, getString(R.string.error_could_not_connect), Toast.LENGTH_LONG);
                     toast.show();
                 }

@@ -672,13 +672,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
         if (mCursor.getCount() <= 0) { //In case the query returned no rows.
             Log.error("QuestionFragment.updateFromCursor(): The ContentProvider query returned no rows.");
-
-            //Check for this possible cause.
-            // TODO: Is there any simpler way to just catch the
-            // ItemsContentProvider.NoNetworkConnection exception in the CursorLoader?
-            if (!Utils.getNetworkIsConnected(activity)) {
-                UiUtils.warnAboutNoNetworkConnection(activity);
-            }
+            UiUtils.warnAboutMissingNetwork(activity);
 
             return;
         }
