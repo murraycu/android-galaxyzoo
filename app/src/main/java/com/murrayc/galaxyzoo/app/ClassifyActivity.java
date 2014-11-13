@@ -92,7 +92,7 @@ public class ClassifyActivity extends ItemActivity
         }
 
         //Make the SyncAdapter respond to preferences changes.
-        //The SyncAdapater can't do this itself, because SharedPreferences
+        //The SyncAdapter can't do this itself, because SharedPreferences
         //doesn't work across processes.
         try {
             PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
@@ -104,7 +104,7 @@ public class ClassifyActivity extends ItemActivity
         /**
          * Ask the SyncProvider to update whenever anything in the ItemContentProvider's
          * Items table changes. This seems excessive, but maybe we can trust
-         * the SyncAdapater framework to not try to do too much work.
+         * the SyncAdapter framework to not try to do too much work.
          *
          * Register the observer for the data table. The table's path
          * and any of its subpaths trigger the observer.
