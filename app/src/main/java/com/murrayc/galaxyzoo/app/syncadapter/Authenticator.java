@@ -124,7 +124,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
         //TODO: Check if the server complains when we provide an invalid auth_key
         //so we can invalidate it.
 
-        //TODO: Encrypt the auth token.
+        //TODO: Encrypt the auth token. Or does the AccountManager take care of this already?
 
         // If we get here, then we couldn't access the user's auth key or password - so we
         // need to re-prompt them for their credentials. We do that by creating

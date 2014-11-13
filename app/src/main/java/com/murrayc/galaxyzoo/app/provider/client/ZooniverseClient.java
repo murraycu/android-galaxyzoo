@@ -297,6 +297,7 @@ public class ZooniverseClient {
         //Be careful: The server still returns OK_CREATED even if we provide the wrong Authorization here.
         //There doesn't seem to be any way to know if it's correct other than checking your recent
         //classifications in your profile.
+        //See https://github.com/zooniverse/Galaxy-Zoo/issues/184
         if ((authName != null) && (authApiKey != null)) {
             conn.setRequestProperty("Authorization", generateAuthorizationHeader(authName, authApiKey));
         }
