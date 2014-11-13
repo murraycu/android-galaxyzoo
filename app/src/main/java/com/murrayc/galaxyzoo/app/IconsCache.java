@@ -20,43 +20,45 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+//import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
-import com.murrayc.galaxyzoo.app.provider.HttpUtils;
-import com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder;
+//import com.android.volley.RequestQueue;
+//import com.android.volley.toolbox.Volley;
+//import com.murrayc.galaxyzoo.app.provider.HttpUtils;
+//import com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+//import java.io.BufferedReader;
+//import java.io.ByteArrayOutputStream;
+//import java.io.File;
+//import java.io.FileInputStream;
+//import java.io.FileOutputStream;
+//import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+//import java.io.InputStreamReader;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
+//import java.util.regex.Matcher;
+//import java.util.regex.Pattern;
+//import java.util.regex.PatternSyntaxException;
 
 class IconsCache {
     //TODO: Generate these automatically, making sure they are unique:
+    /*
     private static final String CACHE_FILE_WORKFLOW_ICONS = "workflowicons";
     private static final String CACHE_FILE_EXAMPLE_ICONS = "exampleicons";
     private static final String CACHE_FILE_CSS = "css";
+    */
 
     private static final String ASSET_PATH_ICONS_DIR = "icons/";
     private static final String ICON_FILE_PREFIX = "icon_";
-    private static long ASSETS_ICONS_TIMESTAMP = 1409922463000L; //Update this when bundling new copies of the files.
+    //private static long ASSETS_ICONS_TIMESTAMP = 1409922463000L; //Update this when bundling new copies of the files.
 
 
     private final DecisionTree mDecisionTree;
-    private final File mCacheDir;
+    //private final File mCacheDir;
 
     //TODO: Don't put both kinds of icons in the same map:
     //See this about the use of the LruCache:
@@ -64,9 +66,11 @@ class IconsCache {
     private final LruCache<String, Bitmap> mWorkflowIcons = new LruCache<>(20);
     private final LruCache<String, Bitmap> mExampleIcons = new LruCache<>(20);
     private final Context mContext;
+    /*
     private Bitmap mBmapWorkflowIcons = null;
     private Bitmap mBmapExampleIcons = null;
     private RequestQueue mRequestQueue = null;
+    */
 
     /**
      * This does network IO so it should not be used in the UI's main thread.
@@ -78,7 +82,7 @@ class IconsCache {
     public IconsCache(final Context context, final DecisionTree decisionTree) {
         this.mDecisionTree = decisionTree;
         this.mContext = context;
-        this.mRequestQueue = Volley.newRequestQueue(context);
+        /* this.mRequestQueue = Volley.newRequestQueue(context);
 
         mCacheDir = context.getExternalCacheDir();
         if (mCacheDir == null) {
@@ -109,24 +113,31 @@ class IconsCache {
         if (loadFromNetwork) {
             loadFromNetwork(context, lastModified);
         } else {
-            //Just get the cached icons:
-            if (!reloadCachedIcons()) {
-                //Something went wrong while reloading the icons from the cache files,
-                Log.error("IconsCache: reloadCachedIcons() failed.");
 
-                //So try loading them again.
-                if (Utils.getNetworkIsConnected(context)) {
-                    Log.info("IconsCache(): Reloading the icons from the network after failing to reload them from the cache.");
-                    loadFromNetwork(context, lastModified);
-                }
+         */
+
+        //Just get the cached icons:
+        if (!reloadCachedIcons()) {
+            //Something went wrong while reloading the icons from the cache files,
+            Log.error("IconsCache: reloadCachedIcons() failed.");
+
+            /*
+            //So try loading them again.
+            if (Utils.getNetworkIsConnected(context)) {
+                Log.info("IconsCache(): Reloading the icons from the network after failing to reload them from the cache.");
+                loadFromNetwork(context, lastModified);
             }
+            */
         }
+
+        /* }
 
         mBmapWorkflowIcons = null;
         mBmapExampleIcons = null;
+        */
     }
 
-
+    /*
     private void loadFromNetwork(final Context context, long lastModified) {
         //Get the updated files from the server and re-process them:
         readIconsFileSync(Config.ICONS_URI, CACHE_FILE_WORKFLOW_ICONS);
@@ -149,6 +160,7 @@ class IconsCache {
     private static String getPrefKeyIconCacheLastMod(Context context) {
         return context.getString(R.string.pref_key_icons_cache_last_mod);
     }
+    */
 
     private boolean reloadCachedIcons() {
         mWorkflowIcons.evictAll();
@@ -268,6 +280,7 @@ class IconsCache {
         return ASSET_PATH_ICONS_DIR + ICON_FILE_PREFIX + cssName;
     }
 
+    /*
     private void readIconsFileSync(final String uriStr, final String cacheId) {
         final String cacheFileUri = createCacheFile(cacheId);
         if(!HttpUtils.cacheUriToFileSync(getContext(), mRequestQueue, uriStr, cacheFileUri)) {
@@ -523,6 +536,7 @@ class IconsCache {
             }
         }
     }
+    */
 
     public Bitmap getIcon(final String iconName) {
         //Avoid a NullPointerException from LruCache.get() if we pass a null key.

@@ -33,7 +33,7 @@ public class Config {
 
     //Maybe this whole class should be in the app, not the content provider.
     //TODO: Is there a stable URI for this?
-    public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2014-09-05_13-06-46.css";
+    //public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2014-09-05_13-06-46.css";
 
     //We hard-code this.
     //Alternatively, we could hard-code the removal of this question from the XML
@@ -46,12 +46,12 @@ public class Config {
 
     //This is one big image file containing many icons,
     //for use with the CSS Sprites technique.
-    public static final String ICONS_URI = STATIC_IMAGES_SERVER + "workflow.png";
+    //public static final String ICONS_URI = STATIC_IMAGES_SERVER + "workflow.png";
 
     //This is one big image file containing many icons,
     //for use with the CSS Sprites technique.
     //Note: Do not use the examples.png which is also there - it seems to be outdated and unused.
-    public static final String EXAMPLES_URI = STATIC_IMAGES_SERVER + "examples.jpg";
+    //public static final String EXAMPLES_URI = STATIC_IMAGES_SERVER + "examples.jpg";
 
     //Add the example ID and .jpg to this:
     public static final String FULL_EXAMPLE_URI = STATIC_IMAGES_SERVER + "examples/";
