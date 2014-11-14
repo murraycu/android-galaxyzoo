@@ -98,18 +98,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         Log.info("doRegularTasks() start");
         //Do the download first, to avoid the UI having to wait for new subjects to classify.
 
-        try {
-            downloadMinimumSubjectsAsync();
-            downloadMissingImages();
 
-            //Do less urgent things next:
-            uploadOutstandingClassifications();
-        } catch (final HttpUtils.NoNetworkException e) {
-            //Ignore this - it is normal if wifi-only is set in the settings
-            //and if we are then not on a wi-fi connection.
-            Log.info("SyncAdapter.doRegularTasks(): Ignoring NoNetworkException.");
-        }
+        downloadMinimumSubjectsAsync();
+        downloadMissingImages();
 
+        //Do less urgent things next:
+        uploadOutstandingClassifications();
         removeOldSubjects();
 
         Log.info("doRegularTasks() end");
@@ -126,7 +120,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         //Find out if the image is currently being downloaded:
 
-        return mSubjectAdder.downloadMissingImages();
+        try {
+            return mSubjectAdder.downloadMissingImages();
+        } catch (final HttpUtils.NoNetworkException e) {
+            //Ignore this - it is normal if wifi-only is set in the settings
+            //and if we are then not on a wi-fi connection.
+            Log.info("SyncAdapter.downloadMissingImages(): Ignoring NoNetworkException.");
+            return false;
+        }
     }
 
     private ContentResolver getContentResolver() {
@@ -161,22 +162,30 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         mRequestMoreItemsTaskInProgress = true;
 
-        mClient.requestMoreItemsAsync(count,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(final String response) {
-                        final List<ZooniverseClient.Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(response);
-                        onQueryTaskFinished(result);
-                        mRequestMoreItemsTaskInProgress = false;
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(final VolleyError error) {
-                        Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", error);
-                        mRequestMoreItemsTaskInProgress = false;
-                    }
-                });
+        try {
+            mClient.requestMoreItemsAsync(count,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(final String response) {
+                            final List<ZooniverseClient.Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(response);
+                            onQueryTaskFinished(result);
+                            mRequestMoreItemsTaskInProgress = false;
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(final VolleyError error) {
+                            Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", error);
+                            mRequestMoreItemsTaskInProgress = false;
+                        }
+                    });
+        } catch (final HttpUtils.NoNetworkException e) {
+            //Ignore this - it is normal if wifi-only is set in the settings
+            //and if we are then not on a wi-fi connection.
+            Log.info("SyncAdapter.requestMoreItemsAsync(): Ignoring NoNetworkException.");
+            mRequestMoreItemsTaskInProgress = false;
+        }
+
     }
 
     private int getNotDoneNeededForCache() {
@@ -409,12 +418,19 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         @Override
         public void run() {
             Log.info("UploadTask.run()");
-            final boolean result = doUploadSync(mItemId, mSubjectId, mAuthName, mAuthApiKey);
+            boolean result = false;
+            try {
+                result = doUploadSync(mItemId, mSubjectId, mAuthName, mAuthApiKey);
+            } catch (final HttpUtils.NoNetworkException e) {
+                //This is normal, if there is no suitable network connection.
+                Log.info("UploadTask(): NoNetworkException");
+            }
 
             //Call onPostExecute in the main thread:
+            final boolean resultToUse = result;
             mHandler.post(new Runnable() {
                 public void run() {
-                    onPostExecute(result);
+                    onPostExecute(resultToUse);
                 }
             });
         }
