@@ -296,8 +296,10 @@ public class ClassifyActivity extends ItemActivity
         Log.info("ClassifyActivity: onSharedPreferenceChanged().");
 
         //Changes to these preferences would need us to do some work:
+        //TODO: Do we need this check, or will we only be notified about the app's own preferences?
         if (TextUtils.equals(key, getString(R.string.pref_key_cache_size)) ||
-                TextUtils.equals(key, getString(R.string.pref_key_keep_count))) {
+                TextUtils.equals(key, getString(R.string.pref_key_keep_count)) ||
+                TextUtils.equals(key, getString(R.string.pref_key_wifi_only))) {
             requestSync();
         }
     }
