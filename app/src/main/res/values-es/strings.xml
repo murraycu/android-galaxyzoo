@@ -133,6 +133,7 @@
     <string name="error_button_cancel">Cancelar</string>
     <string name="error_button_retry">Reintentar</string>
     <string name="error_no_network">Sin conexión de red.</string>
+    <string name="error_no_wifi_network">Sin conexión de red Wi-Fi.</string>
     <string name="error_could_not_connect">Cannot connect to the server.</string>
     <string name="error_no_subjects">Cannot download new subjects to classify.</string>
     <string name="message_logged_in">Logged In.</string>

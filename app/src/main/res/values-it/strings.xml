@@ -131,6 +131,7 @@
 
     <string name="error_button_cancel">Annulla</string>
     <string name="error_no_network">Nessuna connessione di rete.</string>
+    <string name="error_no_wifi_network">Nessuna connessione di rete Wi-Fi.</string>
     <string name="error_could_not_connect">Cannot connect to the server.</string>
     <string name="error_button_retry">Riprova</string>
     <string name="error_no_subjects">Cannot download new subjects to classify.</string>
