@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- android:contentAuthority should match Items.AUTHORITY - the ContentProvider's authority. -->
+<!-- TODO: It is visible in the Accounts even though we use userVisible="false" -->
 <sync-adapter
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:contentAuthority="com.murrayc.galaxyzoo.app"
     android:accountType="galaxyzoo.com"
     android:userVisible="false"
-    android:supportsUploading="false"
+    android:supportsUploading="true"
     android:allowParallelSyncs="false"
     android:isAlwaysSyncable="true"/>
