@@ -133,6 +133,9 @@ public class LoginUtils {
 
         final Account account = accts[0];
 
+        //Make sure that this has not been unset somehow:
+        setAutomaticAccountSync(context, account);
+
         final LoginDetails result = new LoginDetails();
 
 
