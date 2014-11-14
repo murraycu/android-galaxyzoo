@@ -241,7 +241,7 @@ public class ClassifyActivity extends ItemActivity
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        Log.info("SyncAdapter: onSharedPreferenceChanged().");
+        Log.info("ClassifyActivity: onSharedPreferenceChanged().");
 
         //Changes to these preferences would need us to do some work:
         if (TextUtils.equals(key, getString(R.string.pref_key_cache_size)) ||
