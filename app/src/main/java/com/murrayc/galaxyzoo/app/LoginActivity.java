@@ -297,6 +297,9 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             if (addingAccount) {
                 accountManager.addAccountExplicitly(account, null, null);
                 Utils.copyPrefsToAccount(this, accountManager, account);
+
+                //Tell the SyncAdapter to sync whenever the network is reconnected:
+                LoginUtils.setAutomaticAccountSync(this, account);
             }
 
             //TODO? ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true)

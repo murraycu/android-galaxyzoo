@@ -24,11 +24,14 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.JsonReader;
+
+import com.murrayc.galaxyzoo.app.provider.Item;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +46,7 @@ public class LoginUtils {
     // An account type, in the form of a domain name
     // This must match the android:accountType in authenticator.xml
     public static final String ACCOUNT_TYPE = "galaxyzoo.com";
+
     //This is an arbitrary string, because Accountmanager.setAuthToken() needs something non-null
     public static final String ACCOUNT_AUTHTOKEN_TYPE = "authApiKey";
 
@@ -171,6 +175,18 @@ public class LoginUtils {
         //so the SyncAdapter can use them.
         //See SettingsFragment.onSharedPreferenceChanged().
         Utils.copyPrefsToAccount(context, accountManager, account);
+
+        //Tell the SyncAdapter to sync whenever the network is reconnected:
+        setAutomaticAccountSync(context, account);
+    }
+
+    static void setAutomaticAccountSync(final Context context, final Account account) {
+        final ContentResolver resolver = context.getContentResolver();
+        if (resolver == null) {
+            return;
+        }
+
+        resolver.setSyncAutomatically(account, Item.AUTHORITY, true);
     }
 
     public static void removeAnonymousAccount(final Context context) {
