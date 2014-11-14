@@ -19,9 +19,13 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
@@ -30,6 +34,9 @@ import android.view.MenuItem;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
+import com.murrayc.galaxyzoo.app.syncadapter.SyncAdapter;
+
+import java.lang.ref.WeakReference;
 
 /**
  * An activity showing a single subject. This
@@ -70,12 +77,57 @@ public class ClassifyActivity extends ItemActivity
 //        }
 //    }
 
-    private void requestSync() {
-        final Bundle extras = new Bundle();
-        extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 
-        //Ask the framework to run our SyncAdapter.
-        ContentResolver.requestSync(null, Item.AUTHORITY, extras);
+    /**
+     * Asynchronously gets the account and tells the SyncAdapter to sync it now:
+     */
+    public static class RequestSyncTask extends AsyncTask<Void, Void, Void> {
+
+        private final WeakReference<Context> mContextReference;
+
+        RequestSyncTask(final Context context) {
+            mContextReference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            if (mContextReference == null) {
+                return null;
+            }
+
+            final Context context = mContextReference.get();
+            if (context == null) {
+                return null;
+            }
+
+            final AccountManager mgr = AccountManager.get(context);
+            final Account[] accts = mgr.getAccountsByType(LoginUtils.ACCOUNT_TYPE);
+            if((accts == null) || (accts.length < 1)) {
+                //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
+                return null;
+            }
+
+            final Account account = accts[0];
+
+            final Bundle extras = new Bundle();
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+
+
+            //Ask the framework to run our SyncAdapter.
+            ContentResolver.requestSync(account, Item.AUTHORITY, extras);
+
+            return null;
+        }
+
+        @Override
+        protected void onCancelled() {
+        }
+    }
+
+    private void requestSync() {
+        final RequestSyncTask task = new RequestSyncTask(this);
+        task.execute();
     }
 
     private int mClassificationsDoneInSession = 0;
