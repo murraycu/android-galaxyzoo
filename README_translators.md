@@ -11,6 +11,11 @@ You could submit them as a github pull request, or just email them if you find
 that too difficult.
 
 
+If you prefer to use gettext's .po file format, here are some exported
+.po files that can be imported back into Android's XML format.
+https://github.com/murraycu/android-galaxyzoo/tree/master/app/src/main/locale
+
+
 There are some sample screenshots here to help you to understand the context:
 https://github.com/murraycu/android-galaxyzoo/tree/master/screenshots_for_translators
 
