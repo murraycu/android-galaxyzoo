@@ -25,6 +25,9 @@
     <!-- <color name="text_color_primary">#000000</color> -->
 
     <color name="color_window_background">#000000</color>
+
+    <color name="color_toolbar_icons">#000000</color>
+
     <!-- <color name="color_toolbar_title_text">#000000</color> -->
 
     <color name="color_button_background">#263238</color> -->

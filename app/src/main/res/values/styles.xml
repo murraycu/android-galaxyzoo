@@ -60,11 +60,11 @@
         For some reason, they already get the textColorPrimary when running on API 21,
         but not on older versions of Android, so this is only necessary for older
         Android versions.-->
-        <item name="actionMenuTextColor">@color/abc_primary_text_material_light</item>
+        <item name="actionMenuTextColor">@color/color_toolbar_icons</item>
 
 
         <!-- android:textColorSecondary is the color of the menu overflow icon (three vertical dots) -->
-        <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
+        <item name="android:textColorSecondary">@color/color_toolbar_icons</item>
 
         <!-- This would set the toolbar's background color,
         but setting this also changes the popup menu's background,
