@@ -1,0 +1,19 @@
+*** Short description:
+
+Classify Galaxy Zoo images. Few have witnessed what you're about to see.
+
+*** Full description:
+
+To understand how galaxies formed we need your help to classify them according to their shapes. If you're quick, you may even be the first person to see the galaxies you're asked to classify.
+
+This app caches several subjects locally so you can classify even while offline and have the classifications automatically uploaded later.
+
+This is an official Galaxy Zoo app. To learn more, see http://www.galaxyzoo.org/
+
+
+Notes:
+
+*** The sequence of questions is determined by the Galaxy Zoo project and is consistent with the web UI.
+
+*** This page explains why Galaxy Zoo needs various permissions:
+     https://raw.githubusercontent.com/murraycu/android-galaxyzoo/master/README_permissions.md
