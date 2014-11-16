@@ -1,0 +1,306 @@
+# Translations template for PROJECT.
+# Copyright (C) 2014 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2014-11-16 14:19+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.0dev\n"
+
+#. The name of the app
+msgctxt "app_name"
+msgid "Galaxy Zoo"
+msgstr ""
+
+#. The description of the app
+msgctxt "about_text"
+msgid ""
+"An android app for classifying <a "
+"href=\"http://www.galaxyzoo.org/\">Galaxy Zoo</a> subjects. This is an "
+"official Zooniverse and Galaxy Zoo app.\n"
+"\n"
+"This android app was developed by <a href=\"http://murrayc.com/\">Murray "
+"Cumming</a>.\n"
+"\n"
+"This app uses the <a "
+"href=\"https://android.googlesource.com/platform/frameworks/volley\">Volley</a>"
+" library, under the Apache License version 2.0.\n"
+"\n"
+"The answer icons and example images are from the Zooniverse's <a "
+"href=\"https://github.com/zooniverse/Galaxy-Zoo\">web UI for Galaxy-"
+"Zoo</a>, under the Apache License version 2.0.\n"
+"\n"
+"Subject images from the <a href=\"http://www.sdss3.org/\">Sloan Digital "
+"Sky Survey</a> are used under their <a "
+"href=\"http://www.sdss3.org/collaboration/imageuse.php\">non-commercial "
+"licence</a>.\n"
+"\n"
+"Subject images from the <a href=\"http://hubblesite.org/\">Hubble Space "
+"Telescope</a> are from NASA and STScI and used under their <a "
+"href=\"http://hubblesite.org/about_us/copyright.php\">public domain "
+"license</a>."
+msgstr ""
+
+#. This shows the version number of the app.
+#, c-format
+msgctxt "about_version_text_format"
+msgid "Version: %s"
+msgstr ""
+
+#. This is shown while the app is first starting.
+msgctxt "progress_loading_text"
+msgid "Loading…"
+msgstr ""
+
+#. An action. Shown on a button or menu item.
+msgctxt "action_invert"
+msgid "Invert"
+msgstr ""
+
+#. An action. Shown on a button or menu item.
+msgctxt "action_examples"
+msgid "Examples"
+msgstr ""
+
+#. An action. Shown on a button or menu item.
+msgctxt "action_login"
+msgid "Login"
+msgstr ""
+
+#. An action. Shown on a button or menu item.
+msgctxt "action_favorite"
+msgid "Favorite"
+msgstr ""
+
+#. An action. Shown on a button or menu item.
+msgctxt "action_restart"
+msgid "Restart"
+msgstr ""
+
+#. An action. Shown on a button or menu item.
+msgctxt "action_list"
+msgid "List"
+msgstr ""
+
+#. An action. Shown on a button or menu item.
+msgctxt "action_next"
+msgid "Classify"
+msgstr ""
+
+#. Shown on a menu item (and in the system's accounts list) to open the
+#. application's settings (preferences).
+msgctxt "action_settings"
+msgid "Settings"
+msgstr ""
+
+#. Shown in the system's accounts list to describe the application's settings
+#. (preferences)..
+msgctxt "description_settings"
+msgid "How many to download in advance, etc."
+msgstr ""
+
+#. Shown on a menu item to view the application's description.
+msgctxt "action_about"
+msgid "About"
+msgstr ""
+
+#. The accessibility description of an image
+msgctxt "description_thumbnail"
+msgid "Thumbnail"
+msgstr ""
+
+#. The accessibility description of an image
+msgctxt "description_standard_image"
+msgid "Standard Image"
+msgstr ""
+
+#. The title of a set of example images.
+msgctxt "title_examples"
+msgid "Examples"
+msgstr ""
+
+#. The title of a screen that shows an example image.
+msgctxt "title_activity_example_viewer"
+msgid "Example"
+msgstr ""
+
+#. The title of a screen that shows an image.
+msgctxt "title_activity_subject_viewer"
+msgid "Subject"
+msgstr ""
+
+#. The text for a button that lets the user reset a password.
+msgctxt "forgot_password_button_text"
+msgid "<a href=\"https://www.zooniverse.org/password/reset\">Forgot password?</a>"
+msgstr ""
+
+#. The text for a button that lets the user register to get a username and
+#. password.
+msgctxt "register_button_text"
+msgid "<a href=\"https://www.zooniverse.org/signup\">Register</a>"
+msgstr ""
+
+#. The accessibility description of an image
+msgctxt "content_description_example_image"
+msgid "Example image."
+msgstr ""
+
+msgctxt "title_zooniverse_id"
+msgid "Zooniverse ID:"
+msgstr ""
+
+#. The accessibility description of a contextual icon.
+msgctxt "content_description_favorite"
+msgid "Whether the subject is a favorite."
+msgstr ""
+
+#. The accessibility description of a contextual icon.
+msgctxt "content_description_classified"
+msgid "Whether the subject has been classified."
+msgstr ""
+
+#. The accessibility description of a contextual icon.
+msgctxt "content_description_uploaded"
+msgid "Whether the subject has been uploaded."
+msgstr ""
+
+#. The title of a button that lets the user look at an image in more detail.
+msgctxt "button_title_examine"
+msgid "Examine"
+msgstr ""
+
+#. The title of a button that takes the user to a discussion forum for the
+#. image.
+msgctxt "button_title_discuss"
+msgid "Discuss"
+msgstr ""
+
+#. The title of a screen that explains how to use the app.
+msgctxt "title_activity_question_help"
+msgid "Help"
+msgstr ""
+
+#. The title of a screen that lets the user log in to the system.
+msgctxt "title_activity_login"
+msgid "Sign in"
+msgstr ""
+
+#. Some text to encourage the user to login.
+msgctxt "login_hint"
+msgid "Login or create an account to receive credit for your work."
+msgstr ""
+
+#. The description of the username field when logging in..
+msgctxt "prompt_username"
+msgid "Username"
+msgstr ""
+
+#. The description of the password field when logging in..
+msgctxt "prompt_password"
+msgid "Password"
+msgstr ""
+
+#. The title of the login button.
+msgctxt "action_sign_in"
+msgid "Sign in"
+msgstr ""
+
+#. The title of the login button that will appear on the on-screen keyboard.
+msgctxt "action_sign_in_short"
+msgid "Sign in"
+msgstr ""
+
+#. An error message.
+msgctxt "error_invalid_password"
+msgid "This password is too short."
+msgstr ""
+
+#. An error message.
+msgctxt "error_incorrect_password"
+msgid "This password is incorrect."
+msgstr ""
+
+#. An error message.
+msgctxt "error_field_required"
+msgid "This field is required."
+msgstr ""
+
+#. An error message. We show this when we cannot continue because there is no
+#. network connection.
+msgctxt "error_no_network"
+msgid "No network connection."
+msgstr ""
+
+#. An error message. We show this when we cannot continue because there is no
+#. wi-fi network connection.
+msgctxt "error_no_wifi_network"
+msgid "No Wi-Fi network connection."
+msgstr ""
+
+#. TODO: Make this clearer for people who don't know what an (Internet) server
+#. is?
+#. An error message. We show this when we cannot continue because something is
+#. wrong with the network connection.
+msgctxt "error_could_not_connect"
+msgid "Cannot connect to the server."
+msgstr ""
+
+#. An error message. We show this when we cannot continue because something is
+#. wrong with the network connection.
+msgctxt "error_no_subjects"
+msgid "Cannot download new subjects to classify."
+msgstr ""
+
+#. We offer this button when showing the alert dialog about a network
+#. connection problem.
+msgctxt "error_button_retry"
+msgid "Retry"
+msgstr ""
+
+#. We offer this button when showing the alert dialog about a network
+#. connection problem.
+msgctxt "error_button_cancel"
+msgid "Cancel"
+msgstr ""
+
+#. An informative message. This lets the user know that they are already
+#. logged in to the system.
+msgctxt "message_logged_in"
+msgid "Logged In."
+msgstr ""
+
+#. The title of the Settings screen to show or change the app preferences.
+msgctxt "title_activity_settings"
+msgid "Settings"
+msgstr ""
+
+#. The title of the preference that controls how many items are downloaded
+#. before they are needed.
+msgctxt "pref_title_cache_size"
+msgid "Download in advance"
+msgstr ""
+
+#. The title of the preference that controls how many old items should stay on
+#. the device.
+msgctxt "pref_title_keep_count"
+msgid "Keep"
+msgstr ""
+
+msgctxt "pref_title_wifi_only"
+msgid "Download via Wi-Fi only"
+msgstr ""
+
+msgctxt "pref_description_wifi_only"
+msgid "To reduce carrier data charges, don't download over mobile networks."
+msgstr ""
+
