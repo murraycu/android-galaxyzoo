@@ -1,140 +1,53 @@
-<?xml version="1.0" encoding="UTF-8"?><resources>
-
-    <!-- The name of the app -->
-    <string name="app_name">Galaxy zoo</string>
-
-    <!-- The description of the app -->
-    <string name="about_text">Una app per Android per la classificazione degli argomenti di <a href="http://www.galaxyzoo.org/"> Galazy Zoo</a>. Questa non è una app ufficiale Zooniverse o Galaxy Zoo.\n\nQuesta app per Android è stata sviluppata da<a href="http://murrayc.com/">Murray Cumming</a>.\n\nL\'icona di lancio si basa su <a href="http://www.eso.org/public/images/eso1042e/">l\'immagine della galassia ESO/HAWK-I NGC 4030</a> e si utilizza con la licenza di Creative Commons Attribution 4.0 International.</string>
-
-    <!-- This shows the version number of the app. -->
-    <string name="about_version_text_format">Versione: %s</string>
-
-    <!-- This is shown while the app is first starting. -->
-    <string name="progress_loading_text">Caricamento in corso…</string>
-
-    <!-- An action. Shown on a button or menu item. -->
-    <string name="action_invert">Inverti</string>
-
-    <!-- An action. Shown on a button or menu item. -->
-    <string name="action_examples">Esempi</string>
-
-    <!-- An action. Shown on a button or menu item. -->
-    <string name="action_login">Accesso</string>
-
-    <!-- An action. Shown on a button or menu item. -->
-    <string name="action_favorite">Preferito</string>
-
-    <!-- An action. Shown on a button or menu item. -->
-    <string name="action_restart">Riavvia</string>
-
-    <!-- An action. Shown on a button or menu item. -->
-    <string name="action_list">Lista</string>
-
-    <!-- An action. Shown on a button or menu item. -->
-    <string name="action_next">Classifica</string>
-
-    <!-- Shown on a menu item to open the application's settings (preferences). -->
-    <string name="action_settings">Impostazioni</string>
-
-    <string name="description_settings">How many to download in advance, etc.</string>
-
-    <!-- Shown on a menu item to view the application's description. -->
-    <string name="action_about">Informazioni</string>
-
-    <!-- The accessibility description of an image -->
-    <string name="description_thumbnail">Miniatura</string>
-
-    <!-- The accessibility description of an image -->
-    <string name="description_standard_image">Immagine standard</string>
-
-    <!-- The title of a set of example images. -->
-    <string name="title_examples">Esempi</string>
-
-    <!-- The title of a screen that shows an example image. -->
-    <string name="title_activity_example_viewer">Esempio</string>
-
-    <!-- The title of a screen that shows an image. -->
-    <string name="title_activity_subject_viewer">Argomento</string>
-
-    <!-- The text for a button that lets the user reset a password. -->
-    <string name="forgot_password_button_text">
-    <a href="https://www.zooniverse.org/password/reset">Password dimenticata?</a>
-  </string>
-
-    <!-- The text for a button that lets the user register to get a username and password. -->
-    <string name="register_button_text">
-    <a href="https://www.zooniverse.org/signup">Registrati</a>
-  </string>
-
-    <!-- The accessibility description of an image -->
-    <string name="content_description_example_image">Immagine di esempio</string>
-
-    <string name="title_zooniverse_id">ID di Zooniverse:</string>
-
-    <!-- The accessibility description of a contextual icon. -->
-    <string name="content_description_favorite">Se l\'argomento è tra i preferiti.</string>
-
-    <!-- The accessibility description of a contextual icon. -->
-    <string name="content_description_classified">Se l\'argomento è stato classificato.</string>
-
-    <!-- The accessibility description of a contextual icon. -->
-    <string name="content_description_uploaded">Se l\'argomento è stato caricato.</string>
-
-    <!-- The title of a button that lets the user look at an image in more detail. -->
-    <string name="button_title_examine">Esamina</string>
-
-    <!-- The title of a button that takes the user to a discussion forum for the image. -->
-    <string name="button_title_discuss">Discuti</string>
-
-    <!-- The title of a screen that explains how to use the app. -->
-    <string name="title_activity_question_help">Aiuto</string>
-
-    <!-- The title of a screen that lets the user log in to the system. -->
-    <string name="title_activity_login">Accedi</string>
-
-    <!-- Some text to encourage the user to login. -->
-    <string name="login_hint">Accedi o crea un account per ricevere riconoscimento per il tuo lavoro.</string>
-
-    <!-- The description of the username field when logging in.. -->
-    <string name="prompt_username">Nome utente</string>
-
-    <!-- The description of the password field when logging in.. -->
-    <string name="prompt_password">Password</string>
-
-    <!-- The title of the login button. -->
-    <string name="action_sign_in">Accedi</string>
-
-    <!-- The title of the login button that will appear on the on-screen keyboard. -->
-    <string name="action_sign_in_short">Accedo</string>
-
-    <!-- An error message. -->
-    <string name="error_invalid_password">La password inserita è troppo corta.</string>
-
-    <!-- An error message. -->
-    <string name="error_incorrect_password">La password inserita non è corretta.</string>
-
-    <!-- An error message. -->
-    <string name="error_field_required">Campo obbligatorio.</string>
-
-
-    <!-- The title of the Settings screen to show or change the app preferences. -->
-    <string name="title_activity_settings">Impostazioni</string>
-
-    <!-- The title of the preference that controls how many items are downloaded before they are needed. -->
-    <string name="pref_title_cache_size">Download in corso</string>
-
-    <!-- The title of the preference that controls how many old items should stay on the device. -->
-    <string name="pref_title_keep_count">Mantieni</string>
-
-    <string name="pref_title_wifi_only">Scarica solo tramite Wi-Fi</string>
-    <string name="pref_description_wifi_only">Per ridurre i costi applicati dall\'operatore per i dati, non scaricare tramite reti mobili.</string>
-
-    <string name="error_button_cancel">Annulla</string>
-    <string name="error_no_network">Nessuna connessione di rete.</string>
-    <string name="error_no_wifi_network">Nessuna connessione di rete Wi-Fi.</string>
-    <string name="error_could_not_connect">Cannot connect to the server.</string>
-    <string name="error_button_retry">Riprova</string>
-    <string name="error_no_subjects">Cannot download new subjects to classify.</string>
-    <string name="message_logged_in">Logged In.</string>
-
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="app_name">Galaxy zoo</string>
+  <string name="about_text">"Una app per Android per la classificazione degli argomenti di "<a href="http://www.galaxyzoo.org/">" Galazy Zoo"</a>. Questa non è una app ufficiale Zooniverse o Galaxy Zoo.\n\nQuesta app per Android è stata sviluppata da<a href="http://murrayc.com/">Murray Cumming</a>".\n\nL\'icona di lancio si basa su "<a href="http://www.eso.org/public/images/eso1042e/">l\'immagine della galassia ESO/HAWK-I NGC 4030</a>" e si utilizza con la licenza di Creative Commons Attribution 4.0 International."</string>
+  <string name="about_version_text_format">Versione: %s</string>
+  <string name="progress_loading_text">Caricamento in corso…</string>
+  <string name="action_invert">Inverti</string>
+  <string name="action_examples">Esempi</string>
+  <string name="action_login">Accesso</string>
+  <string name="action_favorite">Preferito</string>
+  <string name="action_restart">Riavvia</string>
+  <string name="action_list">Lista</string>
+  <string name="action_next">Classifica</string>
+  <string name="action_settings">Impostazioni</string>
+  <string name="description_settings">How many to download in advance, etc.</string>
+  <string name="action_about">Informazioni</string>
+  <string name="description_thumbnail">Miniatura</string>
+  <string name="description_standard_image">Immagine standard</string>
+  <string name="title_examples">Esempi</string>
+  <string name="title_activity_example_viewer">Esempio</string>
+  <string name="title_activity_subject_viewer">Argomento</string>
+  <string name="forgot_password_button_text">" "<a href="https://www.zooniverse.org/password/reset">Password dimenticata?</a>" "</string>
+  <string name="register_button_text">" "<a href="https://www.zooniverse.org/signup">Registrati</a>" "</string>
+  <string name="content_description_example_image">Immagine di esempio</string>
+  <string name="title_zooniverse_id">ID di Zooniverse:</string>
+  <string name="content_description_favorite">Se l\'argomento è tra i preferiti.</string>
+  <string name="content_description_classified">Se l\'argomento è stato classificato.</string>
+  <string name="content_description_uploaded">Se l\'argomento è stato caricato.</string>
+  <string name="button_title_examine">Esamina</string>
+  <string name="button_title_discuss">Discuti</string>
+  <string name="title_activity_question_help">Aiuto</string>
+  <string name="title_activity_login">Accedi</string>
+  <string name="login_hint">Accedi o crea un account per ricevere riconoscimento per il tuo lavoro.</string>
+  <string name="prompt_username">Nome utente</string>
+  <string name="prompt_password">Password</string>
+  <string name="action_sign_in">Accedi</string>
+  <string name="action_sign_in_short">Accedo</string>
+  <string name="error_invalid_password">La password inserita è troppo corta.</string>
+  <string name="error_incorrect_password">La password inserita non è corretta.</string>
+  <string name="error_field_required">Campo obbligatorio.</string>
+  <string name="error_no_network">Nessuna connessione di rete.</string>
+  <string name="error_no_wifi_network">Nessuna connessione di rete Wi-Fi.</string>
+  <string name="error_could_not_connect">Cannot connect to the server.</string>
+  <string name="error_no_subjects">Cannot download new subjects to classify.</string>
+  <string name="error_button_retry">Riprova</string>
+  <string name="error_button_cancel">Annulla</string>
+  <string name="message_logged_in">Logged In.</string>
+  <string name="title_activity_settings">Impostazioni</string>
+  <string name="pref_title_cache_size">Download in corso</string>
+  <string name="pref_title_keep_count">Mantieni</string>
+  <string name="pref_title_wifi_only">Scarica solo tramite Wi-Fi</string>
+  <string name="pref_description_wifi_only">Per ridurre i costi applicati dall\'operatore per i dati, non scaricare tramite reti mobili.</string>
 </resources>

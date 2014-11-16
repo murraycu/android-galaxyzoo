@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?><resources>
-    <!-- The possible numbers of items that may be downloaded in advance before they are needed. -->
-    <string-array name="pref_cache_size_entries">
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string-array name="pref_cache_size_entries">
     <item>5 objetos</item>
     <item>10 objetos</item>
     <item>20 objetos</item>
     <item>50 objetos</item>
   </string-array>
-
-    <!-- The possible numbers of old items that may be kept on the device. -->
-    <string-array name="pref_keep_count_entries">
+  <string-array name="pref_keep_count_entries">
     <item>5 objetos clasificados</item>
     <item>10 objetos clasificados</item>
     <item>20 objetos clasificados</item>

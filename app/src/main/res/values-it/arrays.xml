@@ -1,18 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?><resources>
-    <!-- The possible numbers of items that may be downloaded in advance before they are needed. -->
-    <string-array name="pref_cache_size_entries">
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string-array name="pref_cache_size_entries">
     <item>5 argomenti</item>
     <item>10 argomenti</item>
     <item>20 argomenti</item>
     <item>50 argomenti</item>
   </string-array>
-
-    <!-- The possible numbers of old items that may be kept on the device. -->
-    <string-array name="pref_keep_count_entries">
+  <string-array name="pref_keep_count_entries">
     <item>5 argomenti classificati</item>
     <item>10 argomenti classificati</item>
     <item>20 argomenti classificati</item>
     <item>50 argomenti classificati</item>
   </string-array>
-
 </resources>
