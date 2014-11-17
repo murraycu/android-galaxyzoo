@@ -45,6 +45,10 @@
     </style>
     -->
 
+    <!-- This also works if parent="Theme.AppCompat.Light.DarkActionBar" which might be
+    more correct, but it's all very confusing and poorly documented.
+    This has some hints: https://chris.banes.me/2014/11/12/theme-vs-style/
+    murrayc. -->
     <style name="GalaxyZooThemeToolbarDarkOverflow" parent="AppTheme">
 
         <!-- android:textColorPrimary is the  color of the title text in the Toolbar,
