@@ -95,6 +95,9 @@ public class ZooFragment extends Fragment {
             textView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
+        final String versionText =
+                String.format(getString(R.string.about_version_text_format), BuildConfig.VERSION_NAME);
+
         //The about dialog's text is split into multiple strings to make translation easier,
         //so we need to concatenate them here.
         //Note that we use getText(), not getString(),
@@ -107,21 +110,27 @@ public class ZooFragment extends Fragment {
         strBuilder.append(getText(R.string.about_text2));
         strBuilder.append("\n\n");
         strBuilder.append(getText(R.string.about_text3));
-
         strBuilder.append("\n\n");
         strBuilder.append(getText(R.string.about_text4));
         strBuilder.append("\n\n");
         strBuilder.append(getText(R.string.about_text5));
         strBuilder.append("\n\n");
         strBuilder.append(getText(R.string.about_text6));
+        strBuilder.append("\n\n");
+        strBuilder.append(versionText);
         textView.setText(strBuilder);
 
+        /* We used to put the version text into a separate TextView,
+           but when the about text in textView is too long,
+           the scroll never reaches this far.
+           It does work when we add it to first regular textView.
+         */
+        /*
         final TextView textViewVersion = (TextView) view.findViewById(R.id.textViewVersion);
         if (textViewVersion != null) {
-            final String versionText =
-                    String.format(getString(R.string.about_version_text_format), BuildConfig.VERSION_NAME);
             textViewVersion.setText(versionText);
         }
+        */
 
         final AlertDialog dialog = builder.create();
         dialog.setTitle(R.string.app_name);

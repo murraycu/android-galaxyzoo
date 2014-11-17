@@ -16,10 +16,15 @@
         android:id="@+id/textViewAbout"
         android:layout_marginBottom="@dimen/activity_vertical_margin" />
 
+    <!-- For some reason, the dialog never scrolls down this far,
+    so we concatenate the version string to the end of the main text instead.
+    Then it works. -->
+    <!--
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:id="@+id/textViewVersion" />
+        -->
 
 </LinearLayout>
