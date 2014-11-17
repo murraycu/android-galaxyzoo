@@ -6,11 +6,13 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/standard_large_margin">
 
+    <!-- The string is added dynamically,
+    because we split it up into multiple string resources,
+    to make translation easier. -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:text="@string/about_text"
         android:id="@+id/textViewAbout"
         android:layout_marginBottom="@dimen/activity_vertical_margin" />
 

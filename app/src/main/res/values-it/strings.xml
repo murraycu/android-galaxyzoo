@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
   <string name="app_name">Galaxy zoo</string>
-  <string name="about_text">"Una app per Android per la classificazione degli argomenti di "<a href="http://www.galaxyzoo.org/">" Galazy Zoo"</a>. Questa non è una app ufficiale Zooniverse o Galaxy Zoo.\n\nQuesta app per Android è stata sviluppata da<a href="http://murrayc.com/">Murray Cumming</a>".\n\nL\'icona di lancio si basa su "<a href="http://www.eso.org/public/images/eso1042e/">l\'immagine della galassia ESO/HAWK-I NGC 4030</a>" e si utilizza con la licenza di Creative Commons Attribution 4.0 International."</string>
+  <string name="about_text1">Una app per Android per la classificazione degli argomenti di <a href="http://www.galaxyzoo.org/">Galazy Zoo</a>. Questa è una app ufficiale Zooniverse o Galaxy Zoo.</string>
+  <string name="about_text2">Questa app per Android è stata sviluppata da<a href="http://murrayc.com/">Murray Cumming</a>.</string>
   <string name="about_version_text_format">Versione: %s</string>
   <string name="progress_loading_text">Caricamento in corso…</string>
   <string name="action_invert">Inverti</string>

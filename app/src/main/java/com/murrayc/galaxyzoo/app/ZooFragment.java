@@ -22,6 +22,7 @@ package com.murrayc.galaxyzoo.app;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -93,6 +94,27 @@ public class ZooFragment extends Fragment {
         if (textView != null) {
             textView.setMovementMethod(LinkMovementMethod.getInstance());
         }
+
+        //The about dialog's text is split into multiple strings to make translation easier,
+        //so we need to concatenate them here.
+        //Note that we use getText(), not getString(),
+        //so we don't lose the <a href=""> links.
+        //Likewise, we use SpannableStringBuilder instead of StringBuilder,
+        //because we lose the links when using StringBuilder.
+        final SpannableStringBuilder strBuilder = new SpannableStringBuilder();
+        strBuilder.append(getText(R.string.about_text1));
+        strBuilder.append("\n\n");
+        strBuilder.append(getText(R.string.about_text2));
+        strBuilder.append("\n\n");
+        strBuilder.append(getText(R.string.about_text3));
+
+        strBuilder.append("\n\n");
+        strBuilder.append(getText(R.string.about_text4));
+        strBuilder.append("\n\n");
+        strBuilder.append(getText(R.string.about_text5));
+        strBuilder.append("\n\n");
+        strBuilder.append(getText(R.string.about_text6));
+        textView.setText(strBuilder);
 
         final TextView textViewVersion = (TextView) view.findViewById(R.id.textViewVersion);
         if (textViewVersion != null) {

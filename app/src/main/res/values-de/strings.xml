@@ -1,7 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
   <string name="app_name">Galaxy Zoo</string>
-  <string name="about_text">"Dies ist eine Android App zur Klassifierung von "<a href="http://www.galaxyzoo.org/">Galaxy Zoo</a>" Objekten. Dies ist eine offiziele Zooniverse und Galaxy Zoo App.\n\nDiese Android App wurde von "<a href="http://murrayc.com/">Murray Cumming</a>" entwickelt.\n\nDiese App benutzt die "<a href="https://android.googlesource.com/platform/frameworks/volley">Volley</a>" Bibliothek, unter der Apache License version 2.0.\n\nDie Antwort Symbole und die Beispiel Bilder sind von der "<a href="https://github.com/zooniverse/Galaxy-Zoo">Web-basierten Benutzeroberfläche für Galaxy-Zoo</a>" von Zooniverse, unter der Apache License Version 2.0.\n\nObjekt Bilder von der "<a href="http://www.sdss3.org/">Sloan Digital Sky Survey</a>" werden unter der "<a href="http://www.sdss3.org/collaboration/imageuse.php">non-commercial licence</a>" benutzt.\n\nObjekt Bilder vom "<a href="http://hubblesite.org/">Hubble Space Teleskop</a>" sind von der NASA und der STScI und werden unter ihrer "<a href="http://hubblesite.org/about_us/copyright.php">public domain license</a>" benutzt."</string>
+  <string name="about_text1">Dies ist eine Android App zur Klassifierung von <a href="http://www.galaxyzoo.org/">Galaxy Zoo</a> Objekten. Dies ist eine offiziele Zooniverse und Galaxy Zoo App.</string>
+  <string name="about_text2">Diese Android App wurde von <a href="http://murrayc.com/">Murray Cumming</a> entwickelt.</string>
+  <string name="about_text3">Diese App benutzt die <a href="https://android.googlesource.com/platform/frameworks/volley">Volley</a> Bibliothek, unter der Apache License version 2.0.</string>
+  <string name="about_text4">Die Antwort Symbole und die Beispiel Bilder sind von der <a href="https://github.com/zooniverse/Galaxy-Zoo">Web-basierten Benutzeroberfläche für Galaxy-Zoo</a> von Zooniverse, unter der Apache License Version 2.0.</string>
+  <string name="about_text5">Objekt Bilder von der <a href="http://www.sdss3.org/">Sloan Digital Sky Survey</a> werden unter der <a href="http://www.sdss3.org/collaboration/imageuse.php">non-commercial licence</a> benutzt.</string>
+  <string name="about_text6">Objekt Bilder vom <a href="http://hubblesite.org/">Hubble Space Teleskop</a> sind von der NASA und der STScI und werden unter ihrer <a href="http://hubblesite.org/about_us/copyright.php">public domain license</a> benutzt.</string>
   <string name="about_version_text_format">Version: %s</string>
   <string name="progress_loading_text">Ladevorgang…</string>
   <string name="action_invert">Invertieren</string>
