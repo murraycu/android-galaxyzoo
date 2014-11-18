@@ -34,7 +34,6 @@ import android.view.MenuItem;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
-import com.murrayc.galaxyzoo.app.syncadapter.SyncAdapter;
 
 import java.lang.ref.WeakReference;
 
