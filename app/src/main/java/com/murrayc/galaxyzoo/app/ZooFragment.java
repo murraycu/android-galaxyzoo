@@ -88,12 +88,16 @@ public class ZooFragment extends Fragment {
         final View view = inflater.inflate(R.layout.about, null);
         builder.setView(view);
 
+
+        final TextView textView = (TextView) view.findViewById(R.id.textViewAbout);
+        if (textView == null) {
+            Log.error("showAbout: textView was null.");
+            return;
+        }
+
         //This voodoo makes the textviews' HTML links clickable:
         //See http://stackoverflow.com/questions/2734270/how-do-i-make-links-in-a-textview-clickable/20647011#20647011
-        final TextView textView = (TextView) view.findViewById(R.id.textViewAbout);
-        if (textView != null) {
-            textView.setMovementMethod(LinkMovementMethod.getInstance());
-        }
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
 
         final String versionText =
                 String.format(getString(R.string.about_version_text_format), BuildConfig.VERSION_NAME);
