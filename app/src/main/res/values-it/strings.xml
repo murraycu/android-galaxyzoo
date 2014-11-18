@@ -51,4 +51,16 @@
   <string name="pref_title_keep_count">Mantieni</string>
   <string name="pref_title_wifi_only">Scarica solo tramite Wi-Fi</string>
   <string name="pref_description_wifi_only">Per ridurre i costi applicati dall\'operatore per i dati, non scaricare tramite reti mobili.</string>
+  <string-array name="pref_cache_size_entries">
+    <item>5 argomenti</item>
+    <item>10 argomenti</item>
+    <item>20 argomenti</item>
+    <item>50 argomenti</item>
+  </string-array>
+  <string-array name="pref_keep_count_entries">
+    <item>5 argomenti classificati</item>
+    <item>10 argomenti classificati</item>
+    <item>20 argomenti classificati</item>
+    <item>50 argomenti classificati</item>
+  </string-array>
 </resources>

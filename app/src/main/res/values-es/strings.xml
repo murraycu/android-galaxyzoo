@@ -51,4 +51,16 @@
   <string name="pref_title_keep_count">Conservar</string>
   <string name="pref_title_wifi_only">Descargar solo con Wi-Fi</string>
   <string name="pref_description_wifi_only">No descargar contenido en redes móviles para reducir los cargos de datos del operador.</string>
+  <string-array name="pref_cache_size_entries">
+    <item>5 objetos</item>
+    <item>10 objetos</item>
+    <item>20 objetos</item>
+    <item>50 objetos</item>
+  </string-array>
+  <string-array name="pref_keep_count_entries">
+    <item>5 objetos clasificados</item>
+    <item>10 objetos clasificados</item>
+    <item>20 objetos clasificados</item>
+    <item>50 objetos clasificados</item>
+  </string-array>
 </resources>

@@ -55,4 +55,16 @@
   <string name="pref_title_keep_count">Behalte</string>
   <string name="pref_title_wifi_only">Nur über WLAN herunterladen</string>
   <string name="pref_description_wifi_only">Downloads über Mobilfunknetze vermeiden, um Kosten für die Datenübertragung zu senken.</string>
+  <string-array name="pref_cache_size_entries">
+    <item>5 Objekte</item>
+    <item>10 Objekte</item>
+    <item>20 Objekte</item>
+    <item>50 Objekte</item>
+  </string-array>
+  <string-array name="pref_keep_count_entries">
+    <item>5 klassifizierte Objekte</item>
+    <item>10 klassifizierte Objekte</item>
+    <item>20 klassifizierte Objekte</item>
+    <item>50 klassifizierte Objekte</item>
+  </string-array>
 </resources>

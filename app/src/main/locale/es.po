@@ -1,4 +1,4 @@
-# Italian translations for PROJECT.
+# Spanish translations for PROJECT.
 # Copyright (C) 2014 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-11-17 10:11+0100\n"
-"PO-Revision-Date: 2014-11-17 10:11+0100\n"
+"POT-Creation-Date: 2014-11-18 13:22+0100\n"
+"PO-Revision-Date: 2014-11-18 13:22+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: it <LL@li.org>\n"
+"Language-Team: es <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=((n == 1) ? 0 : 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. The name of the app
 msgctxt "app_name"
 msgid "Galaxy Zoo"
-msgstr "Galaxy zoo"
+msgstr "Galaxy Zoo"
 
 #. The description of the app. This text is split into separate strings     to
 #. make life easier for translators.
@@ -31,16 +31,16 @@ msgid ""
 "href=\"http://www.galaxyzoo.org/\">Galaxy Zoo</a> subjects. This is an "
 "official Zooniverse and Galaxy Zoo app."
 msgstr ""
-"Una app per Android per la classificazione degli argomenti di <a "
-"href=\"http://www.galaxyzoo.org/\">Galazy Zoo</a>. Questa è una app "
-"ufficiale Zooniverse o Galaxy Zoo."
+"Una app Android para clasificar objetos de <a "
+"href=\"http://www.galaxyzoo.org/\">Galaxy Zoo</a>. Es una app oficial de "
+"Zooniverse o Galaxy."
 
 msgctxt "about_text2"
 msgid ""
 "This android app was developed by <a href=\"http://murrayc.com/\">Murray "
 "Cumming</a>"
 msgstr ""
-"Questa app per Android è stata sviluppata da<a "
+"Esta app Android fue desarrollada por <a "
 "href=\"http://murrayc.com/\">Murray Cumming</a>."
 
 msgctxt "about_text3"
@@ -77,37 +77,37 @@ msgstr ""
 #, c-format
 msgctxt "about_version_text_format"
 msgid "Version: %s"
-msgstr "Versione: %s"
+msgstr "Versión: %s"
 
 #. This is shown while the app is first starting.
 msgctxt "progress_loading_text"
 msgid "Loading…"
-msgstr "Caricamento in corso…"
+msgstr "Cargando…"
 
 #. An action. Shown on a button or menu item.
 msgctxt "action_invert"
 msgid "Invert"
-msgstr "Inverti"
+msgstr "Invertir"
 
 #. An action. Shown on a button or menu item.
 msgctxt "action_examples"
 msgid "Examples"
-msgstr "Esempi"
+msgstr "Ejemplos"
 
 #. An action. Shown on a button or menu item.
 msgctxt "action_login"
 msgid "Login"
-msgstr "Accesso"
+msgstr "Iniciar sesión"
 
 #. An action. Shown on a button or menu item.
 msgctxt "action_favorite"
 msgid "Favorite"
-msgstr "Preferito"
+msgstr "Favorito"
 
 #. An action. Shown on a button or menu item.
 msgctxt "action_restart"
 msgid "Restart"
-msgstr "Riavvia"
+msgstr "Reiniciar"
 
 #. An action. Shown on a button or menu item.
 msgctxt "action_list"
@@ -117,13 +117,13 @@ msgstr "Lista"
 #. An action. Shown on a button or menu item.
 msgctxt "action_next"
 msgid "Classify"
-msgstr "Classifica"
+msgstr "Clasificar"
 
 #. Shown on a menu item (and in the system's accounts list) to open the
 #. application's settings (preferences).
 msgctxt "action_settings"
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr "Ajustes"
 
 #. Shown in the system's accounts list to describe the application's settings
 #. (preferences)..
@@ -134,7 +134,7 @@ msgstr "How many to download in advance, etc."
 #. Shown on a menu item to view the application's description.
 msgctxt "action_about"
 msgid "About"
-msgstr "Informazioni"
+msgstr "Acerca de"
 
 #. The accessibility description of an image
 msgctxt "description_thumbnail"
@@ -144,132 +144,132 @@ msgstr "Miniatura"
 #. The accessibility description of an image
 msgctxt "description_standard_image"
 msgid "Standard Image"
-msgstr "Immagine standard"
+msgstr "Imagen estándar"
 
 #. The title of a set of example images.
 msgctxt "title_examples"
 msgid "Examples"
-msgstr "Esempi"
+msgstr "Ejemplos"
 
 #. The title of a screen that shows an example image.
 msgctxt "title_activity_example_viewer"
 msgid "Example"
-msgstr "Esempio"
+msgstr "Ejemplo"
 
 #. The title of a screen that shows an image.
 msgctxt "title_activity_subject_viewer"
 msgid "Subject"
-msgstr "Argomento"
+msgstr "Objeto"
 
 #. The text for a button that lets the user reset a password.
 msgctxt "forgot_password_button_text"
 msgid "<a href=\"https://www.zooniverse.org/password/reset\">Forgot password?</a>"
 msgstr ""
-" <a href=\"https://www.zooniverse.org/password/reset\">Password "
-"dimenticata?</a> "
+"<a href=\"https://www.zooniverse.org/password/reset\">¿Olvidó la "
+"contraseña?</a>"
 
 #. The text for a button that lets the user register to get a username and
 #. password.
 msgctxt "register_button_text"
 msgid "<a href=\"https://www.zooniverse.org/signup\">Register</a>"
-msgstr " <a href=\"https://www.zooniverse.org/signup\">Registrati</a> "
+msgstr "<a href=\"https://www.zooniverse.org/signup\">Registrarse</a>"
 
 #. The accessibility description of an image
 msgctxt "content_description_example_image"
 msgid "Example image."
-msgstr "Immagine di esempio"
+msgstr "Imagen de ejemplo"
 
 msgctxt "title_zooniverse_id"
 msgid "Zooniverse ID:"
-msgstr "ID di Zooniverse:"
+msgstr "ID Zooniverse:"
 
 #. The accessibility description of a contextual icon.
 msgctxt "content_description_favorite"
 msgid "Whether the subject is a favorite."
-msgstr "Se l'argomento è tra i preferiti."
+msgstr "Elija si el objeto es uno de los favoritos."
 
 #. The accessibility description of a contextual icon.
 msgctxt "content_description_classified"
 msgid "Whether the subject has been classified."
-msgstr "Se l'argomento è stato classificato."
+msgstr "Si el objeto ya ha sido clasificado."
 
 #. The accessibility description of a contextual icon.
 msgctxt "content_description_uploaded"
 msgid "Whether the subject has been uploaded."
-msgstr "Se l'argomento è stato caricato."
+msgstr "Si el objeto ya ha sido cargado."
 
 #. The title of a button that lets the user look at an image in more detail.
 msgctxt "button_title_examine"
 msgid "Examine"
-msgstr "Esamina"
+msgstr "Examinar"
 
 #. The title of a button that takes the user to a discussion forum for the
 #. image.
 msgctxt "button_title_discuss"
 msgid "Discuss"
-msgstr "Discuti"
+msgstr "Debate"
 
 #. The title of a screen that explains how to use the app.
 msgctxt "title_activity_question_help"
 msgid "Help"
-msgstr "Aiuto"
+msgstr "Ayuda"
 
 #. The title of a screen that lets the user log in to the system.
 msgctxt "title_activity_login"
 msgid "Sign in"
-msgstr "Accedi"
+msgstr "Iniciar sesión"
 
 #. Some text to encourage the user to login.
 msgctxt "login_hint"
 msgid "Login or create an account to receive credit for your work."
-msgstr "Accedi o crea un account per ricevere riconoscimento per il tuo lavoro."
+msgstr "Inicie sesión o regístrese para recibir crédito por su trabajo."
 
 #. The description of the username field when logging in..
 msgctxt "prompt_username"
 msgid "Username"
-msgstr "Nome utente"
+msgstr "Nombre de usuario"
 
 #. The description of the password field when logging in..
 msgctxt "prompt_password"
 msgid "Password"
-msgstr "Password"
+msgstr "Contraseña"
 
 #. The title of the login button.
 msgctxt "action_sign_in"
 msgid "Sign in"
-msgstr "Accedi"
+msgstr "Iniciar sesión"
 
 #. The title of the login button that will appear on the on-screen keyboard.
 msgctxt "action_sign_in_short"
 msgid "Sign in"
-msgstr "Accedo"
+msgstr "Iniciar sesión"
 
 #. An error message.
 msgctxt "error_invalid_password"
 msgid "This password is too short."
-msgstr "La password inserita è troppo corta."
+msgstr "La contraseña es demasiado corta."
 
 #. An error message.
 msgctxt "error_incorrect_password"
 msgid "This password is incorrect."
-msgstr "La password inserita non è corretta."
+msgstr "La contraseña es incorrecta."
 
 #. An error message.
 msgctxt "error_field_required"
 msgid "This field is required."
-msgstr "Campo obbligatorio."
+msgstr "El campo es obligatorio."
 
 #. An error message. We show this when we cannot continue because there is no
 #. network connection.
 msgctxt "error_no_network"
 msgid "No network connection."
-msgstr "Nessuna connessione di rete."
+msgstr "Sin conexión de red."
 
 #. An error message. We show this when we cannot continue because there is no
 #. wi-fi network connection.
 msgctxt "error_no_wifi_network"
 msgid "No Wi-Fi network connection."
-msgstr "Nessuna connessione di rete Wi-Fi."
+msgstr "Sin conexión de red Wi-Fi."
 
 #. TODO: Make this clearer for people who don't know what an (Internet) server
 #. is?
@@ -289,13 +289,13 @@ msgstr "Cannot download new subjects to classify."
 #. connection problem.
 msgctxt "error_button_retry"
 msgid "Retry"
-msgstr "Riprova"
+msgstr "Reintentar"
 
 #. We offer this button when showing the alert dialog about a network
 #. connection problem.
 msgctxt "error_button_cancel"
 msgid "Cancel"
-msgstr "Annulla"
+msgstr "Cancelar"
 
 #. An informative message. This lets the user know that they are already
 #. logged in to the system.
@@ -306,27 +306,71 @@ msgstr "Logged In."
 #. The title of the Settings screen to show or change the app preferences.
 msgctxt "title_activity_settings"
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr "Ajustes"
 
 #. The title of the preference that controls how many items are downloaded
 #. before they are needed.
 msgctxt "pref_title_cache_size"
 msgid "Download in advance"
-msgstr "Download in corso"
+msgstr "Descargar de antemano"
 
 #. The title of the preference that controls how many old items should stay on
 #. the device.
 msgctxt "pref_title_keep_count"
 msgid "Keep"
-msgstr "Mantieni"
+msgstr "Conservar"
 
 msgctxt "pref_title_wifi_only"
 msgid "Download via Wi-Fi only"
-msgstr "Scarica solo tramite Wi-Fi"
+msgstr "Descargar solo con Wi-Fi"
 
 msgctxt "pref_description_wifi_only"
 msgid "To reduce carrier data charges, don't download over mobile networks."
 msgstr ""
-"Per ridurre i costi applicati dall'operatore per i dati, non scaricare "
-"tramite reti mobili."
+"No descargar contenido en redes móviles para reducir los cargos de datos "
+"del operador."
+
+#. The possible numbers of items that may be downloaded in advance before they
+#. are needed.
+msgctxt "pref_cache_size_entries:0"
+msgid "5 subjects"
+msgstr "5 objetos"
+
+#. The possible numbers of items that may be downloaded in advance before they
+#. are needed.
+msgctxt "pref_cache_size_entries:1"
+msgid "10 subjects"
+msgstr "10 objetos"
+
+#. The possible numbers of items that may be downloaded in advance before they
+#. are needed.
+msgctxt "pref_cache_size_entries:2"
+msgid "20 subjects"
+msgstr "20 objetos"
+
+#. The possible numbers of items that may be downloaded in advance before they
+#. are needed.
+msgctxt "pref_cache_size_entries:3"
+msgid "50 subjects"
+msgstr "50 objetos"
+
+#. The possible numbers of old items that may be kept on the device.
+msgctxt "pref_keep_count_entries:0"
+msgid "5 classified subjects"
+msgstr "5 objetos clasificados"
+
+#. The possible numbers of old items that may be kept on the device.
+msgctxt "pref_keep_count_entries:1"
+msgid "10 classified subjects"
+msgstr "10 objetos clasificados"
+
+#. The possible numbers of old items that may be kept on the device.
+msgctxt "pref_keep_count_entries:2"
+msgid "20 classified subjects"
+msgstr "20 objetos clasificados"
+
+#. The possible numbers of old items that may be kept on the device.
+msgctxt "pref_keep_count_entries:3"
+msgid "50 classified subjects"
+msgstr "50 objetos clasificados"
 

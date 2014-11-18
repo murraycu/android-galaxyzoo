@@ -168,4 +168,34 @@
     //when specifying a transition when starting an activity that contains this SubjectFragment.
     <string name="transition_subject_image" translatable="false">transition_subject_image</string>
 
+    <!-- The possible numbers of items that may be downloaded in advance before they are needed. -->
+    <string-array name="pref_cache_size_entries">
+        <item>5 subjects</item>
+        <item>10 subjects</item>
+        <item>20 subjects</item>
+        <item>50 subjects</item>
+    </string-array>
+
+    <string-array name="pref_cache_size_values" translatable="false">
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>50</item>
+    </string-array>
+
+    <!-- The possible numbers of old items that may be kept on the device. -->
+    <string-array name="pref_keep_count_entries">
+        <item>5 classified subjects</item>
+        <item>10 classified subjects</item>
+        <item>20 classified subjects</item>
+        <item>50 classified subjects</item>
+    </string-array>
+
+    <string-array name="pref_keep_count_values" translatable="false">
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>50</item>
+    </string-array>
+
 </resources>
