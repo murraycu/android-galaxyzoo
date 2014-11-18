@@ -164,7 +164,8 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
 
         mExistingAccountName = null;
         if (loginDetails == null) {
-            Log.error("LoginActivity.onExistingLoginRetrieved(): getAccountLoginDetails() returned null");
+            Log.error("LoginActivity.onExistingLoginRetrieved(): loginDetails is null.");
+            return;
         } else {
             mExistingAccountName = loginDetails.name; //The anonymous name will never be here. Instead see LoginDetails.isAnonymous.
         }

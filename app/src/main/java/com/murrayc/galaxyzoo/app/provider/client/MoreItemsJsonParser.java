@@ -132,6 +132,11 @@ public class MoreItemsJsonParser {
 
         reader.endObject();
 
+        if (locations == null) {
+            Log.error("parseMoreItemsJsonObjectSubject(): locations is null.");
+            return null;
+        }
+
         return new ZooniverseClient.Subject(subjectId, zooniverseId,
                 locations.getLocationStandard(), locations.getLocationThumbnail(), locations.getLocationInverted());
     }
