@@ -96,6 +96,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
     private void showUserDescriptionAsSummary(final Preference preference) {
+        if (!(preference instanceof ListPreference)) {
+            Log.error("showUserDescriptionAsSummary(): preference is not a ListPreference.");
+            return;
+        }
+
         final ListPreference listPref = (ListPreference) preference;
         preference.setSummary(listPref.getEntry());
     }
