@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-11-18 13:22+0100\n"
+"POT-Creation-Date: 2014-11-19 10:05+0100\n"
 "PO-Revision-Date: 2014-11-18 13:22+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: it <LL@li.org>\n"
@@ -35,10 +35,11 @@ msgstr ""
 "href=\"http://www.galaxyzoo.org/\">Galazy Zoo</a>. Questa è una app "
 "ufficiale Zooniverse o Galaxy Zoo."
 
+#, fuzzy
 msgctxt "about_text2"
 msgid ""
 "This android app was developed by <a href=\"http://murrayc.com/\">Murray "
-"Cumming</a>"
+"Cumming</a>."
 msgstr ""
 "Questa app per Android è stata sviluppata da<a "
 "href=\"http://murrayc.com/\">Murray Cumming</a>."
@@ -62,7 +63,7 @@ msgid ""
 "Subject images from the <a href=\"http://www.sdss3.org/\">Sloan Digital "
 "Sky Survey</a> are used under their <a "
 "href=\"http://www.sdss3.org/collaboration/imageuse.php\">non-commercial "
-"licence</a>."
+"license</a>."
 msgstr ""
 
 msgctxt "about_text6"
@@ -163,16 +164,14 @@ msgstr "Argomento"
 
 #. The text for a button that lets the user reset a password.
 msgctxt "forgot_password_button_text"
-msgid "<a href=\"https://www.zooniverse.org/password/reset\">Forgot password?</a>"
+msgid "Forgot password?"
 msgstr ""
-"<a href=\"https://www.zooniverse.org/password/reset\">Password "
-"dimenticata?</a>"
 
 #. The text for a button that lets the user register to get a username and
 #. password.
 msgctxt "register_button_text"
-msgid "<a href=\"https://www.zooniverse.org/signup\">Register</a>"
-msgstr "<a href=\"https://www.zooniverse.org/signup\">Registrati</a>"
+msgid "Register"
+msgstr ""
 
 #. The accessibility description of an image
 msgctxt "content_description_example_image"

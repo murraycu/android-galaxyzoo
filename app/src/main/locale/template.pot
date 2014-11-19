@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-11-18 13:21+0100\n"
+"POT-Creation-Date: 2014-11-19 10:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgstr ""
 msgctxt "about_text2"
 msgid ""
 "This android app was developed by <a href=\"http://murrayc.com/\">Murray "
-"Cumming</a>"
+"Cumming</a>."
 msgstr ""
 
 msgctxt "about_text3"
@@ -56,7 +56,7 @@ msgid ""
 "Subject images from the <a href=\"http://www.sdss3.org/\">Sloan Digital "
 "Sky Survey</a> are used under their <a "
 "href=\"http://www.sdss3.org/collaboration/imageuse.php\">non-commercial "
-"licence</a>."
+"license</a>."
 msgstr ""
 
 msgctxt "about_text6"
@@ -157,13 +157,13 @@ msgstr ""
 
 #. The text for a button that lets the user reset a password.
 msgctxt "forgot_password_button_text"
-msgid "<a href=\"https://www.zooniverse.org/password/reset\">Forgot password?</a>"
+msgid "Forgot password?"
 msgstr ""
 
 #. The text for a button that lets the user register to get a username and
 #. password.
 msgctxt "register_button_text"
-msgid "<a href=\"https://www.zooniverse.org/signup\">Register</a>"
+msgid "Register"
 msgstr ""
 
 #. The accessibility description of an image
