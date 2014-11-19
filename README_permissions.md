@@ -6,7 +6,10 @@ and settings we must often request access to the data and settings for all
 apps. This is apparently unavoidable.
 
 * WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
-  (only requested on Android 4.3 and older.)
+  ( Usually only requested on Android 4.3 and older,
+  but currently requested for all Android versions due to an issue on
+  Android 5.0 "Lolliop":
+  https://github.com/murraycu/android-galaxyzoo/issues/5 )
   To access the app's local cache of images.
   The app does not access files belonging to any other application.
 
