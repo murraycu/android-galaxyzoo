@@ -20,8 +20,8 @@
   <string name="title_examples">Ejemplos</string>
   <string name="title_activity_example_viewer">Ejemplo</string>
   <string name="title_activity_subject_viewer">Objeto</string>
-  <string name="forgot_password_button_text"><a href="https://www.zooniverse.org/password/reset">¿Olvidó la contraseña?</a></string>
-  <string name="register_button_text"><a href="https://www.zooniverse.org/signup">Registrarse</a></string>
+  <string name="forgot_password_button_text">¿Olvidó la contraseña?</string>
+  <string name="register_button_text">Registrarse</string>
   <string name="content_description_example_image">Imagen de ejemplo</string>
   <string name="title_zooniverse_id">ID Zooniverse:</string>
   <string name="content_description_favorite">Elija si el objeto es uno de los favoritos.</string>

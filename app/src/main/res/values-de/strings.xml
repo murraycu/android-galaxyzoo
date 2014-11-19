@@ -24,8 +24,8 @@
   <string name="title_examples">Beispiele</string>
   <string name="title_activity_example_viewer">Beispiel</string>
   <string name="title_activity_subject_viewer">Objekt</string>
-  <string name="forgot_password_button_text"><a href="https://www.zooniverse.org/password/reset">Passwort vergessen?</a></string>
-  <string name="register_button_text"><a href="https://www.zooniverse.org/signup">Registrieren</a></string>
+  <string name="forgot_password_button_text">Passwort vergessen?</string>
+  <string name="register_button_text">Registrieren</string>
   <string name="content_description_example_image">Beispielbild.</string>
   <string name="title_zooniverse_id">Zooniverse ID:</string>
   <string name="content_description_favorite">Ist das Objekt ein Favorit?</string>
