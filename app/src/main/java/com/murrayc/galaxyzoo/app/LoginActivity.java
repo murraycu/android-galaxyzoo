@@ -31,6 +31,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
@@ -107,12 +108,8 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             }
         });
 
-        //This voodoo makes the textviews' HTML links clickable:
-        //See http://stackoverflow.com/questions/2734270/how-do-i-make-links-in-a-textview-clickable/20647011#20647011
-        TextView textView = (TextView) findViewById(R.id.textViewForgot);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
-        textView = (TextView) findViewById(R.id.textViewRegister);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        setTextViewLink(R.id.textViewForgot, Config.FORGET_PASSWORD_URI, R.string.forgot_password_button_text);
+        setTextViewLink(R.id.textViewRegister, Config.REGISTER_URI, R.string.register_button_text);
 
         Button mUsernameSignInButton = (Button) findViewById(R.id.username_sign_in_button);
         mUsernameSignInButton.setOnClickListener(new OnClickListener() {
@@ -142,6 +139,20 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             }
         };
         task.execute();
+    }
+
+    private void setTextViewLink(final int textViewResourceId, final String uri, final int strResourceId) {
+        //We add the <a> link here rather than having it in the string resource,
+        //to make life easier for translators.
+        final String html = "<a href=\"" + uri + "\">" +
+                getString(strResourceId) + "</a>";
+
+        TextView textView = (TextView) findViewById(textViewResourceId);
+        textView.setText(Html.fromHtml(html));
+
+        //This setMovementMethod() voodoo makes the textviews' HTML links clickable:
+        //See http://stackoverflow.com/questions/2734270/how-do-i-make-links-in-a-textview-clickable/20647011#20647011
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override

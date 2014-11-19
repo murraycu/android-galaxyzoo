@@ -70,10 +70,10 @@
     <string name="title_activity_subject_viewer">Subject</string>
 
     <!-- The text for a button that lets the user reset a password. -->
-    <string name="forgot_password_button_text"><a href="https://www.zooniverse.org/password/reset">Forgot password?</a></string>
+    <string name="forgot_password_button_text">Forgot password?</string>
 
     <!-- The text for a button that lets the user register to get a username and password. -->
-    <string name="register_button_text"><a href="https://www.zooniverse.org/signup">Register</a></string>
+    <string name="register_button_text">Register</string>
 
     <!-- The accessibility description of an image -->
     <string name="content_description_example_image">Example image.</string>
