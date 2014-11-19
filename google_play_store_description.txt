@@ -4,12 +4,11 @@ Classify Galaxy Zoo images. Few have witnessed what you're about to see.
 
 *** Full description:
 
-To understand how galaxies formed we need your help to classify them according to their shapes. If you're quick, you may even be the first person to see the galaxies you're asked to classify.
+To understand how galaxies have formed, astronomers need your help to classify them according to their shapes. If you're quick, you may even be the first person to see the galaxies you're asked to classify. Images come from telescopes including Hubble and the Sloan Digital Sky Survey. 
 
 This app caches several subjects locally so you can classify even while offline and have the classifications automatically uploaded later.
 
-This is an official Galaxy Zoo app. To learn more, see http://www.galaxyzoo.org/
-
+This is an official Zooniverse app. To learn more about the Galaxy Zoo project and our science, visit http://www.galaxyzoo.org/
 
 Notes:
 
