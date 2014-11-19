@@ -189,7 +189,7 @@ public class LoginUtils {
             return;
         }
 
-        resolver.setSyncAutomatically(account, Item.AUTHORITY, true);
+        ContentResolver.setSyncAutomatically(account, Item.AUTHORITY, true);
     }
 
     public static void removeAnonymousAccount(final Context context) {
