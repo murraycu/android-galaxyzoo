@@ -536,15 +536,15 @@ public class ItemsContentProvider extends ContentProvider {
                 Log.info("createFileUri(): subject id=" + subjectId +", file created: " + realFile.getAbsolutePath());
             }
             */
-        }  catch (UnsupportedOperationException e) {
+        }  catch (final UnsupportedOperationException e) {
             //This happens while running under ProviderTestCase2.
             //so we just catch it and provide a useful value,
             //so at least the other functionality can be tested.
             //TODO: Find a way to let it succeed.
-            Log.error("createCacheFile(): Unsupported operation", e);
+            Log.error("createCacheFile(): Unsupported operation for filename=" + file.getAbsolutePath(), e);
             return "testuri";
         } catch (final IOException e) {
-            Log.error("createCacheFile(): IOException", e);
+            Log.error("createCacheFile(): IOException for filename=" + file.getAbsolutePath(), e);
             return null;
         }
 

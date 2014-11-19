@@ -3,8 +3,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.murrayc.galaxyzoo.app" >
 
+    <!-- TODO: We shouldn't need these after SDK version 18, but Android 5.0 "Lollipop" (API 21) seems
+    to need them again.
+    See https://github.com/murraycu/android-galaxyzoo/issues/5 . -->
+    <!--
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
+    -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
