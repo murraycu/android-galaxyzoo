@@ -28,3 +28,7 @@ apps. This is apparently unavoidable.
   classifications.
   The app does not access sync settings belonging to any other application.
 
+
+
+Android is a trademark of Google Inc.
+

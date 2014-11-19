@@ -40,3 +40,7 @@ TODO: Robert Simpson says they are using some online tool for this that he can
 give people access to.
 
 Many thanks for all your help.
+
+
+Android is a trademark of Google Inc.
+

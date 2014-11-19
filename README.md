@@ -8,3 +8,8 @@ Feedback and source code pull requests (or patches) are very welcome.
 
 
 See README_permissions.md and README_translors.md
+
+
+
+Android is a trademark of Google Inc.
+
