@@ -1,19 +1,9 @@
 *** Translating the app
 
-To translate this app to your language, you need to provide translated versions of these files:
-https://github.com/murraycu/android-galaxyzoo/blob/master/app/src/main/res/values/strings.xml
-https://github.com/murraycu/android-galaxyzoo/blob/master/app/src/main/res/values/arrays.xml
-
-For instance, here is the German translation:
-https://github.com/murraycu/android-galaxyzoo/tree/master/app/src/main/res/values-de
-
-You could submit them as a github pull request, or just email them if you find
-that too difficult.
-
-
-If you prefer to use gettext's .po file format, here are some exported
-.po files that can be imported back into Android's XML format.
-https://github.com/murraycu/android-galaxyzoo/tree/master/app/src/main/locale
+We use Transifex, who generously support open-source projects.
+Please visit our Transifex page to create or correct translations for your
+language:
+https://www.transifex.com/projects/p/android-galaxyzoo/
 
 
 There are some sample screenshots here to help you to understand the context:
