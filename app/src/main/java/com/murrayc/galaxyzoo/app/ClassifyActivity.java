@@ -78,6 +78,51 @@ public class ClassifyActivity extends ItemActivity
 
 
     /**
+      * Asynchronously discovers if we are logged in and offers a login if not.
+      */
+     public static class CheckLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final WeakReference<Context> mContextReference;
+
+        CheckLoginTask(final Context context) {
+            mContextReference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            if (mContextReference == null) {
+                return null;
+            }
+
+            final Context context = mContextReference.get();
+            if (context == null) {
+                return null;
+            }
+
+            return LoginUtils.getLoggedIn(context);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (mContextReference == null) {
+                return;
+            }
+
+            final Context context = mContextReference.get();
+            if (context == null) {
+                return;
+            }
+
+            if (!result) {
+                final Intent intent = new Intent(context, LoginActivity.class);
+                context.startActivity(intent);
+            }
+
+        }
+    }
+
+    /**
      * Asynchronously gets the account and tells the SyncAdapter to sync it now:
      */
     public static class RequestSyncTask extends AsyncTask<Void, Void, Void> {
@@ -266,14 +311,16 @@ public class ClassifyActivity extends ItemActivity
         //Suggest registering or logging in after a certain number of classifications,
         //as the web UI does, but don't ask again.
         if (mClassificationsDoneInSession == 3) {
-            if (!LoginUtils.getLoggedIn(this)) {
-                final Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-            }
+            checkForLoginAsync();
         }
         mClassificationsDoneInSession++;
 
         startNextClassification();
+    }
+
+    private void checkForLoginAsync() {
+        final CheckLoginTask task = new CheckLoginTask(this);
+        task.execute();
     }
 
     private void startNextClassification() {

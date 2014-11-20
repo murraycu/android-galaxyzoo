@@ -55,7 +55,15 @@ public class LoginUtils {
     //or at least show a translatable "Anonymous" there instead.
     private static final String ACCOUNT_NAME_ANONYMOUS = "anonymous";
 
-    //TODO: Ask the provider instead of using this hack which uses too much internal knowledge.
+    /**
+     * Returns true if we have a real account that has logged into the server,
+     * or false if we are using the anonymous account.
+     *
+     * Don't call this from the main thread - use an AsyncTask, for instance.
+     *
+     * @param context
+     * @return
+     */
     public static boolean getLoggedIn(final Context context) {
         final LoginDetails loginDetails = getAccountLoginDetails(context);
         if (loginDetails == null) {
@@ -119,6 +127,7 @@ public class LoginUtils {
 
     /**
      * This returns null if there is no account (not even an anonymous account).
+     * Don't call this from the main thread - use an AsyncTask, for instance.
      *
      * @param context
      * @return
