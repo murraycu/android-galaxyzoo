@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="app_name">Galaxy Zoo</string>
+  <string name="about_text1">Una app Android para clasificar objetos de <a href="http://www.galaxyzoo.org/">Galaxy Zoo</a>. Es una app oficial de Zooniverse o Galaxy.</string>
+  <string name="about_text2">Esta app Android fue desarrollada por <a href="http://murrayc.com/">Murray Cumming</a>.</string>
+  <string name="about_version_text_format">Versión: %s</string>
+  <string name="progress_loading_text">Cargando…</string>
+  <string name="action_invert">Invertir</string>
+  <string name="action_examples">Ejemplos</string>
+  <string name="action_login">Iniciar sesión</string>
+  <string name="action_favorite">Favorito</string>
+  <string name="action_restart">Reiniciar</string>
+  <string name="action_list">Lista</string>
+  <string name="action_next">Clasificar</string>
+  <string name="action_settings">Ajustes</string>
+  <string name="description_settings">How many to download in advance, etc.</string>
+  <string name="action_about">Acerca de</string>
+  <string name="description_thumbnail">Miniatura</string>
+  <string name="description_standard_image">Imagen estándar</string>
+  <string name="title_examples">Ejemplos</string>
+  <string name="title_activity_example_viewer">Ejemplo</string>
+  <string name="title_activity_subject_viewer">Objeto</string>
+  <string name="forgot_password_button_text">¿Olvidó la contraseña?</string>
+  <string name="register_button_text">Registrarse</string>
+  <string name="content_description_example_image">Imagen de ejemplo</string>
+  <string name="title_zooniverse_id">ID Zooniverse:</string>
+  <string name="content_description_favorite">Elija si el objeto es uno de los favoritos.</string>
+  <string name="content_description_classified">Si el objeto ya ha sido clasificado.</string>
+  <string name="content_description_uploaded">Si el objeto ya ha sido cargado.</string>
+  <string name="button_title_examine">Examinar</string>
+  <string name="button_title_discuss">Debate</string>
+  <string name="title_activity_question_help">Ayuda</string>
+  <string name="title_activity_login">Iniciar sesión</string>
+  <string name="login_hint">Inicie sesión o regístrese para recibir crédito por su trabajo.</string>
+  <string name="prompt_username">Nombre de usuario</string>
+  <string name="prompt_password">Contraseña</string>
+  <string name="action_sign_in">Iniciar sesión</string>
+  <string name="action_sign_in_short">Iniciar sesión</string>
+  <string name="error_invalid_password">La contraseña es demasiado corta.</string>
+  <string name="error_incorrect_password">La contraseña es incorrecta.</string>
+  <string name="error_field_required">El campo es obligatorio.</string>
+  <string name="error_no_network">Sin conexión de red.</string>
+  <string name="error_no_wifi_network">Sin conexión de red Wi-Fi.</string>
+  <string name="error_could_not_connect">Cannot connect to the server.</string>
+  <string name="error_no_subjects">Cannot download new subjects to classify.</string>
+  <string name="error_button_retry">Reintentar</string>
+  <string name="error_button_cancel">Cancelar</string>
+  <string name="message_logged_in">Logged In.</string>
+  <string name="title_activity_settings">Ajustes</string>
+  <string name="pref_title_cache_size">Descargar de antemano</string>
+  <string name="pref_title_keep_count">Conservar</string>
+  <string name="pref_title_wifi_only">Descargar solo con Wi-Fi</string>
+  <string name="pref_description_wifi_only">No descargar contenido en redes móviles para reducir los cargos de datos del operador.</string>
+  <string-array name="pref_cache_size_entries">
+    <item>5 objetos</item>
+    <item>10 objetos</item>
+    <item>20 objetos</item>
+    <item>50 objetos</item>
+  </string-array>
+  <string-array name="pref_keep_count_entries">
+    <item>5 objetos clasificados</item>
+    <item>10 objetos clasificados</item>
+    <item>20 objetos clasificados</item>
+    <item>50 objetos clasificados</item>
+  </string-array>
+</resources>
