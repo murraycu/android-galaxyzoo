@@ -1,62 +1,113 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
+  <!--The name of the app-->
   <string name="app_name">Galaxy zoo</string>
-  <string name="about_text1">Una app per Android per la classificazione degli argomenti di <a href="http://www.galaxyzoo.org/">Galazy Zoo</a>. Questa è una app ufficiale Zooniverse o Galaxy Zoo.</string>
-  <string name="about_text2">Questa app per Android è stata sviluppata da<a href="http://murrayc.com/">Murray Cumming</a>.</string>
+  <!--The description of the app. This text is split into separate strings
+    to make life easier for translators.-->
+  <string name="about_text1">Una app per Android per la classificazione degli argomenti di &lt;a href="http://www.galaxyzoo.org/"&gt;Galazy Zoo&lt;/a&gt;. Questa è una app ufficiale Zooniverse o Galaxy Zoo.</string>
+  <string name="about_text2">Questa app per Android è stata sviluppata da&lt;a href="http://murrayc.com/"&gt;Murray Cumming&lt;/a&gt;.</string>
+  <!--This shows the version number of the app.-->
   <string name="about_version_text_format">Versione: %s</string>
+  <!--This is shown while the app is first starting.-->
   <string name="progress_loading_text">Caricamento in corso…</string>
+  <!--An action. Shown on a button or menu item.-->
   <string name="action_invert">Inverti</string>
+  <!--An action. Shown on a button or menu item.-->
   <string name="action_examples">Esempi</string>
+  <!--An action. Shown on a button or menu item.-->
   <string name="action_login">Accesso</string>
+  <!--An action. Shown on a button or menu item.-->
   <string name="action_favorite">Preferito</string>
+  <!--An action. Shown on a button or menu item.-->
   <string name="action_restart">Riavvia</string>
+  <!--An action. Shown on a button or menu item.-->
   <string name="action_list">Lista</string>
+  <!--An action. Shown on a button or menu item.-->
   <string name="action_next">Classifica</string>
+  <!--Shown on a menu item (and in the system's accounts list) to open the application's settings (preferences).-->
   <string name="action_settings">Impostazioni</string>
+  <!--Shown in the system's accounts list to describe the application's settings (preferences)..-->
   <string name="description_settings">How many to download in advance, etc.</string>
+  <!--Shown on a menu item to view the application's description.-->
   <string name="action_about">Informazioni</string>
+  <!--The accessibility description of an image-->
   <string name="description_thumbnail">Miniatura</string>
+  <!--The accessibility description of an image-->
   <string name="description_standard_image">Immagine standard</string>
+  <!--The title of a set of example images.-->
   <string name="title_examples">Esempi</string>
+  <!--The title of a screen that shows an example image.-->
   <string name="title_activity_example_viewer">Esempio</string>
+  <!--The title of a screen that shows an image.-->
   <string name="title_activity_subject_viewer">Argomento</string>
+  <!--The text for a button that lets the user reset a password.-->
   <string name="forgot_password_button_text">Password dimenticata?</string>
+  <!--The text for a button that lets the user register to get a username and password.-->
   <string name="register_button_text">Registrati</string>
+  <!--The accessibility description of an image-->
   <string name="content_description_example_image">Immagine di esempio</string>
   <string name="title_zooniverse_id">ID di Zooniverse:</string>
+  <!--The accessibility description of a contextual icon.-->
   <string name="content_description_favorite">Se l\'argomento è tra i preferiti.</string>
+  <!--The accessibility description of a contextual icon.-->
   <string name="content_description_classified">Se l\'argomento è stato classificato.</string>
+  <!--The accessibility description of a contextual icon.-->
   <string name="content_description_uploaded">Se l\'argomento è stato caricato.</string>
+  <!--The title of a button that lets the user look at an image in more detail.-->
   <string name="button_title_examine">Esamina</string>
+  <!--The title of a button that takes the user to a discussion forum for the image.-->
   <string name="button_title_discuss">Discuti</string>
+  <!--The title of a screen that explains how to use the app.-->
   <string name="title_activity_question_help">Aiuto</string>
+  <!--The title of a screen that lets the user log in to the system.-->
   <string name="title_activity_login">Accedi</string>
+  <!--Some text to encourage the user to login.-->
   <string name="login_hint">Accedi o crea un account per ricevere riconoscimento per il tuo lavoro.</string>
+  <!--The description of the username field when logging in..-->
   <string name="prompt_username">Nome utente</string>
+  <!--The description of the password field when logging in..-->
   <string name="prompt_password">Password</string>
+  <!--The title of the login button.-->
   <string name="action_sign_in">Accedi</string>
+  <!--The title of the login button that will appear on the on-screen keyboard.-->
   <string name="action_sign_in_short">Accedo</string>
+  <!--An error message.-->
   <string name="error_invalid_password">La password inserita è troppo corta.</string>
+  <!--An error message.-->
   <string name="error_incorrect_password">La password inserita non è corretta.</string>
+  <!--An error message.-->
   <string name="error_field_required">Campo obbligatorio.</string>
+  <!--An error message. We show this when we cannot continue because there is no network connection.-->
   <string name="error_no_network">Nessuna connessione di rete.</string>
+  <!--An error message. We show this when we cannot continue because there is no wi-fi network connection.-->
   <string name="error_no_wifi_network">Nessuna connessione di rete Wi-Fi.</string>
+  <!--TODO: Make this clearer for people who don't know what an (Internet) server is?-->
+  <!--An error message. We show this when we cannot continue because something is wrong with the network connection.-->
   <string name="error_could_not_connect">Cannot connect to the server.</string>
+  <!--An error message. We show this when we cannot continue because something is wrong with the network connection.-->
   <string name="error_no_subjects">Cannot download new subjects to classify.</string>
+  <!--We offer this button when showing the alert dialog about a network connection problem.-->
   <string name="error_button_retry">Riprova</string>
+  <!--We offer this button when showing the alert dialog about a network connection problem.-->
   <string name="error_button_cancel">Annulla</string>
+  <!--An informative message. This lets the user know that they are already logged in to the system.-->
   <string name="message_logged_in">Logged In.</string>
+  <!--The title of the Settings screen to show or change the app preferences.-->
   <string name="title_activity_settings">Impostazioni</string>
+  <!--The title of the preference that controls how many items are downloaded before they are needed.-->
   <string name="pref_title_cache_size">Download in corso</string>
+  <!--The title of the preference that controls how many old items should stay on the device.-->
   <string name="pref_title_keep_count">Mantieni</string>
   <string name="pref_title_wifi_only">Scarica solo tramite Wi-Fi</string>
   <string name="pref_description_wifi_only">Per ridurre i costi applicati dall\'operatore per i dati, non scaricare tramite reti mobili.</string>
+  <!--The possible numbers of items that may be downloaded in advance before they are needed.-->
   <string-array name="pref_cache_size_entries">
     <item>5 argomenti</item>
     <item>10 argomenti</item>
     <item>20 argomenti</item>
     <item>50 argomenti</item>
   </string-array>
+  <!--The possible numbers of old items that may be kept on the device.-->
   <string-array name="pref_keep_count_entries">
     <item>5 argomenti classificati</item>
     <item>10 argomenti classificati</item>
