@@ -21,7 +21,9 @@ package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -37,6 +39,8 @@ import android.widget.ImageView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
+
+import java.lang.ref.WeakReference;
 
 /**
  * A fragment representing a single subject.
@@ -207,6 +211,66 @@ public class SubjectFragment extends ItemFragment
         showImage();
     }
 
+    //See http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
+    private static class ShowImageTask extends AsyncTask<String, Void, Bitmap> {
+        private final WeakReference<ImageView> imageViewReference;
+        private final WeakReference<SubjectFragment> fragmentReference;
+
+        private String strUri = null;
+
+        public ShowImageTask(final ImageView imageView, final SubjectFragment fragment) {
+            // Use a WeakReference to ensure the ImageView can be garbage collected
+            imageViewReference = new WeakReference<>(imageView);
+
+            // Use a WeakReference to ensure the ImageView can be garbage collected
+            fragmentReference = new WeakReference<>(fragment);
+        }
+
+        // Decode image in background.
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            strUri = params[0];
+
+            if (fragmentReference != null) {
+                final SubjectFragment fragment = fragmentReference.get();
+                if (fragment != null) {
+                    return UiUtils.getBitmapFromContentUri(fragment.getActivity(), strUri);
+                }
+            }
+
+            return null;
+        }
+
+        // Once complete, see if ImageView is still around and set bitmap.
+        // This avoids calling the ImageView methods in the non-main thread.
+        @Override
+        protected void onPostExecute(final Bitmap bitmap) {
+            if (bitmap == null) {
+                //Something was wrong with the (cached) image,
+                //so just abandon this whole item.
+                //That seems safer and simpler than trying to recover just one of the 3 images.
+                if (fragmentReference != null) {
+                    final SubjectFragment fragment = fragmentReference.get();
+                    if (fragment != null) {
+                        fragment.abandonItem();
+                    }
+                }
+            }
+
+            if (imageViewReference != null && bitmap != null) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    if (bitmap != null) {
+                        imageView.setImageBitmap(bitmap);
+                    } else {
+
+                        imageView.setImageResource(android.R.color.transparent);
+                    }
+                }
+            }
+        }
+    }
+
     private void showImage() {
         final Activity activity = getActivity();
         if (activity == null)
@@ -236,22 +300,9 @@ public class SubjectFragment extends ItemFragment
             }
         }
 
-        boolean imageShown = false;
         if (!TextUtils.isEmpty(imageUriStr)) {
-            imageShown = UiUtils.fillImageViewFromContentUri(activity, imageUriStr, mImageView);
-
-            if(!imageShown) {
-                //Something was wrong with the (cached) image,
-                //so just abandon this whole item.
-                //That seems safer and simpler than trying to recover just one of the 3 images.
-                abandonItem();
-            }
-        }
-
-        if(!imageShown) {
-            //Make it blank,
-            //to avoid still showing the picture from the previous subject:
-            mImageView.setImageResource(android.R.color.transparent);
+            final ShowImageTask task = new ShowImageTask(mImageView, this);
+            task.execute(imageUriStr);
         }
     }
 

@@ -35,7 +35,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -46,10 +45,18 @@ import java.io.InputStream;
  */
 class UiUtils {
 
-    static boolean fillImageViewFromContentUri(final Context context, final String imageUriStr, final ImageView imageView) {
+    /** Get a URI for an image in the ItemsContentProvider.
+     *
+     * Don't call this from a main (UI) thread.
+     *
+     * @param context
+     * @param imageUriStr
+     * @return
+     */
+    static Bitmap getBitmapFromContentUri(final Context context, final String imageUriStr) {
         if (imageUriStr == null) {
-            Log.error("fillImageViewFromContentUri(): imageUriStr is null.");
-            return false;
+            Log.error("getBitmapFromContentUri(): imageUriStr is null.");
+            return null;
         }
 
         final ContentResolver contentResolver = context.getContentResolver();
@@ -62,20 +69,19 @@ class UiUtils {
             stream = contentResolver.openInputStream(uri);
             bMap = BitmapFactory.decodeStream(stream);
         } catch (final IOException e) {
-            Log.error("fillImageViewFromContentUri(): BitmapFactory.decodeStream() failed.", e);
-            return false;
+            Log.error("getBitmapFromContentUri(): BitmapFactory.decodeStream() failed.", e);
+            return null;
         } finally {
             if (stream != null) {
                 try {
                     stream.close();
                 } catch (final IOException e) {
-                    Log.error("fillImageViewFromContentUri(): Exception while closing stream.", e);
+                    Log.error("getBitmapFromContentUri(): Exception while closing stream.", e);
                 }
             }
         }
 
-        imageView.setImageBitmap(bMap);
-        return true;
+        return bMap;
     }
 
     private static void warnAboutNoNetworkConnection(final Activity activity) {

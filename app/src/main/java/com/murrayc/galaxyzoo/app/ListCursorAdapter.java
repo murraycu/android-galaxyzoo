@@ -22,6 +22,7 @@ package com.murrayc.galaxyzoo.app;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -98,8 +99,10 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
         if (!TextUtils.isEmpty(imageUriStr)) {
             boolean imageShown = false;
             if (thumbnailDownloaded) {
-                imageShown = UiUtils.fillImageViewFromContentUri(mContext, imageUriStr, viewHolder.imageView);
-                if (!imageShown) {
+                final Bitmap bMap = UiUtils.getBitmapFromContentUri(mContext, imageUriStr);
+                if (bMap != null) {
+                    viewHolder.imageView.setImageBitmap(bMap);
+                } else {
                     Utils.abandonItem(mContext, itemId);
                 }
             }
