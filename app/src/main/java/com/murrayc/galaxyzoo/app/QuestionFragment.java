@@ -512,6 +512,7 @@ public class QuestionFragment extends BaseQuestionFragment
     private void onAnswerButtonClicked(final String questionId, final String answerId) {
         if (questionId == null) {
             Log.error("onAnswerButtonClicked: questionId was null.");
+            return;
         }
 
         //TODO: Move this logic to the parent ClassifyFragment?
@@ -555,8 +556,10 @@ public class QuestionFragment extends BaseQuestionFragment
         } else {
             //The classification is finished.
             //We save it to the ContentProvider, which will upload it.
-            //TODO: Prevent the user from being able to press the button again between now
-            //and the new subject being shown.
+            //
+            //Set the questionID to null to prevent us from starting to save this again
+            //if the user presses the "Done" button again while we are waiting for our AsyncTask.
+            //(see our check for a null questionId at the start of this method.)
             final SaveClassificationTask task = new SaveClassificationTask(this, mClassificationInProgress);
             task.execute();
         }
