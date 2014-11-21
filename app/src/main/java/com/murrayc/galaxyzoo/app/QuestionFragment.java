@@ -30,6 +30,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -56,6 +57,7 @@ import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -555,13 +557,8 @@ public class QuestionFragment extends BaseQuestionFragment
             //We save it to the ContentProvider, which will upload it.
             //TODO: Prevent the user from being able to press the button again between now
             //and the new subject being shown.
-            saveClassification(mClassificationInProgress);
-
-            //Finish the classification:
-            wipeClassification();
-
-            //TODO: Do something else for tablet UIs that share the activity.
-            mCallbacks.onClassificationFinished();
+            final SaveClassificationTask task = new SaveClassificationTask(this, mClassificationInProgress);
+            task.execute();
         }
     }
 
@@ -575,7 +572,61 @@ public class QuestionFragment extends BaseQuestionFragment
         update();
     }
 
-    private void saveClassification(final ClassificationInProgress classificationInProgress) {
+    private static class SaveClassificationTask extends AsyncTask<Void, Void, Void> {
+
+        private final WeakReference<QuestionFragment> fragmentReference;
+        private final ClassificationInProgress classificationInProgress;
+
+        SaveClassificationTask(final QuestionFragment fragment, final ClassificationInProgress classificationInProgress) {
+            this.fragmentReference = new WeakReference<>(fragment);
+            this.classificationInProgress = classificationInProgress;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            if (fragmentReference == null) {
+                return null;
+            }
+
+            final QuestionFragment fragment = fragmentReference.get();
+            if (fragment == null) {
+                return null;
+            }
+
+            fragment.saveClassificationSync(classificationInProgress);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (fragmentReference == null) {
+                return;
+            }
+
+            final QuestionFragment fragment = fragmentReference.get();
+            if (fragment == null) {
+                return;
+            }
+
+            //Finish the classification:
+            fragment.wipeClassification();
+
+            //TODO: Do something else for tablet UIs that share the activity.
+            fragment.mCallbacks.onClassificationFinished();
+
+        }
+
+    }
+
+    /**
+     * Avoid calling this from the main (UI) thread - StrictMode doesn't like it on at least API 15
+     * and API 16.
+     *
+     * @param classificationInProgress
+     */
+    private void saveClassificationSync(final ClassificationInProgress classificationInProgress) {
         final String itemId = getItemId();
         if (TextUtils.equals(itemId, ItemsContentProvider.URI_PART_ITEM_ID_NEXT)) {
             Log.error("QuestionFragment.saveClassification(): Attempting to save with the 'next' ID.");
