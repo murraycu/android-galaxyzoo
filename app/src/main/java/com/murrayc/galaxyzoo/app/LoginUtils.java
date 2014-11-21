@@ -174,6 +174,12 @@ public class LoginUtils {
         }
     }
 
+    /**
+     * Add the anonymous Account.
+     *
+     * Don't call this from the main thread - use an AsyncTask, for instance.
+     * @param context
+     */
     public static void addAnonymousAccount(final Context context) {
         final AccountManager accountManager = AccountManager.get(context);
         final Account account = new Account(ACCOUNT_NAME_ANONYMOUS, LoginUtils.ACCOUNT_TYPE);

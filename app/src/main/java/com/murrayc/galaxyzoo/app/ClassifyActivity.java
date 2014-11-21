@@ -266,14 +266,7 @@ public class ClassifyActivity extends ItemActivity
     }
 
     private void onExistingLoginRetrieved(final LoginUtils.LoginDetails loginDetails) {
-        if (loginDetails == null) {
-            //Add an anonymous Account,
-            //because our SyncAdapter will not run if there is no associated Account,
-            //and we want it to run to get the items to classify, and to upload
-            //anonymous classifications.
-            LoginUtils.addAnonymousAccount(this);
-            requestSync(); //In case sync has not happened before because of this.
-        } else if (!TextUtils.isEmpty(loginDetails.authApiKey)) {
+        if (loginDetails != null && !TextUtils.isEmpty(loginDetails.authApiKey)) {
             //Tell the user that we are logged in,
             //reassuring them that their classifications will be part of their profile:
             //TODO: Is there a better way to do this?
@@ -282,6 +275,9 @@ public class ClassifyActivity extends ItemActivity
             UiUtils.showLoggedInToast(this);
         }
 
+        //Request a sync in case sync has not happened before because there was not yet
+        //an anonymous account (which is added in GetExistingLogin).
+        requestSync();
     }
 
 
