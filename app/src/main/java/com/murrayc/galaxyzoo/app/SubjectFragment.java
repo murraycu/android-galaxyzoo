@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -211,66 +212,6 @@ public class SubjectFragment extends ItemFragment
         showImage();
     }
 
-    //See http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
-    private static class ShowImageFromContentProviderTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-        private final WeakReference<ItemFragment> fragmentReference;
-
-        private String strUri = null;
-
-        public ShowImageFromContentProviderTask(final ImageView imageView, final ItemFragment fragment) {
-            // Use a WeakReference to ensure the ImageView can be garbage collected
-            imageViewReference = new WeakReference<>(imageView);
-
-            // Use a WeakReference to ensure the ImageView can be garbage collected
-            fragmentReference = new WeakReference<>(fragment);
-        }
-
-        // Decode image in background.
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            strUri = params[0];
-
-            if (fragmentReference != null) {
-                final ItemFragment fragment = fragmentReference.get();
-                if (fragment != null) {
-                    return UiUtils.getBitmapFromContentUri(fragment.getActivity(), strUri);
-                }
-            }
-
-            return null;
-        }
-
-        // Once complete, see if ImageView is still around and set bitmap.
-        // This avoids calling the ImageView methods in the non-main thread.
-        @Override
-        protected void onPostExecute(final Bitmap bitmap) {
-            if (bitmap == null) {
-                //Something was wrong with the (cached) image,
-                //so just abandon this whole item.
-                //That seems safer and simpler than trying to recover just one of the 3 images.
-                if (fragmentReference != null) {
-                    final ItemFragment fragment = fragmentReference.get();
-                    if (fragment != null) {
-                        fragment.abandonItem();
-                    }
-                }
-            }
-
-            if (imageViewReference != null && bitmap != null) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    if (bitmap != null) {
-                        imageView.setImageBitmap(bitmap);
-                    } else {
-
-                        imageView.setImageResource(android.R.color.transparent);
-                    }
-                }
-            }
-        }
-    }
-
     private void showImage() {
         final Activity activity = getActivity();
         if (activity == null)
@@ -301,7 +242,19 @@ public class SubjectFragment extends ItemFragment
         }
 
         if (!TextUtils.isEmpty(imageUriStr)) {
-            final ShowImageFromContentProviderTask task = new ShowImageFromContentProviderTask(mImageView, this);
+            final UiUtils.ShowImageFromContentProviderTask task = new UiUtils.ShowImageFromContentProviderTask(mImageView, activity) {
+                @Override
+                protected void onPostExecute(final Bitmap bitmap) {
+                    super.onPostExecute(bitmap);
+
+                    if (bitmap == null) {
+                        //Something was wrong with the (cached) image,
+                        //so just abandon this whole item.
+                        //That seems safer and simpler than trying to recover just one of the 3 images.
+                        SubjectFragment.this.abandonItem();
+                    }
+                }
+            };
             task.execute(imageUriStr);
         }
     }

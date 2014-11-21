@@ -78,6 +78,54 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
         return new ViewHolder(v, this);
     }
 
+    class ShowViewHolderImageFromContentProviderTask extends UiUtils.ShowImageFromContentProviderTask {
+        final WeakReference<ViewHolder> viewHolderReference;
+        final int position;
+        final String itemId;
+
+        public ShowViewHolderImageFromContentProviderTask(final Context fragment, final ViewHolder viewHolder, int position, final String itemId) {
+            super(viewHolder.imageView, fragment);
+
+            this.viewHolderReference = new WeakReference<>(viewHolder);
+            this.position = position;
+            this.itemId = itemId;
+        }
+
+        @Override
+        protected void onPostExecute(final Bitmap bitmap) {
+
+            if (viewHolderReference == null) {
+                return;
+            }
+
+            final ViewHolder viewHolder = viewHolderReference.get();
+            if (viewHolder == null) {
+                return;
+            }
+
+            //Check that we are still dealing with the same position,
+            //because the ImageView might be recycled for use with a different position.
+            if (viewHolder.getPosition() != position) {
+                return;
+            }
+
+            super.onPostExecute(bitmap);
+
+            if (bitmap != null) {
+                //Hide the progress indicator now that we are showing the image.
+                viewHolder.progressBar.setVisibility(View.GONE);
+            } else {
+                //Show the progress indicator because we have no image:
+                viewHolder.progressBar.setVisibility(View.VISIBLE);
+
+                //Something was wrong with the (cached) image,
+                //so just abandon this whole item.
+                //That seems safer and simpler than trying to recover just one of the 3 images.
+                Utils.abandonItem(mContext, itemId);
+            }
+        }
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
         mCursor.moveToPosition(i);
@@ -97,23 +145,14 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
         */
 
         if (!TextUtils.isEmpty(imageUriStr)) {
-            boolean imageShown = false;
             if (thumbnailDownloaded) {
-                final Bitmap bMap = UiUtils.getBitmapFromContentUri(mContext, imageUriStr);
-                if (bMap != null) {
-                    viewHolder.imageView.setImageBitmap(bMap);
-                } else {
-                    Utils.abandonItem(mContext, itemId);
-                }
-            }
-
-            if (imageShown) {
-                viewHolder.progressBar.setVisibility(View.GONE);
+                //viewHolder.imageView.setImageDrawable(null);
+                final ShowViewHolderImageFromContentProviderTask task = new ShowViewHolderImageFromContentProviderTask(mContext, viewHolder, viewHolder.getPosition(), itemId);
+                task.execute(imageUriStr);
             } else {
+                //We are still waiting for it to download:
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
-                //TODO: Make sure it gets updated later?
             }
-
 
             if (!favorite && !done && !uploaded) {
                 viewHolder.iconsPanel.setVisibility(View.GONE);
