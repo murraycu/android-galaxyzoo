@@ -255,7 +255,18 @@ public class LoginUtils {
                 return null;
             }
 
-            return getAccountLoginDetails(context);
+            final LoginDetails result = getAccountLoginDetails(context);
+            if (result == null) {
+                //Add an anonymous Account,
+                //because our SyncAdapter will not run if there is no associated Account,
+                //and we want it to run to get the items to classify, and to upload
+                //anonymous classifications.
+                LoginUtils.addAnonymousAccount(context);
+
+                return getAccountLoginDetails(context);
+            }
+
+            return result;
         }
 
         @Override
