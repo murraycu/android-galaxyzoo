@@ -16,3 +16,6 @@ Notes:
 
 *** This page explains why Galaxy Zoo needs various permissions:
      https://raw.githubusercontent.com/murraycu/android-galaxyzoo/master/README_permissions.md
+
+*** You can help to translate this app to your language:
+     https://github.com/murraycu/android-galaxyzoo/blob/master/README_translators.md
