@@ -207,10 +207,18 @@ public class LoginUtils {
         ContentResolver.setSyncAutomatically(account, Item.AUTHORITY, true);
     }
 
+    /** Don't call this from the main UI thread.
+     *
+     * @param context
+     */
     public static void removeAnonymousAccount(final Context context) {
         removeAccount(context, ACCOUNT_NAME_ANONYMOUS);
     }
 
+    /** Don't call this from the main UI thread.
+     *
+     * @param context
+     */
     public static void removeAccount(final Context context, final String accountName) {
         final AccountManager accountManager = AccountManager.get(context);
         final Account account = new Account(accountName, LoginUtils.ACCOUNT_TYPE);

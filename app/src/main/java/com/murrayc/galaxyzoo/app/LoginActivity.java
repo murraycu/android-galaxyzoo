@@ -26,6 +26,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -45,6 +46,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
+
+import java.lang.ref.WeakReference;
 
 //TODO: Use the toolbar, but we cannot derive from ActionBarActivity from AppCompat.
 //Android's standard AccountAuthenticatorActivity doesn't let us use the toolbar,
@@ -274,6 +277,76 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         }
     }
 
+    private static class AccountSaveTask extends AsyncTask<Void, Void, Void> {
+
+        private final WeakReference<Context> contextReference;
+        private final LoginUtils.LoginResult loginResult;
+        private final String existingAccountName;
+
+        private final boolean existingAccountIsAnonymous;
+
+        AccountSaveTask(final Context context, final LoginUtils.LoginResult loginResult, final String existingAccountName, boolean existingAccountIsAnonymous) {
+            this.contextReference = new WeakReference<>(context);
+            this.loginResult = loginResult;
+            this.existingAccountName = existingAccountName;
+            this.existingAccountIsAnonymous = existingAccountIsAnonymous;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            if (contextReference == null) {
+                return null;
+            }
+
+            final Context context = contextReference.get();
+            if (context == null) {
+                return null;
+            }
+
+            final String accountName = loginResult.getName();
+
+            final AccountManager accountManager = AccountManager.get(context);
+
+            boolean addingAccount = false;
+            if (existingAccountIsAnonymous) {
+                //Remove the existing account so we can add the new one.
+                //TODO: Find a way to just change the name,
+                //though we don't lose any ItemsContentProvider data when we delete an Account.
+                LoginUtils.removeAnonymousAccount(context);
+                addingAccount = true;
+            } else if(!TextUtils.equals(existingAccountName, accountName)) {
+                //Remove any existing account so we can add the new one.
+                //TODO: Find a way to just change the name,
+                if (!TextUtils.isEmpty(existingAccountName)) {
+                    LoginUtils.removeAccount(context, existingAccountName);
+                }
+
+                addingAccount = true;
+            }
+
+
+            final Account account = new Account(accountName, LoginUtils.ACCOUNT_TYPE);
+            if (addingAccount) {
+                accountManager.addAccountExplicitly(account, null, null);
+                Utils.copyPrefsToAccount(context, accountManager, account);
+
+                //Tell the SyncAdapter to sync whenever the network is reconnected:
+                LoginUtils.setAutomaticAccountSync(context, account);
+            }
+
+            //TODO? ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true)
+
+            //This is apparently not necessary, when updating an existing account,
+            //if this activity was launched from our Authenticator, for instance if our
+            //Authenticator found that the accounts' existing auth token was invalid.
+            //Presumably it is necessary if this activity is launched from our app.
+            accountManager.setAuthToken(account, LoginUtils.ACCOUNT_AUTHTOKEN_TYPE, loginResult.getApiKey());
+
+            return null;
+        }
+    }
+
     private void finishWithResult(final LoginUtils.LoginResult result) {
         boolean loggedIn = false;
         if ((result != null) && result.getSuccess()) {
@@ -284,47 +357,14 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             UiUtils.showLoggedInToast(this);
         }
 
-        if (loggedIn) {
-            final AccountManager accountManager = AccountManager.get(this);
-
-            boolean addingAccount = false;
-            if (mExistingAccountIsAnonymous) {
-                //Remove the existing account so we can add the new one.
-                //TODO: Find a way to just change the name,
-                //though we don't lose any ItemsContentProvider data when we delete an Account.
-                LoginUtils.removeAnonymousAccount(this);
-                addingAccount = true;
-            } else if(!TextUtils.equals(mExistingAccountName, result.getName())) {
-                //Remove any existing account so we can add the new one.
-                //TODO: Find a way to just change the name,
-                if (!TextUtils.isEmpty(mExistingAccountName)) {
-                    LoginUtils.removeAccount(this, mExistingAccountName);
-                }
-
-                addingAccount = true;
-            }
-
-            //TODO: Get the existing Account instance?
-            final Account account = new Account(result.getName(), LoginUtils.ACCOUNT_TYPE);
-            if (addingAccount) {
-                accountManager.addAccountExplicitly(account, null, null);
-                Utils.copyPrefsToAccount(this, accountManager, account);
-
-                //Tell the SyncAdapter to sync whenever the network is reconnected:
-                LoginUtils.setAutomaticAccountSync(this, account);
-            }
-
-            //TODO? ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true)
-
-            //This is apparently not necessary, when updating an existing account,
-            //if this activity was launched from our Authenticator, for instance if our
-            //Authenticator found that the accounts' existing auth token was invalid.
-            //Presumably it is necessary if this activity is launched from our app.
-            accountManager.setAuthToken(account, LoginUtils.ACCOUNT_AUTHTOKEN_TYPE, result.getApiKey());
-        }
 
         final Intent intent = new Intent();
+
         if (loggedIn) {
+            final AccountSaveTask task = new AccountSaveTask(this, result, mExistingAccountName, mExistingAccountIsAnonymous);
+            task.execute();
+
+            //Set the accountName in the intent result:
             intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, result.getName());
             intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, LoginUtils.ACCOUNT_TYPE);
         }
