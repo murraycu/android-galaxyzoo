@@ -84,7 +84,7 @@ public class Utils {
         return new NetworkConnected(true, false);
     }
 
-    public static boolean getBooleanPref(final Context context, final int prefKeyResId) {
+    private static boolean getBooleanPref(final Context context, final int prefKeyResId) {
         final String value = getStringPref(context, prefKeyResId);
         if (value == null) {
             return false;

@@ -33,7 +33,7 @@ public class QuestionLinearLayout extends LinearLayout {
 
     //A map of number-of-rows-of-icons to max height experienced.
     private final Map<Integer, Integer> mMaxHeightsExperienced = new HashMap<>();
-    int mCurrentRowsCountForMaxHeight = 0;
+    private int mCurrentRowsCountForMaxHeight = 0;
 
     public QuestionLinearLayout(final Context context, final AttributeSet attrs) {
         super(context, attrs);

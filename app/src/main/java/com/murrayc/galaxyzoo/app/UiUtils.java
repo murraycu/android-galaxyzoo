@@ -78,12 +78,12 @@ class UiUtils {
         return true;
     }
 
-    static void warnAboutNoNetworkConnection(final Activity activity) {
+    private static void warnAboutNoNetworkConnection(final Activity activity) {
         final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_network), Toast.LENGTH_LONG);
         toast.show();
     }
 
-    static void warnAboutNoWifiNetworkConnection(final Activity activity) {
+    private static void warnAboutNoWifiNetworkConnection(final Activity activity) {
         final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_wifi_network), Toast.LENGTH_LONG);
         toast.show();
     }
