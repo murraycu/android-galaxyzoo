@@ -212,13 +212,13 @@ public class SubjectFragment extends ItemFragment
     }
 
     //See http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
-    private static class ShowImageTask extends AsyncTask<String, Void, Bitmap> {
+    private static class ShowImageFromContentProviderTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
-        private final WeakReference<SubjectFragment> fragmentReference;
+        private final WeakReference<ItemFragment> fragmentReference;
 
         private String strUri = null;
 
-        public ShowImageTask(final ImageView imageView, final SubjectFragment fragment) {
+        public ShowImageFromContentProviderTask(final ImageView imageView, final ItemFragment fragment) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             imageViewReference = new WeakReference<>(imageView);
 
@@ -232,7 +232,7 @@ public class SubjectFragment extends ItemFragment
             strUri = params[0];
 
             if (fragmentReference != null) {
-                final SubjectFragment fragment = fragmentReference.get();
+                final ItemFragment fragment = fragmentReference.get();
                 if (fragment != null) {
                     return UiUtils.getBitmapFromContentUri(fragment.getActivity(), strUri);
                 }
@@ -250,7 +250,7 @@ public class SubjectFragment extends ItemFragment
                 //so just abandon this whole item.
                 //That seems safer and simpler than trying to recover just one of the 3 images.
                 if (fragmentReference != null) {
-                    final SubjectFragment fragment = fragmentReference.get();
+                    final ItemFragment fragment = fragmentReference.get();
                     if (fragment != null) {
                         fragment.abandonItem();
                     }
@@ -301,7 +301,7 @@ public class SubjectFragment extends ItemFragment
         }
 
         if (!TextUtils.isEmpty(imageUriStr)) {
-            final ShowImageTask task = new ShowImageTask(mImageView, this);
+            final ShowImageFromContentProviderTask task = new ShowImageFromContentProviderTask(mImageView, this);
             task.execute(imageUriStr);
         }
     }
