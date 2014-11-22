@@ -43,6 +43,7 @@ public class ExampleViewerFragment extends Fragment {
     public static final String ARG_EXAMPLE_URL = "example-url";
     private View mLoadingView;
     private View mRootView;
+    private String mUriStr = null;
 
     public ExampleViewerFragment() {
         // Required empty public constructor
@@ -66,20 +67,27 @@ public class ExampleViewerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        String uriStr = null;
         final Bundle bundle = getArguments();
         if (bundle != null) {
-            uriStr = bundle.getString(ARG_EXAMPLE_URL);
+            setExampleUrl(bundle.getString(ARG_EXAMPLE_URL));
         }
 
         mRootView = inflater.inflate(R.layout.fragment_example_viewer, container, false);
 
-        final ImageView imageView = (ImageView) mRootView.findViewById(R.id.imageView);
-        if (imageView != null) {
-            loadBitmap(uriStr, imageView);
-        }
+        update();
 
         return mRootView;
+    }
+
+    public void update() {
+        final ImageView imageView = (ImageView) mRootView.findViewById(R.id.imageView);
+        if (imageView != null) {
+            loadBitmap(mUriStr, imageView);
+        }
+    }
+
+    public void setExampleUrl(final String uriStr) {
+        mUriStr = uriStr;
     }
 
     //See http://developer.android.com/training/displaying-bitmaps/process-bitmap.html

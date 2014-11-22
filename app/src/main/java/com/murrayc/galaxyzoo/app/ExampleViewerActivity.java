@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 
@@ -37,15 +38,31 @@ public class ExampleViewerActivity extends ActionBarActivity {
         final Intent intent = getIntent();
         final String uriStr = intent.getStringExtra(ExampleViewerFragment.ARG_EXAMPLE_URL);
 
-        final Bundle arguments = new Bundle();
-        arguments.putString(ExampleViewerFragment.ARG_EXAMPLE_URL, uriStr);
-
         if (savedInstanceState == null) {
-            final ExampleViewerFragment fragment = new ExampleViewerFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment)
-                    .commit();
+
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager != null) {
+                //We check to see if the fragment exists already,
+                //because apparently it sometimes does exist already when the app has been
+                //in the background for some time,
+                //at least on Android 5.0 (Lollipop)
+                ExampleViewerFragment fragment = (ExampleViewerFragment) fragmentManager.findFragmentById(R.id.container);
+                if (fragment == null) {
+                    final Bundle arguments = new Bundle();
+                    arguments.putString(ExampleViewerFragment.ARG_EXAMPLE_URL, uriStr);
+
+                    fragment = new ExampleViewerFragment();
+                    fragment.setArguments(arguments);
+                    fragmentManager.beginTransaction()
+                            .add(R.id.container, fragment)
+                            .commit();
+                } else {
+                    Log.info("ExampleViewerActivity.onCreate(): The ExampleViewerFragment already existed.");
+
+                    fragment.setExampleUrl(uriStr);
+                    fragment.update();
+                }
+            }
         }
 
         // Show the Up button in the action bar.
