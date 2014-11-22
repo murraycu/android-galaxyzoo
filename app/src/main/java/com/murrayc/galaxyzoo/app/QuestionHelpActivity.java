@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 
 /**
  * An activity showing a single subject. This
@@ -56,19 +57,32 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            final Bundle arguments = new Bundle();
-            arguments.putString(BaseQuestionFragment.ARG_QUESTION_ID,
-                    getQuestionId());
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager != null) {
+                //We check to see if the fragment exists already,
+                //because apparently it sometimes does exist already when the app has been
+                //in the background for some time,
+                //at least on Android 5.0 (Lollipop)
+                QuestionHelpFragment fragment = (QuestionHelpFragment) fragmentManager.findFragmentById(R.id.container);
+                if (fragment == null) {
+                    // Create the detail fragment and add it to the activity
+                    // using a fragment transaction.
+                    final Bundle arguments = new Bundle();
+                    arguments.putString(BaseQuestionFragment.ARG_QUESTION_ID,
+                            getQuestionId());
 
-            // TODO: Find a simpler way to just pass this through to the fragment.
-            // For instance, pass the intent.getExtras() as the bundle?.
-            final QuestionHelpFragment fragment = new QuestionHelpFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment)
-                    .commit();
+                    fragment = new QuestionHelpFragment();
+                    fragment.setArguments(arguments);
+                    fragmentManager.beginTransaction()
+                            .add(R.id.container, fragment)
+                            .commit();
+                } else {
+                    Log.info("QuestionHelpActivity.onCreate(): The QuestionHelpFragment already existed.");
+
+                    fragment.setQuestionId(getQuestionId());
+                    fragment.update();
+                }
+            }
         }
 
         showUpButton();

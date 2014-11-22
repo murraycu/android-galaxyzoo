@@ -77,7 +77,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         update();
     }
 
-    private void update() {
+    public void update() {
         // Use the Builder class for convenient dialog construction
         final Activity activity = getActivity();
         final DecisionTree.Question question = getQuestion();
