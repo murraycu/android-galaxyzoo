@@ -28,6 +28,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -230,19 +231,35 @@ public class ClassifyActivity extends ItemActivity
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            final Bundle arguments = new Bundle();
-            arguments.putString(ItemFragment.ARG_ITEM_ID,
-                    getItemId());
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager != null) {
+                //We check to see if the fragment exists already,
+                //because apparently it sometimes does exist already when the app has been
+                //in the background for some time,
+                //at least on Android 5.0 (Lollipop)
 
-            // TODO: Find a simpler way to just pass this through to the fragment.
-            // For instance, pass the intent.getExtras() as the bundle?.
-            final ClassifyFragment fragment = new ClassifyFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment)
-                    .commit();
+                // Create the detail fragment and add it to the activity
+                // using a fragment transaction.
+                final Bundle arguments = new Bundle();
+                arguments.putString(ItemFragment.ARG_ITEM_ID,
+                        getItemId());
+
+                ClassifyFragment fragment = (ClassifyFragment) fragmentManager.findFragmentById(R.id.container);
+                if (fragment == null) {
+                    // TODO: Find a simpler way to just pass this through to the fragment.
+                    // For instance, pass the intent.getExtras() as the bundle?.
+                    fragment = new ClassifyFragment();
+                    fragment.setArguments(arguments);
+                    fragmentManager.beginTransaction()
+                            .add(R.id.container, fragment)
+                            .commit();
+                } else {
+                    Log.info("ClassifyActivity.onCreate(): The ClassifyFragment already existed.");
+
+                    fragment.setItemId(getItemId());
+                    fragment.update();
+                }
+            }
         }
 
         /*
