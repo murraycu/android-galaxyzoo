@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -60,19 +61,32 @@ public class SubjectViewerActivity extends ItemActivity {
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            final Bundle arguments = new Bundle();
-            arguments.putString(ItemFragment.ARG_ITEM_ID,
-                    getItemId());
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager != null) {
+                //We check to see if the fragment exists already,
+                //because apparently it sometimes does exist already when the app has been
+                //in the background for some time,
+                //at least on Android 5.0 (Lollipop)
+                SubjectViewerFragment fragment = (SubjectViewerFragment) fragmentManager.findFragmentById(R.id.container);
+                if (fragment == null) {
+                    // Create the detail fragment and add it to the activity
+                    // using a fragment transaction.
+                    final Bundle arguments = new Bundle();
+                    arguments.putString(ItemFragment.ARG_ITEM_ID,
+                            getItemId());
 
-            // TODO: Find a simpler way to just pass this through to the fragment.
-            // For instance, pass the intent.getExtras() as the bundle?.
-            final SubjectViewerFragment fragment = new SubjectViewerFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment)
-                    .commit();
+                    fragment = new SubjectViewerFragment();
+                    fragment.setArguments(arguments);
+                    fragmentManager.beginTransaction()
+                            .add(R.id.container, fragment)
+                            .commit();
+                } else {
+                    Log.info("SubjectViewerActivity.onCreate(): The SubjectViewerFragment already existed.");
+
+                    fragment.setItemId(getItemId());
+                    fragment.update();
+                }
+            }
         }
 
         showUpButton();
