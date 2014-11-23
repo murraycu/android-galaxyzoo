@@ -271,6 +271,15 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         }
     }
 
+    /* We don't override this, to call update(),
+     * because that can sometimes lead to us using a Fragment Transaction at the wrong time,
+     * causing this exception:
+     *   "java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState".
+     * Instead we do it in the parent activity's onResumeFragments() - see ClassifyActivty.onResumeFragments() .
+     * as suggested here:
+     * http://www.androiddesignpatterns.com/2013/08/fragment-transaction-commit-state-loss.html
+     */
+    /*
     @Override
     public void onResume() {
         super.onResume();
@@ -281,6 +290,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             update();
         }
     }
+    */
 
     private void updateFromCursor() {
         if (mCursor == null) {

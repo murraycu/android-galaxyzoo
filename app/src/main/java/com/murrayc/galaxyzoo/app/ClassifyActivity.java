@@ -282,6 +282,27 @@ public class ClassifyActivity extends ItemActivity
         task.execute();
     }
 
+    /** This would ideally be in ClassifyFragment.onResume() or similar,
+     * but we need to do it here to avoid this exception sometimes:
+     *   "java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState".
+     * as suggested here:
+     * http://www.androiddesignpatterns.com/2013/08/fragment-transaction-commit-state-loss.html
+     */
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+
+        final ClassifyFragment fragmentClassify = getChildFragment();
+        if (fragmentClassify != null) {
+
+            if(TextUtils.equals(fragmentClassify.getItemId(), ItemsContentProvider.URI_PART_ITEM_ID_NEXT)) {
+                //We are probably resuming again after a previous failure to get new items
+                //from the network, so try again:
+                fragmentClassify.update();
+            }
+        }
+    }
+
     private void onExistingLoginRetrieved(final LoginUtils.LoginDetails loginDetails) {
         if (loginDetails != null && !TextUtils.isEmpty(loginDetails.authApiKey)) {
             //Tell the user that we are logged in,
@@ -339,9 +360,15 @@ public class ClassifyActivity extends ItemActivity
     private void startNextClassification() {
         //Start another classification:
         setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
-        final ClassifyFragment fragmentClassify = (ClassifyFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-        fragmentClassify.setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
-        fragmentClassify.update();
+        final ClassifyFragment fragmentClassify = getChildFragment();
+        if (fragmentClassify != null) {
+            fragmentClassify.setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
+            fragmentClassify.update();
+        }
+    }
+
+    private ClassifyFragment getChildFragment() {
+        return (ClassifyFragment) getSupportFragmentManager().findFragmentById(R.id.container);
     }
 
     @Override
