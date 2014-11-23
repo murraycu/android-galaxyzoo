@@ -89,13 +89,12 @@ class UiUtils {
             //Callers should maybe use a derived class that overrides this
             //to call abandonItem() when the bitmap is null.
 
-            if (imageViewReference != null && bitmap != null) {
+            if (imageViewReference != null) {
                 final ImageView imageView = imageViewReference.get();
                 if (imageView != null) {
                     if (bitmap != null) {
                         imageView.setImageBitmap(bitmap);
                     } else {
-
                         imageView.setImageResource(android.R.color.transparent);
                     }
                 }
