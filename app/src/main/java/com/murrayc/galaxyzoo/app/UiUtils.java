@@ -53,6 +53,10 @@ class UiUtils {
         private final WeakReference<ImageView> imageViewReference;
         private final WeakReference<Context> contextReference;
 
+        protected String getUri() {
+            return strUri;
+        }
+
         private String strUri = null;
 
         public ShowImageFromContentProviderTask(final ImageView imageView, final Context fragment) {

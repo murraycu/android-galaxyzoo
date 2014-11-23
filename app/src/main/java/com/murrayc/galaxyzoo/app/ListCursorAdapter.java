@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
+import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -38,6 +39,8 @@ import java.lang.ref.WeakReference;
  * Created by murrayc on 5/16/14.
  */
 class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolder> {
+
+    final LruCache<String, Bitmap> mCache = new LruCache<>(20);
 
     private class CursorObserver extends DataSetObserver {
         @Override
@@ -114,6 +117,12 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
             if (bitmap != null) {
                 //Hide the progress indicator now that we are showing the image.
                 viewHolder.progressBar.setVisibility(View.GONE);
+
+                //Store it in our cache:
+                final String uri = getUri();
+                if (!TextUtils.isEmpty(uri)) {
+                    mCache.put(uri, bitmap);
+                }
             } else {
                 //Show the progress indicator because we have no image:
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
@@ -147,8 +156,18 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
         if (!TextUtils.isEmpty(imageUriStr)) {
             if (thumbnailDownloaded) {
                 //viewHolder.imageView.setImageDrawable(null);
-                final ShowViewHolderImageFromContentProviderTask task = new ShowViewHolderImageFromContentProviderTask(mContext, viewHolder, viewHolder.getPosition(), itemId);
-                task.execute(imageUriStr);
+
+                //Try to get it from our cache first.
+                //This shouldn't be necessary, but it is for now because our RecyclerView.Adapter
+                //is massively inefficient, refreshing the whole view whenever the number
+                //of items changes.
+                final Bitmap bitmap = mCache.get(imageUriStr);
+                if (bitmap != null) {
+                    viewHolder.imageView.setImageBitmap(bitmap);
+                } else {
+                    final ShowViewHolderImageFromContentProviderTask task = new ShowViewHolderImageFromContentProviderTask(mContext, viewHolder, viewHolder.getPosition(), itemId);
+                    task.execute(imageUriStr);
+                }
             } else {
                 //We are still waiting for it to download:
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
