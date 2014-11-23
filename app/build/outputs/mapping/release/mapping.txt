@@ -8315,11 +8315,13 @@ com.murrayc.galaxyzoo.app.ClassifyActivity -> com.murrayc.galaxyzoo.app.Classify
     int mClassificationsDoneInSession -> n
     void requestSync() -> o
     void onCreate(android.os.Bundle) -> onCreate
+    void onResumeFragments() -> b
     void onExistingLoginRetrieved(com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails) -> a
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     void onClassificationFinished() -> k
     void checkForLoginAsync() -> p
     void startNextClassification() -> q
+    com.murrayc.galaxyzoo.app.ClassifyFragment getChildFragment() -> r
     void abandonItem() -> l
     void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
     void access$000(com.murrayc.galaxyzoo.app.ClassifyActivity,com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails) -> a
@@ -8356,7 +8358,6 @@ com.murrayc.galaxyzoo.app.ClassifyFragment -> com.murrayc.galaxyzoo.app.f:
     void showChildFragments(boolean) -> e
     void addOrUpdateChildFragments() -> U
     void update() -> L
-    void onResume() -> l
     void updateFromCursor() -> V
     void onClickListenerRetry() -> W
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
@@ -8504,10 +8505,11 @@ com.murrayc.galaxyzoo.app.ListActivity -> com.murrayc.galaxyzoo.app.ListActivity
     void navigateToNextAvailable() -> k
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
 com.murrayc.galaxyzoo.app.ListCursorAdapter -> com.murrayc.galaxyzoo.app.x:
-    com.murrayc.galaxyzoo.app.ListCursorAdapter$CursorObserver mDataSetObserver -> a
-    android.content.Context mContext -> b
-    android.database.Cursor mCursor -> c
-    com.murrayc.galaxyzoo.app.ListCursorAdapter$OnItemClickedListener mListener -> d
+    android.support.v4.util.LruCache mCache -> a
+    com.murrayc.galaxyzoo.app.ListCursorAdapter$CursorObserver mDataSetObserver -> b
+    android.content.Context mContext -> c
+    android.database.Cursor mCursor -> d
+    com.murrayc.galaxyzoo.app.ListCursorAdapter$OnItemClickedListener mListener -> e
     android.database.Cursor getItem(int) -> c
     com.murrayc.galaxyzoo.app.ListCursorAdapter$ViewHolder onCreateViewHolder(android.view.ViewGroup,int) -> c
     void onBindViewHolder(com.murrayc.galaxyzoo.app.ListCursorAdapter$ViewHolder,int) -> a
@@ -8912,6 +8914,7 @@ com.murrayc.galaxyzoo.app.UiUtils$ShowImageFromContentProviderTask -> com.murray
     java.lang.ref.WeakReference imageViewReference -> a
     java.lang.ref.WeakReference contextReference -> b
     java.lang.String strUri -> c
+    java.lang.String getUri() -> a
     android.graphics.Bitmap doInBackground(java.lang.String[]) -> a
     void onPostExecute(android.graphics.Bitmap) -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
@@ -8952,6 +8955,7 @@ com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox -> com.murrayc.galaxyz
     android.net.Uri CONTENT_URI -> b
 com.murrayc.galaxyzoo.app.provider.HttpUtils -> com.murrayc.galaxyzoo.app.provider.c:
     void throwIfNoNetwork(android.content.Context) -> a
+    boolean getNetworkIsConnected(android.content.Context) -> b
     java.net.HttpURLConnection openConnection(java.lang.String) -> a
     boolean cacheUriToFileSync(android.content.Context,com.android.volley.RequestQueue,java.lang.String,java.lang.String) -> a
     void setConnectionUserAgent(java.net.HttpURLConnection) -> a
@@ -9086,12 +9090,11 @@ com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder -> com.murrayc.galaxyzoo.app.
     void addRequestToQueue(com.android.volley.Request) -> a
     boolean onImageDownloadDone(boolean,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
     android.content.Context getContext() -> b
-    void throwIfNoNetwork() -> c
     void markImageDownloadAsNotInProgress(java.lang.String) -> b
     boolean markImageAsDownloaded(android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,java.lang.String) -> a
     void addSubject(com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject,boolean) -> a
     boolean subjectIsInDatabase(java.lang.String) -> a
-    java.lang.String getWhereClauseForDownloadNotDone() -> d
+    java.lang.String getWhereClauseForDownloadNotDone() -> c
     boolean access$000(com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder,boolean,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
 com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder$1 -> com.murrayc.galaxyzoo.app.syncadapter.c:
     java.lang.String val$uriFileToCache -> a
