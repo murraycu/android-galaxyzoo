@@ -198,7 +198,10 @@ public class SubjectAdder {
             return false;
         }
 
-        throwIfNoNetwork();
+        //Don't try if there is no suitable network connection:
+        if(!HttpUtils.getNetworkIsConnected(getContext())) {
+            return false;
+        }
 
         final Date now = new Date();
         mImageDownloadsInProgress.put(uriFileToCache, now);
