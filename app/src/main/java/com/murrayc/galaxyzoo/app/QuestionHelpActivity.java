@@ -88,11 +88,12 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
         showUpButton();
     }
 
-    private String getQuestionId() {
+    public String getQuestionId() {
         return mQuestionId;
     }
 
-    private void setQuestionId(final String questionId) {
+    //This is not private, so we can use it in tests.
+    public void setQuestionId(final String questionId) {
         mQuestionId = questionId;
     }
 
