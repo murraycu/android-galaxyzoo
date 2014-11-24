@@ -821,6 +821,7 @@ public class QuestionFragment extends BaseQuestionFragment
         public void onClassificationFinished();
     }
 
+    //This is just public so we can test it.
     /**
      * This lets us store the classification's answers
      * during the classification. Alternatively,
@@ -828,7 +829,7 @@ public class QuestionFragment extends BaseQuestionFragment
      * way, but this lets us avoid having half-complete classifications
      * in the content provider.
      */
-    static private class ClassificationInProgress implements Parcelable {
+    static public class ClassificationInProgress implements Parcelable {
         public static final Parcelable.Creator<ClassificationInProgress> CREATOR
                 = new Parcelable.Creator<ClassificationInProgress>() {
             public ClassificationInProgress createFromParcel(Parcel in) {
@@ -856,6 +857,32 @@ public class QuestionFragment extends BaseQuestionFragment
             }
 
             favorite = (in.readInt() == 1);
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o)
+                return true;
+
+            if (o == null || getClass() != o.getClass())
+                return false;
+
+            final ClassificationInProgress that = (ClassificationInProgress) o;
+
+            if (favorite != that.favorite)
+                return false;
+
+            if (!answers.equals(that.answers))
+                return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = answers.hashCode();
+            result = 31 * result + (favorite ? 1 : 0);
+            return result;
         }
 
         public void add(final String questionId, final String answerId, final List<String> checkboxIds) {
@@ -925,6 +952,36 @@ public class QuestionFragment extends BaseQuestionFragment
                         this.checkboxIds.add(str);
                     }
                 }
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o)
+                    return true;
+
+                if (o == null || getClass() != o.getClass())
+                    return false;
+
+                final QuestionAnswer that = (QuestionAnswer) o;
+
+                if (!answerId.equals(that.answerId))
+                    return false;
+
+                if (!checkboxIds.equals(that.checkboxIds))
+                    return false;
+
+                if (!questionId.equals(that.questionId))
+                    return false;
+
+                return true;
+            }
+
+            @Override
+            public int hashCode() {
+                int result = questionId.hashCode();
+                result = 31 * result + answerId.hashCode();
+                result = 31 * result + checkboxIds.hashCode();
+                return result;
             }
 
             public String getQuestionId() {
