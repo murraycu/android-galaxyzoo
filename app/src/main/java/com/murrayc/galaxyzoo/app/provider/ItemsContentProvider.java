@@ -37,6 +37,7 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 import com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder;
 
@@ -513,7 +514,7 @@ public class ItemsContentProvider extends ContentProvider {
             return null;
         }
 
-        final File cacheDir = context.getExternalCacheDir();
+        final File cacheDir = Utils.getExternalCacheDir(context);
         if (cacheDir == null) {
             Log.error("createFileUri(): getExternalCacheDir returned null.");
             return null;

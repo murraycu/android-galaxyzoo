@@ -32,6 +32,7 @@ import android.preference.PreferenceManager;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -45,6 +46,19 @@ public class Utils {
 
     public static boolean getUseWifiOnly(final Context context) {
         return getBooleanPref(context, R.string.pref_key_wifi_only);
+    }
+
+    public static File getExternalCacheDir(final Context context) {
+        try {
+            return context.getExternalCacheDir();
+        }  catch (final UnsupportedOperationException e) {
+            //This happens while running under ProviderTestCase2.
+            //so we just catch it and provide a useful value,
+            //so at least the other functionality can be tested.
+            //TODO: Find a way to let it succeed.
+            Log.error("getExternalCacheDir(): Unsupported operation from Context.getExternalCacheDir()", e);
+            return null;
+        }
     }
 
     public final static class NetworkConnected {

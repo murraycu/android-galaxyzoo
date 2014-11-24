@@ -84,10 +84,10 @@ class IconsCache {
         this.mContext = context;
         /* this.mRequestQueue = Volley.newRequestQueue(context);
 
-        mCacheDir = context.getExternalCacheDir();
+        mCacheDir = Utils.getExternalCacheDir(context);
         if (mCacheDir == null) {
             //This would probably lead to a crash later:
-            Log.error("IconsCache(): Context.getExternalCacheDir() returned null.");
+            Log.error("IconsCache(): getExternalCacheDir() returned null.");
         }
 
         long lastModified = 0;

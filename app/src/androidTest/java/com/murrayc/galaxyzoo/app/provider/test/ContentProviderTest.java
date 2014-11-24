@@ -109,7 +109,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
         assertNotNull(fileContentUri);
 
         //Open the actual file data at that content: URI:
-        /* TODO: Test this when we find out how to make getExternalFilesDir() work in this ProviderTestCase2.
+        /* TODO: Test this when we find out how to make getExternalCacheDir() work in this ProviderTestCase2.
         final Uri uri = Uri.parse(fileContentUri);
         final OutputStream stream = mMockResolver.openOutputStream(uri);
         assertNotNull(stream);
