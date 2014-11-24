@@ -26,7 +26,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
@@ -255,7 +254,7 @@ public class ZooniverseClient {
     public void requestMoreItemsAsync(int count, final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
         throwIfNoNetwork();
 
-        final Request request = new StringRequest(Request.Method.GET,
+        final Request request = new ZooStringRequest(Request.Method.GET,
                 getQueryUri(count),
                 listener,
                 errorListener);

@@ -38,6 +38,8 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -47,8 +49,8 @@ import java.util.concurrent.TimeoutException;
  */
 public class HttpUtils {
 
-    private static final String HTTP_REQUEST_HEADER_PARAM_USER_AGENT = "User-Agent";
-    private static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";
+    public static final String HTTP_REQUEST_HEADER_PARAM_USER_AGENT = "User-Agent";
+    public static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";
     public static final int TIMEOUT_MILLIS = 20000; //20 seconds. Long but not too short for GPRS connections and not endless.
 
     public static void throwIfNoNetwork(final Context context) {
@@ -150,6 +152,13 @@ public class HttpUtils {
         @Override
         protected void deliverResponse(final Boolean response) {
             mListener.onResponse(response);
+        }
+
+        @Override
+        public Map<String, String> getHeaders(){
+            final Map<String, String> headers = new HashMap<>();
+            headers.put(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.USER_AGENT_MURRAYC);
+            return headers;
         }
     }
 
