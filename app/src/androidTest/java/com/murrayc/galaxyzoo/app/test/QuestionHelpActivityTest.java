@@ -52,11 +52,11 @@ public class QuestionHelpActivityTest
     }
 
     public void testStateDestroy() {
-        final String questionId = "sloan-999";
-        mActivity.setQuestionId(questionId);
+        final String TEST_QUESTION_ID = "sloan-999";
+        mActivity.setQuestionId(TEST_QUESTION_ID);
         mActivity.finish();
         mActivity = this.getActivity();
         assertNotNull(mActivity);
-        assertEquals(mActivity.getQuestionId(), questionId);
+        assertEquals(mActivity.getQuestionId(), TEST_QUESTION_ID);
     }
 }

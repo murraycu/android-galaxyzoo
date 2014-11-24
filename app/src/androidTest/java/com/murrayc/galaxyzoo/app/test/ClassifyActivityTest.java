@@ -52,8 +52,8 @@ public class ClassifyActivityTest
     }
 
     public void testStateDestroy() {
-        final String itemId = "test123456789";
-        mActivity.setItemId(itemId);
+        final String TEST_ITEM_ID = "test123456789";
+        mActivity.setItemId(TEST_ITEM_ID);
         mActivity.finish();
         mActivity = this.getActivity();
         assertNotNull(mActivity);
