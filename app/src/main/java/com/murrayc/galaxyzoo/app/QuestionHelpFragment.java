@@ -20,7 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
