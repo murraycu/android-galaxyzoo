@@ -50,4 +50,13 @@ public class SubjectViewerActivityTest
     public void testExists() {
         assertNotNull(mActivity);
     }
+
+    public void testStateDestroy() {
+        final String itemId = "test123456789";
+        mActivity.setItemId(itemId);
+        mActivity.finish();
+        mActivity = this.getActivity();
+        assertNotNull(mActivity);
+        assertEquals(mActivity.getItemId(), itemId);
+    }
 }

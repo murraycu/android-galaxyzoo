@@ -50,4 +50,10 @@ public class LoginActivityTest
     public void testExists() {
         assertNotNull(mActivity);
     }
+
+    public void testStateDestroy() {
+        mActivity.finish();
+        mActivity = this.getActivity();
+        assertNotNull(mActivity);
+    }
 }

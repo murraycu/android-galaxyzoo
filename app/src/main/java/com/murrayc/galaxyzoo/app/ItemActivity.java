@@ -33,11 +33,13 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 public class ItemActivity extends BaseActivity implements ItemFragment.Callbacks {
     private String mItemId;
 
-    String getItemId() {
+    //This is not private, so we can use it in tests.
+    public String getItemId() {
         return mItemId;
     }
 
-    void setItemId(final String itemId) {
+    //This is not private, so we can use it in tests.
+    public void setItemId(final String itemId) {
         mItemId = itemId;
     }
 
