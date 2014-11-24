@@ -57,6 +57,6 @@ public class QuestionHelpActivityTest
         mActivity.finish();
         mActivity = this.getActivity();
         assertNotNull(mActivity);
-        assertEquals(mActivity.getQuestionId(), TEST_QUESTION_ID);
+        assertEquals(TEST_QUESTION_ID, mActivity.getQuestionId());
     }
 }

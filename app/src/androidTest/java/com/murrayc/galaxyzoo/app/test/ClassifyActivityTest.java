@@ -57,6 +57,6 @@ public class ClassifyActivityTest
         mActivity.finish();
         mActivity = this.getActivity();
         assertNotNull(mActivity);
-        assertEquals(mActivity.getItemId(), itemId);
+        assertEquals(TEST_ITEM_ID, mActivity.getItemId());
     }
 }

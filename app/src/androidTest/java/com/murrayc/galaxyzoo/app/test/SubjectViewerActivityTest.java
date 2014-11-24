@@ -57,6 +57,6 @@ public class SubjectViewerActivityTest
         mActivity.finish();
         mActivity = this.getActivity();
         assertNotNull(mActivity);
-        assertEquals(mActivity.getItemId(), TEST_ITEM_ID);
+        assertEquals(TEST_ITEM_ID, mActivity.getItemId());
     }
 }
