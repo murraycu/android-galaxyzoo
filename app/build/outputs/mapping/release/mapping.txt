@@ -45,9 +45,10 @@ android.support.v4.app.BackStackRecord -> android.support.v4.app.h:
     void dump(java.lang.String,java.io.FileDescriptor,java.io.PrintWriter,java.lang.String[]) -> a
     void dump(java.lang.String,java.io.PrintWriter,boolean) -> a
     void addOp(android.support.v4.app.BackStackRecord$Op) -> a
-    android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment) -> a
     android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment,java.lang.String) -> a
     void doAddOp(int,android.support.v4.app.Fragment,java.lang.String,int) -> a
+    android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment) -> a
+    android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment,java.lang.String) -> b
     android.support.v4.app.FragmentTransaction hide(android.support.v4.app.Fragment) -> a
     android.support.v4.app.FragmentTransaction show(android.support.v4.app.Fragment) -> b
     android.support.v4.app.FragmentTransaction detach(android.support.v4.app.Fragment) -> c
@@ -540,8 +541,8 @@ android.support.v4.app.FragmentTabHost$TabInfo -> android.support.v4.app.ag:
     java.lang.Class access$300(android.support.v4.app.FragmentTabHost$TabInfo) -> c
     android.os.Bundle access$400(android.support.v4.app.FragmentTabHost$TabInfo) -> d
 android.support.v4.app.FragmentTransaction -> android.support.v4.app.ah:
-    android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment) -> a
     android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment,java.lang.String) -> a
+    android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment) -> a
     android.support.v4.app.FragmentTransaction hide(android.support.v4.app.Fragment) -> a
     android.support.v4.app.FragmentTransaction show(android.support.v4.app.Fragment) -> b
     android.support.v4.app.FragmentTransaction detach(android.support.v4.app.Fragment) -> c
@@ -8050,6 +8051,7 @@ com.android.volley.NetworkResponse -> com.a.a.m:
     byte[] data -> b
     java.util.Map headers -> c
     boolean notModified -> d
+    long networkTimeMs -> e
 com.android.volley.NoConnectionError -> com.a.a.n:
 com.android.volley.Request -> com.a.a.o:
     com.android.volley.VolleyLog$MarkerLog mEventLog -> a
@@ -8160,6 +8162,8 @@ com.android.volley.ServerError -> com.a.a.x:
 com.android.volley.TimeoutError -> com.a.a.y:
 com.android.volley.VolleyError -> com.a.a.z:
     com.android.volley.NetworkResponse networkResponse -> a
+    long networkTimeMs -> b
+    void setNetworkTimeMs(long) -> a
 com.android.volley.VolleyLog -> com.a.a.aa:
     java.lang.String TAG -> a
     boolean DEBUG -> b
@@ -8717,6 +8721,8 @@ com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress -> com.murra
     android.os.Parcelable$Creator CREATOR -> CREATOR
     java.util.List answers -> a
     boolean favorite -> b
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
     void add(java.lang.String,java.lang.String,java.util.List) -> a
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
@@ -8733,6 +8739,8 @@ com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnsw
     java.lang.String questionId -> a
     java.lang.String answerId -> b
     java.util.List checkboxIds -> c
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
     java.lang.String getQuestionId() -> a
     java.lang.String getAnswerId() -> b
     java.util.List getCheckboxIds() -> c
@@ -8921,6 +8929,7 @@ com.murrayc.galaxyzoo.app.UiUtils$ShowImageFromContentProviderTask -> com.murray
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
 com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.bp:
     boolean getUseWifiOnly(android.content.Context) -> a
+    java.io.File getExternalCacheDir(android.content.Context) -> b
     com.murrayc.galaxyzoo.app.Utils$NetworkConnected getNetworkIsConnected(android.content.Context,boolean) -> a
     boolean getBooleanPref(android.content.Context,int) -> b
     int getIntPref(android.content.Context,int) -> a
@@ -8932,7 +8941,7 @@ com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.bp:
     void copyPrefToAccount(android.content.Context,java.lang.String,java.lang.String) -> a
     void copyPrefToAccount(android.accounts.AccountManager,android.accounts.Account,java.lang.String,java.lang.String) -> a
     void copyPrefsToAccount(android.content.Context,android.accounts.AccountManager,android.accounts.Account) -> a
-    void initDefaultPrefs(android.content.Context) -> b
+    void initDefaultPrefs(android.content.Context) -> c
 com.murrayc.galaxyzoo.app.Utils$NetworkConnected -> com.murrayc.galaxyzoo.app.bq:
     boolean connected -> a
     boolean notConnectedBecauseNotOnWifi -> b
@@ -8967,6 +8976,7 @@ com.murrayc.galaxyzoo.app.provider.HttpUtils$FileCacheRequest -> com.murrayc.gal
     com.android.volley.Response$Listener mListener -> c
     com.android.volley.Response parseNetworkResponse(com.android.volley.NetworkResponse) -> a
     void deliverResponse(java.lang.Boolean) -> a
+    java.util.Map getHeaders() -> i
     void deliverResponse(java.lang.Object) -> a
 com.murrayc.galaxyzoo.app.provider.HttpUtils$NoNetworkException -> com.murrayc.galaxyzoo.app.provider.e:
 com.murrayc.galaxyzoo.app.provider.ImageType -> com.murrayc.galaxyzoo.app.provider.f:
@@ -9035,7 +9045,9 @@ com.murrayc.galaxyzoo.app.provider.client.MoreItemsJsonParser$Locations -> com.m
     java.lang.String getLocationStandard() -> a
     java.lang.String getLocationThumbnail() -> b
     java.lang.String getLocationInverted() -> c
-com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient -> com.murrayc.galaxyzoo.app.provider.a.c:
+com.murrayc.galaxyzoo.app.provider.client.ZooStringRequest -> com.murrayc.galaxyzoo.app.provider.a.c:
+    java.util.Map getHeaders() -> i
+com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient -> com.murrayc.galaxyzoo.app.provider.a.d:
     android.content.Context mContext -> a
     java.lang.String mServerBaseUri -> b
     com.android.volley.RequestQueue mQueue -> c
@@ -9053,7 +9065,7 @@ com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient -> com.murrayc.galaxy
     android.content.Context getContext() -> f
     boolean uploadClassificationSync(java.lang.String,java.lang.String,java.util.List) -> a
     com.android.volley.RequestQueue getRequestQueue() -> a
-com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject -> com.murrayc.galaxyzoo.app.provider.a.d:
+com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject -> com.murrayc.galaxyzoo.app.provider.a.e:
     java.lang.String mSubjectId -> a
     java.lang.String mZooniverseId -> b
     java.lang.String mLocationStandard -> c

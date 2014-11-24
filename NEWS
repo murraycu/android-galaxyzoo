@@ -1,0 +1,6 @@
+1.26:
+
+* Avoid duplicate icons and menu items.
+* Examples: Avoid crash or restart when closing.
+* Correct the User-Agent for downloads.
+
