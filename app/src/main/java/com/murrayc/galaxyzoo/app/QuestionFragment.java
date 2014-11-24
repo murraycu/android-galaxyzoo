@@ -840,21 +840,15 @@ public class QuestionFragment extends BaseQuestionFragment
                 return new ClassificationInProgress[size];
             }
         };
-        private final List<QuestionAnswer> answers = new ArrayList<>();
+        private final List<QuestionAnswer> answers;
         private boolean favorite = false;
 
         public ClassificationInProgress() {
-
+            answers = new ArrayList<>();
         }
 
         public ClassificationInProgress(final Parcel in) {
-            final Object[] array = in.readArray(QuestionAnswer.class.getClassLoader());
-            if ((array != null) && (array.length != 0)) {
-                for (final Object object : array) {
-                    final QuestionAnswer answer = (QuestionAnswer) object;
-                    this.answers.add(answer);
-                }
-            }
+            this.answers = in.createTypedArrayList(QuestionAnswer.CREATOR);
 
             favorite = (in.readInt() == 1);
         }
@@ -896,7 +890,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
         @Override
         public void writeToParcel(final Parcel dest, int flags) {
-            dest.writeArray(answers.toArray());
+            dest.writeTypedList(answers);
             dest.writeInt(favorite ? 1 : 0);
         }
 
@@ -999,9 +993,7 @@ public class QuestionFragment extends BaseQuestionFragment
                 dest.writeString(getQuestionId());
                 dest.writeString(getAnswerId());
 
-                if (checkboxIds != null) {
-                    dest.writeArray(checkboxIds.toArray());
-                }
+                dest.writeStringList(checkboxIds);
             }
         }
     }
