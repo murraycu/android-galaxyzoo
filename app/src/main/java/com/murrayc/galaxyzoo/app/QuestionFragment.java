@@ -872,7 +872,7 @@ public class QuestionFragment extends BaseQuestionFragment
             if (favorite != that.favorite)
                 return false;
 
-            if (!answers.equals(that.answers))
+            if (answers != null ? !answers.equals(that.answers) : that.answers != null)
                 return false;
 
             return true;
@@ -880,7 +880,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
         @Override
         public int hashCode() {
-            int result = answers.hashCode();
+            int result = answers != null ? answers.hashCode() : 0;
             result = 31 * result + (favorite ? 1 : 0);
             return result;
         }
@@ -944,18 +944,11 @@ public class QuestionFragment extends BaseQuestionFragment
                 this.questionId = in.readString();
                 this.answerId = in.readString();
 
-                final Object[] array = in.readArray(String.class.getClassLoader());
-                if ((array != null) && (array.length != 0)) {
-                    this.checkboxIds = new ArrayList<>();
-                    for (final Object object : array) {
-                        final String str = (String) object;
-                        this.checkboxIds.add(str);
-                    }
-                }
+                this.checkboxIds = in.createStringArrayList();
             }
 
             @Override
-            public boolean equals(Object o) {
+            public boolean equals(final Object o) {
                 if (this == o)
                     return true;
 
@@ -964,13 +957,13 @@ public class QuestionFragment extends BaseQuestionFragment
 
                 final QuestionAnswer that = (QuestionAnswer) o;
 
-                if (!answerId.equals(that.answerId))
+                if (answerId != null ? !answerId.equals(that.answerId) : that.answerId != null)
                     return false;
 
-                if (!checkboxIds.equals(that.checkboxIds))
+                if (checkboxIds != null ? !checkboxIds.equals(that.checkboxIds) : that.checkboxIds != null)
                     return false;
 
-                if (!questionId.equals(that.questionId))
+                if (questionId != null ? !questionId.equals(that.questionId) : that.questionId != null)
                     return false;
 
                 return true;
@@ -978,9 +971,9 @@ public class QuestionFragment extends BaseQuestionFragment
 
             @Override
             public int hashCode() {
-                int result = questionId.hashCode();
-                result = 31 * result + answerId.hashCode();
-                result = 31 * result + checkboxIds.hashCode();
+                int result = questionId != null ? questionId.hashCode() : 0;
+                result = 31 * result + (answerId != null ? answerId.hashCode() : 0);
+                result = 31 * result + (checkboxIds != null ? checkboxIds.hashCode() : 0);
                 return result;
             }
 
