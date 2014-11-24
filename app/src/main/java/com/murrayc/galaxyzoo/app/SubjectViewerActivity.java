@@ -78,7 +78,7 @@ public class SubjectViewerActivity extends ItemActivity {
                     fragment = new SubjectViewerFragment();
                     fragment.setArguments(arguments);
                     fragmentManager.beginTransaction()
-                            .add(R.id.container, fragment)
+                            .replace(R.id.container, fragment)
                             .commit();
                 } else {
                     Log.info("SubjectViewerActivity.onCreate(): The SubjectViewerFragment already existed.");

@@ -251,7 +251,7 @@ public class ClassifyActivity extends ItemActivity
                     fragment = new ClassifyFragment();
                     fragment.setArguments(arguments);
                     fragmentManager.beginTransaction()
-                            .add(R.id.container, fragment)
+                            .replace(R.id.container, fragment)
                             .commit();
                 } else {
                     Log.info("ClassifyActivity.onCreate(): The ClassifyFragment already existed.");

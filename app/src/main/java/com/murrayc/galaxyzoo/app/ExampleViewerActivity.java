@@ -54,7 +54,7 @@ public class ExampleViewerActivity extends ActionBarActivity {
                     fragment = new ExampleViewerFragment();
                     fragment.setArguments(arguments);
                     fragmentManager.beginTransaction()
-                            .add(R.id.container, fragment)
+                            .replace(R.id.container, fragment)
                             .commit();
                 } else {
                     Log.info("ExampleViewerActivity.onCreate(): The ExampleViewerFragment already existed.");

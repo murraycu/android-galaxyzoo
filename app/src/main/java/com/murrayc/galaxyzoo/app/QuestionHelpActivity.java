@@ -74,7 +74,7 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
                     fragment = new QuestionHelpFragment();
                     fragment.setArguments(arguments);
                     fragmentManager.beginTransaction()
-                            .add(R.id.container, fragment)
+                            .replace(R.id.container, fragment)
                             .commit();
                 } else {
                     Log.info("QuestionHelpActivity.onCreate(): The QuestionHelpFragment already existed.");
