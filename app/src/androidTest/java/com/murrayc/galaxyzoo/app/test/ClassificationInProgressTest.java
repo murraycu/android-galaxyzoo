@@ -27,6 +27,8 @@ import com.murrayc.galaxyzoo.app.QuestionFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  */
@@ -44,6 +46,17 @@ public class ClassificationInProgressTest extends AndroidTestCase {
 
     public void testParcelable() {
         final QuestionFragment.ClassificationInProgress classificationInProgress = new QuestionFragment.ClassificationInProgress();
+        classificationInProgress.add("testQuestionId1", "testAnswerId1.1", null);
+        classificationInProgress.add("testQuestionId2", "testAnswerId1.2", null);
+
+        List<String> checkboxIds = new ArrayList<>();
+        checkboxIds.add("testCheckboxId1");
+        checkboxIds.add("testCheckboxId2");
+        classificationInProgress.add("testQuestionId3", "testAnswerId3.1", checkboxIds);
+        classificationInProgress.add("testQuestionId3", "testAnswerId3.2", null);
+
+        classificationInProgress.add("testQuestionId4", "testAnswerId4.1", null);
+
 
         // Obtain a Parcel object and write the parcelable object to it:
         final Parcel parcel = Parcel.obtain();
