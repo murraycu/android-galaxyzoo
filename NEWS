@@ -1,6 +1,25 @@
 1.26:
 
-* Avoid duplicate icons and menu items.
+* Avoids duplicate icons and menu items.
 * Examples: Avoid crash or restart when closing.
 * Correct the User-Agent for downloads.
+
+
+1.25:
+* Avoids image flickering in the list.
+* Hopefully avoids a rare crash when resuming (re-opening) the app.
+* Hopefully avoids the (rare) doubling of the icons and menu items on Android 5.0 "Lollipop".
+
+
+1.24:
+
+* Slightly improves responsiveness of the user interface and might even avoid
+  (theoretical, so far) crashes on some devices.
+
+
+1.23:
+
+* This hopefully fixes a crash on some devices when offering a login/register
+  after 3 classifications.
+
 
