@@ -61,12 +61,24 @@ public class ZooniverseClient {
     //AsyncTask, the UI is non responsive during this work.
     //For instance, buttons appear to be pressed, but their clicked listeners are not called.
     private static final int MAXIMUM_DOWNLOAD_ITEMS = 10;
-    private final RequestQueue mQueue;
+    private RequestQueue mQueue = null;
 
     public ZooniverseClient(final Context context, final String serverBaseUri) {
         mContext = context;
         mServerBaseUri = serverBaseUri;
-        mQueue = Volley.newRequestQueue(context);
+
+        //The MockContext used by ProviderTestCase2 (in our unit tests),
+        //doesn't implement getPackageName(), but Volley.newRequestQueue()
+        //calls it. Replacing that MockContext in ProviderTestCase2 is rather difficult,
+        //so this is a quick workaround until we really need to use volley from our ContentProvider test:
+        try {
+            context.getPackageName();
+
+            mQueue = Volley.newRequestQueue(context);
+        } catch (final UnsupportedOperationException ex) {
+            Log.info("ZooniverseClient: Not creating mQueue because context.getPackageName() would fail.");
+            mQueue = null; //Just for the unit test.
+        }
     }
 
     private String getQueryMoreItemsUri() {
