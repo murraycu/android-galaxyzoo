@@ -1,7 +1,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:key="cache_size"
+        android:key="@string/pref_key_cache_size"
         android:title="@string/pref_title_cache_size"
         android:dialogTitle="@string/pref_title_cache_size"
         android:defaultValue="@string/pref_default_cache_size"
@@ -9,7 +9,7 @@
         android:entryValues="@array/pref_cache_size_values" />
 
     <ListPreference
-        android:key="keep_count"
+        android:key="@string/pref_key_keep_count"
         android:title="@string/pref_title_keep_count"
         android:dialogTitle="@string/pref_title_keep_count"
         android:defaultValue="@string/pref_default_keep_count"
@@ -17,7 +17,7 @@
         android:entryValues="@array/pref_keep_count_values" />
 
     <CheckBoxPreference
-        android:key="wifi_only"
+        android:key="@string/pref_key_wifi_only"
         android:title="@string/pref_title_wifi_only"
         android:summary="@string/pref_description_wifi_only" />
 
