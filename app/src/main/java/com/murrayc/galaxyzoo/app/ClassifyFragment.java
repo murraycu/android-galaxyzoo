@@ -150,7 +150,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      */
     private void showLoadingInProgress(boolean loadingInProgress) {
         showLoadingView(loadingInProgress);
-        showChildFragments(loadingInProgress);
+        showChildFragments(!loadingInProgress);
     }
 
     /** Hide both the loading (progress) view and the child fragments.
@@ -182,18 +182,18 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         final Fragment fragmentSubject = fragmentManager.findFragmentById(R.id.child_fragment_subject);
         if (fragmentSubject != null) {
             if (show) {
-                transaction.hide(fragmentSubject);
-            } else {
                 transaction.show(fragmentSubject);
+            } else {
+                transaction.hide(fragmentSubject);
             }
         }
 
         final Fragment fragmentQuestion = fragmentManager.findFragmentById(R.id.child_fragment_question);
         if (fragmentQuestion != null) {
             if (show) {
-                transaction.hide(fragmentQuestion);
-            } else {
                 transaction.show(fragmentQuestion);
+            } else {
+                transaction.hide(fragmentQuestion);
             }
         }
 
