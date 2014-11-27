@@ -36,7 +36,7 @@ public class ExampleViewerActivity extends ActionBarActivity {
         UiUtils.showToolbar(this);
 
         final Intent intent = getIntent();
-        final String uriStr = intent.getStringExtra(ExampleViewerFragment.ARG_EXAMPLE_URL);
+        final String strIconName = intent.getStringExtra(ExampleViewerFragment.ARG_EXAMPLE_ICON_NAME);
 
         if (savedInstanceState == null) {
 
@@ -49,7 +49,7 @@ public class ExampleViewerActivity extends ActionBarActivity {
                 ExampleViewerFragment fragment = (ExampleViewerFragment) fragmentManager.findFragmentById(R.id.container);
                 if (fragment == null) {
                     final Bundle arguments = new Bundle();
-                    arguments.putString(ExampleViewerFragment.ARG_EXAMPLE_URL, uriStr);
+                    arguments.putString(ExampleViewerFragment.ARG_EXAMPLE_ICON_NAME, strIconName);
 
                     fragment = new ExampleViewerFragment();
                     fragment.setArguments(arguments);
@@ -59,7 +59,7 @@ public class ExampleViewerActivity extends ActionBarActivity {
                 } else {
                     Log.info("ExampleViewerActivity.onCreate(): The ExampleViewerFragment already existed.");
 
-                    fragment.setExampleUrl(uriStr);
+                    fragment.setExampleIconName(strIconName);
                     fragment.update();
                 }
             }

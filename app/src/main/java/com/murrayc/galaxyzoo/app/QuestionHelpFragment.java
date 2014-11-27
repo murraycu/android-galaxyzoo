@@ -182,11 +182,9 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             return;
         }
 
-        final String uri = Config.FULL_EXAMPLE_URI + iconName + ".jpg";
-
         try {
             final Intent intent = new Intent(activity, ExampleViewerActivity.class);
-            intent.putExtra(ExampleViewerFragment.ARG_EXAMPLE_URL, uri);
+            intent.putExtra(ExampleViewerFragment.ARG_EXAMPLE_ICON_NAME, iconName);
 
             //"subjectImageTransition" is also specified as transitionName="subjectImageTransition"
             //on the ImageButton here (when we created it) and in fragment_subject.xml.

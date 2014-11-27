@@ -19,6 +19,7 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -29,21 +30,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.net.URL;
-import java.net.URLConnection;
-
 
 /**
  * A simple {@link android.app.Fragment} subclass.
  */
 public class ExampleViewerFragment extends Fragment {
-    public static final String ARG_EXAMPLE_URL = "example-url";
+    public static final String ARG_EXAMPLE_ICON_NAME = "example-icon-name";
     private View mLoadingView;
     private View mRootView;
-    private String mUriStr = null;
+    private String mExampleIconName = null;
 
     public ExampleViewerFragment() {
         // Required empty public constructor
@@ -54,13 +51,13 @@ public class ExampleViewerFragment extends Fragment {
      * This is tedious. It would be far easier if ImageView had a setFromUrl(url) method that did
      * the work asynchronously itself.
      *
-     * @param strUri
+     * @param strIconName
      * @param imageView
      */
-    private void loadBitmap(final String strUri, ImageView imageView) {
+    private void loadBitmap(final String strIconName, ImageView imageView) {
         showLoadingView(true);
         final BitmapWorkerTask task = new BitmapWorkerTask(imageView, this);
-        task.execute(strUri);
+        task.execute(strIconName);
     }
 
     @Override
@@ -69,7 +66,7 @@ public class ExampleViewerFragment extends Fragment {
 
         final Bundle bundle = getArguments();
         if (bundle != null) {
-            setExampleUrl(bundle.getString(ARG_EXAMPLE_URL));
+            setExampleIconName(bundle.getString(ARG_EXAMPLE_ICON_NAME));
         }
 
         mRootView = inflater.inflate(R.layout.fragment_example_viewer, container, false);
@@ -79,15 +76,17 @@ public class ExampleViewerFragment extends Fragment {
         return mRootView;
     }
 
+    private static final String ASSET_PATH_EXAMPLES_DIR = "examples/";
+
     public void update() {
         final ImageView imageView = (ImageView) mRootView.findViewById(R.id.imageView);
         if (imageView != null) {
-            loadBitmap(mUriStr, imageView);
+            loadBitmap(mExampleIconName, imageView);
         }
     }
 
-    public void setExampleUrl(final String uriStr) {
-        mUriStr = uriStr;
+    public void setExampleIconName(final String exampleIconName) {
+        mExampleIconName = exampleIconName;
     }
 
     //See http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
@@ -95,7 +94,7 @@ public class ExampleViewerFragment extends Fragment {
         private final WeakReference<ImageView> imageViewReference;
         private final WeakReference<ExampleViewerFragment> fragmentReference;
 
-        private String strUri = null;
+        private String strName = null;
 
         public BitmapWorkerTask(final ImageView imageView, final ExampleViewerFragment fragment) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
@@ -109,33 +108,30 @@ public class ExampleViewerFragment extends Fragment {
         // Decode image in background.
         @Override
         protected Bitmap doInBackground(String... params) {
-            strUri = params[0];
+            strName = params[0];
 
-            URLConnection connection;
-            try {
-                final URL url = new URL(strUri);
-                connection = url.openConnection();
-            } catch (IOException e) {
-                Log.error("doInBackground(): ExampleViewerFragment.BitmapWorkerTask.doInBackground: exception while opening connection", e);
-                return null;
-            }
-
-            InputStream stream = null;
-            try {
-                stream = connection.getInputStream();
-                return BitmapFactory.decodeStream(stream);
-            } catch (IOException e) {
-                Log.error("doInBackground(): ExampleViewerFragment.BitmapWorkerTask.doInBackground: exception while using stream", e);
-                return null;
-            } finally {
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (final IOException e) {
-                        Log.error("doInBackground(): Exception while closing stream.");
-                    }
+            Context context = null;
+            if (fragmentReference != null) {
+                final ExampleViewerFragment fragment = fragmentReference.get();
+                if (fragment != null) {
+                    context = fragment.getActivity();
                 }
             }
+
+            if (context == null) {
+                Log.error("BitmapWorkerTask.doInBackground(): context was null.");
+                return null;
+            }
+
+            final String assetPath = ASSET_PATH_EXAMPLES_DIR + strName + ".jpg";
+
+            Bitmap bitmap = null;
+            final InputStream inputStreamAsset = Utils.openAsset(context, assetPath);
+            if(inputStreamAsset != null) {
+                bitmap = BitmapFactory.decodeStream(inputStreamAsset);
+            }
+
+            return bitmap;
         }
 
         // Once complete, see if ImageView is still around and set bitmap.
