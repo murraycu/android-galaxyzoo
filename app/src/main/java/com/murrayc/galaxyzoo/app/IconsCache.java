@@ -123,7 +123,7 @@ class IconsCache {
 
             /*
             //So try loading them again.
-            if (Utils.getNetworkIsConnected(context)) {
+            if ((networkConnected != null) || (networkConnected.connected)) {
                 Log.info("IconsCache(): Reloading the icons from the network after failing to reload them from the cache.");
                 loadFromNetwork(context, lastModified);
             }
