@@ -116,6 +116,8 @@ public class ZooFragment extends Fragment {
         strBuilder.append(PARAGRAPH_BREAK);
         strBuilder.append(getText(R.string.about_text3));
         strBuilder.append(PARAGRAPH_BREAK);
+        strBuilder.append(getText(R.string.about_text3b));
+        strBuilder.append(PARAGRAPH_BREAK);
         strBuilder.append(getText(R.string.about_text4));
         strBuilder.append(PARAGRAPH_BREAK);
         strBuilder.append(getText(R.string.about_text5));
