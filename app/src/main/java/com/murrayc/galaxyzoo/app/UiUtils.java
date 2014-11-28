@@ -22,124 +22,22 @@ package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
 
 /**
  * Created by murrayc on 5/21/14.
  */
 class UiUtils {
-
-    //See http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
-    static class ShowImageFromContentProviderTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-        private final WeakReference<Context> contextReference;
-
-        protected String getUri() {
-            return strUri;
-        }
-
-        private String strUri = null;
-
-        public ShowImageFromContentProviderTask(final ImageView imageView, final Context fragment) {
-            // Use a WeakReference to ensure the ImageView can be garbage collected
-            imageViewReference = new WeakReference<>(imageView);
-
-            // Use a WeakReference to ensure the ImageView can be garbage collected
-            contextReference = new WeakReference<>(fragment);
-        }
-
-        // Decode image in background.
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            strUri = params[0];
-
-            if (contextReference != null) {
-                final Context context = contextReference.get();
-                if (context != null) {
-                    return UiUtils.getBitmapFromContentUri(context, strUri);
-                }
-            }
-
-            return null;
-        }
-
-        // Once complete, see if ImageView is still around and set bitmap.
-        // This avoids calling the ImageView methods in the non-main thread.
-        @Override
-        protected void onPostExecute(final Bitmap bitmap) {
-            //Callers should maybe use a derived class that overrides this
-            //to call abandonItem() when the bitmap is null.
-
-            if (imageViewReference != null) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    if (bitmap != null) {
-                        imageView.setImageBitmap(bitmap);
-                    } else {
-                        imageView.setImageResource(android.R.color.transparent);
-                    }
-                }
-            }
-        }
-    }
-
-    /** Get a URI for an image in the ItemsContentProvider.
-     *
-     * Don't call this from a main (UI) thread.
-     *
-     * @param context
-     * @param imageUriStr
-     * @return
-     */
-    static Bitmap getBitmapFromContentUri(final Context context, final String imageUriStr) {
-        if (imageUriStr == null) {
-            Log.error("getBitmapFromContentUri(): imageUriStr is null.");
-            return null;
-        }
-
-        final ContentResolver contentResolver = context.getContentResolver();
-
-        Bitmap bMap = null;
-        final Uri uri = Uri.parse(imageUriStr);
-
-        InputStream stream = null;
-        try {
-            stream = contentResolver.openInputStream(uri);
-            bMap = BitmapFactory.decodeStream(stream);
-        } catch (final IOException e) {
-            Log.error("getBitmapFromContentUri(): BitmapFactory.decodeStream() failed.", e);
-            return null;
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (final IOException e) {
-                    Log.error("getBitmapFromContentUri(): Exception while closing stream.", e);
-                }
-            }
-        }
-
-        return bMap;
-    }
 
     private static void warnAboutNoNetworkConnection(final Activity activity) {
         final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_network), Toast.LENGTH_LONG);

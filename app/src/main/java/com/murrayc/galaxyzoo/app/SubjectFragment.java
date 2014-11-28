@@ -21,7 +21,6 @@ package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -38,6 +37,8 @@ import android.widget.ImageView;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 /**
  * A fragment representing a single subject.
@@ -237,22 +238,22 @@ public class SubjectFragment extends ItemFragment
             }
         }
 
-        if (!TextUtils.isEmpty(imageUriStr)) {
-            final UiUtils.ShowImageFromContentProviderTask task = new UiUtils.ShowImageFromContentProviderTask(mImageView, activity) {
-                @Override
-                protected void onPostExecute(final Bitmap bitmap) {
-                    super.onPostExecute(bitmap);
+        //Note: We call cancelRequest in onPause() to avoid a leak,
+        //as vaguely suggested by the into() documentation.
+        Picasso.with(activity).load(imageUriStr).into(mImageView, new Callback() {
+            @Override
+            public void onSuccess() {
 
-                    if (bitmap == null) {
-                        //Something was wrong with the (cached) image,
-                        //so just abandon this whole item.
-                        //That seems safer and simpler than trying to recover just one of the 3 images.
-                        SubjectFragment.this.abandonItem();
-                    }
-                }
-            };
-            task.execute(imageUriStr);
-        }
+            }
+
+            @Override
+            public void onError() {
+                //Something was wrong with the (cached) image,
+                //so just abandon this whole item.
+                //That seems safer and simpler than trying to recover just one of the 3 images.
+                SubjectFragment.this.abandonItem();
+            }
+        });
     }
 
     private boolean getInverted() {
@@ -302,5 +303,16 @@ public class SubjectFragment extends ItemFragment
          * This prevents memory leaks.
          */
         mCursor = null;
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        //Picasso's into() documentation tells us to use cancelRequest() to avoid a leak,
+        //though it doesn't suggest where/when to call it:
+        //http://square.github.io/picasso/javadoc/com/squareup/picasso/RequestCreator.html#into-android.widget.ImageView-com.squareup.picasso.Callback-
+        Picasso.with(getActivity()).cancelRequest(mImageView);
     }
 }
