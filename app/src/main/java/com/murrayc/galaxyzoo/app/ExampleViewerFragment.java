@@ -29,6 +29,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -44,6 +47,7 @@ public class ExampleViewerFragment extends Fragment {
     private View mLoadingView;
     private View mRootView;
     private String mUriStr = null;
+    private ImageView mImageView = null;
 
     public ExampleViewerFragment() {
         // Required empty public constructor
@@ -59,8 +63,21 @@ public class ExampleViewerFragment extends Fragment {
      */
     private void loadBitmap(final String strUri, ImageView imageView) {
         showLoadingView(true);
-        final BitmapWorkerTask task = new BitmapWorkerTask(imageView, this);
-        task.execute(strUri);
+
+        //Note: We call cancelRequest in onPause() to avoid a leak,
+        //as vaguely suggested by the into() documentation.
+        Picasso.with(getActivity()).load(strUri).into(imageView, new Callback() {
+            @Override
+            public void onSuccess() {
+                showLoadingView(false);
+            }
+
+            @Override
+            public void onError() {
+                showLoadingView(false);
+                Log.error("ExampleViewerFragment.loadBitmap.onError().");
+            }
+        });
     }
 
     @Override
@@ -73,89 +90,31 @@ public class ExampleViewerFragment extends Fragment {
         }
 
         mRootView = inflater.inflate(R.layout.fragment_example_viewer, container, false);
+        mImageView = (ImageView) mRootView.findViewById(R.id.imageView);
 
         update();
 
         return mRootView;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        //Picasso's load() documentation tells us to use cancelRequest() to avoid a leak,
+        //though it doesn't suggest where/when to call it:
+        //http://square.github.io/picasso/javadoc/com/squareup/picasso/RequestCreator.html#into-android.widget.ImageView-com.squareup.picasso.Callback-
+        Picasso.with(getActivity()).cancelRequest(mImageView);
+    }
+
     public void update() {
-        final ImageView imageView = (ImageView) mRootView.findViewById(R.id.imageView);
-        if (imageView != null) {
-            loadBitmap(mUriStr, imageView);
+        if (mImageView != null) {
+            loadBitmap(mUriStr, mImageView);
         }
     }
 
     public void setExampleUrl(final String uriStr) {
         mUriStr = uriStr;
-    }
-
-    //See http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
-    private static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-        private final WeakReference<ExampleViewerFragment> fragmentReference;
-
-        private String strUri = null;
-
-        public BitmapWorkerTask(final ImageView imageView, final ExampleViewerFragment fragment) {
-            // Use a WeakReference to ensure the ImageView can be garbage collected
-            imageViewReference = new WeakReference<>(imageView);
-
-            // Use a WeakReference to ensure the ImageView can be garbage collected
-            fragment.showLoadingView(true);
-            fragmentReference = new WeakReference<>(fragment);
-        }
-
-        // Decode image in background.
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            strUri = params[0];
-
-            URLConnection connection;
-            try {
-                final URL url = new URL(strUri);
-                connection = url.openConnection();
-            } catch (IOException e) {
-                Log.error("doInBackground(): ExampleViewerFragment.BitmapWorkerTask.doInBackground: exception while opening connection", e);
-                return null;
-            }
-
-            InputStream stream = null;
-            try {
-                stream = connection.getInputStream();
-                return BitmapFactory.decodeStream(stream);
-            } catch (IOException e) {
-                Log.error("doInBackground(): ExampleViewerFragment.BitmapWorkerTask.doInBackground: exception while using stream", e);
-                return null;
-            } finally {
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (final IOException e) {
-                        Log.error("doInBackground(): Exception while closing stream.");
-                    }
-                }
-            }
-        }
-
-        // Once complete, see if ImageView is still around and set bitmap.
-        // This avoids calling the ImageView methods in the non-main thread.
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (imageViewReference != null && bitmap != null) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
-
-            if (fragmentReference != null) {
-                final ExampleViewerFragment fragment = fragmentReference.get();
-                if (fragment != null) {
-                    fragment.showLoadingView(false);
-                }
-            }
-        }
     }
 
     private void showLoadingView(boolean show) {
