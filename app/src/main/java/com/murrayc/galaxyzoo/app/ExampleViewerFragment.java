@@ -101,7 +101,7 @@ public class ExampleViewerFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        //Picasso's load() documentation tells us to use cancelRequest() to avoid a leak,
+        //Picasso's into() documentation tells us to use cancelRequest() to avoid a leak,
         //though it doesn't suggest where/when to call it:
         //http://square.github.io/picasso/javadoc/com/squareup/picasso/RequestCreator.html#into-android.widget.ImageView-com.squareup.picasso.Callback-
         Picasso.with(getActivity()).cancelRequest(mImageView);

@@ -33,6 +33,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -81,57 +84,77 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
         return new ViewHolder(v, this);
     }
 
-    class ShowViewHolderImageFromContentProviderTask extends UiUtils.ShowImageFromContentProviderTask {
+    private static class ImageLoadedCallback implements Callback {
+        final WeakReference<Context> contextReference;
         final WeakReference<ViewHolder> viewHolderReference;
         final int position;
         final String itemId;
 
-        public ShowViewHolderImageFromContentProviderTask(final Context fragment, final ViewHolder viewHolder, int position, final String itemId) {
-            super(viewHolder.imageView, fragment);
 
+        public  ImageLoadedCallback(final Context context, final ViewHolder viewHolder, int position, final String itemId) {
+            this.contextReference = new WeakReference<>(context);
             this.viewHolderReference = new WeakReference<>(viewHolder);
             this.position = position;
             this.itemId = itemId;
+
         }
 
-        @Override
-        protected void onPostExecute(final Bitmap bitmap) {
-
+        private ViewHolder getValidViewHolder() {
             if (viewHolderReference == null) {
-                return;
+                return null;
             }
 
             final ViewHolder viewHolder = viewHolderReference.get();
             if (viewHolder == null) {
-                return;
+                return null;
             }
 
             //Check that we are still dealing with the same position,
             //because the ImageView might be recycled for use with a different position.
             if (viewHolder.getPosition() != position) {
+                return null;
+            }
+
+            return viewHolder;
+        }
+
+        @Override
+        public void onSuccess() {
+            final ViewHolder viewHolder = getValidViewHolder();
+            if (viewHolder == null) {
                 return;
             }
 
-            super.onPostExecute(bitmap);
+            //Hide the progress indicator now that we are showing the image.
+            viewHolder.progressBar.setVisibility(View.GONE);
+        }
 
-            if (bitmap != null) {
-                //Hide the progress indicator now that we are showing the image.
-                viewHolder.progressBar.setVisibility(View.GONE);
-
-                //Store it in our cache:
-                final String uri = getUri();
-                if (!TextUtils.isEmpty(uri)) {
-                    mCache.put(uri, bitmap);
-                }
-            } else {
-                //Show the progress indicator because we have no image:
-                viewHolder.progressBar.setVisibility(View.VISIBLE);
-
-                //Something was wrong with the (cached) image,
-                //so just abandon this whole item.
-                //That seems safer and simpler than trying to recover just one of the 3 images.
-                Utils.abandonItem(mContext, itemId);
+        @Override
+        public void onError() {
+            final ViewHolder viewHolder = getValidViewHolder();
+            if (viewHolder == null) {
+                return;
             }
+
+            //Show the progress indicator because we have no image:
+            viewHolder.progressBar.setVisibility(View.VISIBLE);
+
+
+            if (contextReference == null) {
+                return;
+            }
+
+            final Context context = contextReference.get();
+            if (viewHolder == null) {
+                return;
+            }
+
+            //Something was wrong with the (cached) image,
+            //so just abandon this whole item.
+            //That seems safer and simpler than trying to recover just one of the 3 images.
+            Utils.abandonItem(context, itemId);
+
+            Log.error("ListCursorAdaptor.onBindViewHolder.onError().");
         }
     }
 
@@ -157,17 +180,14 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
             if (thumbnailDownloaded) {
                 //viewHolder.imageView.setImageDrawable(null);
 
-                //Try to get it from our cache first.
-                //This shouldn't be necessary, but it is for now because our RecyclerView.Adapter
-                //is massively inefficient, refreshing the whole view whenever the number
-                //of items changes.
-                final Bitmap bitmap = mCache.get(imageUriStr);
-                if (bitmap != null) {
-                    viewHolder.imageView.setImageBitmap(bitmap);
-                } else {
-                    final ShowViewHolderImageFromContentProviderTask task = new ShowViewHolderImageFromContentProviderTask(mContext, viewHolder, viewHolder.getPosition(), itemId);
-                    task.execute(imageUriStr);
-                }
+                //Cancel any previous requests for this ImageView.
+                //TODO: Is this really necessary? - Doesn't Picasso do this automatically?
+                Picasso.with(mContext).cancelRequest(viewHolder.imageView);
+
+                // TODO: We could use this, but how would we be able to pass a position to check,
+                // so we can call viewHolder.progressBar.setVisibility(View.GONE) after its loaded?
+                Picasso.with(mContext).load(imageUriStr).into(viewHolder.imageView,
+                        new ImageLoadedCallback(mContext, viewHolder, viewHolder.getPosition(), itemId));
             } else {
                 //We are still waiting for it to download:
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
@@ -189,6 +209,13 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
         }
 
         //holder.itemView.setTag(item);
+    }
+
+    public void onViewRecycled(final ViewHolder viewHolder) {
+        //Picasso's into() documentation tells us to use cancelRequest() to avoid a leak,
+        //though it doesn't suggest where/when to call it:
+        //http://square.github.io/picasso/javadoc/com/squareup/picasso/RequestCreator.html#into-android.widget.ImageView-com.squareup.picasso.Callback-
+        Picasso.with(mContext).cancelRequest(viewHolder.imageView);
     }
 
     @Override
