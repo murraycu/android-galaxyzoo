@@ -145,7 +145,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
             }
 
             final Context context = contextReference.get();
-            if (viewHolder == null) {
+            if (context == null) {
                 return;
             }
 
