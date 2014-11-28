@@ -19,9 +19,6 @@
 
 package com.murrayc.galaxyzoo.app;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -31,12 +28,6 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.net.URL;
-import java.net.URLConnection;
 
 
 /**
