@@ -186,6 +186,10 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
 
                 // TODO: We could use this, but how would we be able to pass a position to check,
                 // so we can call viewHolder.progressBar.setVisibility(View.GONE) after its loaded?
+
+                //Don't show the ProgressBar while we are briefly loading from our ContentProvider -
+                //only show it while we are waiting for it to download from the internet.
+                viewHolder.progressBar.setVisibility(View.GONE);
                 Picasso.with(mContext).load(imageUriStr).into(viewHolder.imageView,
                         new ImageLoadedCallback(mContext, viewHolder, viewHolder.getPosition(), itemId));
             } else {
