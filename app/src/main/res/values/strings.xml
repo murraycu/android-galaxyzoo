@@ -160,11 +160,14 @@
     <!-- The title of the preference that controls how many old items should stay on the device. -->
     <string name="pref_title_keep_count">Keep</string>
     <string name="pref_default_keep_count" translatable="false">50</string>
+    <string name="pref_default_show_discuss_question" translatable="false">true</string>
     <string name="pref_default_wifi_only" translatable="false">false</string>
 
     <string name="pref_title_wifi_only">Download via Wi-Fi only</string>
     <string name="pref_description_wifi_only">To reduce carrier data charges, don\'t download over mobile networks.</string>
 
+    <string name="pref_title_show_discuss_question">Offer Discussion</string>
+    <string name="pref_description_show_discuss_question">Whether to show the \"Would you like to discuss this object?\" question.</string>
 
     //The android:transitionName used for the ImageView that shows the subject.
     //Activities can use the same transitionName on small versions of the image,

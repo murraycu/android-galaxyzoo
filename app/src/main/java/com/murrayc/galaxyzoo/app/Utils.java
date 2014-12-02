@@ -48,6 +48,10 @@ public class Utils {
         return getBooleanPref(context, R.string.pref_key_wifi_only);
     }
 
+    public static boolean getShowDiscussQuestion(final Context context) {
+        return getBooleanPref(context, R.string.pref_key_show_discuss_question);
+    }
+
     public static File getExternalCacheDir(final Context context) {
         try {
             return context.getExternalCacheDir();

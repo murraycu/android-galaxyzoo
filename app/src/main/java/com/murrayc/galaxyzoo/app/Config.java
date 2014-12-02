@@ -41,6 +41,7 @@ class Config {
     //and then always ask the question at the end via Java code.
     public static final CharSequence QUESTION_ID_DISCUSS = "sloan-11";
     public static final CharSequence ANSWER_ID_DISCUSS_YES = "a-0";
+    public static final String ANSWER_ID_DISCUSS_NO = "a-1";
 
     static private final String STATIC_IMAGES_SERVER = "http://static.zooniverse.org/www.galaxyzoo.org/images/";
 

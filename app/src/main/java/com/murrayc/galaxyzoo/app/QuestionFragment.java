@@ -556,8 +556,19 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         final String nextQuestionId = nextQuestion.getId();
-        setQuestionId(nextQuestionId);
 
+        //Skip the "Discuss" question, depending on the setting:
+        if (!TextUtils.isEmpty(nextQuestionId)
+                && nextQuestionId.equals(Config.QUESTION_ID_DISCUSS)
+                && !Utils.getShowDiscussQuestion(getActivity())) {
+            //Add a "No" for the Discuss question without even showing the question:
+            storeAnswer(nextQuestionId, Config.ANSWER_ID_DISCUSS_NO);
+
+            showNextQuestion(nextQuestionId, Config.ANSWER_ID_DISCUSS_NO);
+            return;
+        }
+
+        setQuestionId(nextQuestionId);
         update();
     }
 

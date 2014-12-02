@@ -17,6 +17,12 @@
         android:entryValues="@array/pref_keep_count_values" />
 
     <CheckBoxPreference
+        android:key="@string/pref_key_show_discuss_question"
+        android:title="@string/pref_title_show_discuss_question"
+        android:defaultValue="@string/pref_default_show_discuss_question"
+        android:summary="@string/pref_description_show_discuss_question" />
+
+    <CheckBoxPreference
         android:key="@string/pref_key_wifi_only"
         android:title="@string/pref_title_wifi_only"
         android:defaultValue="@string/pref_default_wifi_only"
