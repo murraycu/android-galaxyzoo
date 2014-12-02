@@ -516,44 +516,34 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         //TODO: Move this logic to the parent ClassifyFragment?
-        final Activity activity = getActivity();
-        if (activity == null)
-            return;
 
+        //Save the answer so we can upload it when the classification is finished.
+        storeAnswer(questionId, answerId);
+
+        //Open the discussion page if the user chose that.
         if ((TextUtils.equals(questionId, com.murrayc.galaxyzoo.app.Config.QUESTION_ID_DISCUSS)) &&
                 (TextUtils.equals(answerId, com.murrayc.galaxyzoo.app.Config.ANSWER_ID_DISCUSS_YES))) {
             //Open a link to the discussion page.
-            UiUtils.openDiscussionPage(activity, getZooniverseId());
-        } else {
-            List<String> checkboxes = null;
-
-            //Get the selected checkboxes too:
-            final Singleton singleton = getSingleton();
-            final DecisionTree tree = singleton.getDecisionTree();
-            final DecisionTree.Question question = tree.getQuestion(questionId);
-            if (question.hasCheckboxes()) {
-                checkboxes = new ArrayList<>();
-                for (final DecisionTree.Checkbox checkbox : question.getCheckboxes()) {
-                    final String checkboxId = checkbox.getId();
-                    final ToggleButton button = mCheckboxButtons.get(checkboxId);
-                    if ((button != null) && button.isChecked()) {
-                        checkboxes.add(checkboxId);
-                    }
-                }
-            }
-
-            //Remember the answer:
-            mClassificationInProgress.add(questionId, answerId, checkboxes);
+            UiUtils.openDiscussionPage(getActivity(), getZooniverseId());
         }
 
+        //Show the next question.
+        showNextQuestion(questionId, answerId);
+    }
+
+    /**
+     * Show the next question,
+     * saving the whole classification and showing a new subject if necessary.
+     *
+     * @param questionId
+     * @param answerId
+     */
+    private void showNextQuestion(final String questionId, final String answerId) {
         final Singleton singleton = getSingleton();
         final DecisionTree tree = singleton.getDecisionTree();
 
-        final DecisionTree.Question question = tree.getNextQuestionForAnswer(questionId, answerId);
-        if (question != null) {
-            setQuestionId(question.getId());
-            update();
-        } else {
+        final DecisionTree.Question nextQuestion = tree.getNextQuestionForAnswer(questionId, answerId);
+        if (nextQuestion == null) {
             //The classification is finished.
             //We save it to the ContentProvider, which will upload it.
             //
@@ -562,7 +552,35 @@ public class QuestionFragment extends BaseQuestionFragment
             //(see our check for a null questionId at the start of this method.)
             final SaveClassificationTask task = new SaveClassificationTask(this, mClassificationInProgress);
             task.execute();
+            return;
         }
+
+        final String nextQuestionId = nextQuestion.getId();
+        setQuestionId(nextQuestionId);
+
+        update();
+    }
+
+    private void storeAnswer(final String questionId, final String answerId) {
+        List<String> checkboxes = null;
+
+        //Get the selected checkboxes too:
+        final Singleton singleton = getSingleton();
+        final DecisionTree tree = singleton.getDecisionTree();
+        final DecisionTree.Question question = tree.getQuestion(questionId);
+        if (question.hasCheckboxes()) {
+            checkboxes = new ArrayList<>();
+            for (final DecisionTree.Checkbox checkbox : question.getCheckboxes()) {
+                final String checkboxId = checkbox.getId();
+                final ToggleButton button = mCheckboxButtons.get(checkboxId);
+                if ((button != null) && button.isChecked()) {
+                    checkboxes.add(checkboxId);
+                }
+            }
+        }
+
+        //Remember the answer:
+        mClassificationInProgress.add(questionId, answerId, checkboxes);
     }
 
     private void wipeClassification() {
