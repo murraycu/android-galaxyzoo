@@ -19,6 +19,7 @@
     <CheckBoxPreference
         android:key="@string/pref_key_wifi_only"
         android:title="@string/pref_title_wifi_only"
-        android:summary="@string/pref_description_wifi_only" />
+        android:defaultValue="@string/pref_default_wifi_only"
+        android:summary="@string/pref_description_wifi_only"/>
 
 </PreferenceScreen>

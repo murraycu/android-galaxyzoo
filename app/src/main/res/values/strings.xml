@@ -160,6 +160,7 @@
     <!-- The title of the preference that controls how many old items should stay on the device. -->
     <string name="pref_title_keep_count">Keep</string>
     <string name="pref_default_keep_count" translatable="false">50</string>
+    <string name="pref_default_wifi_only" translatable="false">false</string>
 
     <string name="pref_title_wifi_only">Download via Wi-Fi only</string>
     <string name="pref_description_wifi_only">To reduce carrier data charges, don\'t download over mobile networks.</string>
