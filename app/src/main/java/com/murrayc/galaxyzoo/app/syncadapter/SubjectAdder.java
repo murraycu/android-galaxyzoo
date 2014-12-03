@@ -67,10 +67,13 @@ public class SubjectAdder {
         final ContentResolver resolver = getContext().getContentResolver();
 
         final String[] projection = {Item.Columns._ID,
+                Item.Columns.LOCATION_STANDARD_DOWNLOADED,
                 Item.Columns.LOCATION_STANDARD_URI_REMOTE,
                 Item.Columns.LOCATION_STANDARD_URI,
+                Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED,
                 Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE,
                 Item.Columns.LOCATION_THUMBNAIL_URI,
+                Item.Columns.LOCATION_INVERTED_DOWNLOADED,
                 Item.Columns.LOCATION_INVERTED_URI_REMOTE,
                 Item.Columns.LOCATION_INVERTED_URI};
         final Cursor c = resolver.query(Item.ITEMS_URI, projection,
@@ -86,25 +89,34 @@ public class SubjectAdder {
             final Uri itemUri = Utils.getItemUri(itemId);
 
             //Restart any downloads that seem to have failed before, or have been interrupted:
-            final String uriStandardRemote = c.getString(1);
-            if (!mImageDownloadsInProgress.containsKey(uriStandardRemote)) {
-                final String uriStandard = c.getString(2);
-                downloadMissingImage(itemUri, uriStandardRemote, uriStandard, ImageType.STANDARD);
-                noWorkNeeded = false;
+            final boolean standardDownloaded = c.getInt(1) == 1;
+            if (!standardDownloaded) {
+                final String uriStandardRemote = c.getString(2);
+                if (!mImageDownloadsInProgress.containsKey(uriStandardRemote)) {
+                    final String uriStandard = c.getString(3);
+                    downloadMissingImage(itemUri, uriStandardRemote, uriStandard, ImageType.STANDARD);
+                    noWorkNeeded = false;
+                }
             }
 
-            final String uriThumbnailRemote = c.getString(3);
-            if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
-                final String uriThumbnail = c.getString(4);
-                downloadMissingImage(itemUri, uriThumbnailRemote, uriThumbnail, ImageType.THUMBNAIL);
-                noWorkNeeded = false;
+            final boolean thumbnailDownloaded = c.getInt(4) == 1;
+            if (!thumbnailDownloaded) {
+                final String uriThumbnailRemote = c.getString(5);
+                if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
+                    final String uriThumbnail = c.getString(6);
+                    downloadMissingImage(itemUri, uriThumbnailRemote, uriThumbnail, ImageType.THUMBNAIL);
+                    noWorkNeeded = false;
+                }
             }
 
-            final String uriInvertedRemote = c.getString(5);
-            if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
-                final String uriInverted = c.getString(6);
-                downloadMissingImage(itemUri, uriInvertedRemote, uriInverted, ImageType.INVERTED);
-                noWorkNeeded = false;
+            final boolean invertedDownloaded = c.getInt(7) == 1;
+            if(!invertedDownloaded) {
+                final String uriInvertedRemote = c.getString(8);
+                if (!mImageDownloadsInProgress.containsKey(uriInvertedRemote)) {
+                    final String uriInverted = c.getString(9);
+                    downloadMissingImage(itemUri, uriInvertedRemote, uriInverted, ImageType.INVERTED);
+                    noWorkNeeded = false;
+                }
             }
         }
 
@@ -114,6 +126,8 @@ public class SubjectAdder {
     }
 
     private void downloadMissingImage(final Uri itemUri, final String uriRemote, final String uriContent, ImageType imageType) {
+        Log.info("downloadMissingImage(): imageType=" + imageType + ", uriRemote=" + uriRemote);
+
         try {
             cacheUriToFile(uriRemote, uriContent, itemUri, imageType, true /* async */);
         } catch (final HttpUtils.NoNetworkException e) {
