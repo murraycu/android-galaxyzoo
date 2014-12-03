@@ -42,6 +42,9 @@
     <string name="action_restart">Restart</string>
 
     <!-- An action. Shown on a button or menu item. -->
+    <string name="action_discuss">Discuss</string>
+
+    <!-- An action. Shown on a button or menu item. -->
     <string name="action_list">List</string>
 
     <!-- An action. Shown on a button or menu item. -->

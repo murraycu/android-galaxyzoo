@@ -263,6 +263,10 @@ public class QuestionFragment extends BaseQuestionFragment
                 restartClassification();
                 return true;
             }
+            case R.id.option_menu_item_discuss: {
+                UiUtils.openDiscussionPage(getActivity(), getZooniverseId());
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }

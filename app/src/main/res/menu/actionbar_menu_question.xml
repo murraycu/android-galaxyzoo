@@ -22,4 +22,9 @@
         app:showAsAction="ifRoom"
         android:title="@string/action_restart"
         android:orderInCategory="5" />
+    <item
+        android:id="@+id/option_menu_item_discuss"
+        app:showAsAction="ifRoom"
+        android:title="@string/action_discuss"
+        android:orderInCategory="6" />
 </menu>
