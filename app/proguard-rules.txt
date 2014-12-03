@@ -15,3 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# For Picasso.
+# See https://github.com/square/picasso/blob/master/README.md
+-dontwarn com.squareup.okhttp.**

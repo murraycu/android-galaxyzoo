@@ -1,3 +1,11 @@
+1.27:
+
+* Faster, smoother, showing of images.
+* Added a "Discuss" menu item.
+* Added an "Offer Discussion" setting, defaulting to true.
+* Avoid unnecessary repeat downloads of images.
+
+
 1.26:
 
 * Avoids duplicate icons and menu items.
