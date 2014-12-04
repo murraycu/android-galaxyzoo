@@ -63,6 +63,13 @@ public class HttpUtils {
         }
     }
 
+    public static void throwIfNoNetwork(final Context context, boolean wifiOnly) {
+        if(!getNetworkIsConnected(context, wifiOnly)) {
+            //Throw an exception so the caller knows.
+            throw new NoNetworkException();
+        }
+    }
+
     /**
      * Don't call this from the main thread because it uses the Account.
      *
@@ -70,8 +77,18 @@ public class HttpUtils {
      * @return
      */
     public static boolean getNetworkIsConnected(final Context context) {
+        return getNetworkIsConnected(context, LoginUtils.getUseWifiOnly(context));
+    }
+
+    /**
+     * Don't call this from the main thread because it uses the Account.
+     *
+     * @param context
+     * @return
+     */
+    public static boolean getNetworkIsConnected(final Context context, boolean wifiOnly) {
         final Utils.NetworkConnected networkConnected =
-                Utils.getNetworkIsConnected(context, LoginUtils.getUseWifiOnly(context));
+                Utils.getNetworkIsConnected(context, wifiOnly);
         return networkConnected.connected;
     }
 

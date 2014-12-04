@@ -45,6 +45,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 import java.lang.ref.WeakReference;
@@ -406,7 +407,12 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
                 return null;
             }
 
-            return mClient.loginSync(mUsername, mPassword);
+            try {
+                return mClient.loginSync(mUsername, mPassword);
+            } catch (final HttpUtils.NoNetworkException ex) {
+                Log.info("LoginActivity.UserLoginTask.doInBackground(): loginSync() threw a NoNetworkException.");
+                return null;
+            }
         }
 
         @Override
@@ -416,7 +422,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
 
             // A null result means that we didn't even get a response from the server for some reason:
             if (result == null) {
-                if (!UiUtils.warnAboutMissingNetwork(LoginActivity.this)) {
+                if (!UiUtils.warnAboutMissingNetwork(LoginActivity.this, false /* loginSync() ignored the wifi-only setting */)) {
                     final Toast toast = Toast.makeText(LoginActivity.this, getString(R.string.error_could_not_connect), Toast.LENGTH_LONG);
                     toast.show();
                 }

@@ -98,7 +98,8 @@ public class ZooniverseClient {
     }
 
     public LoginUtils.LoginResult loginSync(final String username, final String password) {
-        throwIfNoNetwork();
+        HttpUtils.throwIfNoNetwork(getContext(),
+                false); //Ignore the wifi-only setting because this will be when the user is explicitly requesting a login.
 
         final HttpURLConnection conn = HttpUtils.openConnection(getLoginUri());
         if (conn == null) {
