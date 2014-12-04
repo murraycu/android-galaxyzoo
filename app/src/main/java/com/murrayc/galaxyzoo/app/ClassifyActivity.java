@@ -50,6 +50,8 @@ import java.lang.ref.WeakReference;
 public class ClassifyActivity extends ItemActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener,
             ItemFragment.Callbacks, QuestionFragment.Callbacks{
+    private boolean mIsStateAlreadySaved = false;
+    private boolean mPendingClassificationFinished = false;
 
 //    public class ItemsContentProviderObserver extends ContentObserver {
 //
@@ -282,6 +284,12 @@ public class ClassifyActivity extends ItemActivity
         task.execute();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mIsStateAlreadySaved = true;
+    }
+
     /** This would ideally be in ClassifyFragment.onResume() or similar,
      * but we need to do it here to avoid this exception sometimes:
      *   "java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState".
@@ -291,6 +299,15 @@ public class ClassifyActivity extends ItemActivity
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
+
+        mIsStateAlreadySaved = false;
+
+        //See onClassificationFinished().
+        if(mPendingClassificationFinished) {
+            mPendingClassificationFinished = false;
+            doClassificationFinished();
+            return;
+        }
 
         final ClassifyFragment fragmentClassify = getChildFragment();
         if (fragmentClassify != null) {
@@ -342,6 +359,18 @@ public class ClassifyActivity extends ItemActivity
 
     @Override
     public void onClassificationFinished() {
+        // Avoid causing this exception when ClassifyFragment tries to show() an AlertDialog:
+        // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        if(mIsStateAlreadySaved) {
+            //Do it later instead.
+            this.mPendingClassificationFinished = true;
+            return;
+        }
+
+        doClassificationFinished();
+    }
+
+    private void doClassificationFinished() {
         //Suggest registering or logging in after a certain number of classifications,
         //as the web UI does, but don't ask again.
         if (mClassificationsDoneInSession == 3) {
@@ -349,6 +378,11 @@ public class ClassifyActivity extends ItemActivity
         }
         mClassificationsDoneInSession++;
 
+        // Careful: This can cause an AlertDialog.show() if there are no more items and if the
+        // network is not working properly.
+        // That's a problem because this method (onClassificationFinished()) can result from an AsyncTask.onPostExecute(),
+        // which is generally discouraged:
+        // See http://www.androiddesignpatterns.com/2013/08/fragment-transaction-commit-state-loss.html
         startNextClassification();
     }
 
