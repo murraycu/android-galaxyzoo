@@ -1,3 +1,8 @@
+1.29:
+
+* Avoid a possible crash in version 1.28.
+
+
 1.28:
 
 * Avoid a slow-down before the last question.
