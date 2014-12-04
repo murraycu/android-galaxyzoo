@@ -29,7 +29,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.JsonReader;
 
@@ -330,7 +329,7 @@ public class LoginUtils {
     static void copyPrefsToAccount(final Context context, final AccountManager accountManager, final Account account) {
         //Copy the preferences into the account.
         //See also SettingsFragment.onSharedPreferenceChanged()
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final SharedPreferences prefs = Utils.getPreferences(context);
         final Map<String, ?> keys = prefs.getAll();
         for(final Map.Entry<String, ?> entry : keys.entrySet()) {
             final Object value =  entry.getValue();
@@ -344,6 +343,19 @@ public class LoginUtils {
                 copyPrefToAccount(accountManager, account, entry.getKey(), Boolean.toString((Boolean) value));
             }
         }
+    }
+
+    /**
+     * Get the "use-wifi only" setting from the account.
+     *
+     * Don't call this from the main thread - use an AsyncTask, for instance.
+     * Or use Utils.getUseWifiOnlyFromSharedPrefs().
+     *
+     * @param context
+     * @return
+     */
+    public static boolean getUseWifiOnly(final Context context) {
+        return getBooleanPref(context, R.string.pref_key_wifi_only);
     }
 
     public static class LoginDetails {

@@ -119,7 +119,7 @@ class UiUtils {
      * @return
      */
     static boolean warnAboutMissingNetwork(final Activity activity) {
-        return warnAboutMissingNetwork(activity, Utils.getUseWifiOnly(activity));
+        return warnAboutMissingNetwork(activity, Utils.getUseWifiOnlyFromSharedPrefs(activity));
     }
 
     /**

@@ -30,6 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.RequestFuture;
 import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.FileOutputStream;
@@ -45,6 +46,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * Don't use any of these methods from the main thread.
+ *
  * Created by murrayc on 8/25/14.
  */
 public class HttpUtils {
@@ -60,9 +63,15 @@ public class HttpUtils {
         }
     }
 
+    /**
+     * Don't call this from the main thread because it uses the Account.
+     *
+     * @param context
+     * @return
+     */
     public static boolean getNetworkIsConnected(final Context context) {
         final Utils.NetworkConnected networkConnected =
-                Utils.getNetworkIsConnected(context, Utils.getUseWifiOnly(context));
+                Utils.getNetworkIsConnected(context, LoginUtils.getUseWifiOnly(context));
         return networkConnected.connected;
     }
 

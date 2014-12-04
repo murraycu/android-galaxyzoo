@@ -22,6 +22,7 @@ package com.murrayc.galaxyzoo.app;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -40,13 +41,40 @@ public class Utils {
 
     public static final String STRING_ENCODING = "UTF-8";
 
-    public static boolean getUseWifiOnly(final Context context) {
-        return LoginUtils.getBooleanPref(context, R.string.pref_key_wifi_only);
+    /**
+     * Ideally you would use LoginUtils.getUseWifiOnly() instead of the copy that is in
+     * the SharedPreferences, but this is useful when you don't want to call from the main thread.
+     *
+     * @param context
+     * @return
+     */
+    public static boolean getUseWifiOnlyFromSharedPrefs(final Context context) {
+        //We use the SharedPreferences rather than the copy of our prefs in the Account,
+        //to avoid using the Account in the main thread.
+        final SharedPreferences prefs = getPreferences(context);
+        final String key =  context.getString(R.string.pref_key_wifi_only);
+        return prefs.getBoolean(key, false /* default */);
     }
 
-    public static boolean getShowDiscussQuestion(final Context context) {
-        return LoginUtils.getBooleanPref(context, R.string.pref_key_show_discuss_question);
+    /**
+     * Ideally you would use LoginUtils.getShowDiscussQuestion() instead of the copy that is in
+     * the SharedPreferences, but this is useful when you don't want to call from the main thread.
+     *
+     * @param context
+     * @return
+     */
+    public static boolean getShowDiscussQuestionFromSharedPrefs(final Context context) {
+        //We use the SharedPreferences rather than the copy of our prefs in the Account,
+        //to avoid using the Account in the main thread.
+        final SharedPreferences prefs = getPreferences(context);
+        final String key =  context.getString(R.string.pref_key_show_discuss_question);
+        return prefs.getBoolean(key, true /* default */);
     }
+
+    static SharedPreferences getPreferences(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
 
     public static File getExternalCacheDir(final Context context) {
         try {

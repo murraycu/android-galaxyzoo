@@ -564,7 +564,7 @@ public class QuestionFragment extends BaseQuestionFragment
         //Skip the "Discuss" question, depending on the setting:
         if (!TextUtils.isEmpty(nextQuestionId)
                 && nextQuestionId.equals(Config.QUESTION_ID_DISCUSS)
-                && !Utils.getShowDiscussQuestion(getActivity())) {
+                && !Utils.getShowDiscussQuestionFromSharedPrefs(getActivity())) {
             //Add a "No" for the Discuss question without even showing the question:
             storeAnswer(nextQuestionId, Config.ANSWER_ID_DISCUSS_NO);
 
