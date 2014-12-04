@@ -8649,6 +8649,15 @@ com.murrayc.galaxyzoo.app.LoginUtils -> com.murrayc.galaxyzoo.app.ao:
     void setAutomaticAccountSync(android.content.Context,android.accounts.Account) -> a
     void removeAnonymousAccount(android.content.Context) -> d
     void removeAccount(android.content.Context,java.lang.String) -> a
+    boolean getBooleanPref(android.content.Context,int) -> a
+    int getIntPref(android.content.Context,int) -> b
+    java.lang.String getStringPref(android.content.Context,int) -> c
+    android.accounts.Account getAccount(android.accounts.AccountManager) -> a
+    android.accounts.Account getAccount(android.content.Context) -> f
+    void copyPrefToAccount(android.content.Context,java.lang.String,java.lang.String) -> a
+    void copyPrefToAccount(android.accounts.AccountManager,android.accounts.Account,java.lang.String,java.lang.String) -> a
+    void copyPrefsToAccount(android.content.Context,android.accounts.AccountManager,android.accounts.Account) -> a
+    boolean getUseWifiOnly(android.content.Context) -> e
 com.murrayc.galaxyzoo.app.LoginUtils$GetExistingLogin -> com.murrayc.galaxyzoo.app.ap:
     java.lang.ref.WeakReference mContextReference -> a
     com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails doInBackground(java.lang.Void[]) -> a
@@ -8921,21 +8930,15 @@ com.murrayc.galaxyzoo.app.UiUtils -> com.murrayc.galaxyzoo.app.bn:
     boolean warnAboutMissingNetwork(android.app.Activity) -> a
     boolean warnAboutMissingNetwork(android.app.Activity,boolean) -> a
 com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.bo:
-    boolean getUseWifiOnly(android.content.Context) -> a
-    boolean getShowDiscussQuestion(android.content.Context) -> b
-    java.io.File getExternalCacheDir(android.content.Context) -> c
+    boolean getUseWifiOnlyFromSharedPrefs(android.content.Context) -> a
+    boolean getShowDiscussQuestionFromSharedPrefs(android.content.Context) -> b
+    android.content.SharedPreferences getPreferences(android.content.Context) -> c
+    java.io.File getExternalCacheDir(android.content.Context) -> d
     com.murrayc.galaxyzoo.app.Utils$NetworkConnected getNetworkIsConnected(android.content.Context,boolean) -> a
-    boolean getBooleanPref(android.content.Context,int) -> b
-    int getIntPref(android.content.Context,int) -> a
-    java.lang.String getStringPref(android.content.Context,int) -> c
-    android.accounts.Account getAccount(android.accounts.AccountManager) -> a
     java.io.InputStream openAsset(android.content.Context,java.lang.String) -> a
     void abandonItem(android.content.Context,java.lang.String) -> b
     android.net.Uri getItemUri(java.lang.String) -> a
-    void copyPrefToAccount(android.content.Context,java.lang.String,java.lang.String) -> a
-    void copyPrefToAccount(android.accounts.AccountManager,android.accounts.Account,java.lang.String,java.lang.String) -> a
-    void copyPrefsToAccount(android.content.Context,android.accounts.AccountManager,android.accounts.Account) -> a
-    void initDefaultPrefs(android.content.Context) -> d
+    void initDefaultPrefs(android.content.Context) -> e
 com.murrayc.galaxyzoo.app.Utils$NetworkConnected -> com.murrayc.galaxyzoo.app.bp:
     boolean connected -> a
     boolean notConnectedBecauseNotOnWifi -> b

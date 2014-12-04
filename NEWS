@@ -1,3 +1,8 @@
+1.28:
+
+* Avoid a slow-down before the last question.
+
+
 1.27:
 
 * Faster, smoother, showing of images.
