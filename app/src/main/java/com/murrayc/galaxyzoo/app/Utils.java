@@ -19,12 +19,9 @@
 
 package com.murrayc.galaxyzoo.app;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -35,7 +32,6 @@ import com.murrayc.galaxyzoo.app.provider.Item;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 
 /**
  *
@@ -45,11 +41,11 @@ public class Utils {
     public static final String STRING_ENCODING = "UTF-8";
 
     public static boolean getUseWifiOnly(final Context context) {
-        return getBooleanPref(context, R.string.pref_key_wifi_only);
+        return LoginUtils.getBooleanPref(context, R.string.pref_key_wifi_only);
     }
 
     public static boolean getShowDiscussQuestion(final Context context) {
-        return getBooleanPref(context, R.string.pref_key_show_discuss_question);
+        return LoginUtils.getBooleanPref(context, R.string.pref_key_show_discuss_question);
     }
 
     public static File getExternalCacheDir(final Context context) {
@@ -102,48 +98,6 @@ public class Utils {
         return new NetworkConnected(true, false);
     }
 
-    private static boolean getBooleanPref(final Context context, final int prefKeyResId) {
-        final String value = getStringPref(context, prefKeyResId);
-        if (value == null) {
-            return false;
-        }
-
-        return Boolean.parseBoolean(value);
-    }
-
-    public static int getIntPref(final Context context, final int prefKeyResId) {
-        final String value = getStringPref(context, prefKeyResId);
-        if (value == null) {
-            return 0;
-        }
-
-        try {
-            return Integer.parseInt(value);
-        } catch (final NumberFormatException e) {
-            return 0;
-        }
-    }
-
-    private static String getStringPref(Context context, int prefKeyResId) {
-        final AccountManager mgr = AccountManager.get(context);
-        final Account account = getAccount(mgr);
-        if (account == null) {
-            return null;
-        }
-
-        return mgr.getUserData(account, context.getString(prefKeyResId));
-    }
-
-    private static Account getAccount(final AccountManager mgr) {
-        final Account[] accts = mgr.getAccountsByType(LoginUtils.ACCOUNT_TYPE);
-        if((accts == null) || (accts.length < 1)) {
-            //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
-            return null;
-        }
-
-        return accts[0];
-    }
-
     static InputStream openAsset(final Context context, final String filename) {
         try {
             return context.getAssets().open(filename);
@@ -169,46 +123,6 @@ public class Utils {
         final Uri.Builder uriBuilder = Item.ITEMS_URI.buildUpon();
         uriBuilder.appendPath(itemId);
         return uriBuilder.build();
-    }
-
-    static void copyPrefToAccount(final Context context, final String key, final String value) {
-        //Copy the preference to the Account:
-        final AccountManager mgr = AccountManager.get(context);
-        final Account[] accts = mgr.getAccountsByType(LoginUtils.ACCOUNT_TYPE);
-        if((accts == null) || (accts.length < 1)) {
-            //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
-            return;
-        }
-
-        final Account account = accts[0];
-        if (account == null) {
-            return;
-        }
-
-        copyPrefToAccount(mgr, account, key, value);
-    }
-
-    private static void copyPrefToAccount(final AccountManager mgr, final Account account, final String key, final String value) {
-        mgr.setUserData(account, key, value);
-    }
-
-    static void copyPrefsToAccount(final Context context, final AccountManager accountManager, final Account account) {
-        //Copy the preferences into the account.
-        //See also SettingsFragment.onSharedPreferenceChanged()
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        final Map<String, ?> keys = prefs.getAll();
-        for(final Map.Entry<String, ?> entry : keys.entrySet()) {
-            final Object value =  entry.getValue();
-            if (value == null) {
-                continue;
-            } else if (value instanceof String) {
-                copyPrefToAccount(accountManager, account, entry.getKey(), (String) value);
-            } else if (value instanceof Integer) {
-                copyPrefToAccount(accountManager, account, entry.getKey(), Integer.toString((Integer) value));
-            } else if (value instanceof Boolean) {
-                copyPrefToAccount(accountManager, account, entry.getKey(), Boolean.toString((Boolean) value));
-            }
-        }
     }
 
     static void initDefaultPrefs(final Context context) {

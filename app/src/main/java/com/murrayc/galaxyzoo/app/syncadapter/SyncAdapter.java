@@ -495,11 +495,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private int getMinCacheSize() {
-        return Utils.getIntPref(getContext(), R.string.pref_key_cache_size);
+        return LoginUtils.getIntPref(getContext(), R.string.pref_key_cache_size);
     }
 
     private int getKeepCount() {
-        return Utils.getIntPref(getContext(), R.string.pref_key_keep_count);
+        return LoginUtils.getIntPref(getContext(), R.string.pref_key_keep_count);
     }
 
 

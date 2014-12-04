@@ -26,8 +26,10 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.JsonReader;
 
@@ -38,6 +40,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+import java.util.Map;
 
 /**
  * Created by murrayc on 10/5/14.
@@ -192,7 +195,7 @@ public class LoginUtils {
         //Give the new account the existing (probably default) preferences,
         //so the SyncAdapter can use them.
         //See SettingsFragment.onSharedPreferenceChanged().
-        Utils.copyPrefsToAccount(context, accountManager, account);
+        copyPrefsToAccount(context, accountManager, account);
 
         //Tell the SyncAdapter to sync whenever the network is reconnected:
         setAutomaticAccountSync(context, account);
@@ -223,6 +226,123 @@ public class LoginUtils {
         final AccountManager accountManager = AccountManager.get(context);
         final Account account = new Account(accountName, LoginUtils.ACCOUNT_TYPE);
         accountManager.removeAccount(account, null, null);
+    }
+
+    /**
+     * Get a preference from the Account.
+     *
+     * Don't call this from the main thread - use an AsyncTask, for instance.
+     *
+     * @param context
+     * @param prefKeyResId
+     * @return
+     */
+    static boolean getBooleanPref(final Context context, final int prefKeyResId) {
+        final String value = getStringPref(context, prefKeyResId);
+        if (value == null) {
+            return false;
+        }
+
+        return Boolean.parseBoolean(value);
+    }
+
+    /**
+     * Get a preference from the Account.
+     *
+     * Don't call this from the main thread - use an AsyncTask, for instance.
+     *
+     * @param context
+     * @param prefKeyResId
+     * @return
+     */
+    public static int getIntPref(final Context context, final int prefKeyResId) {
+        final String value = getStringPref(context, prefKeyResId);
+        if (value == null) {
+            return 0;
+        }
+
+        try {
+            return Integer.parseInt(value);
+        } catch (final NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Get a preference from the Account.
+     *
+     * Don't call this from the main thread - use an AsyncTask, for instance.
+     *
+     * @param context
+     * @param prefKeyResId
+     * @return
+     */
+    private static String getStringPref(Context context, int prefKeyResId) {
+        final AccountManager mgr = AccountManager.get(context);
+        final Account account = getAccount(mgr);
+        if (account == null) {
+            return null;
+        }
+
+        return mgr.getUserData(account, context.getString(prefKeyResId));
+    }
+
+    /**
+     * Get the Account.
+     *
+     * Don't call this from the main thread - use an AsyncTask, for instance.
+     *
+     * @param mgr
+     * @return
+     */
+    private static Account getAccount(final AccountManager mgr) {
+        final Account[] accts = mgr.getAccountsByType(ACCOUNT_TYPE);
+        if((accts == null) || (accts.length < 1)) {
+            //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
+            return null;
+        }
+
+        return accts[0];
+    }
+
+    static void copyPrefToAccount(final Context context, final String key, final String value) {
+        //Copy the preference to the Account:
+        final AccountManager mgr = AccountManager.get(context);
+        final Account[] accts = mgr.getAccountsByType(ACCOUNT_TYPE);
+        if((accts == null) || (accts.length < 1)) {
+            //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
+            return;
+        }
+
+        final Account account = accts[0];
+        if (account == null) {
+            return;
+        }
+
+        copyPrefToAccount(mgr, account, key, value);
+    }
+
+    private static void copyPrefToAccount(final AccountManager mgr, final Account account, final String key, final String value) {
+        mgr.setUserData(account, key, value);
+    }
+
+    static void copyPrefsToAccount(final Context context, final AccountManager accountManager, final Account account) {
+        //Copy the preferences into the account.
+        //See also SettingsFragment.onSharedPreferenceChanged()
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final Map<String, ?> keys = prefs.getAll();
+        for(final Map.Entry<String, ?> entry : keys.entrySet()) {
+            final Object value =  entry.getValue();
+            if (value == null) {
+                continue;
+            } else if (value instanceof String) {
+                copyPrefToAccount(accountManager, account, entry.getKey(), (String) value);
+            } else if (value instanceof Integer) {
+                copyPrefToAccount(accountManager, account, entry.getKey(), Integer.toString((Integer) value));
+            } else if (value instanceof Boolean) {
+                copyPrefToAccount(accountManager, account, entry.getKey(), Boolean.toString((Boolean) value));
+            }
+        }
     }
 
     public static class LoginDetails {

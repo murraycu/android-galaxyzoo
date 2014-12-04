@@ -92,7 +92,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             value = checkboxPref.isChecked() ? "true" : ""; //See Boolean.parseBoolean().
         }
 
-        Utils.copyPrefToAccount(getActivity(), key, value);
+        LoginUtils.copyPrefToAccount(getActivity(), key, value);
     }
 
     private void showUserDescriptionAsSummary(final Preference preference) {

@@ -329,7 +329,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             final Account account = new Account(accountName, LoginUtils.ACCOUNT_TYPE);
             if (addingAccount) {
                 accountManager.addAccountExplicitly(account, null, null);
-                Utils.copyPrefsToAccount(context, accountManager, account);
+                LoginUtils.copyPrefsToAccount(context, accountManager, account);
 
                 //Tell the SyncAdapter to sync whenever the network is reconnected:
                 LoginUtils.setAutomaticAccountSync(context, account);
