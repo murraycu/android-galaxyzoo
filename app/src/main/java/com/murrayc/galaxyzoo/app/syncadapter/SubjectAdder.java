@@ -221,6 +221,8 @@ public class SubjectAdder {
         mImageDownloadsInProgress.put(uriFileToCache, now);
 
         if (asyncFileDownloads) {
+            Log.info("cacheUriToFile(): uriFileToCache=" + uriFileToCache);
+
             final Request<Boolean> request = new HttpUtils.FileCacheRequest(getContext(), uriFileToCache, cacheFileUri,
                     new Response.Listener<Boolean>() {
                         @Override

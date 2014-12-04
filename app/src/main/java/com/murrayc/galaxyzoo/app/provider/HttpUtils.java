@@ -122,6 +122,8 @@ public class HttpUtils {
     }
 
     public static boolean cacheUriToFileSync(final Context context, final RequestQueue requestQueue, final String uriFileToCache, final String cacheFileUri) {
+        Log.info("cacheUriToFileSync(): uriFileToCache=" + uriFileToCache);
+
         final RequestFuture<Boolean> futureListener = RequestFuture.newFuture();
         final Request<Boolean> request = new FileCacheRequest(context, uriFileToCache, cacheFileUri,
                 futureListener, futureListener);

@@ -267,6 +267,8 @@ public class ZooniverseClient {
     public void requestMoreItemsAsync(int count, final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
         throwIfNoNetwork();
 
+        Log.info("requestMoreItemsAsync(): count=" + count);
+
         final Request request = new ZooStringRequest(Request.Method.GET,
                 getQueryUri(count),
                 listener,
