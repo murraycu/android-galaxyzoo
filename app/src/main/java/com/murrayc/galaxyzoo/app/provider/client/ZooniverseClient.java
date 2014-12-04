@@ -250,10 +250,10 @@ public class ZooniverseClient {
             //then this won't return until after the timeout, even if an error happen earlier.
             response = futureListener.get(HttpUtils.TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
         } catch (final InterruptedException | ExecutionException e) {
-            Log.error("cacheUriToFile(): Exception from request.", e);
+            Log.error("requestMoreItemsSync(): Exception from request.", e);
             return null;
         } catch (TimeoutException e) {
-            Log.error("cacheUriToFile(): Timeout Exception from request.", e);
+            Log.error("requestMoreItemsSync(): Timeout Exception from request.", e);
         }
 
         //Presumably this happens when onErrorResponse() is called.
