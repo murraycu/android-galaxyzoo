@@ -38,6 +38,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.wefika.flowlayout.FlowLayout;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -124,8 +126,8 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         layoutVertical.addView(textViewAnswer,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        final LinearLayout layoutHorizontal = new LinearLayout(activity);
-        layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
+        final FlowLayout layoutHorizontal = new FlowLayout(activity);
+        //layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
         final LinearLayout.LayoutParams paramsHorizontal = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         paramsHorizontal.setMargins(0, UiUtils.getPxForDpResource(activity, R.dimen.standard_margin), 0, 0);
@@ -152,8 +154,8 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             //which uses the same name in fragment_subject.xml
             ViewCompat.setTransitionName(imageExample, getString(R.string.transition_subject_image));
 
-            final LinearLayout.LayoutParams paramsImage = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            final FlowLayout.LayoutParams paramsImage = new FlowLayout.LayoutParams(
+                    FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
 
             //This requires API level 17: paramsImage.setMarginStart(getPxForDp(activity, MARGIN_MEDIUM_DP));
             //imageExample.setLayoutParams(paramsImage);
