@@ -63,6 +63,8 @@ public class SubjectAdder {
     boolean downloadMissingImages() {
         boolean noWorkNeeded = true;
 
+        throwIfNoNetwork();
+
         //Get all the items that have an image that is not yet fully downloaded:
         final ContentResolver resolver = getContext().getContentResolver();
 
