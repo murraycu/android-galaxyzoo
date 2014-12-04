@@ -8961,7 +8961,9 @@ com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox -> com.murrayc.galaxyz
     android.net.Uri CONTENT_URI -> b
 com.murrayc.galaxyzoo.app.provider.HttpUtils -> com.murrayc.galaxyzoo.app.provider.c:
     void throwIfNoNetwork(android.content.Context) -> a
+    void throwIfNoNetwork(android.content.Context,boolean) -> a
     boolean getNetworkIsConnected(android.content.Context) -> b
+    boolean getNetworkIsConnected(android.content.Context,boolean) -> b
     java.net.HttpURLConnection openConnection(java.lang.String) -> a
     boolean cacheUriToFileSync(android.content.Context,com.android.volley.RequestQueue,java.lang.String,java.lang.String) -> a
     void setConnectionUserAgent(java.net.HttpURLConnection) -> a
@@ -9099,11 +9101,12 @@ com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder -> com.murrayc.galaxyzoo.app.
     void addRequestToQueue(com.android.volley.Request) -> a
     boolean onImageDownloadDone(boolean,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
     android.content.Context getContext() -> b
+    void throwIfNoNetwork() -> c
     void markImageDownloadAsNotInProgress(java.lang.String) -> b
     boolean markImageAsDownloaded(android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,java.lang.String) -> a
     void addSubject(com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject,boolean) -> a
     boolean subjectIsInDatabase(java.lang.String) -> a
-    java.lang.String getWhereClauseForDownloadNotDone() -> c
+    java.lang.String getWhereClauseForDownloadNotDone() -> d
     boolean access$000(com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder,boolean,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
 com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder$1 -> com.murrayc.galaxyzoo.app.syncadapter.c:
     java.lang.String val$uriFileToCache -> a

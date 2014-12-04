@@ -1,3 +1,11 @@
+1.30:
+
+* Avoid a crash when trying to login when there is no network
+  connection, or when the wifi-only setting was on.
+* Avoid use of cellular data to re-attempt image downloads
+  even when the wifi-only setting was on.
+
+
 1.29:
 
 * Avoid a possible crash in version 1.28.
