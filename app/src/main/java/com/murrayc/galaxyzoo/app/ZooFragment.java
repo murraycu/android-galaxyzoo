@@ -110,6 +110,8 @@ public class ZooFragment extends Fragment {
         //because we lose the links when using StringBuilder.
         final SpannableStringBuilder strBuilder = new SpannableStringBuilder();
         final String PARAGRAPH_BREAK = "\n\n";
+        strBuilder.append(versionText);
+        strBuilder.append(PARAGRAPH_BREAK);
         strBuilder.append(getText(R.string.about_text1));
         strBuilder.append(PARAGRAPH_BREAK);
         strBuilder.append(getText(R.string.about_text2));
@@ -123,8 +125,7 @@ public class ZooFragment extends Fragment {
         strBuilder.append(getText(R.string.about_text5));
         strBuilder.append(PARAGRAPH_BREAK);
         strBuilder.append(getText(R.string.about_text6));
-        strBuilder.append(PARAGRAPH_BREAK);
-        strBuilder.append(versionText);
+
         textView.setText(strBuilder);
 
         /* We used to put the version text into a separate TextView,
