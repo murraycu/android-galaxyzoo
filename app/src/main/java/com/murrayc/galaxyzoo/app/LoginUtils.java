@@ -137,6 +137,9 @@ public class LoginUtils {
     public static LoginDetails getAccountLoginDetails(final Context context) {
         final AccountManager mgr = AccountManager.get(context);
         final Account account = getAccount(mgr);
+        if (account == null) {
+            return null;
+        }
 
         //Make sure that this has not been unset somehow:
         setAutomaticAccountSync(context, account);
