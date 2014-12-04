@@ -137,13 +137,7 @@ public class LoginUtils {
      */
     public static LoginDetails getAccountLoginDetails(final Context context) {
         final AccountManager mgr = AccountManager.get(context);
-        final Account[] accts = mgr.getAccountsByType(ACCOUNT_TYPE);
-        if((accts == null) || (accts.length < 1)) {
-            //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
-            return null;
-        }
-
-        final Account account = accts[0];
+        final Account account = getAccount(mgr);
 
         //Make sure that this has not been unset somehow:
         setAutomaticAccountSync(context, account);
@@ -279,7 +273,7 @@ public class LoginUtils {
      */
     private static String getStringPref(Context context, int prefKeyResId) {
         final AccountManager mgr = AccountManager.get(context);
-        final Account account = getAccount(mgr);
+        final Account account = getAccount(context);
         if (account == null) {
             return null;
         }
@@ -305,16 +299,23 @@ public class LoginUtils {
         return accts[0];
     }
 
+    /**
+     * Get the Account.
+     *
+     * Don't call this from the main thread - use an AsyncTask, for instance.
+     *
+     * @param context
+     * @return
+     */
+    private static Account getAccount(final Context context) {
+        final AccountManager mgr = AccountManager.get(context);
+        return getAccount(mgr);
+    }
+
     static void copyPrefToAccount(final Context context, final String key, final String value) {
         //Copy the preference to the Account:
         final AccountManager mgr = AccountManager.get(context);
-        final Account[] accts = mgr.getAccountsByType(ACCOUNT_TYPE);
-        if((accts == null) || (accts.length < 1)) {
-            //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
-            return;
-        }
-
-        final Account account = accts[0];
+        final Account account = getAccount(context);
         if (account == null) {
             return;
         }
