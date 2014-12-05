@@ -30,7 +30,7 @@ import java.io.InputStream;
  * Simple test to ensure that the generated bindings are working.
  */
 public class DecisionTreeTest extends AndroidTestCase {
-    private static DecisionTree decisionTree;
+    private static DecisionTree decisionTree = null;
 
 
     @Override
