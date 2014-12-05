@@ -231,7 +231,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
         return mCursor.getCount();
     }
 
-    public void changeCursor(final Cursor cursor) {
+    public final void changeCursor(final Cursor cursor) {
         final boolean changed = (mCursor != cursor);
 
         //TODO: our CursorObserver.onChanged() method never seems to be called
