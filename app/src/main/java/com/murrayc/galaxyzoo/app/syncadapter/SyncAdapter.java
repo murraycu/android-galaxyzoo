@@ -232,6 +232,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         // TODO: Request re-authentication when the server says we have used the wrong name + api_key.
         // What does the server reply in that case?
+        // See https://github.com/zooniverse/Galaxy-Zoo/issues/184
         final LoginUtils.LoginDetails loginDetails = LoginUtils.getAccountLoginDetails(getContext());
 
         // query the database for any item whose classification is not yet uploaded.
