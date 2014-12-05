@@ -322,11 +322,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private boolean doUploadSync(final String itemId, final String subjectId, final String authName, final String authApiKey) {
 
-        final String PARAM_PART_CLASSIFICATION = "classification";
 
         //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
         //but that did not allow multiple parameters with the same name, which we need.
         final List<NameValuePair> nameValuePairs = new ArrayList<>();
+
+        //Help the server know that the classification is from this Android app,
+        //by reusing the User-Agent string as a parameter value.
+        //See https://github.com/murraycu/android-galaxyzoo/issues/11
+        nameValuePairs.add(new BasicNameValuePair("interface",
+                HttpUtils.USER_AGENT_MURRAYC));
+
+        final String PARAM_PART_CLASSIFICATION = "classification";
         nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
                 subjectId));
 

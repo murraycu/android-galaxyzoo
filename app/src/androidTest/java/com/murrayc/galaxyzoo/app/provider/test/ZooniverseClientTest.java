@@ -216,6 +216,8 @@ public class ZooniverseClientTest extends AndroidTestCase {
         final URL mockUrl = server.getUrl("/");
         final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
 
+        //SyncAdapter.doUploadSync() adds an "interface" parameter too,
+        //but we are testing a more generic API here:
         List<NameValuePair> values = new ArrayList<>();
         values.add(new BasicNameValuePair("classification[subject_ids][]", "504e4a38c499611ea6010c6a"));
         values.add(new BasicNameValuePair("classification[favorite][]", "true"));
