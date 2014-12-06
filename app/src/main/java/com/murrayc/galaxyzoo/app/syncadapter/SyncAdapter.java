@@ -57,6 +57,7 @@ import java.util.List;
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String COUNT_AS_COUNT = "COUNT(*) AS count";
+    private static final String PARAM_PART_CLASSIFICATION = "classification";
     private int mUploadsInProgress = 0;
 
     private boolean mRequestMoreItemsTaskInProgress = false;
@@ -327,13 +328,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         //but that did not allow multiple parameters with the same name, which we need.
         final List<NameValuePair> nameValuePairs = new ArrayList<>();
 
-        //Help the server know that the classification is from this Android app,
-        //by reusing the User-Agent string as a parameter value.
-        //See https://github.com/murraycu/android-galaxyzoo/issues/11
-        nameValuePairs.add(new BasicNameValuePair("interface",
-                HttpUtils.USER_AGENT_MURRAYC));
-
-        final String PARAM_PART_CLASSIFICATION = "classification";
         nameValuePairs.add(new BasicNameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
                 subjectId));
 
@@ -369,15 +363,21 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     projection, selection, selectionArgs, orderBy);
         }
 
+        int max_sequence = 0;
         while (c.moveToNext()) {
             final int sequence = c.getInt(0);
             final String questionId = c.getString(1);
             final String answerId = c.getString(2);
 
+            //We could instead ORDER BY the sequence but that might be slightly slower and need a index.
+            if(sequence > max_sequence) {
+                max_sequence = sequence;
+            }
+
             //Add the question's answer:
             //TODO: Is the string representation of sequence locale-dependent?
             final String questionKey =
-                    PARAM_PART_CLASSIFICATION + "[annotations][" + sequence + "][" + questionId + "]";
+                    getAnnotationPart(sequence) + "[" + questionId + "]";
             nameValuePairs.add(new BasicNameValuePair(questionKey, answerId));
 
 
@@ -407,7 +407,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         c.close();
 
 
+        //Help the server know that the classification is from this Android app,
+        //by reusing the User-Agent string as a parameter value.
+        //See https://github.com/murraycu/android-galaxyzoo/issues/11
+        final String key =
+                getAnnotationPart(max_sequence + 1 ) + "[interface]";
+        nameValuePairs.add(new BasicNameValuePair(key, HttpUtils.USER_AGENT_MURRAYC));
+
         return mClient.uploadClassificationSync(authName, authApiKey, nameValuePairs);
+    }
+
+    private static String getAnnotationPart(int sequence) {
+        return PARAM_PART_CLASSIFICATION + "[annotations][" + sequence + "]";
     }
 
     private class UploadTask implements Runnable {
