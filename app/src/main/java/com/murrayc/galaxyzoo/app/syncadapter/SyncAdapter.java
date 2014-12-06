@@ -411,7 +411,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         //by reusing the User-Agent string as a parameter value.
         //See https://github.com/murraycu/android-galaxyzoo/issues/11
         final String key =
-                getAnnotationPart(max_sequence + 1 ) + "[interface]";
+                getAnnotationPart(max_sequence + 1 ) + "[user_agent]";
         nameValuePairs.add(new BasicNameValuePair(key, HttpUtils.USER_AGENT_MURRAYC));
 
         return mClient.uploadClassificationSync(authName, authApiKey, nameValuePairs);
