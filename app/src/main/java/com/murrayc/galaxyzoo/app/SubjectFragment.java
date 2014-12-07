@@ -96,16 +96,16 @@ public class SubjectFragment extends ItemFragment
         mImageView = (ImageView) mRootView.findViewById(R.id.imageView);
         if (mImageView == null) {
             Log.error("mImageView is null.");
+        } else {
+            //Make the image invert when clicked,
+            //like in the web UI:
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    doInvert();
+                }
+            });
         }
-
-        //Make the image invert when clicked,
-        //like in the web UI:
-        mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doInvert();
-            }
-        });
 
         setHasOptionsMenu(true);
 
