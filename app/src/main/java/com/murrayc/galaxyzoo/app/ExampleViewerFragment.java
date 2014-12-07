@@ -35,8 +35,8 @@ import com.squareup.picasso.Picasso;
  */
 public class ExampleViewerFragment extends Fragment {
     public static final String ARG_EXAMPLE_URL = "example-url";
-    private View mLoadingView;
-    private View mRootView;
+    private View mLoadingView = null;
+    private View mRootView = null;
     private String mUriStr = null;
     private ImageView mImageView = null;
 

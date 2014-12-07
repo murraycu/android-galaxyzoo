@@ -241,8 +241,8 @@ public class Singleton {
     }
 
     private static class LocaleDetails {
-        public String language;
-        public String countryCode;
+        public String language = null;
+        public String countryCode = null;
 
         @Override
         public boolean equals(Object o) {

@@ -34,7 +34,7 @@ import android.support.v4.app.FragmentManager;
  */
 public class QuestionHelpActivity extends BaseActivity implements ItemFragment.Callbacks {
 
-    private String mQuestionId;
+    private String mQuestionId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

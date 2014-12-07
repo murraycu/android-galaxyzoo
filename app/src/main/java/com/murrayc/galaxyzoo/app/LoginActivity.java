@@ -74,10 +74,10 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private EditText mUsernameView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    private EditText mUsernameView = null;
+    private EditText mPasswordView = null;
+    private View mProgressView = null;
+    private View mLoginFormView = null;
     private String mExistingAccountName = null;
     private boolean mExistingAccountIsAnonymous = false;
 

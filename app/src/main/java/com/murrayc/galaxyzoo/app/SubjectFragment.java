@@ -64,9 +64,9 @@ public class SubjectFragment extends ItemFragment
     private final String[] mColumns = {Item.Columns._ID,
             Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_STANDARD_DOWNLOADED,
             Item.Columns.LOCATION_INVERTED_URI, Item.Columns.LOCATION_INVERTED_DOWNLOADED};
-    private Cursor mCursor;
-    private View mRootView;
-    private ImageView mImageView;
+    private Cursor mCursor = null;
+    private View mRootView = null;
+    private ImageView mImageView = null;
     private boolean mInverted = false;
 
 

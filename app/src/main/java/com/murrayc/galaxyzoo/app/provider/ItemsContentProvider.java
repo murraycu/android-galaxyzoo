@@ -203,7 +203,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
 
-    private DatabaseHelper mOpenDbHelper;
+    private DatabaseHelper mOpenDbHelper = null;
 
     //These are only used in the rare case that we need to explicitly get a "next" item,
     //and block on the result, if the SyncAdapter hasn't done that for us.
@@ -1222,6 +1222,6 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private static class UriParts {
-        public String itemId;
+        public String itemId = null;
     }
 }

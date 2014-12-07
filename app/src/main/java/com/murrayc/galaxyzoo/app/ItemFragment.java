@@ -52,7 +52,7 @@ public class ItemFragment extends ZooFragment {
      */
     private Callbacks mCallbacks = sDummyCallbacks;
     private Singleton mSingleton = null;
-    private String mItemId;
+    private String mItemId = null;
 
     String getItemId() {
         return mItemId;

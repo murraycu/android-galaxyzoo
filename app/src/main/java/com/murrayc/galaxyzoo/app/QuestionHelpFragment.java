@@ -43,7 +43,7 @@ import android.widget.TextView;
  * A simple {@link Fragment} subclass.
  */
 public class QuestionHelpFragment extends BaseQuestionFragment {
-    private View mRootView;
+    private View mRootView = null;
 
     public QuestionHelpFragment() {
         // Required empty public constructor

@@ -27,7 +27,7 @@ import android.graphics.drawable.BitmapDrawable;
  */
 public class BaseQuestionFragment extends ItemFragment {
     public static final String ARG_QUESTION_ID = "question-id";
-    private String mQuestionId;
+    private String mQuestionId = null;
 
     String getQuestionId() {
         return mQuestionId;

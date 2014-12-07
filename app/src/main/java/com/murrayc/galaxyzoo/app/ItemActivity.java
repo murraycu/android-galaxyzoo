@@ -31,7 +31,7 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  */
 @SuppressLint("Registered") //It is not an actual activity - it is just a base class.
 public class ItemActivity extends BaseActivity implements ItemFragment.Callbacks {
-    private String mItemId;
+    private String mItemId = null;
 
     //This is not private, so we can use it in tests.
     public String getItemId() {

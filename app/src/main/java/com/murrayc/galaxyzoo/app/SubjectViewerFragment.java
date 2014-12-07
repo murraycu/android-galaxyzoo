@@ -54,9 +54,9 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     private static final int COLUMN_INDEX_ID = 0;
     private final String[] mColumns = {Item.Columns._ID};
-    private Cursor mCursor;
-    private View mLoadingView;
-    private View mRootView;
+    private Cursor mCursor = null;
+    private View mLoadingView = null;
+    private View mRootView = null;
 
 
     /**

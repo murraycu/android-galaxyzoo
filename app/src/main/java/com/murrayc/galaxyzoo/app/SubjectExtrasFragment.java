@@ -55,12 +55,12 @@ public class SubjectExtrasFragment extends ItemFragment
     /* private static final int COLUMN_INDEX_ID = 0; */
     private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
     private final String[] mColumns = {Item.Columns._ID, Item.Columns.ZOONIVERSE_ID};
-    private Cursor mCursor;
-    private String mZooniverseId; //Only used for the talk URI so far.
+    private Cursor mCursor = null;
+    private String mZooniverseId = null; //Only used for the talk URI so far.
 
     // A map of checkbox IDs to buttons.
     private boolean mLoaderFinished = false;
-    private View mRootView;
+    private View mRootView = null;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the

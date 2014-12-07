@@ -87,8 +87,8 @@ public class ListFragment extends ZooFragment
     private final String[] mColumns = {Item.Columns._ID,
             Item.Columns.LOCATION_THUMBNAIL_URI, Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED,
             Item.Columns.DONE, Item.Columns.UPLOADED, Item.Columns.FAVORITE};
-    private View mRootView;
-    private ListCursorAdapter mAdapter;
+    private View mRootView = null;
+    private ListCursorAdapter mAdapter = null;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
