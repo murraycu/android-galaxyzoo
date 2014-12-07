@@ -39,11 +39,14 @@ public class BaseQuestionFragment extends ItemFragment {
 
     DecisionTree.Question getQuestion() {
         final Singleton singleton = getSingleton();
-
         final DecisionTree tree = singleton.getDecisionTree();
 
-        DecisionTree.Question question = tree.getQuestionOrFirst(getQuestionId());
-        setQuestionId(question.getId());
+        final DecisionTree.Question question = tree.getQuestionOrFirst(getQuestionId());
+        if (question != null) {
+            //TODO: Is this useful/necessary?
+            setQuestionId(question.getId());
+        }
+
         return question;
     }
 

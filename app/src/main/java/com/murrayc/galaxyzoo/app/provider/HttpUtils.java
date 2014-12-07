@@ -243,9 +243,14 @@ public class HttpUtils {
             //FileOutputStream doesn't seem to understand content provider URIs:
             pfd = context.getContentResolver().
                     openFileDescriptor(Uri.parse(cacheFileContentUri), "w");
+            if (pfd == null) {
+                Log.error("parseGetFileResponseContent(): pfd is null.");
+                return false;
+            } else {
 
-            fout = new FileOutputStream(pfd.getFileDescriptor());
-            fout.write(data);
+                fout = new FileOutputStream(pfd.getFileDescriptor());
+                fout.write(data);
+            }
         } catch (final IOException e) {
             Log.error("parseGetFileResponseContent(): Exception while writing to FileOutputStream", e);
             return false;

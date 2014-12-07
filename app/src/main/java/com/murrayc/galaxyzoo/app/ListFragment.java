@@ -213,8 +213,14 @@ public class ListFragment extends ZooFragment
         }
 
         final RecyclerView gridView = getGridView();
+        if (gridView == null) {
+            Log.error("update(): gridView is null.");
+            return;
+        }
+
         gridView.setLayoutManager(
                 new GridLayoutManager(activity, gridSpan));
+
 
         //This is apparently already the default:
         //gridView.setItemAnimator(new DefaultItemAnimator());
@@ -257,6 +263,11 @@ public class ListFragment extends ZooFragment
 
     private void onGridItemClicked(int position, final View sharedElementView) {
         final RecyclerView gridView = getGridView();
+        if (gridView == null) {
+            Log.error("onGridItemClicked(): gridView is null.");
+            return;
+        }
+
         RecyclerView.Adapter adapter = gridView.getAdapter();
 
         /*

@@ -583,7 +583,7 @@ public class QuestionFragment extends BaseQuestionFragment
         final Singleton singleton = getSingleton();
         final DecisionTree tree = singleton.getDecisionTree();
         final DecisionTree.Question question = tree.getQuestion(questionId);
-        if (question.hasCheckboxes()) {
+        if ((question != null) && question.hasCheckboxes()) {
             checkboxes = new ArrayList<>();
             for (final DecisionTree.Checkbox checkbox : question.getCheckboxes()) {
                 final String checkboxId = checkbox.getId();

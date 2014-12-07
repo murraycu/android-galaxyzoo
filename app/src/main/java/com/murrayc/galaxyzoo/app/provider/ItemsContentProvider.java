@@ -631,35 +631,41 @@ public class ItemsContentProvider extends ContentProvider {
             case MATCHER_ID_ITEM_NEXT: {
                 c = queryItemNext(projection, selection, selectionArgs, orderBy);
 
-                final int count = c.getCount();
-                if (count < 1) {
-                    //Immediately get some more from the REST server and then try again.
-                    //Get one synchronously, for now.
-                    //This is a (small) duplicate of what SyncProvider does.
-                    //TODO: Find a way to ask the SyncProvider to do exactly this and no more,
-                    //and block until it has finished?
-                    try {
-                        final List<ZooniverseClient.Subject> subjects = mZooniverseClient.requestMoreItemsSync(1);
-                        mSubjectAdder.addSubjects(subjects, false /* not async - we need it immediately. */);
-                    } catch (final HttpUtils.NoNetworkException e) {
-                        //Return the empty cursor,
-                        //and let the caller guess at the cause.
-                        //If we let the exception be thrown by this query() method then
-                        //it will causes an app crash in AsyncTask.done(), as used by CursorLoader.
-                        //TODO: Find a better way to respond to errors when using CursorLoader?
-                        return c;
+                if (c == null) {
+                    Log.error("ItemsContentProvider.query(): c is null.");
+                } else {
+                    final int count = c.getCount();
+                    if (count < 1) {
+                        //Immediately get some more from the REST server and then try again.
+                        //Get one synchronously, for now.
+                        //This is a (small) duplicate of what SyncProvider does.
+                        //TODO: Find a way to ask the SyncProvider to do exactly this and no more,
+                        //and block until it has finished?
+                        try {
+                            final List<ZooniverseClient.Subject> subjects = mZooniverseClient.requestMoreItemsSync(1);
+                            mSubjectAdder.addSubjects(subjects, false /* not async - we need it immediately. */);
+                        } catch (final HttpUtils.NoNetworkException e) {
+                            //Return the empty cursor,
+                            //and let the caller guess at the cause.
+                            //If we let the exception be thrown by this query() method then
+                            //it will causes an app crash in AsyncTask.done(), as used by CursorLoader.
+                            //TODO: Find a better way to respond to errors when using CursorLoader?
+                            return c;
+                        }
+
+                        c.close();
+                        c = queryItemNext(projection, selection, selectionArgs, orderBy);
                     }
 
-                    c.close();
-                    c = queryItemNext(projection, selection, selectionArgs, orderBy);
+
+                    c.setNotificationUri(getContext().getContentResolver(),
+                            Item.CONTENT_URI); //TODO: More precise?
                 }
 
                 //Make sure we have enough soon enough
                 //by getting the rest asynchronously:
                 requestSync();
 
-                c.setNotificationUri(getContext().getContentResolver(),
-                        Item.CONTENT_URI); //TODO: More precise?
                 break;
             }
 
