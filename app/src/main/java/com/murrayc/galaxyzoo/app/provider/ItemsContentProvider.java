@@ -921,6 +921,14 @@ public class ItemsContentProvider extends ContentProvider {
                 " AND (" + selection + ')' : "");
     }
 
+    /**
+     * Get the database.
+     *
+     * We don't need to close() this SQLiteDatabase.
+     *   See http://stackoverflow.com/a/12715032/1123654
+     *
+     * @return
+     */
     private SQLiteDatabase getDb() {
         return mOpenDbHelper.getWritableDatabase();
     }
