@@ -1,3 +1,11 @@
+1.31:
+
+* Uploading classifications: Tell the server that the Android app was used.
+  https://github.com/murraycu/android-galaxyzoo/issues/11
+* Try to avoid an occasional crash when warning that there is no network
+  connection. Thanks for using the Report button.
+
+
 1.30:
 
 * Avoid a crash when trying to login when there is no network

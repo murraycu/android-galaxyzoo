@@ -8316,16 +8316,20 @@ com.murrayc.galaxyzoo.app.BaseQuestionFragment -> com.murrayc.galaxyzoo.app.b:
     com.murrayc.galaxyzoo.app.DecisionTree$Question getQuestion() -> L
     android.graphics.drawable.BitmapDrawable getIcon(android.content.Context,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton) -> a
 com.murrayc.galaxyzoo.app.ClassifyActivity -> com.murrayc.galaxyzoo.app.ClassifyActivity:
-    int mClassificationsDoneInSession -> n
+    boolean mIsStateAlreadySaved -> n
+    boolean mPendingClassificationFinished -> o
+    int mClassificationsDoneInSession -> p
     void requestSync() -> o
     void onCreate(android.os.Bundle) -> onCreate
+    void onPause() -> onPause
     void onResumeFragments() -> b
     void onExistingLoginRetrieved(com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails) -> a
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     void onClassificationFinished() -> k
-    void checkForLoginAsync() -> p
-    void startNextClassification() -> q
-    com.murrayc.galaxyzoo.app.ClassifyFragment getChildFragment() -> r
+    void doClassificationFinished() -> p
+    void checkForLoginAsync() -> q
+    void startNextClassification() -> r
+    com.murrayc.galaxyzoo.app.ClassifyFragment getChildFragment() -> s
     void abandonItem() -> l
     void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
     void access$000(com.murrayc.galaxyzoo.app.ClassifyActivity,com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails) -> a
@@ -9142,6 +9146,7 @@ com.murrayc.galaxyzoo.app.syncadapter.SyncAdapter -> com.murrayc.galaxyzoo.app.s
     boolean removeOldSubjects() -> i
     void removeItem(java.lang.String) -> a
     boolean doUploadSync(java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
+    java.lang.String getAnnotationPart(int) -> b
     void onQueryTaskFinished(java.util.List) -> a
     void onUploadTaskFinished(boolean,java.lang.String) -> a
     void markItemAsUploaded(java.lang.String) -> b
