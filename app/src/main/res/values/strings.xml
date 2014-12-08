@@ -35,7 +35,7 @@
     <!-- An action. Shown on a button or menu item. -->
     <string name="action_login">Login</string>
 
-    <!-- An checkable action with two states. It is either a favorite or not. Shown on a button or menu item. -->
+    <!-- A checkable action with two states. It is either a favorite or not. Shown on a button or menu item. -->
     <string name="action_favorite">Favorite</string>
 
     <!-- An action. Shown on a button or menu item. -->
