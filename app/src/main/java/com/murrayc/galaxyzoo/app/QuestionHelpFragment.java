@@ -81,11 +81,15 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         // Use the Builder class for convenient dialog construction
         final Activity activity = getActivity();
         final DecisionTree.Question question = getQuestion();
+        if (question == null) {
+            Log.error("update(): question is null.");
+            return;
+        }
 
         //Show the Help text:
         final TextView textView = (TextView) mRootView.findViewById(R.id.textView);
         if (textView == null) {
-            Log.error("textView is null.");
+            Log.error("update(): textView is null.");
             return;
         }
         textView.setText(question.getHelp());
@@ -93,7 +97,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         //Show the example images:
         final TableLayout tableLayout = (TableLayout) mRootView.findViewById(R.id.tableLayout);
         if (tableLayout == null) {
-            Log.error("tableLayout is null.");
+            Log.error("update(): tableLayout is null.");
             return;
         }
 

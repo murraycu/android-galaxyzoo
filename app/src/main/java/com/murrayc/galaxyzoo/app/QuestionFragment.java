@@ -320,11 +320,15 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         final DecisionTree.Question question = getQuestion();
+        if (question == null) {
+            Log.error("update(): question is null.");
+            return;
+        }
 
         //Show the title:
         final TextView textViewTitle = (TextView) mRootView.findViewById(R.id.textViewTitle);
         if (textViewTitle == null) {
-            Log.error("textViewTitle is null.");
+            Log.error("update(): textViewTitle is null.");
             return;
         }
         textViewTitle.setText(question.getTitle());
@@ -332,7 +336,7 @@ public class QuestionFragment extends BaseQuestionFragment
         //Show the text:
         final TextView textViewText = (TextView) mRootView.findViewById(R.id.textViewText);
         if (textViewText == null) {
-            Log.error("textViewText is null.");
+            Log.error("update(): textViewText is null.");
             return;
         }
         textViewText.setText(question.getText());
@@ -340,7 +344,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
         final TableLayout layoutAnswers = (TableLayout) mRootView.findViewById(R.id.layoutAnswers);
         if (layoutAnswers == null) {
-            Log.error("layoutAnswers is null.");
+            Log.error("update(): layoutAnswers is null.");
             return;
         }
 
