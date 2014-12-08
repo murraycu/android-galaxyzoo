@@ -7,7 +7,7 @@
   <string name="about_text1">Una app per Android per la classificazione delle galassie di <a href="http://www.galaxyzoo.org/">Galaxy Zoo</a>. Questa è una app ufficiale per Zooniverse e per Galaxy Zoo.</string>
   <string name="about_text2">Questa app per Android è stata sviluppata da<a href="http://murrayc.com/">Murray Cumming</a>.</string>
   <string name="about_text3">Questa applicazione utilizza la framework <a href="https://android.googlesource.com/platform/frameworks/volley">Volley</a>, rilasciato sotto la licenza Apache 2.0.</string>
-  <string name="about_text3b">Questa applicazione utilizza la framework <a href="http://square.github.io/picasso/">Picasso</a>, rilasciato sotto la licenza Apache 2.0.</string>
+  <string name="about_text3b">Questa app utilizza la framework <a href="http://square.github.io/picasso/">Picasso</a>, rilasciata sotto la licenza Apache 2.0.</string>
   <string name="about_text4">Le icone per le risposte e le immagini sono parte <a href="https://github.com/zooniverse/Galaxy-Zoo">dell\'interfaccia di Galaxy-Zoo</a> presso il sito Zooniverse, e sono sotto la licenza Apache 2.0. </string>
   <string name="about_text5">Le immagini degli oggetti provenienti dalla <a href="http://www.sdss3.org/">Sloan Digital Sky Survey</a> sono rilasciate sotto la loro licenza <a href="http://www.sdss3.org/collaboration/imageuse.php">"non-commercial"</a></string>
   <string name="about_text6">Le immagini proveniente dalla <a href="http://hubblesite.org/">Hubble Space Telescope</a> sono proprietà della NASA e della STScl e sono rilasciate sotto <a href="http://hubblesite.org/about_us/copyright.php">la loro licensa di publico dominio</a>.</string>
@@ -21,10 +21,12 @@
   <string name="action_examples">Esempi</string>
   <!--An action. Shown on a button or menu item.-->
   <string name="action_login">Accesso</string>
-  <!--An action. Shown on a button or menu item.-->
+  <!--An checkable action with two states. It is either a favorite or not. Shown on a button or menu item.-->
   <string name="action_favorite">Preferito</string>
   <!--An action. Shown on a button or menu item.-->
   <string name="action_restart">Riavvia</string>
+  <!--An action. Shown on a button or menu item.-->
+  <string name="action_discuss">Discuti</string>
   <!--An action. Shown on a button or menu item.-->
   <string name="action_list">Lista</string>
   <!--An action. Shown on a button or menu item.-->
@@ -105,6 +107,8 @@
   <string name="pref_title_keep_count">Mantieni</string>
   <string name="pref_title_wifi_only">Scarica solo tramite Wi-Fi</string>
   <string name="pref_description_wifi_only">Per ridurre i costi applicati dall\'operatore per i dati, non scaricare tramite reti mobili.</string>
+  <string name="pref_title_show_discuss_question">Proponi una discussione</string>
+  <string name="pref_description_show_discuss_question">Fare vedere la domanda \"Vorresti discutere a proposito di quest\'oggetto?\" oppure no</string>
   <!--The possible numbers of items that may be downloaded in advance before they are needed.-->
   <string-array name="pref_cache_size_entries">
     <item>5 argomenti</item>
