@@ -25,7 +25,7 @@ import android.provider.BaseColumns;
 /**
  * Created by murrayc on 5/28/14.
  */
-public class ClassificationAnswer {
+public final class ClassificationAnswer {
     public static final String AUTHORITY =
             Item.AUTHORITY;
 

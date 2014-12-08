@@ -50,7 +50,7 @@ import java.util.concurrent.TimeoutException;
  *
  * Created by murrayc on 8/25/14.
  */
-public class HttpUtils {
+public final class HttpUtils {
 
     public static final String HTTP_REQUEST_HEADER_PARAM_USER_AGENT = "User-Agent";
     public static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";

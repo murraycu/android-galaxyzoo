@@ -25,7 +25,7 @@ import android.provider.BaseColumns;
 /**
  * Created by murrayc on 5/28/14.
  */
-public class Item {
+public final class Item {
     public static final String AUTHORITY =
             "com.murrayc.galaxyzoo.app";
 

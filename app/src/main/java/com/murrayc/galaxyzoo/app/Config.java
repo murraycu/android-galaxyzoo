@@ -24,7 +24,7 @@ package com.murrayc.galaxyzoo.app;
  *
  * Created by murrayc on 10/10/14.
  */
-class Config {
+final class Config {
     //Maybe this whole class should be in the app, not the content provider.
     public static final String TALK_URI = "http://talk.galaxyzoo.org/#/subjects/";
 

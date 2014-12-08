@@ -37,7 +37,7 @@ import java.io.InputStream;
 /**
  *
  */
-public class Utils {
+public final class Utils {
 
     public static final String STRING_ENCODING = "UTF-8";
 

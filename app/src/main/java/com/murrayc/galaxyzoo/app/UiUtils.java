@@ -37,7 +37,7 @@ import android.widget.Toast;
 /**
  * Created by murrayc on 5/21/14.
  */
-class UiUtils {
+final class UiUtils {
 
     private static void warnAboutNoNetworkConnection(final Activity activity) {
         final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_network), Toast.LENGTH_LONG);

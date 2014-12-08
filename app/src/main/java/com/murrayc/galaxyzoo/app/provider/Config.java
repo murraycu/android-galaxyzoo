@@ -25,7 +25,7 @@ package com.murrayc.galaxyzoo.app.provider;
  *
  * See also com.murrayc.galaxyzoo.app.Config.
  */
-public class Config {
+public final class Config {
 
     public static final String SERVER = "https://api.zooniverse.org/projects/galaxy_zoo/";
 }

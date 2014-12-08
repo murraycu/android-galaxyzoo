@@ -44,7 +44,7 @@ import java.util.Map;
 /**
  * Created by murrayc on 10/5/14.
  */
-public class LoginUtils {
+public final class LoginUtils {
     // An account type, in the form of a domain name
     // This must match the android:accountType in authenticator.xml
     public static final String ACCOUNT_TYPE = "galaxyzoo.com";

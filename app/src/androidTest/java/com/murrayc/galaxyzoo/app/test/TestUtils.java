@@ -27,7 +27,7 @@ import com.murrayc.galaxyzoo.app.R;
 /**
  * Created by murrayc on 11/7/14.
  */
-public class TestUtils {
+public final class TestUtils {
     static void setTheme(final ActivityUnitTestCase<?> testCase) {
         //Avoid this exception:
         //java.lang.IllegalStateException: You need to use a Theme.AppCompat theme (or descendant) with this activity.
