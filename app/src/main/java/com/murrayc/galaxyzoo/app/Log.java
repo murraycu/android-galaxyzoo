@@ -24,7 +24,7 @@ package com.murrayc.galaxyzoo.app;
  * A class that wraps methods in Log to add the calling method name from the servlet to
  * log messages.
  */
-public class Log {
+public final class Log {
 
     private static final String LOG_TAG = "android-galaxyzoo"; //TODO: Get this from the build files somehow.
 
