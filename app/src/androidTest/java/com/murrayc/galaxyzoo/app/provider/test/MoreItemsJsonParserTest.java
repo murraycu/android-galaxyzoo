@@ -21,11 +21,16 @@ package com.murrayc.galaxyzoo.app.provider.test;
 
 import android.test.AndroidTestCase;
 
+import com.murrayc.galaxyzoo.app.Log;
+import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.client.MoreItemsJsonParser;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -34,12 +39,18 @@ import java.util.List;
 public class MoreItemsJsonParserTest extends AndroidTestCase {
     private List<ZooniverseClient.Subject> mSubjects = null;
 
+
     @Override
     public void setUp() throws IOException {
         final InputStream inputStream = MoreItemsJsonParserTest.class.getClassLoader().getResourceAsStream("test_more_items_response.json");
         assertNotNull(inputStream);
-        mSubjects = MoreItemsJsonParser.parseMoreItemsResponseContent(inputStream);
+
+        final Reader reader = new InputStreamReader(inputStream, Utils.STRING_ENCODING);
+
+        mSubjects = MoreItemsJsonParser.parseMoreItemsResponseContent(reader);
         assertNotNull(mSubjects);
+
+        reader.close();
     }
 
     @Override
