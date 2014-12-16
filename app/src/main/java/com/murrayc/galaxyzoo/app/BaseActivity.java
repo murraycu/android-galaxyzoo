@@ -94,6 +94,9 @@ class BaseActivity extends ActionBarActivity {
         final int id = item.getItemId();
 
         if (id == android.R.id.home) {
+            //We can use this instead of more complex code, checking NavUtils.shouldUpRecreateTask(),
+            //because we know that our activities will never be opened from another app.
+            //See http://developer.android.com/training/implementing-navigation/ancestral.html.
             NavUtils.navigateUpFromSameTask(this);
             return true;
         }
