@@ -48,9 +48,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.murrayc.galaxyzoo.app.ClassifyActivity" />
         </activity>
+
+        <!-- We use the app name because this is the main activity. -->
+        <!-- We use launchMode="singleTop" so the Up button (from the Help/Examples screen, for
+        instance, takes us back without losing the half-done classification. Otherwise,
+        Up would create a new instance, because Up is meant to ignore the back stack. -->
         <activity
             android:name=".ClassifyActivity"
-            android:label="@string/app_name" > <!-- We use the app name because this is the main activity. -->
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
