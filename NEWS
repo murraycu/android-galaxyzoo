@@ -1,3 +1,9 @@
+
+* Help: Don't lose the ongoing classification when pressing the toolbar's
+  back/up button.
+  https://github.com/murraycu/android-galaxyzoo/issues/6
+* Added Italian translation.
+
 1.31:
 
 * Uploading classifications: Tell the server that the Android app was used.
