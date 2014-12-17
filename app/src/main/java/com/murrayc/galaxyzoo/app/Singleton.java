@@ -103,7 +103,7 @@ public class Singleton {
         //country code in uppercase, such as ch_CN, like normal system locales.
         final String country = locale.getCountry();
         if (!TextUtils.isEmpty(country)) {
-            result.countryCode = country.toLowerCase();
+            result.countryCode = country.toLowerCase(new Locale(Utils.STRING_LANGUAGE));
         }
 
         return result;

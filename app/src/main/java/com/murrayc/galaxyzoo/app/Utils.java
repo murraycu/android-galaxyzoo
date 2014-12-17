@@ -39,6 +39,14 @@ import java.io.InputStream;
  */
 public final class Utils {
 
+    /**
+     * For use, for instance with String.toLowerCase()
+     */
+    public static final String STRING_LANGUAGE = "en";
+
+    /**
+     * For use when parsing and building raw binary data:
+     */
     public static final String STRING_ENCODING = "UTF-8";
 
     /**
