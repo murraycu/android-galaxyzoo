@@ -86,7 +86,7 @@ public final class HttpUtils {
      * @param context
      * @return
      */
-    public static boolean getNetworkIsConnected(final Context context, boolean wifiOnly) {
+    private static boolean getNetworkIsConnected(final Context context, boolean wifiOnly) {
         final Utils.NetworkConnected networkConnected =
                 Utils.getNetworkIsConnected(context, wifiOnly);
         return networkConnected.connected;

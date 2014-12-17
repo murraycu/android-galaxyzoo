@@ -179,7 +179,7 @@ public final class LoginUtils {
      * Don't call this from the main thread - use an AsyncTask, for instance.
      * @param context
      */
-    public static void addAnonymousAccount(final Context context) {
+    private static void addAnonymousAccount(final Context context) {
         final AccountManager accountManager = AccountManager.get(context);
         final Account account = new Account(ACCOUNT_NAME_ANONYMOUS, LoginUtils.ACCOUNT_TYPE);
         accountManager.addAccountExplicitly(account, null, null);
@@ -233,7 +233,7 @@ public final class LoginUtils {
      * @param prefKeyResId
      * @return
      */
-    static boolean getBooleanPref(final Context context, final int prefKeyResId) {
+    private static boolean getBooleanPref(final Context context, final int prefKeyResId) {
         final String value = getStringPref(context, prefKeyResId);
         if (value == null) {
             return false;
