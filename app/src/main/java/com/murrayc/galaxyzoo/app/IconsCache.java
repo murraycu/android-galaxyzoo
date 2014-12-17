@@ -509,8 +509,8 @@ class IconsCache {
     }
 
     private void cacheBitmapToFile(final Bitmap bmapIcon, final String cacheFileUri) {
-        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        FileOutputStream fout = null;
+        final OutputStream stream = new ByteArrayOutputStream();
+        OutputStream fout = null;
         try {
             fout = new FileOutputStream(cacheFileUri);
             bmapIcon.compress(Bitmap.CompressFormat.PNG, 100, stream);

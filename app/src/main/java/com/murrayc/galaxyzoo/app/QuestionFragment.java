@@ -684,6 +684,9 @@ public class QuestionFragment extends BaseQuestionFragment
         // either completely or not at all, as a transaction.
         // This should prevent an incomplete classification from being uploaded
         // before we have finished adding it.
+        //
+        // We use the specific ArrayList<> subtype instead of List<> because
+        // ContentResolver.applyBatch() takes an ArrayList for some reason.
         final ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
         int sequence = 0;

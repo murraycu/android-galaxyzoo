@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -51,7 +52,7 @@ public class DecisionTree {
     private static final String NODE_ANSWER = "answer";
 
     //TODO: Make this private and add accessors.
-    public final Hashtable<String, Question> questionsMap = new Hashtable<>();
+    public final Map<String, Question> questionsMap = new Hashtable<>();
 
     /**
      * @param inputStreamTree        The XMl file containing the decision tree.
