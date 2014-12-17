@@ -22,8 +22,6 @@ package com.murrayc.galaxyzoo.app;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
-import android.graphics.Bitmap;
-import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -42,8 +40,6 @@ import java.lang.ref.WeakReference;
  * Created by murrayc on 5/16/14.
  */
 class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolder> {
-
-    final LruCache<String, Bitmap> mCache = new LruCache<>(20);
 
     private class CursorObserver extends DataSetObserver {
         @Override
