@@ -965,7 +965,7 @@ public class QuestionFragment extends BaseQuestionFragment
             private final String answerId;
 
             // Any checkboxes that were selected before the answer (usually "Done") was chosen.
-            private List<String> checkboxIds;
+            private final List<String> checkboxIds;
 
             public QuestionAnswer(final String questionId, final String answerId, final List<String> checkboxIds) {
                 this.questionId = questionId;
