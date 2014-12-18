@@ -183,7 +183,7 @@ public class ClassifyActivity extends ItemActivity
     //public static final String AUTHORITY = Item.AUTHORITY;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (TextUtils.isEmpty(getItemId())) {
@@ -198,6 +198,7 @@ public class ClassifyActivity extends ItemActivity
         } catch (final UnsupportedOperationException e) {
             //This happens during our test case, because the MockContext doesn't support this,
             //so ignore this.
+            Log.info("ClassifyActivity.onCreate(): Ignoring UnsupportedOperationException from getDefaultSharedPreferences().");
         }
 
         /**

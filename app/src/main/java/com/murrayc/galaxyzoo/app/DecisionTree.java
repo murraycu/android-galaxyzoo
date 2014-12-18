@@ -62,7 +62,7 @@ public class DecisionTree {
     public DecisionTree(final InputStream inputStreamTree, final InputStream inputStreamTranslation) {
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
-        //Disable feature that we don't need and which just slow the parsing down:
+        //Disable feature that we don't need and which just slows the parsing down:
         //TODO: Confirm that this actually makes a difference.
         dbf.setNamespaceAware(false);
         dbf.setValidating(false);
@@ -71,8 +71,8 @@ public class DecisionTree {
         try {
             documentBuilder = dbf.newDocumentBuilder();
         } catch (final ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            //TODO: Throw a more suitable exception.
+            Log.error("DecisionTree: Exception from newDocumentBuilder", e);
             return;
         }
 
@@ -81,14 +81,15 @@ public class DecisionTree {
         try {
             xmlDocument = documentBuilder.parse(inputStreamTree);
         } catch (final SAXException | IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            //TODO: Throw a more suitable exception.
+            Log.error("DecisionTree: Exception from DocumentBuilder.parse()", e);
             return;
         }
 
         final Element rootNode = xmlDocument.getDocumentElement();
         if (!TextUtils.equals(rootNode.getNodeName(), NODE_ROOT)) {
-            android.util.Log.v("android-galaxyzoo", "Unexpected XML root node name found: " + rootNode.getNodeName());
+            //TODO: Throw a suitable exception.
+            Log.error("android-galaxyzoo", "Unexpected XML root node name found: " + rootNode.getNodeName());
             return;
         }
 

@@ -201,7 +201,9 @@ public class ZooniverseClient {
                 result.append(URLEncoder.encode(pair.getName(), Utils.STRING_ENCODING));
                 result.append("=");
                 result.append(URLEncoder.encode(pair.getValue(), Utils.STRING_ENCODING));
-            } catch (UnsupportedEncodingException e) {
+            } catch (final UnsupportedEncodingException e) {
+                //This is incredibly unlikely for the UTF-8 encoding,
+                //so we just log it instead of trying to recover from it.
                 Log.error("getPostDataBytes(): Exception", e);
                 return null;
             }
@@ -217,7 +219,9 @@ public class ZooniverseClient {
         byte[] asBytes = null;
         try {
             asBytes = str.getBytes(Utils.STRING_ENCODING);
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
+            //This is incredibly unlikely for the UTF-8 encoding,
+            //so we just log it instead of trying to recover from it.
             Log.error("generateAuthorizationHeader(): String.getBytes() failed", e);
             return null;
         }

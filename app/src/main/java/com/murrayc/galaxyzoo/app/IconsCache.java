@@ -400,7 +400,7 @@ class IconsCache {
                     if (bufferedReader != null) {
                         try {
                             bufferedReader.close();
-                        } catch (IOException e) {
+                        } catch (final IOException e) {
                             Log.error("getFileContents(): exception while closing bufferedReader", e);
                         }
                     }
@@ -412,7 +412,7 @@ class IconsCache {
                 if (isr != null) {
                     try {
                         isr.close();
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         Log.error("getFileContents(): exception while closing isr", e);
                     }
                 }
@@ -424,7 +424,7 @@ class IconsCache {
             if (fis != null) {
                 try {
                     fis.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     Log.error("getFileContents(): exception while closing fis", e);
                 }
             }
@@ -485,8 +485,6 @@ class IconsCache {
                 final int y = -(Integer.parseInt(yStr)); //Change negative (CSS) to positive (Bitmap).
 
                 //TODO: Avoid hard-coding the 100px, 100px here:
-                //We catch the IllegalArgumentException to avoid letting the CSS crash our app
-                //just by having a wrong value.
                 try {
                     final Bitmap bmapIcon = Bitmap.createBitmap(icons, x, y, 100, 100);
 
@@ -502,6 +500,8 @@ class IconsCache {
                         mWorkflowIcons.put(cssName, bmapIcon);
                     }
                 } catch (final IllegalArgumentException ex) {
+                    //We catch this IllegalArgumentException to avoid letting the CSS crash our app
+                    //just by having a wrong value.
                     Log.error("IllegalArgumentException from createBitmap() for iconName=" + cssName + ", x=" + x + ", y=" + y + ", icons.width=" + icons.getWidth() + ", icons.height=" + icons.getHeight());
                 }
             }
@@ -522,7 +522,7 @@ class IconsCache {
             if (fout != null) {
                 try {
                     fout.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     Log.error("cacheBitmapToFile(): Exception while closing fout.", e);
                 }
             }
@@ -531,7 +531,7 @@ class IconsCache {
         if (stream != null) {
             try {
                 stream.close();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 Log.error("cacheBitmapToFile(): Exception while closing stream.", e);
             }
         }
