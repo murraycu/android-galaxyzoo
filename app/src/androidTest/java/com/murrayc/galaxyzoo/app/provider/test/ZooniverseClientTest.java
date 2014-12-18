@@ -241,7 +241,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
-    public void testUploadWithFailure() throws IOException, ZooniverseClient.UploadException {
+    public void testUploadWithFailure() throws IOException {
         final MockWebServer server = new MockWebServer();
 
         final MockResponse response = new MockResponse();
@@ -255,9 +255,15 @@ public class ZooniverseClientTest extends AndroidTestCase {
         List<NameValuePair> values = new ArrayList<>();
         values.add(new BasicNameValuePair("test nonsense", "12345"));
 
-        final boolean result = client.uploadClassificationSync("testAuthName",
-                "testAuthApiKey", values);
-        assertFalse(result);
+        try {
+            final boolean result = client.uploadClassificationSync("testAuthName",
+                    "testAuthApiKey", values);
+            assertFalse(result);
+        } catch (final ZooniverseClient.UploadException ex) {
+            //This is (at least with okhttp.mockwebserver) a normal
+            //event if the upload was refused via an error response code.
+            assertTrue(ex.getCause() instanceof IOException);
+        }
 
         server.shutdown();
     }

@@ -327,6 +327,8 @@ public class ZooniverseClient {
         //Get the response:
         InputStream in = null;
         try {
+            //Note: At least with okhttp.mockwebserver, getInputStream() will throw an IOException (file
+            //not found) if the response code was an error, such as HTTP_UNAUTHORIZED.
             in = conn.getInputStream();
             final int responseCode = conn.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_CREATED) {
