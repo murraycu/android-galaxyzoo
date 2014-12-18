@@ -21,7 +21,6 @@ package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -188,16 +187,12 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
         final String uri = Config.FULL_EXAMPLE_URI + iconName + ".jpg";
 
-        try {
-            final Intent intent = new Intent(activity, ExampleViewerActivity.class);
-            intent.putExtra(ExampleViewerFragment.ARG_EXAMPLE_URL, uri);
+        final Intent intent = new Intent(activity, ExampleViewerActivity.class);
+        intent.putExtra(ExampleViewerFragment.ARG_EXAMPLE_URL, uri);
 
-            //"subjectImageTransition" is also specified as transitionName="subjectImageTransition"
-            //on the ImageButton here (when we created it) and in fragment_subject.xml.
-            //TODO: Why do we need to specify it again here?
-            ActivityCompat.startActivity(activity, intent, UiUtils.getTransitionOptionsBundle(activity, imageButton));
-        } catch (final ActivityNotFoundException e) {
-            Log.error("Could not open the example image URI.", e);
-        }
+        //"subjectImageTransition" is also specified as transitionName="subjectImageTransition"
+        //on the ImageButton here (when we created it) and in fragment_subject.xml.
+        //TODO: Why do we need to specify it again here?
+        ActivityCompat.startActivity(activity, intent, UiUtils.getTransitionOptionsBundle(activity, imageButton));
     }
 }

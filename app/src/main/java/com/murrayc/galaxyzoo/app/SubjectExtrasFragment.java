@@ -20,7 +20,6 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -181,12 +180,8 @@ public class SubjectExtrasFragment extends ItemFragment
         //Open a link to the examine page:
         final String uriTalk = com.murrayc.galaxyzoo.app.Config.EXAMINE_URI + getZooniverseId();
 
-        try {
-            final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriTalk));
-            activity.startActivity(intent);
-        } catch (final ActivityNotFoundException e) {
-            Log.error("Could not open the examine URI.", e);
-        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriTalk));
+        activity.startActivity(intent);
     }
 
     private void updateFromCursor() {

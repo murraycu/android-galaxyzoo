@@ -21,7 +21,6 @@ package com.murrayc.galaxyzoo.app;
 
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -66,12 +65,8 @@ final class UiUtils {
         //uriBuilder.appendPath(getZooniverseId());
         final String uriTalk = com.murrayc.galaxyzoo.app.Config.TALK_URI + zooniverseId;
 
-        try {
-            final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriTalk));
-            context.startActivity(intent);
-        } catch (final ActivityNotFoundException e) {
-            Log.error("Could not open the discussion URI.", e);
-        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriTalk));
+        context.startActivity(intent);
     }
 
     static void showLoggedInToast(final Context context) {
