@@ -83,27 +83,11 @@ public class ZooniverseClient {
         }
     }
 
-    private static HttpURLConnection openConnection(final String strURL) {
-        final URL url;
-        try {
-            url = new URL(strURL);
-        } catch (final MalformedURLException e) {
-            //TODO: Let the caller catch this?
-            Log.error("openConnection(): exception while parsing URL", e);
-            return null;
-        }
+    private static HttpURLConnection openConnection(final String strURL) throws IOException {
+        final URL url= new URL(strURL);
 
-
-        final HttpURLConnection conn;
-        try {
-            conn = (HttpURLConnection) url.openConnection();
-            setConnectionUserAgent(conn);
-        } catch (final IOException e) {
-            //TODO: Let the caller catch this?
-            Log.error("openConnection(): exception during HTTP connection", e);
-
-            return null;
-        }
+        final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        setConnectionUserAgent(conn);
 
         //Set a reasonable timeout.
         //Otherwise there is not timeout so we might never know if it fails,
@@ -138,9 +122,13 @@ public class ZooniverseClient {
         HttpUtils.throwIfNoNetwork(getContext(),
                 false); //Ignore the wifi-only setting because this will be when the user is explicitly requesting a login.
 
-        final HttpURLConnection conn = openConnection(getLoginUri());
-        if (conn == null) {
-            return null;
+        final HttpURLConnection conn;
+        try {
+            conn = openConnection(getLoginUri());
+        } catch (final IOException e) {
+            Log.error("loginSync(): Could not open connection", e);
+
+            throw new LoginException("Could not open connection.", e);
         }
 
         final List<NameValuePair> nameValuePairs = new ArrayList<>();
@@ -327,9 +315,13 @@ public class ZooniverseClient {
     public boolean uploadClassificationSync(final String authName, final String authApiKey, final List<NameValuePair> nameValuePairs) throws UploadException {
         throwIfNoNetwork();
 
-        final HttpURLConnection conn = openConnection(getPostUploadUri());
-        if (conn == null) {
-            return false;
+        final HttpURLConnection conn;
+        try {
+            conn = openConnection(getPostUploadUri());
+        } catch (IOException e) {
+            Log.error("uploadClassificationSync(): Could not open connection", e);
+
+            throw new UploadException("Could not open connection.", e);
         }
 
         try {
