@@ -34,7 +34,7 @@ public class DecisionTreeTest extends AndroidTestCase {
 
 
     @Override
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, DecisionTree.DecisionTreeException {
         //For some reason DecisionTreeTest.class.getResourceAsStream() doesn't work,
         //so we use DecisionTreeTest.class.getClassLoader().getResourceAsStream(), which does.
         final InputStream inputStream = DecisionTreeTest.class.getClassLoader().getResourceAsStream("test_decision_tree.xml");
