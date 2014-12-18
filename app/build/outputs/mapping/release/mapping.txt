@@ -8387,7 +8387,7 @@ com.murrayc.galaxyzoo.app.Config -> com.murrayc.galaxyzoo.app.j:
     java.lang.CharSequence QUESTION_ID_DISCUSS -> a
     java.lang.CharSequence ANSWER_ID_DISCUSS_YES -> b
 com.murrayc.galaxyzoo.app.DecisionTree -> com.murrayc.galaxyzoo.app.k:
-    java.util.Hashtable questionsMap -> a
+    java.util.Map questionsMap -> a
     void loadTranslation(java.io.InputStream) -> a
     void readJsonQuestions(android.util.JsonReader) -> a
     void readJsonQuestion(android.util.JsonReader,com.murrayc.galaxyzoo.app.DecisionTree$Question) -> a
@@ -8421,7 +8421,9 @@ com.murrayc.galaxyzoo.app.DecisionTree$BaseButton -> com.murrayc.galaxyzoo.app.m
     int getExamplesCount() -> d
     java.lang.String getExampleIconName(java.lang.String,int) -> a
 com.murrayc.galaxyzoo.app.DecisionTree$Checkbox -> com.murrayc.galaxyzoo.app.n:
-com.murrayc.galaxyzoo.app.DecisionTree$Question -> com.murrayc.galaxyzoo.app.o:
+com.murrayc.galaxyzoo.app.DecisionTree$DecisionTreeException -> com.murrayc.galaxyzoo.app.o:
+    com.murrayc.galaxyzoo.app.DecisionTree this$0 -> a
+com.murrayc.galaxyzoo.app.DecisionTree$Question -> com.murrayc.galaxyzoo.app.p:
     java.util.List checkboxes -> a
     java.util.List answers -> b
     java.lang.String id -> c
@@ -8443,7 +8445,7 @@ com.murrayc.galaxyzoo.app.DecisionTree$Question -> com.murrayc.galaxyzoo.app.o:
     java.util.List access$100(com.murrayc.galaxyzoo.app.DecisionTree$Question) -> b
 com.murrayc.galaxyzoo.app.ExampleViewerActivity -> com.murrayc.galaxyzoo.app.ExampleViewerActivity:
     void onCreate(android.os.Bundle) -> onCreate
-com.murrayc.galaxyzoo.app.ExampleViewerFragment -> com.murrayc.galaxyzoo.app.p:
+com.murrayc.galaxyzoo.app.ExampleViewerFragment -> com.murrayc.galaxyzoo.app.q:
     android.view.View mLoadingView -> aa
     android.view.View mRootView -> ab
     java.lang.String mUriStr -> ac
@@ -8455,11 +8457,11 @@ com.murrayc.galaxyzoo.app.ExampleViewerFragment -> com.murrayc.galaxyzoo.app.p:
     void setExampleUrl(java.lang.String) -> a
     void showLoadingView(boolean) -> c
     void access$000(com.murrayc.galaxyzoo.app.ExampleViewerFragment,boolean) -> a
-com.murrayc.galaxyzoo.app.ExampleViewerFragment$1 -> com.murrayc.galaxyzoo.app.q:
+com.murrayc.galaxyzoo.app.ExampleViewerFragment$1 -> com.murrayc.galaxyzoo.app.r:
     com.murrayc.galaxyzoo.app.ExampleViewerFragment this$0 -> a
     void onSuccess() -> a
     void onError() -> b
-com.murrayc.galaxyzoo.app.IconsCache -> com.murrayc.galaxyzoo.app.r:
+com.murrayc.galaxyzoo.app.IconsCache -> com.murrayc.galaxyzoo.app.s:
     com.murrayc.galaxyzoo.app.DecisionTree mDecisionTree -> a
     android.support.v4.util.LruCache mWorkflowIcons -> b
     android.support.v4.util.LruCache mExampleIcons -> c
@@ -8471,7 +8473,7 @@ com.murrayc.galaxyzoo.app.IconsCache -> com.murrayc.galaxyzoo.app.r:
     java.lang.String getIconAssetPath(java.lang.String) -> b
     android.graphics.Bitmap getIcon(java.lang.String) -> a
     android.content.Context getContext() -> a
-com.murrayc.galaxyzoo.app.ItemActivity -> com.murrayc.galaxyzoo.app.s:
+com.murrayc.galaxyzoo.app.ItemActivity -> com.murrayc.galaxyzoo.app.t:
     java.lang.String mItemId -> n
     java.lang.String getItemId() -> m
     void setItemId(java.lang.String) -> b
@@ -8479,7 +8481,7 @@ com.murrayc.galaxyzoo.app.ItemActivity -> com.murrayc.galaxyzoo.app.s:
     void navigateToList() -> n
     void abandonItem() -> l
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.ItemFragment -> com.murrayc.galaxyzoo.app.t:
+com.murrayc.galaxyzoo.app.ItemFragment -> com.murrayc.galaxyzoo.app.u:
     com.murrayc.galaxyzoo.app.ItemFragment$Callbacks sDummyCallbacks -> aa
     com.murrayc.galaxyzoo.app.ItemFragment$Callbacks mCallbacks -> ab
     com.murrayc.galaxyzoo.app.Singleton mSingleton -> ac
@@ -8496,13 +8498,13 @@ com.murrayc.galaxyzoo.app.ItemFragment -> com.murrayc.galaxyzoo.app.t:
     void onSingletonInitialized() -> b_
     void initializeSingleton() -> O
     void abandonItem() -> P
-com.murrayc.galaxyzoo.app.ItemFragment$1 -> com.murrayc.galaxyzoo.app.u:
+com.murrayc.galaxyzoo.app.ItemFragment$1 -> com.murrayc.galaxyzoo.app.v:
     void navigateToList() -> n
     void abandonItem() -> l
-com.murrayc.galaxyzoo.app.ItemFragment$2 -> com.murrayc.galaxyzoo.app.v:
+com.murrayc.galaxyzoo.app.ItemFragment$2 -> com.murrayc.galaxyzoo.app.w:
     com.murrayc.galaxyzoo.app.ItemFragment this$0 -> a
     void onInitialized() -> a
-com.murrayc.galaxyzoo.app.ItemFragment$Callbacks -> com.murrayc.galaxyzoo.app.w:
+com.murrayc.galaxyzoo.app.ItemFragment$Callbacks -> com.murrayc.galaxyzoo.app.x:
     void navigateToList() -> n
     void abandonItem() -> l
 com.murrayc.galaxyzoo.app.ListActivity -> com.murrayc.galaxyzoo.app.ListActivity:
@@ -8510,12 +8512,11 @@ com.murrayc.galaxyzoo.app.ListActivity -> com.murrayc.galaxyzoo.app.ListActivity
     void onItemSelected(java.lang.String,boolean,android.view.View) -> b
     void navigateToNextAvailable() -> k
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.ListCursorAdapter -> com.murrayc.galaxyzoo.app.x:
-    android.support.v4.util.LruCache mCache -> a
-    com.murrayc.galaxyzoo.app.ListCursorAdapter$CursorObserver mDataSetObserver -> b
-    android.content.Context mContext -> c
-    android.database.Cursor mCursor -> d
-    com.murrayc.galaxyzoo.app.ListCursorAdapter$OnItemClickedListener mListener -> e
+com.murrayc.galaxyzoo.app.ListCursorAdapter -> com.murrayc.galaxyzoo.app.y:
+    com.murrayc.galaxyzoo.app.ListCursorAdapter$CursorObserver mDataSetObserver -> a
+    android.content.Context mContext -> b
+    android.database.Cursor mCursor -> c
+    com.murrayc.galaxyzoo.app.ListCursorAdapter$OnItemClickedListener mListener -> d
     android.database.Cursor getItem(int) -> c
     com.murrayc.galaxyzoo.app.ListCursorAdapter$ViewHolder onCreateViewHolder(android.view.ViewGroup,int) -> c
     void onBindViewHolder(com.murrayc.galaxyzoo.app.ListCursorAdapter$ViewHolder,int) -> a
@@ -8526,11 +8527,11 @@ com.murrayc.galaxyzoo.app.ListCursorAdapter -> com.murrayc.galaxyzoo.app.x:
     void onBindViewHolder(android.support.v7.widget.RecyclerView$ViewHolder,int) -> a
     android.support.v7.widget.RecyclerView$ViewHolder onCreateViewHolder(android.view.ViewGroup,int) -> a
     com.murrayc.galaxyzoo.app.ListCursorAdapter$OnItemClickedListener access$100(com.murrayc.galaxyzoo.app.ListCursorAdapter) -> a
-com.murrayc.galaxyzoo.app.ListCursorAdapter$1 -> com.murrayc.galaxyzoo.app.y:
-com.murrayc.galaxyzoo.app.ListCursorAdapter$CursorObserver -> com.murrayc.galaxyzoo.app.z:
+com.murrayc.galaxyzoo.app.ListCursorAdapter$1 -> com.murrayc.galaxyzoo.app.z:
+com.murrayc.galaxyzoo.app.ListCursorAdapter$CursorObserver -> com.murrayc.galaxyzoo.app.aa:
     com.murrayc.galaxyzoo.app.ListCursorAdapter this$0 -> a
     void onChanged() -> onChanged
-com.murrayc.galaxyzoo.app.ListCursorAdapter$ImageLoadedCallback -> com.murrayc.galaxyzoo.app.aa:
+com.murrayc.galaxyzoo.app.ListCursorAdapter$ImageLoadedCallback -> com.murrayc.galaxyzoo.app.ab:
     java.lang.ref.WeakReference contextReference -> a
     java.lang.ref.WeakReference viewHolderReference -> b
     int position -> c
@@ -8538,9 +8539,9 @@ com.murrayc.galaxyzoo.app.ListCursorAdapter$ImageLoadedCallback -> com.murrayc.g
     com.murrayc.galaxyzoo.app.ListCursorAdapter$ViewHolder getValidViewHolder() -> c
     void onSuccess() -> a
     void onError() -> b
-com.murrayc.galaxyzoo.app.ListCursorAdapter$OnItemClickedListener -> com.murrayc.galaxyzoo.app.ab:
+com.murrayc.galaxyzoo.app.ListCursorAdapter$OnItemClickedListener -> com.murrayc.galaxyzoo.app.ac:
     void onItemClicked(int,android.view.View) -> a
-com.murrayc.galaxyzoo.app.ListCursorAdapter$ViewHolder -> com.murrayc.galaxyzoo.app.ac:
+com.murrayc.galaxyzoo.app.ListCursorAdapter$ViewHolder -> com.murrayc.galaxyzoo.app.ad:
     java.lang.ref.WeakReference refParent -> o
     android.widget.ImageView imageView -> i
     android.widget.LinearLayout iconsPanel -> j
@@ -8570,23 +8571,22 @@ com.murrayc.galaxyzoo.app.ListFragment -> com.murrayc.galaxyzoo.app.ListFragment
     android.support.v7.widget.RecyclerView getGridView() -> L
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.ListFragment,int,android.view.View) -> a
-com.murrayc.galaxyzoo.app.ListFragment$1 -> com.murrayc.galaxyzoo.app.ad:
+com.murrayc.galaxyzoo.app.ListFragment$1 -> com.murrayc.galaxyzoo.app.ae:
     void onItemSelected(java.lang.String,boolean,android.view.View) -> b
     void navigateToNextAvailable() -> k
-com.murrayc.galaxyzoo.app.ListFragment$2 -> com.murrayc.galaxyzoo.app.ae:
+com.murrayc.galaxyzoo.app.ListFragment$2 -> com.murrayc.galaxyzoo.app.af:
     com.murrayc.galaxyzoo.app.ListFragment this$0 -> a
     void onItemClicked(int,android.view.View) -> a
-com.murrayc.galaxyzoo.app.ListFragment$Callbacks -> com.murrayc.galaxyzoo.app.af:
+com.murrayc.galaxyzoo.app.ListFragment$Callbacks -> com.murrayc.galaxyzoo.app.ag:
     void onItemSelected(java.lang.String,boolean,android.view.View) -> b
     void navigateToNextAvailable() -> k
-com.murrayc.galaxyzoo.app.Log -> com.murrayc.galaxyzoo.app.ag:
+com.murrayc.galaxyzoo.app.Log -> com.murrayc.galaxyzoo.app.ah:
     java.lang.String defaultString(java.lang.String) -> c
     void error(java.lang.String,java.lang.Throwable) -> a
     void error(java.lang.String) -> a
-    void error(java.lang.String,java.lang.String) -> a
     void info(java.lang.String,java.lang.Throwable) -> b
     void info(java.lang.String) -> b
-    void info(java.lang.String,java.lang.String) -> b
+    void info(java.lang.String,java.lang.String) -> a
 com.murrayc.galaxyzoo.app.LoginActivity -> com.murrayc.galaxyzoo.app.LoginActivity:
     com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient mClient -> n
     com.murrayc.galaxyzoo.app.LoginActivity$UserLoginTask mAuthTask -> o
@@ -8611,67 +8611,69 @@ com.murrayc.galaxyzoo.app.LoginActivity -> com.murrayc.galaxyzoo.app.LoginActivi
     com.murrayc.galaxyzoo.app.LoginActivity$UserLoginTask access$302(com.murrayc.galaxyzoo.app.LoginActivity,com.murrayc.galaxyzoo.app.LoginActivity$UserLoginTask) -> a
     void access$400(com.murrayc.galaxyzoo.app.LoginActivity,com.murrayc.galaxyzoo.app.LoginUtils$LoginResult) -> a
     android.widget.EditText access$500(com.murrayc.galaxyzoo.app.LoginActivity) -> d
-com.murrayc.galaxyzoo.app.LoginActivity$1 -> com.murrayc.galaxyzoo.app.ah:
+com.murrayc.galaxyzoo.app.LoginActivity$1 -> com.murrayc.galaxyzoo.app.ai:
     com.murrayc.galaxyzoo.app.LoginActivity this$0 -> a
     boolean onEditorAction(android.widget.TextView,int,android.view.KeyEvent) -> onEditorAction
-com.murrayc.galaxyzoo.app.LoginActivity$2 -> com.murrayc.galaxyzoo.app.ai:
+com.murrayc.galaxyzoo.app.LoginActivity$2 -> com.murrayc.galaxyzoo.app.aj:
     com.murrayc.galaxyzoo.app.LoginActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.LoginActivity$3 -> com.murrayc.galaxyzoo.app.aj:
+com.murrayc.galaxyzoo.app.LoginActivity$3 -> com.murrayc.galaxyzoo.app.ak:
     com.murrayc.galaxyzoo.app.LoginActivity this$0 -> a
     void onPostExecute(com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails) -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
-com.murrayc.galaxyzoo.app.LoginActivity$4 -> com.murrayc.galaxyzoo.app.ak:
+com.murrayc.galaxyzoo.app.LoginActivity$4 -> com.murrayc.galaxyzoo.app.al:
     boolean val$show -> a
     com.murrayc.galaxyzoo.app.LoginActivity this$0 -> b
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
-com.murrayc.galaxyzoo.app.LoginActivity$5 -> com.murrayc.galaxyzoo.app.al:
+com.murrayc.galaxyzoo.app.LoginActivity$5 -> com.murrayc.galaxyzoo.app.am:
     boolean val$show -> a
     com.murrayc.galaxyzoo.app.LoginActivity this$0 -> b
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
-com.murrayc.galaxyzoo.app.LoginActivity$AccountSaveTask -> com.murrayc.galaxyzoo.app.am:
+com.murrayc.galaxyzoo.app.LoginActivity$AccountSaveTask -> com.murrayc.galaxyzoo.app.an:
     java.lang.ref.WeakReference contextReference -> a
     com.murrayc.galaxyzoo.app.LoginUtils$LoginResult loginResult -> b
     java.lang.String existingAccountName -> c
     boolean existingAccountIsAnonymous -> d
     java.lang.Void doInBackground(java.lang.Void[]) -> a
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.murrayc.galaxyzoo.app.LoginActivity$UserLoginTask -> com.murrayc.galaxyzoo.app.an:
+com.murrayc.galaxyzoo.app.LoginActivity$UserLoginTask -> com.murrayc.galaxyzoo.app.ao:
     java.lang.String mUsername -> b
     java.lang.String mPassword -> c
+    java.lang.Exception exceptionCaught -> d
     com.murrayc.galaxyzoo.app.LoginActivity this$0 -> a
     com.murrayc.galaxyzoo.app.LoginUtils$LoginResult doInBackground(java.lang.Void[]) -> a
     void onPostExecute(com.murrayc.galaxyzoo.app.LoginUtils$LoginResult) -> a
     void onCancelled() -> onCancelled
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.murrayc.galaxyzoo.app.LoginUtils -> com.murrayc.galaxyzoo.app.ao:
+com.murrayc.galaxyzoo.app.LoginUtils -> com.murrayc.galaxyzoo.app.ap:
     boolean getLoggedIn(android.content.Context) -> a
     com.murrayc.galaxyzoo.app.LoginUtils$LoginResult parseLoginResponseContent(java.io.InputStream) -> a
     com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails getAccountLoginDetails(android.content.Context) -> b
-    void addAnonymousAccount(android.content.Context) -> c
+    void addAnonymousAccount(android.content.Context) -> f
     void setAutomaticAccountSync(android.content.Context,android.accounts.Account) -> a
-    void removeAnonymousAccount(android.content.Context) -> d
+    void removeAnonymousAccount(android.content.Context) -> c
     void removeAccount(android.content.Context,java.lang.String) -> a
-    boolean getBooleanPref(android.content.Context,int) -> a
-    int getIntPref(android.content.Context,int) -> b
+    boolean getBooleanPref(android.content.Context,int) -> b
+    int getIntPref(android.content.Context,int) -> a
     java.lang.String getStringPref(android.content.Context,int) -> c
     android.accounts.Account getAccount(android.accounts.AccountManager) -> a
-    android.accounts.Account getAccount(android.content.Context) -> f
+    android.accounts.Account getAccount(android.content.Context) -> g
     void copyPrefToAccount(android.content.Context,java.lang.String,java.lang.String) -> a
     void copyPrefToAccount(android.accounts.AccountManager,android.accounts.Account,java.lang.String,java.lang.String) -> a
     void copyPrefsToAccount(android.content.Context,android.accounts.AccountManager,android.accounts.Account) -> a
-    boolean getUseWifiOnly(android.content.Context) -> e
-com.murrayc.galaxyzoo.app.LoginUtils$GetExistingLogin -> com.murrayc.galaxyzoo.app.ap:
+    boolean getUseWifiOnly(android.content.Context) -> d
+    void access$000(android.content.Context) -> e
+com.murrayc.galaxyzoo.app.LoginUtils$GetExistingLogin -> com.murrayc.galaxyzoo.app.aq:
     java.lang.ref.WeakReference mContextReference -> a
     com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails doInBackground(java.lang.Void[]) -> a
     void onCancelled() -> onCancelled
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails -> com.murrayc.galaxyzoo.app.aq:
+com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails -> com.murrayc.galaxyzoo.app.ar:
     java.lang.String name -> a
     java.lang.String authApiKey -> b
     boolean isAnonymous -> c
-com.murrayc.galaxyzoo.app.LoginUtils$LoginResult -> com.murrayc.galaxyzoo.app.ar:
+com.murrayc.galaxyzoo.app.LoginUtils$LoginResult -> com.murrayc.galaxyzoo.app.as:
     boolean success -> a
     java.lang.String name -> b
     java.lang.String apiKey -> c
@@ -8723,14 +8725,14 @@ com.murrayc.galaxyzoo.app.QuestionFragment -> com.murrayc.galaxyzoo.app.Question
     void access$100(com.murrayc.galaxyzoo.app.QuestionFragment,com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress) -> a
     void access$200(com.murrayc.galaxyzoo.app.QuestionFragment) -> a
     com.murrayc.galaxyzoo.app.QuestionFragment$Callbacks access$300(com.murrayc.galaxyzoo.app.QuestionFragment) -> b
-com.murrayc.galaxyzoo.app.QuestionFragment$1 -> com.murrayc.galaxyzoo.app.as:
+com.murrayc.galaxyzoo.app.QuestionFragment$1 -> com.murrayc.galaxyzoo.app.at:
     void onClassificationFinished() -> k
-com.murrayc.galaxyzoo.app.QuestionFragment$2 -> com.murrayc.galaxyzoo.app.at:
+com.murrayc.galaxyzoo.app.QuestionFragment$2 -> com.murrayc.galaxyzoo.app.au:
     com.murrayc.galaxyzoo.app.DecisionTree$Question val$question -> a
     com.murrayc.galaxyzoo.app.DecisionTree$Answer val$answer -> b
     com.murrayc.galaxyzoo.app.QuestionFragment this$0 -> c
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.QuestionFragment$Callbacks -> com.murrayc.galaxyzoo.app.au:
+com.murrayc.galaxyzoo.app.QuestionFragment$Callbacks -> com.murrayc.galaxyzoo.app.av:
     void onClassificationFinished() -> k
 com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress -> com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress:
     android.os.Parcelable$Creator CREATOR -> CREATOR
@@ -8744,7 +8746,7 @@ com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress -> com.murra
     java.util.List getAnswers() -> a
     boolean isFavorite() -> b
     void setFavorite(boolean) -> a
-com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$1 -> com.murrayc.galaxyzoo.app.av:
+com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$1 -> com.murrayc.galaxyzoo.app.aw:
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress createFromParcel(android.os.Parcel) -> a
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress[] newArray(int) -> a
     java.lang.Object[] newArray(int) -> newArray
@@ -8761,12 +8763,12 @@ com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnsw
     java.util.List getCheckboxIds() -> c
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnswer$1 -> com.murrayc.galaxyzoo.app.aw:
+com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnswer$1 -> com.murrayc.galaxyzoo.app.ax:
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnswer createFromParcel(android.os.Parcel) -> a
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnswer[] newArray(int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.murrayc.galaxyzoo.app.QuestionFragment$SaveClassificationTask -> com.murrayc.galaxyzoo.app.ax:
+com.murrayc.galaxyzoo.app.QuestionFragment$SaveClassificationTask -> com.murrayc.galaxyzoo.app.ay:
     java.lang.ref.WeakReference fragmentReference -> a
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress classificationInProgress -> b
     java.lang.Void doInBackground(java.lang.Void[]) -> a
@@ -8781,7 +8783,7 @@ com.murrayc.galaxyzoo.app.QuestionHelpActivity -> com.murrayc.galaxyzoo.app.Ques
     void navigateToList() -> n
     void abandonItem() -> l
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.QuestionHelpFragment -> com.murrayc.galaxyzoo.app.ay:
+com.murrayc.galaxyzoo.app.QuestionHelpFragment -> com.murrayc.galaxyzoo.app.az:
     android.view.View mRootView -> aa
     void onCreate(android.os.Bundle) -> d
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
@@ -8790,7 +8792,7 @@ com.murrayc.galaxyzoo.app.QuestionHelpFragment -> com.murrayc.galaxyzoo.app.ay:
     void addRowForAnswer(android.app.Activity,android.widget.TableLayout,com.murrayc.galaxyzoo.app.DecisionTree$Question,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton) -> a
     void onExampleImageClicked(android.view.View,java.lang.String) -> a
     void access$000(com.murrayc.galaxyzoo.app.QuestionHelpFragment,android.view.View,java.lang.String) -> a
-com.murrayc.galaxyzoo.app.QuestionHelpFragment$1 -> com.murrayc.galaxyzoo.app.az:
+com.murrayc.galaxyzoo.app.QuestionHelpFragment$1 -> com.murrayc.galaxyzoo.app.ba:
     java.lang.String val$iconName -> a
     com.murrayc.galaxyzoo.app.QuestionHelpFragment this$0 -> b
     void onClick(android.view.View) -> onClick
@@ -8803,13 +8805,13 @@ com.murrayc.galaxyzoo.app.QuestionLinearLayout -> com.murrayc.galaxyzoo.app.Ques
 com.murrayc.galaxyzoo.app.SettingsActivity -> com.murrayc.galaxyzoo.app.SettingsActivity:
     void onCreate(android.os.Bundle) -> onCreate
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.SettingsFragment -> com.murrayc.galaxyzoo.app.ba:
+com.murrayc.galaxyzoo.app.SettingsFragment -> com.murrayc.galaxyzoo.app.bb:
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void onPause() -> onPause
     void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
     void showUserDescriptionAsSummary(android.preference.Preference) -> a
-com.murrayc.galaxyzoo.app.Singleton -> com.murrayc.galaxyzoo.app.bb:
+com.murrayc.galaxyzoo.app.Singleton -> com.murrayc.galaxyzoo.app.bc:
     java.util.List mCallbacks -> a
     com.murrayc.galaxyzoo.app.Singleton ourInstance -> b
     boolean initializationInProgress -> c
@@ -8827,20 +8829,20 @@ com.murrayc.galaxyzoo.app.Singleton -> com.murrayc.galaxyzoo.app.bb:
     boolean localeIsDifferent(android.content.Context) -> a
     com.murrayc.galaxyzoo.app.Singleton access$202(com.murrayc.galaxyzoo.app.Singleton) -> a
     void access$400() -> c
-com.murrayc.galaxyzoo.app.Singleton$1 -> com.murrayc.galaxyzoo.app.bc:
-com.murrayc.galaxyzoo.app.Singleton$Callbacks -> com.murrayc.galaxyzoo.app.bd:
+com.murrayc.galaxyzoo.app.Singleton$1 -> com.murrayc.galaxyzoo.app.bd:
+com.murrayc.galaxyzoo.app.Singleton$Callbacks -> com.murrayc.galaxyzoo.app.be:
     void onInitialized() -> a
-com.murrayc.galaxyzoo.app.Singleton$InitAsyncTask -> com.murrayc.galaxyzoo.app.be:
+com.murrayc.galaxyzoo.app.Singleton$InitAsyncTask -> com.murrayc.galaxyzoo.app.bf:
     java.lang.Void doInBackground(android.content.Context[]) -> a
     void onPostExecute(java.lang.Void) -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.murrayc.galaxyzoo.app.Singleton$LocaleDetails -> com.murrayc.galaxyzoo.app.bf:
+com.murrayc.galaxyzoo.app.Singleton$LocaleDetails -> com.murrayc.galaxyzoo.app.bg:
     java.lang.String language -> a
     java.lang.String countryCode -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.murrayc.galaxyzoo.app.SubjectExtrasFragment -> com.murrayc.galaxyzoo.app.bg:
+com.murrayc.galaxyzoo.app.SubjectExtrasFragment -> com.murrayc.galaxyzoo.app.bh:
     java.lang.String[] mColumns -> ab
     android.database.Cursor mCursor -> ac
     java.lang.String mZooniverseId -> ad
@@ -8864,13 +8866,13 @@ com.murrayc.galaxyzoo.app.SubjectExtrasFragment -> com.murrayc.galaxyzoo.app.bg:
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.SubjectExtrasFragment) -> a
     void access$100(com.murrayc.galaxyzoo.app.SubjectExtrasFragment) -> b
-com.murrayc.galaxyzoo.app.SubjectExtrasFragment$1 -> com.murrayc.galaxyzoo.app.bh:
+com.murrayc.galaxyzoo.app.SubjectExtrasFragment$1 -> com.murrayc.galaxyzoo.app.bi:
     com.murrayc.galaxyzoo.app.SubjectExtrasFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.SubjectExtrasFragment$2 -> com.murrayc.galaxyzoo.app.bi:
+com.murrayc.galaxyzoo.app.SubjectExtrasFragment$2 -> com.murrayc.galaxyzoo.app.bj:
     com.murrayc.galaxyzoo.app.SubjectExtrasFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.SubjectFragment -> com.murrayc.galaxyzoo.app.bj:
+com.murrayc.galaxyzoo.app.SubjectFragment -> com.murrayc.galaxyzoo.app.bk:
     java.lang.String[] mColumns -> ab
     android.database.Cursor mCursor -> ac
     android.view.View mRootView -> ad
@@ -8896,17 +8898,17 @@ com.murrayc.galaxyzoo.app.SubjectFragment -> com.murrayc.galaxyzoo.app.bj:
     void onPause() -> m
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.SubjectFragment) -> a
-com.murrayc.galaxyzoo.app.SubjectFragment$1 -> com.murrayc.galaxyzoo.app.bk:
+com.murrayc.galaxyzoo.app.SubjectFragment$1 -> com.murrayc.galaxyzoo.app.bl:
     com.murrayc.galaxyzoo.app.SubjectFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.SubjectFragment$2 -> com.murrayc.galaxyzoo.app.bl:
+com.murrayc.galaxyzoo.app.SubjectFragment$2 -> com.murrayc.galaxyzoo.app.bm:
     com.murrayc.galaxyzoo.app.SubjectFragment this$0 -> a
     void onSuccess() -> a
     void onError() -> b
 com.murrayc.galaxyzoo.app.SubjectViewerActivity -> com.murrayc.galaxyzoo.app.SubjectViewerActivity:
     void onCreate(android.os.Bundle) -> onCreate
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.SubjectViewerFragment -> com.murrayc.galaxyzoo.app.bm:
+com.murrayc.galaxyzoo.app.SubjectViewerFragment -> com.murrayc.galaxyzoo.app.bn:
     java.lang.String[] mColumns -> ab
     android.database.Cursor mCursor -> ac
     android.view.View mLoadingView -> ad
@@ -8923,17 +8925,19 @@ com.murrayc.galaxyzoo.app.SubjectViewerFragment -> com.murrayc.galaxyzoo.app.bm:
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> a
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
-com.murrayc.galaxyzoo.app.UiUtils -> com.murrayc.galaxyzoo.app.bn:
-    void warnAboutNoNetworkConnection(android.app.Activity) -> b
-    void warnAboutNoWifiNetworkConnection(android.app.Activity) -> c
+com.murrayc.galaxyzoo.app.UiUtils -> com.murrayc.galaxyzoo.app.bo:
     void openDiscussionPage(android.content.Context,java.lang.String) -> a
     void showLoggedInToast(android.content.Context) -> a
     int getPxForDpResource(android.content.Context,int) -> a
     void showToolbar(android.support.v7.app.ActionBarActivity) -> a
     android.os.Bundle getTransitionOptionsBundle(android.app.Activity,android.view.View) -> a
+    void warnAboutNoNetworkConnection(android.app.Activity,com.murrayc.galaxyzoo.app.provider.HttpUtils$NoNetworkException) -> a
+    void warnAboutNoNetworkConnection(android.app.Activity,boolean) -> b
+    void warnAboutNoNetworkConnectionAtAll(android.app.Activity) -> b
+    void warnAboutNoWifiNetworkConnection(android.app.Activity) -> c
     boolean warnAboutMissingNetwork(android.app.Activity) -> a
     boolean warnAboutMissingNetwork(android.app.Activity,boolean) -> a
-com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.bo:
+com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.bp:
     boolean getUseWifiOnlyFromSharedPrefs(android.content.Context) -> a
     boolean getShowDiscussQuestionFromSharedPrefs(android.content.Context) -> b
     android.content.SharedPreferences getPreferences(android.content.Context) -> c
@@ -8943,16 +8947,16 @@ com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.bo:
     void abandonItem(android.content.Context,java.lang.String) -> b
     android.net.Uri getItemUri(java.lang.String) -> a
     void initDefaultPrefs(android.content.Context) -> e
-com.murrayc.galaxyzoo.app.Utils$NetworkConnected -> com.murrayc.galaxyzoo.app.bp:
+com.murrayc.galaxyzoo.app.Utils$NetworkConnected -> com.murrayc.galaxyzoo.app.bq:
     boolean connected -> a
     boolean notConnectedBecauseNotOnWifi -> b
-com.murrayc.galaxyzoo.app.ZooAccountAuthenticatorActivity -> com.murrayc.galaxyzoo.app.bq:
+com.murrayc.galaxyzoo.app.ZooAccountAuthenticatorActivity -> com.murrayc.galaxyzoo.app.br:
     android.accounts.AccountAuthenticatorResponse mAccountAuthenticatorResponse -> n
     android.os.Bundle mResultBundle -> o
     void setAccountAuthenticatorResult(android.os.Bundle) -> a
     void onCreate(android.os.Bundle) -> onCreate
     void finish() -> finish
-com.murrayc.galaxyzoo.app.ZooFragment -> com.murrayc.galaxyzoo.app.br:
+com.murrayc.galaxyzoo.app.ZooFragment -> com.murrayc.galaxyzoo.app.bs:
     boolean onOptionsItemSelected(android.view.MenuItem) -> a
     void requestLogin() -> R
     void showAbout() -> S
@@ -8966,14 +8970,12 @@ com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox -> com.murrayc.galaxyz
 com.murrayc.galaxyzoo.app.provider.HttpUtils -> com.murrayc.galaxyzoo.app.provider.c:
     void throwIfNoNetwork(android.content.Context) -> a
     void throwIfNoNetwork(android.content.Context,boolean) -> a
-    boolean getNetworkIsConnected(android.content.Context) -> b
     boolean getNetworkIsConnected(android.content.Context,boolean) -> b
-    java.net.HttpURLConnection openConnection(java.lang.String) -> a
     boolean cacheUriToFileSync(android.content.Context,com.android.volley.RequestQueue,java.lang.String,java.lang.String) -> a
-    void setConnectionUserAgent(java.net.HttpURLConnection) -> a
-    boolean parseGetFileResponseContent(android.content.Context,byte[],java.lang.String) -> b
-    boolean access$000(android.content.Context,byte[],java.lang.String) -> a
-com.murrayc.galaxyzoo.app.provider.HttpUtils$FileCacheRequest -> com.murrayc.galaxyzoo.app.provider.d:
+    void parseGetFileResponseContent(android.content.Context,byte[],java.lang.String) -> b
+    void access$000(android.content.Context,byte[],java.lang.String) -> a
+com.murrayc.galaxyzoo.app.provider.HttpUtils$FileCacheException -> com.murrayc.galaxyzoo.app.provider.d:
+com.murrayc.galaxyzoo.app.provider.HttpUtils$FileCacheRequest -> com.murrayc.galaxyzoo.app.provider.e:
     java.lang.String mCacheFileUri -> a
     java.lang.ref.WeakReference mContext -> b
     com.android.volley.Response$Listener mListener -> c
@@ -8981,15 +8983,17 @@ com.murrayc.galaxyzoo.app.provider.HttpUtils$FileCacheRequest -> com.murrayc.gal
     void deliverResponse(java.lang.Boolean) -> a
     java.util.Map getHeaders() -> i
     void deliverResponse(java.lang.Object) -> a
-com.murrayc.galaxyzoo.app.provider.HttpUtils$NoNetworkException -> com.murrayc.galaxyzoo.app.provider.e:
-com.murrayc.galaxyzoo.app.provider.ImageType -> com.murrayc.galaxyzoo.app.provider.f:
+com.murrayc.galaxyzoo.app.provider.HttpUtils$NoNetworkException -> com.murrayc.galaxyzoo.app.provider.f:
+    boolean wifiOnly -> a
+    boolean getWifiOnly() -> a
+com.murrayc.galaxyzoo.app.provider.ImageType -> com.murrayc.galaxyzoo.app.provider.g:
     com.murrayc.galaxyzoo.app.provider.ImageType STANDARD -> a
     com.murrayc.galaxyzoo.app.provider.ImageType THUMBNAIL -> b
     com.murrayc.galaxyzoo.app.provider.ImageType INVERTED -> c
     com.murrayc.galaxyzoo.app.provider.ImageType[] $VALUES -> d
     com.murrayc.galaxyzoo.app.provider.ImageType[] values() -> values
     com.murrayc.galaxyzoo.app.provider.ImageType valueOf(java.lang.String) -> valueOf
-com.murrayc.galaxyzoo.app.provider.Item -> com.murrayc.galaxyzoo.app.provider.g:
+com.murrayc.galaxyzoo.app.provider.Item -> com.murrayc.galaxyzoo.app.provider.h:
     android.net.Uri ITEMS_URI -> a
     android.net.Uri CONTENT_URI -> b
     android.net.Uri FILE_URI -> c
@@ -9027,14 +9031,14 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider -> com.murrayc.galaxyzoo
     void removeItem(java.lang.String,java.lang.String[]) -> a
     void createFileUrisForImages(android.content.ContentValues) -> a
     void requestSync() -> d
-com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$1 -> com.murrayc.galaxyzoo.app.provider.h:
-com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$DatabaseHelper -> com.murrayc.galaxyzoo.app.provider.i:
+com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$1 -> com.murrayc.galaxyzoo.app.provider.i:
+com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$DatabaseHelper -> com.murrayc.galaxyzoo.app.provider.j:
     void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
     void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
     void dropTable(android.database.sqlite.SQLiteDatabase,java.lang.String) -> a
     void createTable(android.database.sqlite.SQLiteDatabase) -> a
     void createIndex(android.database.sqlite.SQLiteDatabase,java.lang.String,java.lang.String) -> a
-com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$UriParts -> com.murrayc.galaxyzoo.app.provider.j:
+com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$UriParts -> com.murrayc.galaxyzoo.app.provider.k:
     java.lang.String itemId -> a
 com.murrayc.galaxyzoo.app.provider.client.MoreItemsJsonParser -> com.murrayc.galaxyzoo.app.provider.a.a:
     java.util.List parseMoreItemsResponseContent(java.lang.String) -> a
@@ -9054,11 +9058,13 @@ com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient -> com.murrayc.galaxy
     android.content.Context mContext -> a
     java.lang.String mServerBaseUri -> b
     com.android.volley.RequestQueue mQueue -> c
+    java.net.HttpURLConnection openConnection(java.lang.String) -> a
+    void setConnectionUserAgent(java.net.HttpURLConnection) -> a
     java.lang.String getQueryMoreItemsUri() -> b
     java.lang.String getPostUploadUri() -> c
     java.lang.String getLoginUri() -> d
     com.murrayc.galaxyzoo.app.LoginUtils$LoginResult loginSync(java.lang.String,java.lang.String) -> a
-    boolean writeParamsToHttpPost(java.net.HttpURLConnection,java.util.List) -> a
+    void writeParamsToHttpPost(java.net.HttpURLConnection,java.util.List) -> a
     java.lang.String getPostDataBytes(java.util.List) -> a
     java.lang.String generateAuthorizationHeader(java.lang.String,java.lang.String) -> b
     java.util.List requestMoreItemsSync(int) -> a
@@ -9068,7 +9074,9 @@ com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient -> com.murrayc.galaxy
     android.content.Context getContext() -> f
     boolean uploadClassificationSync(java.lang.String,java.lang.String,java.util.List) -> a
     com.android.volley.RequestQueue getRequestQueue() -> a
-com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject -> com.murrayc.galaxyzoo.app.provider.a.e:
+com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$LoginException -> com.murrayc.galaxyzoo.app.provider.a.e:
+com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$RequestMoreItemsException -> com.murrayc.galaxyzoo.app.provider.a.f:
+com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject -> com.murrayc.galaxyzoo.app.provider.a.g:
     java.lang.String mSubjectId -> a
     java.lang.String mZooniverseId -> b
     java.lang.String mLocationStandard -> c
@@ -9079,6 +9087,7 @@ com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject -> com.murray
     java.lang.String getLocationStandard() -> c
     java.lang.String getLocationThumbnail() -> d
     java.lang.String getLocationInverted() -> e
+com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$UploadException -> com.murrayc.galaxyzoo.app.provider.a.h:
 com.murrayc.galaxyzoo.app.syncadapter.Authenticator -> com.murrayc.galaxyzoo.app.syncadapter.a:
     android.content.Context mContext -> a
     android.os.Bundle addAccount(android.accounts.AccountAuthenticatorResponse,java.lang.String,java.lang.String,java.lang.String[],android.os.Bundle) -> addAccount
@@ -9101,17 +9110,18 @@ com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder -> com.murrayc.galaxyzoo.app.
     void downloadMissingImage(android.net.Uri,java.lang.String,java.lang.String,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
     void addSubjects(java.util.List,boolean) -> a
     void cacheUrisToFiles(android.net.Uri,boolean) -> a
-    boolean cacheUriToFile(java.lang.String,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,boolean) -> a
+    void cacheUriToFileWithNullChecks(java.lang.String,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,boolean) -> a
+    void cacheUriToFile(java.lang.String,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,boolean) -> b
     void addRequestToQueue(com.android.volley.Request) -> a
-    boolean onImageDownloadDone(boolean,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
+    void onImageDownloadDone(boolean,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
     android.content.Context getContext() -> b
     void throwIfNoNetwork() -> c
     void markImageDownloadAsNotInProgress(java.lang.String) -> b
-    boolean markImageAsDownloaded(android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,java.lang.String) -> a
+    void markImageAsDownloaded(android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,java.lang.String) -> a
     void addSubject(com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject,boolean) -> a
     boolean subjectIsInDatabase(java.lang.String) -> a
     java.lang.String getWhereClauseForDownloadNotDone() -> d
-    boolean access$000(com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder,boolean,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
+    void access$000(com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder,boolean,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
 com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder$1 -> com.murrayc.galaxyzoo.app.syncadapter.c:
     java.lang.String val$uriFileToCache -> a
     android.net.Uri val$itemUri -> b
