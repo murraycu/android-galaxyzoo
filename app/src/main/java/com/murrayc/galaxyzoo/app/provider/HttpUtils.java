@@ -32,13 +32,11 @@ import com.android.volley.toolbox.RequestFuture;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
+import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -91,35 +89,6 @@ public final class HttpUtils {
         final Utils.NetworkConnected networkConnected =
                 Utils.getNetworkIsConnected(context, wifiOnly);
         return networkConnected.connected;
-    }
-
-    public static HttpURLConnection openConnection(final String strURL) {
-        final URL url;
-        try {
-            url = new URL(strURL);
-        } catch (MalformedURLException e) {
-            Log.error("openConnection(): exception while parsing URL", e);
-            return null;
-        }
-
-
-        final HttpURLConnection conn;
-        try {
-            conn = (HttpURLConnection) url.openConnection();
-            setConnectionUserAgent(conn);
-        } catch (final IOException e) {
-            Log.error("openConnection(): exception during HTTP connection", e);
-
-            return null;
-        }
-
-        //Set a reasonable timeout.
-        //Otherwise there is not timeout so we might never know if it fails,
-        //so never have the chance to try again.
-        conn.setConnectTimeout(TIMEOUT_MILLIS);
-        conn.setReadTimeout(TIMEOUT_MILLIS);
-
-        return conn;
     }
 
     public static boolean cacheUriToFileSync(final Context context, final RequestQueue requestQueue, final String uriFileToCache, final String cacheFileUri) {
@@ -231,10 +200,6 @@ public final class HttpUtils {
     }
     */
 
-
-    private static void setConnectionUserAgent(final HttpURLConnection connection) {
-        connection.setRequestProperty(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC);
-    }
 
     private static boolean parseGetFileResponseContent(final Context context, final byte[] data, final String cacheFileContentUri) {
         //Write the content to the file:

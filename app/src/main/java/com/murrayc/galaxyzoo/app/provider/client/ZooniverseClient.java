@@ -42,6 +42,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +83,41 @@ public class ZooniverseClient {
         }
     }
 
+    private static HttpURLConnection openConnection(final String strURL) {
+        final URL url;
+        try {
+            url = new URL(strURL);
+        } catch (final MalformedURLException e) {
+            //TODO: Let the caller catch this?
+            Log.error("openConnection(): exception while parsing URL", e);
+            return null;
+        }
+
+
+        final HttpURLConnection conn;
+        try {
+            conn = (HttpURLConnection) url.openConnection();
+            setConnectionUserAgent(conn);
+        } catch (final IOException e) {
+            //TODO: Let the caller catch this?
+            Log.error("openConnection(): exception during HTTP connection", e);
+
+            return null;
+        }
+
+        //Set a reasonable timeout.
+        //Otherwise there is not timeout so we might never know if it fails,
+        //so never have the chance to try again.
+        conn.setConnectTimeout(HttpUtils.TIMEOUT_MILLIS);
+        conn.setReadTimeout(HttpUtils.TIMEOUT_MILLIS);
+
+        return conn;
+    }
+
+    private static void setConnectionUserAgent(final HttpURLConnection connection) {
+        connection.setRequestProperty(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.USER_AGENT_MURRAYC);
+    }
+
     private String getQueryMoreItemsUri() {
         /**
          * REST uri for querying items.
@@ -101,7 +138,7 @@ public class ZooniverseClient {
         HttpUtils.throwIfNoNetwork(getContext(),
                 false); //Ignore the wifi-only setting because this will be when the user is explicitly requesting a login.
 
-        final HttpURLConnection conn = HttpUtils.openConnection(getLoginUri());
+        final HttpURLConnection conn = openConnection(getLoginUri());
         if (conn == null) {
             return null;
         }
@@ -290,7 +327,7 @@ public class ZooniverseClient {
     public boolean uploadClassificationSync(final String authName, final String authApiKey, final List<NameValuePair> nameValuePairs) throws UploadException {
         throwIfNoNetwork();
 
-        final HttpURLConnection conn = HttpUtils.openConnection(getPostUploadUri());
+        final HttpURLConnection conn = openConnection(getPostUploadUri());
         if (conn == null) {
             return false;
         }
