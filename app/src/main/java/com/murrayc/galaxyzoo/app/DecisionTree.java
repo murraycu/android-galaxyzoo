@@ -59,7 +59,7 @@ public class DecisionTree {
      * @param inputStreamTranslation A JSON file containing translations of the question and answers,
      *                               such as https://github.com/zooniverse/Galaxy-Zoo/blob/master/public/locales/es.json
      */
-    public DecisionTree(final InputStream inputStreamTree, final InputStream inputStreamTranslation) {
+    public DecisionTree(final InputStream inputStreamTree, final InputStream inputStreamTranslation) throws DecisionTreeException {
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
         //Disable feature that we don't need and which just slows the parsing down:
@@ -71,9 +71,7 @@ public class DecisionTree {
         try {
             documentBuilder = dbf.newDocumentBuilder();
         } catch (final ParserConfigurationException e) {
-            //TODO: Throw a more suitable exception.
-            Log.error("DecisionTree: Exception from newDocumentBuilder", e);
-            return;
+            throw new DecisionTreeException("Exception from newDocumentBuilder." + e);
         }
 
         org.w3c.dom.Document xmlDocument;
@@ -81,16 +79,12 @@ public class DecisionTree {
         try {
             xmlDocument = documentBuilder.parse(inputStreamTree);
         } catch (final SAXException | IOException e) {
-            //TODO: Throw a more suitable exception.
-            Log.error("DecisionTree: Exception from DocumentBuilder.parse()", e);
-            return;
+            throw new DecisionTreeException("Exception from DocumentBuilder.parse()." + e);
         }
 
         final Element rootNode = xmlDocument.getDocumentElement();
         if (!TextUtils.equals(rootNode.getNodeName(), NODE_ROOT)) {
-            //TODO: Throw a suitable exception.
-            Log.error("android-galaxyzoo", "Unexpected XML root node name found: " + rootNode.getNodeName());
-            return;
+            throw new DecisionTreeException("Unexpected XML root node name found: " + rootNode.getNodeName());
         }
 
         final List<Node> listQuestions = getChildrenByTagName(rootNode, NODE_QUESTION);
@@ -110,11 +104,15 @@ public class DecisionTree {
         //TODO: Find an efficient way to avoid loading English strings that will be replaced,
         //maybe by loading the translation first.
         if (inputStreamTranslation != null) {
-            loadTranslation(inputStreamTranslation);
+            try {
+                loadTranslation(inputStreamTranslation);
+            } catch (final IOException e) {
+                throw new DecisionTreeException("loadTranslation() failed", e);
+            }
         }
     }
 
-    private void loadTranslation(final InputStream inputStreamTranslation) {
+    private void loadTranslation(final InputStream inputStreamTranslation) throws IOException {
         final JsonReader reader;
         try {
             reader = new JsonReader(new InputStreamReader(inputStreamTranslation, Utils.STRING_ENCODING));
@@ -129,9 +127,8 @@ public class DecisionTree {
             reader.endObject();
             reader.close();
         } catch (final UnsupportedEncodingException e) {
-            Log.info("DecisionTree: UnsupportedEncodingException parsing JSON", e);
-        } catch (final IOException e) {
-            Log.info("DecisionTree: IOException parsing JSON", e);
+            //This is very unlikely for UTF-8, so just ignore it.
+            Log.error("DecisionTree: UnsupportedEncodingException parsing JSON", e);
         }
     }
 
@@ -561,6 +558,16 @@ public class DecisionTree {
 
         public List<Answer> getAnswers() {
             return Collections.unmodifiableList(answers);
+        }
+    }
+
+    public class DecisionTreeException extends Exception {
+        DecisionTreeException(final String detail, final Exception cause) {
+            super(detail, cause);
+        }
+
+        DecisionTreeException(final String detail) {
+            super(detail);
         }
     }
 }

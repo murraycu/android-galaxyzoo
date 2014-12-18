@@ -48,7 +48,7 @@ public class Singleton {
     private DecisionTree mDecisionTree = null;
     private LocaleDetails mLocaleDetails = null;
 
-    private Singleton(final Context context) {
+    private Singleton(final Context context) throws DecisionTree.DecisionTreeException {
         //This needs to be done as soon as the app opens.
         //See http://developer.android.com/guide/topics/ui/settings.html#Fragment
         Utils.initDefaultPrefs(context);
@@ -227,7 +227,13 @@ public class Singleton {
             }
 
             final Context context = params[0];
-            Singleton.ourInstance = new Singleton(context);
+            try {
+                Singleton.ourInstance = new Singleton(context);
+            } catch (final DecisionTree.DecisionTreeException e) {
+                //Nothing can continue if this failed,
+                //so let's do our best to get a stacktrace from the user.
+                throw new RuntimeException("Singleton creation failed.", e);
+            }
 
             return null;
         }
