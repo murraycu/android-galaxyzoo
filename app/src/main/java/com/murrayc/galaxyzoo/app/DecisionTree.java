@@ -132,8 +132,6 @@ public class DecisionTree {
             Log.info("DecisionTree: UnsupportedEncodingException parsing JSON", e);
         } catch (final IOException e) {
             Log.info("DecisionTree: IOException parsing JSON", e);
-        } catch (final IllegalStateException e) {
-            Log.info("DecisionTree: IllegalStateException parsing JSON", e);
         }
     }
 

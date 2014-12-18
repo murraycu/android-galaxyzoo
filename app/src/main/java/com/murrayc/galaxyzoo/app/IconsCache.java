@@ -468,9 +468,6 @@ class IconsCache {
 
             p = Pattern.compile(prefix + cssName + "\\{background-position:(-?[0-9]+)(px)? (-?[0-9]+)(px)?\\}");
             //p = Pattern.compile("a.workflow-" + cssName);
-        } catch (PatternSyntaxException e) {
-            Log.error("Regex error", e);
-            return;
         }
 
         final Matcher m = p.matcher(css);
