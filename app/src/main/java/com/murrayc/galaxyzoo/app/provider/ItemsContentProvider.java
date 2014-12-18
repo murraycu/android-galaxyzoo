@@ -651,6 +651,14 @@ public class ItemsContentProvider extends ContentProvider {
                             //it will causes an app crash in AsyncTask.done(), as used by CursorLoader.
                             //TODO: Find a better way to respond to errors when using CursorLoader?
                             return c;
+                        } catch (final ZooniverseClient.RequestMoreItemsException e) {
+                            //Return the empty cursor,
+                            //and let the caller guess at the cause.
+                            //If we let the exception be thrown by this query() method then
+                            //it will causes an app crash in AsyncTask.done(), as used by CursorLoader.
+                            //TODO: Find a better way to respond to errors when using CursorLoader?
+                            Log.error("ZooniverseClient.requestMoreItemsSync() failed", e);
+                            return c;
                         }
 
                         c.close();

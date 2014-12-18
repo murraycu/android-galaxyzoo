@@ -249,7 +249,7 @@ public class ZooniverseClient {
      * @param count
      * @return
      */
-    public List<Subject> requestMoreItemsSync(int count) {
+    public List<Subject> requestMoreItemsSync(int count) throws RequestMoreItemsException {
         throwIfNoNetwork();
 
         //Avoid suddenly doing too much network and disk IO
@@ -270,14 +270,15 @@ public class ZooniverseClient {
             response = futureListener.get(HttpUtils.TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
         } catch (final InterruptedException | ExecutionException e) {
             Log.error("requestMoreItemsSync(): Exception from request.", e);
-            return null;
-        } catch (TimeoutException e) {
+            throw new RequestMoreItemsException("Exception from request.", e);
+        } catch (final TimeoutException e) {
             Log.error("requestMoreItemsSync(): Timeout Exception from request.", e);
+            throw new RequestMoreItemsException("Timeout Exception from request.", e);
         }
 
         //Presumably this happens when onErrorResponse() is called.
         if (response == null) {
-            return null;
+            throw new RequestMoreItemsException("response is null.");
         }
 
         return MoreItemsJsonParser.parseMoreItemsResponseContent(response);
@@ -367,7 +368,6 @@ public class ZooniverseClient {
 
             return true;
         } catch (final IOException e) {
-            //TODO: Let the caller catch this?
             Log.error("uploadClassificationSync: exception during HTTP connection", e);
 
             throw new UploadException("exception during HTTP connection", e);
@@ -436,6 +436,16 @@ public class ZooniverseClient {
     public static class UploadException extends Exception {
         UploadException(final String detail, final Exception cause) {
             super(detail, cause);
+        }
+    }
+
+    public static class RequestMoreItemsException extends Exception {
+        RequestMoreItemsException(final String detail, final Exception cause) {
+            super(detail, cause);
+        }
+
+        public RequestMoreItemsException(final String detail) {
+            super(detail);
         }
     }
 }

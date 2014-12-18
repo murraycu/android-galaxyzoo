@@ -53,7 +53,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
     public void tearDown() {
     }
 
-    public void testMoreItems() throws IOException, InterruptedException {
+    public void testMoreItems() throws IOException, InterruptedException, ZooniverseClient.RequestMoreItemsException {
         final MockWebServer server = new MockWebServer();
 
         final String strResponse = getStringFromStream(
@@ -172,8 +172,12 @@ public class ZooniverseClientTest extends AndroidTestCase {
         final ZooniverseClient client = createZooniverseClient(server);
 
         //Mostly we want to check that it doesn't crash on a bad HTTP response.
-        final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
-        assertTrue((subjects == null) || (subjects.size() == 0));
+        try {
+            final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
+            assertTrue((subjects == null) || (subjects.size() == 0));
+        } catch (ZooniverseClient.RequestMoreItemsException e) {
+            assertTrue(e.getCause() instanceof IOException);
+        }
 
 
         server.shutdown();
@@ -191,8 +195,13 @@ public class ZooniverseClientTest extends AndroidTestCase {
         final ZooniverseClient client = createZooniverseClient(server);
 
         //Mostly we want to check that it doesn't crash on a bad HTTP response.
-        final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
-        assertTrue((subjects == null) || (subjects.size() == 0));
+
+        try {
+            final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
+            assertTrue((subjects == null) || (subjects.size() == 0));
+        } catch (final ZooniverseClient.RequestMoreItemsException e) {
+            assertTrue(e.getCause() instanceof IOException);
+        }
 
         server.shutdown();
     }
@@ -259,10 +268,10 @@ public class ZooniverseClientTest extends AndroidTestCase {
             final boolean result = client.uploadClassificationSync("testAuthName",
                     "testAuthApiKey", values);
             assertFalse(result);
-        } catch (final ZooniverseClient.UploadException ex) {
+        } catch (final ZooniverseClient.UploadException e) {
             //This is (at least with okhttp.mockwebserver) a normal
             //event if the upload was refused via an error response code.
-            assertTrue(ex.getCause() instanceof IOException);
+            assertTrue(e.getCause() instanceof IOException);
         }
 
         server.shutdown();
