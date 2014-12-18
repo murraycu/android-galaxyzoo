@@ -57,16 +57,17 @@ public final class HttpUtils {
     public static final int TIMEOUT_MILLIS = 20000; //20 seconds. Long but not too short for GPRS connections and not endless.
 
     public static void throwIfNoNetwork(final Context context) {
-        if(!getNetworkIsConnected(context)) {
+        final boolean wifiOnly = LoginUtils.getUseWifiOnly(context);
+        if(!getNetworkIsConnected(context, wifiOnly)) {
             //Throw an exception so the caller knows.
-            throw new NoNetworkException();
+            throw new NoNetworkException(wifiOnly);
         }
     }
 
     public static void throwIfNoNetwork(final Context context, boolean wifiOnly) {
         if(!getNetworkIsConnected(context, wifiOnly)) {
             //Throw an exception so the caller knows.
-            throw new NoNetworkException();
+            throw new NoNetworkException(wifiOnly);
         }
     }
 
@@ -276,11 +277,26 @@ public final class HttpUtils {
     }
 
     /**
+     * Thrown by methods that required a suitable network connection.
+     *
      * This is a RuntimeException because only RuntimeExceptions may be thrown by
      * a ContentProvider.
      */
-    public static class NoNetworkException extends RuntimeException {
-        public NoNetworkException() {
+    public static final class NoNetworkException extends RuntimeException {
+        private final boolean wifiOnly;
+
+        /**
+         *
+         * @param wifiOnly True if there was no wifi connection available when a wifi-only
+         *                 connection was required. False if any connection was required but
+         *                 none of any kind was available.
+         */
+        public NoNetworkException(boolean wifiOnly) {
+            this.wifiOnly = wifiOnly;
+        }
+
+        public boolean getWifiOnly() {
+            return wifiOnly;
         }
     }
 }

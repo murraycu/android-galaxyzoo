@@ -133,6 +133,8 @@ public class SubjectAdder {
         try {
             cacheUriToFile(uriRemote, uriContent, itemUri, imageType, true /* async */);
         } catch (final HttpUtils.NoNetworkException e) {
+            //Ignore this - it is normal if wifi-only is set in the settings
+            //and if we are then not on a wi-fi connection.
             Log.info("downloadMissingImage(): No network connection.");
         }
     }

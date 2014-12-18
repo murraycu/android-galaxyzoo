@@ -33,20 +33,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.murrayc.galaxyzoo.app.provider.HttpUtils;
+
 /**
  * Created by murrayc on 5/21/14.
  */
 final class UiUtils {
-
-    private static void warnAboutNoNetworkConnection(final Activity activity) {
-        final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_network), Toast.LENGTH_LONG);
-        toast.show();
-    }
-
-    private static void warnAboutNoWifiNetworkConnection(final Activity activity) {
-        final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_wifi_network), Toast.LENGTH_LONG);
-        toast.show();
-    }
 
     /*
     static void warnAboutNoItemsToDo(final Activity activity) {
@@ -105,6 +97,41 @@ final class UiUtils {
         return options.toBundle();
     }
 
+    public static void warnAboutNoNetworkConnection(final Activity activity, final HttpUtils.NoNetworkException ex) {
+        //This null check would be correct, but seems harsh because this code will only run
+        //in response to an exception, so we cannot expect to test it completely.
+        /*
+        if (ex == null) {
+            throw new IllegalArgumentException("ex is null.");
+        }
+        */
+
+        if ((ex != null) && ex.getWifiOnly()) {
+            warnAboutNoWifiNetworkConnection(activity);
+        } else {
+            warnAboutNoNetworkConnectionAtAll(activity);
+        }
+    }
+
+    private static void warnAboutNoNetworkConnection(final Activity activity, boolean notConnectedBecauseNotOnWifi) {
+        if (notConnectedBecauseNotOnWifi) {
+            warnAboutNoWifiNetworkConnection(activity);
+        } else {
+            warnAboutNoNetworkConnectionAtAll(activity);
+        }
+    }
+
+    private static void warnAboutNoNetworkConnectionAtAll(final Activity activity) {
+        final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_network), Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    private static void warnAboutNoWifiNetworkConnection(final Activity activity) {
+        final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_wifi_network), Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+
     /**
      * Use this instead of the one with the wifiOnly parameter,
      * when we are sure that the request should work even on wi-fi even if
@@ -130,11 +157,8 @@ final class UiUtils {
         // ItemsContentProvider.NoNetworkConnection exception in the CursorLoader?
         final Utils.NetworkConnected networkConnected = Utils.getNetworkIsConnected(activity,
                 wifiOnly);
-        if (networkConnected.notConnectedBecauseNotOnWifi) {
-            warnAboutNoWifiNetworkConnection(activity);
-            return true;
-        } else if (!networkConnected.connected) {
-            warnAboutNoNetworkConnection(activity);
+        if (!networkConnected.connected) {
+            warnAboutNoNetworkConnection(activity, networkConnected.notConnectedBecauseNotOnWifi);
             return true;
         }
 

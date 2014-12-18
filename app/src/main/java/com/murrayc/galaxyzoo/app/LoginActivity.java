@@ -394,8 +394,9 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
 
         private final String mUsername;
         private final String mPassword;
+        private Exception exceptionCaught = null;
 
-        UserLoginTask(String username, String password) {
+        UserLoginTask(final String username, final String password) {
             mUsername = username;
             mPassword = password;
         }
@@ -411,18 +412,29 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
                 return mClient.loginSync(mUsername, mPassword);
             } catch (final HttpUtils.NoNetworkException ex) {
                 Log.info("LoginActivity.UserLoginTask.doInBackground(): loginSync() threw a NoNetworkException.");
-                return null;
+                exceptionCaught = ex;
+            } catch (final ZooniverseClient.LoginException e) {
+                Log.info("LoginActivity.UserLoginTask.doInBackground(): loginSync() threw a LoginException.");
+                exceptionCaught = e;
             }
+
+            return null;
         }
 
         @Override
         protected void onPostExecute(final LoginUtils.LoginResult result) {
             mAuthTask = null;
-            showProgress(false);
+            LoginActivity.this.showProgress(false);
 
             // A null result means that we didn't even get a response from the server for some reason:
             if (result == null) {
-                if (!UiUtils.warnAboutMissingNetwork(LoginActivity.this, false /* loginSync() ignored the wifi-only setting */)) {
+                //Respond appropriately:
+                if (exceptionCaught instanceof HttpUtils.NoNetworkException) {        ;
+                    UiUtils.warnAboutNoNetworkConnection(LoginActivity.this, (HttpUtils.NoNetworkException)exceptionCaught);
+                } else {
+                    //There was some other connection error:
+                    Log.error("UserLoginTask(): Exception from ZooniverseClient.loginSync()", exceptionCaught);
+
                     final Toast toast = Toast.makeText(LoginActivity.this, getString(R.string.error_could_not_connect), Toast.LENGTH_LONG);
                     toast.show();
                 }
@@ -431,10 +443,8 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             }
 
             if (result.getSuccess()) {
-                finishWithResult(result);
+                LoginActivity.this.finishWithResult(result);
             } else {
-
-
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }

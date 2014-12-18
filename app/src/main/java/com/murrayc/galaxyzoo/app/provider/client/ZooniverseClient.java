@@ -97,7 +97,7 @@ public class ZooniverseClient {
         return mServerBaseUri + "login";
     }
 
-    public LoginUtils.LoginResult loginSync(final String username, final String password) {
+    public LoginUtils.LoginResult loginSync(final String username, final String password) throws LoginException {
         HttpUtils.throwIfNoNetwork(getContext(),
                 false); //Ignore the wifi-only setting because this will be when the user is explicitly requesting a login.
 
@@ -123,7 +123,7 @@ public class ZooniverseClient {
         } catch (final IOException e) {
             Log.error("loginSync(): exception during HTTP connection", e);
 
-            return null;
+            throw new LoginException("Could not create POST.", e);
         }
 
         //Get the response:
@@ -139,7 +139,7 @@ public class ZooniverseClient {
         } catch (final IOException e) {
             Log.error("loginSync(): exception during HTTP connection", e);
 
-            return null;
+            throw new LoginException("Could not parse response.", e);
         } finally {
             if (in != null) {
                 try {
@@ -399,5 +399,11 @@ public class ZooniverseClient {
             return mLocationInverted;
         }
 
+    }
+
+    public static class LoginException extends Exception {
+        LoginException(final String detail, final Exception cause) {
+            super(detail, cause);
+        }
     }
 }

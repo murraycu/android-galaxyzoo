@@ -96,7 +96,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
-    public void testLoginWithSuccess() throws IOException, InterruptedException {
+    public void testLoginWithSuccess() throws IOException, InterruptedException, ZooniverseClient.LoginException {
         final MockWebServer server = new MockWebServer();
 
         final String strResponse = getStringFromStream(
@@ -128,7 +128,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
-    public void testLoginWithFailure() throws IOException {
+    public void testLoginWithFailure() throws IOException, ZooniverseClient.LoginException {
         final MockWebServer server = new MockWebServer();
 
 
@@ -150,7 +150,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
-    public void testLoginWithBadResponseContent() throws IOException {
+    public void testLoginWithBadResponseContent() throws IOException, ZooniverseClient.LoginException {
         final MockWebServer server = new MockWebServer();
 
         server.enqueue(new MockResponse().setBody("test bad login response"));
