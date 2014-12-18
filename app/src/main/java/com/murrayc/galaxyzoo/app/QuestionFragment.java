@@ -738,8 +738,16 @@ public class QuestionFragment extends BaseQuestionFragment
 
         try {
             resolver.applyBatch(ClassificationAnswer.AUTHORITY, ops);
-        } catch (RemoteException | OperationApplicationException e) {
+        } catch (final RemoteException | OperationApplicationException e) {
+            //This should never happen, and would mean a loss of the current classification,
+            //so let it crash the app and generate a report with a stacktrace,
+            //because that's (slightly) better than just ignoring it.
+            //
+            //I guess that OperationApplicationException is not an unchecked exception,
+            //because it could be caused by not just pure programmer error,
+            //for instance if our data did not fulfill a Sqlite database constraint.
             Log.error("QuestionFragment. saveClassification(): Exception from applyBatch()", e);
+            throw new RuntimeException("ContentResolver.applyBatch() failed.", e);
         }
 
         //The ItemsContentProvider will upload the classification later.
