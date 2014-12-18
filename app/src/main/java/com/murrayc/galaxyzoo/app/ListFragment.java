@@ -228,11 +228,7 @@ public class ListFragment extends ZooFragment
         //For performance, because all our items are the same size:
         gridView.setHasFixedSize(true);
 
-        try {
-            gridView.setAdapter(mAdapter);
-        } catch (final Exception e) {
-            Log.error("glom", "setListAdapter() failed for query  with exception: " + e.getMessage());
-        }
+        gridView.setAdapter(mAdapter);
 
         /*
          * Initializes the CursorLoader. The URL_LOADER value is eventually passed
