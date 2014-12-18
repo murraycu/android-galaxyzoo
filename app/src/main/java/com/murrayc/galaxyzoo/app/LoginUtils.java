@@ -260,6 +260,12 @@ public final class LoginUtils {
         try {
             return Integer.parseInt(value);
         } catch (final NumberFormatException e) {
+            //NumberFormatException is an unchecked exception but
+            //it would not be a programmer error to try to parse
+            //an input string (the stored preference in this case)
+            //as an Integer, as long as there's no way for us
+            //to check its validity before calling Integer.parseInt().
+            //Therefore we catch it.
             return 0;
         }
     }
