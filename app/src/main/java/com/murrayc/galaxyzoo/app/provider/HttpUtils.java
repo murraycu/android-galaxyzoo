@@ -27,6 +27,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.RequestFuture;
 import com.murrayc.galaxyzoo.app.Log;
@@ -34,6 +35,7 @@ import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -138,17 +140,20 @@ public final class HttpUtils {
 
         @Override
         protected Response<Boolean> parseNetworkResponse(final NetworkResponse response) {
-            boolean result = false;
             if (mContext != null) {
                 final Context context = mContext.get();
-                if (context != null) {
-                    result = parseGetFileResponseContent(context, response.data, mCacheFileUri);
-                } else {
-                    Log.error("parseNetworkResponse(): context is null.");
+                try {
+                    parseGetFileResponseContent(context, response.data, mCacheFileUri);
+                } catch (final IOException e) {
+                    Log.error("HttpUtils.parseNetworkResponse(): parseGetFileResponseContent failed", e);
+                    return Response.error(new VolleyError("parseGetFileResponseContent() failed.", e));
                 }
+            } else {
+                Log.error("parseNetworkResponse(): context is null.");
+                return Response.error(new VolleyError("context is null."));
             }
 
-            return Response.success(result, HttpHeaderParser.parseCacheHeaders(response));
+            return Response.success(true, HttpHeaderParser.parseCacheHeaders(response));
         }
 
         @Override
@@ -205,7 +210,7 @@ public final class HttpUtils {
     */
 
 
-    private static boolean parseGetFileResponseContent(final Context context, final byte[] data, final String cacheFileContentUri) {
+    private static void parseGetFileResponseContent(final Context context, final byte[] data, final String cacheFileContentUri) throws IOException {
         //Write the content to the file:
         ParcelFileDescriptor pfd = null;
         FileOutputStream fout = null;
@@ -215,15 +220,11 @@ public final class HttpUtils {
                     openFileDescriptor(Uri.parse(cacheFileContentUri), "w");
             if (pfd == null) {
                 Log.error("parseGetFileResponseContent(): pfd is null.");
-                return false;
             } else {
 
                 fout = new FileOutputStream(pfd.getFileDescriptor());
                 fout.write(data);
             }
-        } catch (final IOException e) {
-            Log.error("parseGetFileResponseContent(): Exception while writing to FileOutputStream", e);
-            return false;
         } finally {
             if (fout != null) {
                 try {
@@ -241,8 +242,6 @@ public final class HttpUtils {
                 }
             }
         }
-
-        return true;
     }
 
     /**
