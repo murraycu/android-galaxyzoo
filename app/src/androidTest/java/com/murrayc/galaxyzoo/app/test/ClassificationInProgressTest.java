@@ -42,18 +42,8 @@ public class ClassificationInProgressTest extends AndroidTestCase {
     }
 
     public void testParcelable() {
-        final QuestionFragment.ClassificationInProgress classificationInProgress = new QuestionFragment.ClassificationInProgress();
-        classificationInProgress.add("testQuestionId1", "testAnswerId1.1", null);
-        classificationInProgress.add("testQuestionId2", "testAnswerId1.2", null);
-
-        List<String> checkboxIds = new ArrayList<>();
-        checkboxIds.add("testCheckboxId1");
-        checkboxIds.add("testCheckboxId2");
-        classificationInProgress.add("testQuestionId3", "testAnswerId3.1", checkboxIds);
-        classificationInProgress.add("testQuestionId3", "testAnswerId3.2", null);
-
-        classificationInProgress.add("testQuestionId4", "testAnswerId4.1", null);
-
+        final QuestionFragment.ClassificationInProgress classificationInProgress =
+                createTestClassificationInProgress();
 
         // Obtain a Parcel object and write the parcelable object to it:
         final Parcel parcel = Parcel.obtain();
@@ -66,5 +56,46 @@ public class ClassificationInProgressTest extends AndroidTestCase {
         final QuestionFragment.ClassificationInProgress createdFromParcel = QuestionFragment.ClassificationInProgress.CREATOR.createFromParcel(parcel);
         assertFalse("Parcel is the same.", classificationInProgress == createdFromParcel);
         assertEquals(classificationInProgress, createdFromParcel);
+    }
+
+    private QuestionFragment.ClassificationInProgress createTestClassificationInProgress() {
+        final QuestionFragment.ClassificationInProgress result = new QuestionFragment.ClassificationInProgress();
+        result.add("testQuestionId1", "testAnswerId1.1", null);
+        result.add("testQuestionId2", "testAnswerId1.2", null);
+
+        final List<String> checkboxIds = new ArrayList<>();
+        checkboxIds.add("testCheckboxId1");
+        checkboxIds.add("testCheckboxId2");
+        result.add("testQuestionId3", "testAnswerId3.1", checkboxIds);
+        result.add("testQuestionId3", "testAnswerId3.2", null);
+
+        result.add("testQuestionId4", "testAnswerId4.1", null);
+
+        return result;
+    }
+
+    public void testEqualsExpectSuccess() {
+        final QuestionFragment.ClassificationInProgress a = createTestClassificationInProgress();
+        final QuestionFragment.ClassificationInProgress b = createTestClassificationInProgress();
+        assertEquals(a, b);
+        assertEquals(b, a);
+
+    }
+
+
+    public void testEqualsExpectFailureExtraAnswer() {
+        final QuestionFragment.ClassificationInProgress a = createTestClassificationInProgress();
+        final QuestionFragment.ClassificationInProgress b = createTestClassificationInProgress();
+        b.add("testQuestionId4", "testAnswerId4.1", null);
+        assertFalse(a.equals(b));
+        assertFalse(b.equals(a));
+    }
+
+    public void testEqualsExpectFailureExtraQuestion() {
+        final QuestionFragment.ClassificationInProgress a = createTestClassificationInProgress();
+        final QuestionFragment.ClassificationInProgress b = createTestClassificationInProgress();
+        b.add("testQuestionId5", "testAnswerId5.1", null);
+        assertFalse(a.equals(b));
+        assertFalse(b.equals(a));
     }
 }
