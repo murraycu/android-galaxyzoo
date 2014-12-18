@@ -403,7 +403,11 @@ public class ItemsContentProvider extends ContentProvider {
                 final ContentValues valuesComplete = new ContentValues(values);
 
                 //This doesn't actually get any data from the locations.
-                createFileUrisForImages(valuesComplete);
+                try {
+                    createFileUrisForImages(valuesComplete);
+                } catch (final IOException e) {
+                    Log.error("insert(): createFileUrisForImages() failed", e);
+                }
 
                 uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, valuesComplete,
                         sItemsProjectionMap, Item.ITEMS_URI);
@@ -474,7 +478,7 @@ public class ItemsContentProvider extends ContentProvider {
 
     /** Get a the content URI of a new file, whose data will actually be on the local system.
      */
-    private Uri createFileUri() {
+    private Uri createFileUri() throws IOException {
         //Log.info("createFileUri(): subject id=" + subjectId + ", imageType=" + imageType);
 
         final SQLiteDatabase db = getDb();
@@ -508,7 +512,7 @@ public class ItemsContentProvider extends ContentProvider {
      * @param filename
      * @return
      */
-    private String createCacheFile(final String filename) {
+    private String createCacheFile(final String filename) throws IOException {
         final Context context = getContext();
         if (context == null) {
             return null;
@@ -544,9 +548,6 @@ public class ItemsContentProvider extends ContentProvider {
             //TODO: Find a way to let it succeed.
             Log.error("createCacheFile(): Unsupported operation for filename=" + file.getAbsolutePath(), e);
             return "testuri";
-        } catch (final IOException e) {
-            Log.error("createCacheFile(): IOException for filename=" + file.getAbsolutePath(), e);
-            return null;
         }
 
         return file.getAbsolutePath();
@@ -1038,7 +1039,7 @@ public class ItemsContentProvider extends ContentProvider {
      * @param values
      * @return
      */
-    private void createFileUrisForImages(final ContentValues values) {
+    private void createFileUrisForImages(final ContentValues values) throws IOException {
         Uri fileUri = createFileUri();
         if (fileUri != null) {
             values.put(DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI, fileUri.toString());
