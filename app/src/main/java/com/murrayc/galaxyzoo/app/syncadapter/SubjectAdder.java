@@ -180,20 +180,26 @@ public class SubjectAdder {
             final String uriInvertedRemote = c.getString(4);
             final String uriInverted = c.getString(5);
 
-            if (!(cacheUriToFile(uriStandardRemote, uriStandard, itemUri, ImageType.STANDARD, asyncFileDownloads))) {
-                Log.error("cacheUrisToFiles(): cacheUriToFile() failed for standard image.");
-            }
-
-            if (!(cacheUriToFile(uriThumbnailRemote, uriThumbnail, itemUri, ImageType.THUMBNAIL, asyncFileDownloads))) {
-                Log.error("cacheUrisToFiles(): cacheUriToFile() failed for thumbnail image.");
-            }
-
-            if (!(cacheUriToFile(uriInvertedRemote, uriInverted, itemUri, ImageType.INVERTED, asyncFileDownloads))) {
-                Log.error("cacheUrisToFiles(): cacheUriToFile() failed for inverted image.");
-            }
+            cacheUriToFileWithNullChecks(uriStandardRemote, uriStandard, itemUri, ImageType.STANDARD, asyncFileDownloads);
+            cacheUriToFileWithNullChecks(uriThumbnailRemote, uriThumbnail, itemUri, ImageType.THUMBNAIL, asyncFileDownloads);
+            cacheUriToFileWithNullChecks(uriInvertedRemote, uriInverted, itemUri, ImageType.INVERTED, asyncFileDownloads);
         }
 
         c.close();
+    }
+
+    private void cacheUriToFileWithNullChecks(final String uriStandardRemote, final String uriStandard, final Uri itemUri, final ImageType imageType, boolean asyncFileDownloads) {
+        if (TextUtils.isEmpty(uriStandardRemote) || TextUtils.isEmpty(uriStandard)) {
+            Log.error("cacheUriToFileWithNullChecks(): Empty uriStandardRemote or uriStandard.");
+        } else {
+            try {
+                cacheUriToFile(uriStandardRemote, uriStandard, itemUri, imageType, asyncFileDownloads);
+            } catch (final HttpUtils.NoNetworkException e) {
+                //Ignore this - it is normal if wifi-only is set in the settings
+                //and if we are then not on a wi-fi connection.
+                Log.info("cacheUriToFileWithNullChecks(): No network connection.");
+            }
+        }
     }
 
     /**
@@ -201,25 +207,23 @@ public class SubjectAdder {
      *
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private boolean cacheUriToFile(final String uriFileToCache, final String cacheFileUri, final Uri itemUri, final ImageType imageType, boolean asyncFileDownloads) {
+    private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri, final Uri itemUri, final ImageType imageType, boolean asyncFileDownloads) throws HttpUtils.NoNetworkException {
         if (TextUtils.isEmpty(uriFileToCache)) {
-            return false;
+            throw new IllegalArgumentException("uriFileToCache is empty or null.");
         }
 
         if (TextUtils.isEmpty(cacheFileUri)) {
-            return false;
+            throw new IllegalArgumentException("uriFileToCache is empty or null");
         }
 
         //Don't attempt it if it is already in progress.
         if (mImageDownloadsInProgress.containsKey(uriFileToCache)) {
             //TODO: Check the actual date?
-            return false;
+            return;
         }
 
         //Don't try if there is no suitable network connection:
-        if(!HttpUtils.getNetworkIsConnected(getContext())) {
-            return false;
-        }
+        HttpUtils.throwIfNoNetwork(getContext());
 
         final Date now = new Date();
         mImageDownloadsInProgress.put(uriFileToCache, now);
@@ -244,7 +248,6 @@ public class SubjectAdder {
 
             //We won't request the same image again if it succeeded once:
             addRequestToQueue(request);
-            return true;
         } else {
             boolean response = false;
             try {
@@ -252,7 +255,8 @@ public class SubjectAdder {
             } catch (final HttpUtils.FileCacheException e) {
                 Log.error("SubjectAdder.CacheUriToFile(): Exception from HttpUtils.cacheUriToFileSync", e);
             }
-            return onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
+
+            onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
         }
     }
 
@@ -265,14 +269,12 @@ public class SubjectAdder {
         mRequestQueue.add(request);
     }
 
-    private boolean onImageDownloadDone(boolean success, final String uriFileToCache, final Uri itemUri, ImageType imageType) {
+    private void onImageDownloadDone(boolean success, final String uriFileToCache, final Uri itemUri, ImageType imageType) {
         markImageDownloadAsNotInProgress(uriFileToCache);
         if (success) {
-            return markImageAsDownloaded(itemUri, imageType, uriFileToCache);
+            markImageAsDownloaded(itemUri, imageType, uriFileToCache);
         } else {
-            //doRegularTasks() will try again later.
             Log.error("onImageDownloadDone(): cacheUriToContentUriFileSync(): failed.");
-            return false;
         }
     }
 
@@ -289,7 +291,7 @@ public class SubjectAdder {
         mImageDownloadsInProgress.remove(uriFileToCache);
     }
 
-    boolean markImageAsDownloaded(final Uri itemUri, final ImageType imageType, final String uriFileToCache) {
+    private void markImageAsDownloaded(final Uri itemUri, final ImageType imageType, final String uriFileToCache) {
 
         //Don't try downloading this again later:
 
@@ -312,8 +314,7 @@ public class SubjectAdder {
                 fieldName = Item.Columns.LOCATION_INVERTED_DOWNLOADED;
                 break;
             default:
-                Log.error("markImageAsDownloaded(): Unexpected imageType.");
-                return false;
+                throw new IllegalArgumentException("markImageAsDownloaded(): Unexpected imageType.");
         }
 
         final ContentResolver resolver = getContext().getContentResolver();
@@ -325,13 +326,10 @@ public class SubjectAdder {
                 null, null);
         if (affected != 1) {
             Log.error("markImageAsDownloaded(): Failed to mark image download as done.");
-            return false;
         } else {
             //Let the ListView (or other UI) know that there is more to display.
             //TODO? notifyRowChangeBySubjectId(subjectId);
         }
-
-        return true;
     }
 
     /**
