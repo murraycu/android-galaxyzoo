@@ -469,7 +469,8 @@ public class ItemsContentProvider extends ContentProvider {
                 throw new IllegalStateException("could not insert " +
                         "content values: " + values);
             }
-        } catch (android.database.SQLException e) {
+        } catch (final android.database.SQLException e) {
+            //TODO: Let the caller catch this?
             Log.error("insert failed", e);
         }
 

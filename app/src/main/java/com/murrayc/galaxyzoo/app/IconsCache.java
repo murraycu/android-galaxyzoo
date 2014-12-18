@@ -364,7 +364,8 @@ class IconsCache {
         final File file = new File(mCacheDir.getPath(), cacheId);
         try {
             file.createNewFile();
-        } catch (IOException e) {
+        } catch (final IOException e) {
+            //TODO: Let the caller catch this?
             Log.error("Could not create cache file.", e);
             return null;
         }
@@ -394,6 +395,7 @@ class IconsCache {
 
                     return sb.toString();
                 } catch (final IOException e) {
+                    //TODO: Let the caller catch this?
                     Log.error("getFileContents(): IOException", e);
                     return "";
                 } finally {
@@ -406,6 +408,7 @@ class IconsCache {
                     }
                 }
             } catch (final IOException e) {
+                //TODO: Let the caller catch this?
                 Log.error("getFileContents(): IOException", e);
                 return "";
             } finally {
@@ -418,6 +421,7 @@ class IconsCache {
                 }
             }
         } catch (final IOException e) {
+            //TODO: Let the caller catch this?
             Log.error("getFileContents(): IOException", e);
             return "";
         } finally {
@@ -514,6 +518,7 @@ class IconsCache {
             final byte[] byteArray = stream.toByteArray();
             fout.write(byteArray);
         } catch (final IOException e) {
+            //TODO: Let the caller catch this?
             Log.error("cacheBitmapToFile(): Exception while caching icon bitmap.", e);
         } finally {
             if (fout != null) {

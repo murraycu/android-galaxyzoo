@@ -187,6 +187,7 @@ public final class HttpUtils {
         try {
             url = new URL(strUrl);
         } catch (final MalformedURLException e) {
+            //TODO: Let the caller catch this?
             Log.error("getUriLastModified(): can't instantiate URL", e);
             return 0;
         }
@@ -199,6 +200,7 @@ public final class HttpUtils {
             //getLastModified() then returns 0;
             con = (HttpURLConnection) url.openConnection();
         } catch (final IOException e) {
+            //TODO: Let the caller catch this?
             Log.error("getUriLastModified(): can't openConnection", e);
             return 0;
         }
