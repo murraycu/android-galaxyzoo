@@ -62,8 +62,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.enqueue(new MockResponse().setBody(strResponse));
         server.play();
 
-        final URL mockUrl = server.getUrl("/");
-        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+        final ZooniverseClient client = createZooniverseClient(server);
 
         final int COUNT = 5;
         final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(COUNT);
@@ -105,8 +104,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.enqueue(new MockResponse().setBody(strResponse));
         server.play();
 
-        final URL mockUrl = server.getUrl("/");
-        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+        final ZooniverseClient client = createZooniverseClient(server);
 
         final LoginUtils.LoginResult result = client.loginSync("testusername", "testpassword");
         assertNotNull(result);
@@ -140,8 +138,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.enqueue(response);
         server.play();
 
-        final URL mockUrl = server.getUrl("/");
-        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+        final ZooniverseClient client = createZooniverseClient(server);
 
         final LoginUtils.LoginResult result = client.loginSync("testusername", "testpassword");
         assertNotNull(result);
@@ -156,8 +153,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.enqueue(new MockResponse().setBody("test bad login response"));
         server.play();
 
-        final URL mockUrl = server.getUrl("/");
-        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+        final ZooniverseClient client = createZooniverseClient(server);
 
         final LoginUtils.LoginResult result = client.loginSync("testusername", "testpassword");
         assertNotNull(result);
@@ -173,8 +169,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.enqueue(new MockResponse().setBody("some nonsense to try to break things {"));
         server.play();
 
-        final URL mockUrl = server.getUrl("/");
-        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+        final ZooniverseClient client = createZooniverseClient(server);
 
         //Mostly we want to check that it doesn't crash on a bad HTTP response.
         final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
@@ -193,8 +188,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.enqueue(response);
         server.play();
 
-        final URL mockUrl = server.getUrl("/");
-        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+        final ZooniverseClient client = createZooniverseClient(server);
 
         //Mostly we want to check that it doesn't crash on a bad HTTP response.
         final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
@@ -213,8 +207,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.enqueue(response);
         server.play();
 
-        final URL mockUrl = server.getUrl("/");
-        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+        final ZooniverseClient client = createZooniverseClient(server);
 
         //SyncAdapter.doUploadSync() adds an "interface" parameter too,
         //but we are testing a more generic API here:
@@ -257,8 +250,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.enqueue(response);
         server.play();
 
-        final URL mockUrl = server.getUrl("/");
-        final ZooniverseClient client = new ZooniverseClient(getContext(), mockUrl.toString());
+        final ZooniverseClient client = createZooniverseClient(server);
 
         List<NameValuePair> values = new ArrayList<>();
         values.add(new BasicNameValuePair("test nonsense", "12345"));
@@ -268,6 +260,11 @@ public class ZooniverseClientTest extends AndroidTestCase {
         assertFalse(result);
 
         server.shutdown();
+    }
+
+    private ZooniverseClient createZooniverseClient(final MockWebServer server) {
+        final URL mockUrl = server.getUrl("/");
+        return new ZooniverseClient(getContext(), mockUrl.toString());
     }
 
     private String getStringFromStream(final InputStream input) throws IOException {
