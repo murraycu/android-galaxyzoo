@@ -23,6 +23,7 @@ import android.test.AndroidTestCase;
 
 import com.murrayc.galaxyzoo.app.DecisionTree;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -30,33 +31,39 @@ import java.io.InputStream;
  * Simple test to ensure that the generated bindings are working.
  */
 public class DecisionTreeTest extends AndroidTestCase {
-    private static DecisionTree decisionTree = null;
-
-
     @Override
-    public void setUp() throws IOException, DecisionTree.DecisionTreeException {
+    public void setUp() {
+    }
+
+    private DecisionTree createCorrectDecisionTree() throws DecisionTree.DecisionTreeException, IOException {
         //For some reason DecisionTreeTest.class.getResourceAsStream() doesn't work,
         //so we use DecisionTreeTest.class.getClassLoader().getResourceAsStream(), which does.
         final InputStream inputStream = DecisionTreeTest.class.getClassLoader().getResourceAsStream("test_decision_tree.xml");
         assertNotNull(inputStream);
 
         //TODO: Close the stream.
-        decisionTree = new DecisionTree(inputStream, null);
+        final DecisionTree decisionTree = new DecisionTree(inputStream, null);
 
         inputStream.close();
+
+        return decisionTree;
     }
 
     @Override
     public void tearDown() {
     }
 
-    public void testSize() {
+    public void testSize() throws DecisionTree.DecisionTreeException, IOException {
+        final DecisionTree decisionTree = createCorrectDecisionTree();
+
         assertNotNull(decisionTree);
         assertNotNull(decisionTree.questionsMap);
         assertEquals(12, decisionTree.questionsMap.size());
     }
 
-    public void testQuestions() {
+    public void testQuestions() throws DecisionTree.DecisionTreeException, IOException {
+        final DecisionTree decisionTree = createCorrectDecisionTree();
+
         final String QUESTION_ID = "sloan-3";
         final DecisionTree.Question question = decisionTree.getQuestion(QUESTION_ID);
         assertEquals(QUESTION_ID, question.getId());
@@ -67,6 +74,20 @@ public class DecisionTreeTest extends AndroidTestCase {
         assertEquals("sloan-4", nextQuestion.getId());
 
         //TODO: Test getQuestion() and getNextQuestion().
+    }
+
+    public void testParseBadXml() {
+        final String xml = "nonsense";
+        final InputStream is = new ByteArrayInputStream(xml.getBytes());
+
+        //This should throw an exception:
+        final DecisionTree decisionTree;
+        try {
+            decisionTree = new DecisionTree(is, null);
+            assertNull(decisionTree); //This should not be reached.
+        } catch (final DecisionTree.DecisionTreeException e) {
+            assertNotNull(e); //just to avoid an empty catch block.
+        }
     }
 
 }
