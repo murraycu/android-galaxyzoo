@@ -75,54 +75,45 @@ public final class LoginUtils {
         return !(TextUtils.isEmpty(loginDetails.authApiKey));
     }
 
-    public static LoginResult parseLoginResponseContent(final InputStream content) {
+    public static LoginResult parseLoginResponseContent(final InputStream content) throws IOException {
         //A failure by default.
         LoginResult result = new LoginResult(false, null, null);
 
-        final JsonReader reader;
-        try {
-            reader = new JsonReader(new InputStreamReader(content, Utils.STRING_ENCODING));
-            reader.beginObject();
-            boolean success = false;
-            String apiKey = null;
-            String userName = null;
-            String message = null;
-            while (reader.hasNext()) {
-                final String name = reader.nextName();
-                switch (name) {
-                    case "success":
-                        success = reader.nextBoolean();
-                        break;
-                    case "api_key":
-                        apiKey = reader.nextString();
-                        break;
-                    case "name":
-                        userName = reader.nextString();
-                        break;
-                    case "message":
-                        message = reader.nextString();
-                        break;
-                    default:
-                        reader.skipValue();
-                }
+        final JsonReader reader = new JsonReader(new InputStreamReader(content, Utils.STRING_ENCODING));
+        reader.beginObject();
+        boolean success = false;
+        String apiKey = null;
+        String userName = null;
+        String message = null;
+        while (reader.hasNext()) {
+            final String name = reader.nextName();
+            switch (name) {
+                case "success":
+                    success = reader.nextBoolean();
+                    break;
+                case "api_key":
+                    apiKey = reader.nextString();
+                    break;
+                case "name":
+                    userName = reader.nextString();
+                    break;
+                case "message":
+                    message = reader.nextString();
+                    break;
+                default:
+                    reader.skipValue();
             }
-
-            if (success) {
-                result = new LoginResult(true, userName, apiKey);
-            } else {
-                Log.info("Login failed.");
-                Log.info("Login failure message", message);
-            }
-
-            reader.endObject();
-            reader.close();
-        } catch (final UnsupportedEncodingException e) {
-            //TODO: Let the caller catch this?
-            Log.info("parseLoginResponseContent: UnsupportedEncodingException parsing JSON", e);
-        } catch (final IOException e) {
-            //TODO: Let the caller catch this?
-            Log.info("parseLoginResponseContent: IOException parsing JSON", e);
         }
+
+        if (success) {
+            result = new LoginResult(true, userName, apiKey);
+        } else {
+            Log.info("Login failed.");
+            Log.info("Login failure message", message);
+        }
+
+        reader.endObject();
+        reader.close();
 
         return result;
     }

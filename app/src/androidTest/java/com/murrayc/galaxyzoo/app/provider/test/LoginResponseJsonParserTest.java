@@ -40,7 +40,7 @@ public class LoginResponseJsonParserTest extends AndroidTestCase {
     public void tearDown() {
     }
 
-    public void testParseSuccess() {
+    public void testParseSuccess() throws IOException {
         final InputStream inputStream = LoginResponseJsonParserTest.class.getClassLoader().getResourceAsStream("test_login_response_success.json");
         assertNotNull(inputStream);
         final LoginUtils.LoginResult result = LoginUtils.parseLoginResponseContent(inputStream);
