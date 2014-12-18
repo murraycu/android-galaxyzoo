@@ -201,7 +201,7 @@ public class SubjectAdder {
      *
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    boolean cacheUriToFile(final String uriFileToCache, final String cacheFileUri, final Uri itemUri, final ImageType imageType, boolean asyncFileDownloads) {
+    private boolean cacheUriToFile(final String uriFileToCache, final String cacheFileUri, final Uri itemUri, final ImageType imageType, boolean asyncFileDownloads) {
         if (TextUtils.isEmpty(uriFileToCache)) {
             return false;
         }
@@ -246,7 +246,12 @@ public class SubjectAdder {
             addRequestToQueue(request);
             return true;
         } else {
-            final boolean response = HttpUtils.cacheUriToFileSync(getContext(), mRequestQueue, uriFileToCache, cacheFileUri);
+            boolean response = false;
+            try {
+                response = HttpUtils.cacheUriToFileSync(getContext(), mRequestQueue, uriFileToCache, cacheFileUri);
+            } catch (final HttpUtils.FileCacheException e) {
+                Log.error("SubjectAdder.CacheUriToFile(): Exception from HttpUtils.cacheUriToFileSync", e);
+            }
             return onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
         }
     }

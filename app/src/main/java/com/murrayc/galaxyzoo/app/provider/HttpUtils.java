@@ -91,7 +91,7 @@ public final class HttpUtils {
         return networkConnected.connected;
     }
 
-    public static boolean cacheUriToFileSync(final Context context, final RequestQueue requestQueue, final String uriFileToCache, final String cacheFileUri) {
+    public static boolean cacheUriToFileSync(final Context context, final RequestQueue requestQueue, final String uriFileToCache, final String cacheFileUri) throws FileCacheException {
         Log.info("cacheUriToFileSync(): uriFileToCache=" + uriFileToCache);
 
         final RequestFuture<Boolean> futureListener = RequestFuture.newFuture();
@@ -112,9 +112,13 @@ public final class HttpUtils {
             response = futureListener.get(TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
         } catch (final InterruptedException | ExecutionException e) {
             Log.error("cacheUriToFile(): Exception from request.", e);
-        } catch (TimeoutException e) {
+            throw new FileCacheException("Exception from request.", e);
+        } catch (final TimeoutException e) {
             Log.error("cacheUriToFile(): Timeout Exception from request.", e);
+            throw new FileCacheException("Timeout Exception from request.", e);
+
         }
+
         return response;
     }
 
@@ -262,6 +266,12 @@ public final class HttpUtils {
 
         public boolean getWifiOnly() {
             return wifiOnly;
+        }
+    }
+
+    public static class FileCacheException extends Exception {
+        FileCacheException(final String detail, final Exception cause) {
+            super(detail, cause);
         }
     }
 }

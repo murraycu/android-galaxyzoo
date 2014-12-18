@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app.provider.test;
 
 import android.test.AndroidTestCase;
+import android.util.MalformedJsonException;
 
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
@@ -39,6 +40,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Simple test to ensure that the generated bindings are working.
@@ -126,7 +128,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
-    public void testLoginWithFailure() throws IOException, ZooniverseClient.LoginException {
+    public void testLoginWithFailure() throws IOException {
         final MockWebServer server = new MockWebServer();
 
 
@@ -140,14 +142,21 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         final ZooniverseClient client = createZooniverseClient(server);
 
-        final LoginUtils.LoginResult result = client.loginSync("testusername", "testpassword");
-        assertNotNull(result);
-        assertFalse(result.getSuccess());
+
+        try {
+            final LoginUtils.LoginResult result = client.loginSync("testusername", "testpassword");
+            assertNotNull(result);
+            assertFalse(result.getSuccess());
+        } catch (final ZooniverseClient.LoginException e) {
+            assertTrue(e.getCause() instanceof MalformedJsonException);
+        }
+
+
 
         server.shutdown();
     }
 
-    public void testLoginWithBadResponseContent() throws IOException, ZooniverseClient.LoginException {
+    public void testLoginWithBadResponseContent() throws IOException {
         final MockWebServer server = new MockWebServer();
 
         server.enqueue(new MockResponse().setBody("test bad login response"));
@@ -155,9 +164,14 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         final ZooniverseClient client = createZooniverseClient(server);
 
-        final LoginUtils.LoginResult result = client.loginSync("testusername", "testpassword");
-        assertNotNull(result);
-        assertFalse(result.getSuccess());
+
+        try {
+            final LoginUtils.LoginResult result = client.loginSync("testusername", "testpassword");
+            assertNotNull(result);
+            assertFalse(result.getSuccess());
+        } catch (final ZooniverseClient.LoginException e) {
+            assertTrue(e.getCause() instanceof IOException);
+        }
 
         server.shutdown();
     }
@@ -200,7 +214,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
             final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
             assertTrue((subjects == null) || (subjects.size() == 0));
         } catch (final ZooniverseClient.RequestMoreItemsException e) {
-            assertTrue(e.getCause() instanceof IOException);
+            assertTrue(e.getCause() instanceof ExecutionException);
         }
 
         server.shutdown();
