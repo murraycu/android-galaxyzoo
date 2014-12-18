@@ -321,7 +321,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private boolean doUploadSync(final String itemId, final String subjectId, final String authName, final String authApiKey) {
+    private boolean doUploadSync(final String itemId, final String subjectId, final String authName, final String authApiKey) throws ZooniverseClient.UploadException {
 
 
         //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
@@ -443,6 +443,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             } catch (final HttpUtils.NoNetworkException e) {
                 //This is normal, if there is no suitable network connection.
                 Log.info("UploadTask(): NoNetworkException");
+            } catch (ZooniverseClient.UploadException e) {
+                Log.error("UploadTask(): UploadException", e);
             }
 
             //Call onPostExecute in the main thread:

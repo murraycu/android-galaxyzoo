@@ -203,7 +203,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
-    public void testUploadWithSuccess() throws IOException, InterruptedException {
+    public void testUploadWithSuccess() throws IOException, InterruptedException, ZooniverseClient.UploadException {
         final MockWebServer server = new MockWebServer();
 
 
@@ -248,7 +248,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
-    public void testUploadWithFailure() throws IOException {
+    public void testUploadWithFailure() throws IOException, ZooniverseClient.UploadException {
         final MockWebServer server = new MockWebServer();
 
         final MockResponse response = new MockResponse();

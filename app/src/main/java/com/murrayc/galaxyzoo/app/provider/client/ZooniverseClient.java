@@ -115,9 +115,7 @@ public class ZooniverseClient {
             conn.setDoOutput(true);
             conn.setDoInput(true);
 
-            if (!writeParamsToHttpPost(conn, nameValuePairs)) {
-                return null;
-            }
+            writeParamsToHttpPost(conn, nameValuePairs);
 
             conn.connect();
         } catch (final IOException e) {
@@ -151,7 +149,7 @@ public class ZooniverseClient {
         }
     }
 
-    private static boolean writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) {
+    private static void writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) throws IOException {
         OutputStream out = null;
         try {
             out = conn.getOutputStream();
@@ -162,17 +160,11 @@ public class ZooniverseClient {
                         new OutputStreamWriter(out, Utils.STRING_ENCODING));
                 writer.write(getPostDataBytes(nameValuePairs));
                 writer.flush();
-            } catch (final IOException e) {
-                Log.error("writeParamsToHttpPost(): Exception: ", e);
-                return false;
             } finally {
                 if (writer != null) {
                     writer.close();
                 }
             }
-        } catch (final IOException e) {
-            Log.error("writeParamsToHttpPost(): Exception: ", e);
-            return false;
         } finally {
             if (out != null) {
                 try {
@@ -182,8 +174,6 @@ public class ZooniverseClient {
                 }
             }
         }
-
-        return true;
     }
 
     private static String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
@@ -297,7 +287,7 @@ public class ZooniverseClient {
         return mContext;
     }
 
-    public boolean uploadClassificationSync(final String authName, final String authApiKey, final List<NameValuePair> nameValuePairs) {
+    public boolean uploadClassificationSync(final String authName, final String authApiKey, final List<NameValuePair> nameValuePairs) throws UploadException {
         throwIfNoNetwork();
 
         final HttpURLConnection conn = HttpUtils.openConnection(getPostUploadUri());
@@ -312,7 +302,7 @@ public class ZooniverseClient {
         } catch (final IOException e) {
             Log.error("uploadClassificationSync: exception during HTTP connection", e);
 
-            return false;
+            throw new UploadException("exception during HTTP connection", e);
         }
 
         //Add the authentication details to the headers;
@@ -324,8 +314,12 @@ public class ZooniverseClient {
             conn.setRequestProperty("Authorization", generateAuthorizationHeader(authName, authApiKey));
         }
 
-        if (!writeParamsToHttpPost(conn, nameValuePairs)) {
-            return false;
+        try {
+            writeParamsToHttpPost(conn, nameValuePairs);
+        } catch (IOException e) {
+            Log.error("uploadClassificationSync: writeParamsToHttpPost() failed", e);
+
+            throw new UploadException("writeParamsToHttpPost() failed.", e);
         }
 
         //TODO: Is this necessary? conn.connect();
@@ -342,9 +336,10 @@ public class ZooniverseClient {
 
             return true;
         } catch (final IOException e) {
+            //TODO: Let the caller catch this?
             Log.error("uploadClassificationSync: exception during HTTP connection", e);
 
-            return false;
+            throw new UploadException("exception during HTTP connection", e);
         } finally {
             if (in != null) {
                 try {
@@ -403,6 +398,12 @@ public class ZooniverseClient {
 
     public static class LoginException extends Exception {
         LoginException(final String detail, final Exception cause) {
+            super(detail, cause);
+        }
+    }
+
+    public static class UploadException extends Exception {
+        UploadException(final String detail, final Exception cause) {
             super(detail, cause);
         }
     }
