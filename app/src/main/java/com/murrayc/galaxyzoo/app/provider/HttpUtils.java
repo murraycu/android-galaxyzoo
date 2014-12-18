@@ -33,9 +33,7 @@ import com.android.volley.toolbox.RequestFuture;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
-import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;

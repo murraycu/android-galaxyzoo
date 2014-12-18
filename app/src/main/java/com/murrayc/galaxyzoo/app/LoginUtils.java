@@ -37,7 +37,6 @@ import com.murrayc.galaxyzoo.app.provider.Item;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 
