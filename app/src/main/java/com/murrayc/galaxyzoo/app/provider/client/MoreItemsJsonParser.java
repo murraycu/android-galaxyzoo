@@ -68,8 +68,6 @@ public class MoreItemsJsonParser {
             Log.info("parseMoreItemsResponseContent: UnsupportedEncodingException parsing JSON", e);
         } catch (final IOException e) {
             Log.info("parseMoreItemsResponseContent: IOException parsing JSON", e);
-        } catch (final IllegalStateException e) {
-            Log.info("parseMoreItemsResponseContent: IllegalStateException parsing JSON", e);
         }
 
         if (result.size() == 0) {

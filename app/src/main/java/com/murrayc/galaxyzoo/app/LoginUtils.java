@@ -117,11 +117,11 @@ public final class LoginUtils {
             reader.endObject();
             reader.close();
         } catch (final UnsupportedEncodingException e) {
+            //TODO: Let the caller catch this?
             Log.info("parseLoginResponseContent: UnsupportedEncodingException parsing JSON", e);
         } catch (final IOException e) {
+            //TODO: Let the caller catch this?
             Log.info("parseLoginResponseContent: IOException parsing JSON", e);
-        } catch (final IllegalStateException e) {
-            Log.info("parseLoginResponseContent: IllegalStateException parsing JSON", e);
         }
 
         return result;
@@ -161,13 +161,16 @@ public final class LoginUtils {
             final Bundle bundle = response.getResult();
             result.authApiKey = bundle.getString(AccountManager.KEY_AUTHTOKEN);
             return result;
-        } catch (OperationCanceledException e) {
+        } catch (final OperationCanceledException e) {
+            //TODO: Let the caller catch this?
             Log.error("getAccountLoginDetails(): getAccountLoginDetails() failed", e);
             return null;
-        } catch (AuthenticatorException e) {
+        } catch (final AuthenticatorException e) {
+            //TODO: Let the caller catch this?
             Log.error("getAccountLoginDetails(): getAccountLoginDetails() failed", e);
             return null;
-        } catch (IOException e) {
+        } catch (final IOException e) {
+            //TODO: Let the caller catch this?
             Log.error("getAccountLoginDetails(): getAccountLoginDetails() failed", e);
             return null;
         }
