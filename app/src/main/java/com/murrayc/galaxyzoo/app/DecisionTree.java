@@ -411,7 +411,7 @@ public class DecisionTree {
      * because that's generally nice when it's possible.
      * It returns and takes String references, but String is immutable too.
      */
-    static abstract class BaseButton {
+    abstract static class BaseButton {
         private final String id;
         private String text;
         private final String icon;

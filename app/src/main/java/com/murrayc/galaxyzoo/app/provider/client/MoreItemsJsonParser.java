@@ -119,7 +119,7 @@ public class MoreItemsJsonParser {
     /**
      * This is meant to be immutable.
      */
-    final static class Locations {
+    static final class Locations {
         private final String mLocationStandard;
         private final String mLocationThumbnail;
         private final String mLocationInverted;

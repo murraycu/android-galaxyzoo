@@ -875,7 +875,7 @@ public class QuestionFragment extends BaseQuestionFragment
      * way, but this lets us avoid having half-complete classifications
      * in the content provider.
      */
-    static public class ClassificationInProgress implements Parcelable {
+    public static class ClassificationInProgress implements Parcelable {
         public static final Parcelable.Creator<ClassificationInProgress> CREATOR
                 = new Parcelable.Creator<ClassificationInProgress>() {
             public ClassificationInProgress createFromParcel(final Parcel in) {
@@ -952,7 +952,7 @@ public class QuestionFragment extends BaseQuestionFragment
             this.favorite = favorite;
         }
 
-        static private class QuestionAnswer implements Parcelable {
+        private static class QuestionAnswer implements Parcelable {
             public static final Parcelable.Creator<QuestionAnswer> CREATOR
                     = new Parcelable.Creator<QuestionAnswer>() {
                 public QuestionAnswer createFromParcel(final Parcel in) {

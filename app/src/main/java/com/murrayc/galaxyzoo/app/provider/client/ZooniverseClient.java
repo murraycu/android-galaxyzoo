@@ -389,7 +389,7 @@ public class ZooniverseClient {
      * This class is meant to be immutable.
      * It only returns references to immutable Strings.
      */
-    public final static class Subject {
+    public static final class Subject {
         private final String mSubjectId;
         private final String mZooniverseId;
         private final String mLocationStandard;

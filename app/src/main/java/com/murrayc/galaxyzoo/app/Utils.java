@@ -97,7 +97,7 @@ public final class Utils {
         }
     }
 
-    public final static class NetworkConnected {
+    public static final class NetworkConnected {
         public final boolean connected;
         public final boolean notConnectedBecauseNotOnWifi;
 
