@@ -33,7 +33,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +52,7 @@ public class DecisionTree {
     private static final String NODE_ANSWER = "answer";
 
     //TODO: Make this private and add accessors.
-    public final Map<String, Question> questionsMap = new Hashtable<>();
+    public final Map<String, Question> questionsMap = new HashMap<>();
 
     /**
      * @param inputStreamTree        The XMl file containing the decision tree.
