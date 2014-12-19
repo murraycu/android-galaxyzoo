@@ -429,7 +429,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             // A null result means that we didn't even get a response from the server for some reason:
             if (result == null) {
                 //Respond appropriately:
-                if (exceptionCaught instanceof HttpUtils.NoNetworkException) {        ;
+                if (exceptionCaught instanceof HttpUtils.NoNetworkException) {
                     UiUtils.warnAboutNoNetworkConnection(LoginActivity.this, (HttpUtils.NoNetworkException)exceptionCaught);
                 } else {
                     //There was some other connection error:
