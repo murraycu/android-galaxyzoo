@@ -188,7 +188,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         //Mostly we want to check that it doesn't crash on a bad HTTP response.
         try {
             final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
-            assertTrue((subjects == null) || (subjects.size() == 0));
+            assertTrue((subjects == null) || (subjects.isEmpty()));
         } catch (ZooniverseClient.RequestMoreItemsException e) {
             assertTrue(e.getCause() instanceof IOException);
         }
@@ -212,7 +212,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         try {
             final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
-            assertTrue((subjects == null) || (subjects.size() == 0));
+            assertTrue((subjects == null) || (subjects.isEmpty()));
         } catch (final ZooniverseClient.RequestMoreItemsException e) {
             assertTrue(e.getCause() instanceof ExecutionException);
         }

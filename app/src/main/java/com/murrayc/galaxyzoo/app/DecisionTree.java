@@ -539,7 +539,7 @@ public class DecisionTree {
                 return false;
             }
 
-            if (checkboxes.size() == 0) {
+            if (checkboxes.isEmpty()) {
                 return false;
             }
 

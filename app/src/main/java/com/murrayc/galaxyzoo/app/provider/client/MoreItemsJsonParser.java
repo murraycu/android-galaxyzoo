@@ -70,7 +70,7 @@ public class MoreItemsJsonParser {
             Log.info("parseMoreItemsResponseContent: IOException parsing JSON", e);
         }
 
-        if (result.size() == 0) {
+        if (result.isEmpty()) {
             Log.error("Failed. No JSON entities parsed."); //TODO: Use some constant error code?
         }
 
