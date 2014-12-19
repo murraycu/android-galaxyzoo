@@ -275,7 +275,7 @@ public class ListFragment extends ZooFragment
         */
 
         if (!(adapter instanceof ListCursorAdapter)) {
-            Log.error("Unexpected Adapter class: " + adapter.getClass().toString());
+            Log.error("Unexpected Adapter class: " + adapter.getClass());
             return;
         }
 
