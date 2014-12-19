@@ -259,14 +259,12 @@ public class QuestionFragment extends BaseQuestionFragment
 
                 mClassificationInProgress.setFavorite(checked);
                 return true;
-            case R.id.option_menu_item_restart: {
+            case R.id.option_menu_item_restart:
                 restartClassification();
                 return true;
-            }
-            case R.id.option_menu_item_discuss: {
+            case R.id.option_menu_item_discuss:
                 UiUtils.openDiscussionPage(getActivity(), getZooniverseId());
                 return true;
-            }
             default:
                 return super.onOptionsItemSelected(item);
         }

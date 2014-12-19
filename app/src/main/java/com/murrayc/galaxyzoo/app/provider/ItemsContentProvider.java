@@ -258,7 +258,7 @@ public class ItemsContentProvider extends ContentProvider {
 
         switch (match) {
             //TODO: Do not support this because it would delete everything in one go?
-            case MATCHER_ID_ITEMS: {
+            case MATCHER_ID_ITEMS:
                 affected = getDb().delete(DatabaseHelper.TABLE_NAME_ITEMS,
                         (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
@@ -266,7 +266,6 @@ public class ItemsContentProvider extends ContentProvider {
                 );
                 //TODO: Delete all associated files too.
                 break;
-            }
             case MATCHER_ID_ITEM: {
                 //TODO: Use selection.
                 final UriParts uriParts = parseContentUri(uri);
@@ -276,7 +275,7 @@ public class ItemsContentProvider extends ContentProvider {
             }
 
             //TODO: Do not support this because it would delete everything in one go?
-            case MATCHER_ID_CLASSIFICATION_ANSWERS: {
+            case MATCHER_ID_CLASSIFICATION_ANSWERS:
                 affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
                         (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
@@ -284,7 +283,6 @@ public class ItemsContentProvider extends ContentProvider {
                 );
                 //TODO: Delete all associated files too.
                 break;
-            }
             case MATCHER_ID_CLASSIFICATION_ANSWER: {
                 final UriParts uriParts = parseContentUri(uri);
                 affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
@@ -295,7 +293,7 @@ public class ItemsContentProvider extends ContentProvider {
             }
 
             //TODO: Do not support this because it would delete everything in one go?
-            case MATCHER_ID_CLASSIFICATION_CHECKBOXES: {
+            case MATCHER_ID_CLASSIFICATION_CHECKBOXES:
                 affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
                         (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
@@ -303,15 +301,13 @@ public class ItemsContentProvider extends ContentProvider {
                 );
                 //TODO: Delete all associated files too.
                 break;
-            }
-            case MATCHER_ID_CLASSIFICATION_CHECKBOX: {
+            case MATCHER_ID_CLASSIFICATION_CHECKBOX:
                 final UriParts uriParts = parseContentUri(uri);
                 affected = getDb().delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
                         prependIdToSelection(selection),
                         prependToArray(selectionArgs, uriParts.itemId)
                 );
                 break;
-            }
 
             //TODO?: case MATCHER_ID_FILE:
             default:
@@ -388,7 +384,7 @@ public class ItemsContentProvider extends ContentProvider {
 
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_ITEMS:
-            case MATCHER_ID_ITEM: {
+            case MATCHER_ID_ITEM:
                 //Refuse to insert without a Subject ID:
                 final String subjectId = values.getAsString(Item.Columns.SUBJECT_ID);
                 if (TextUtils.isEmpty(subjectId)) {
@@ -416,21 +412,18 @@ public class ItemsContentProvider extends ContentProvider {
                 requestSync();
 
                 break;
-            }
             case MATCHER_ID_CLASSIFICATION_ANSWERS:
-            case MATCHER_ID_CLASSIFICATION_ANSWER: {
+            case MATCHER_ID_CLASSIFICATION_ANSWER:
                 uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
                         values, sClassificationAnswersProjectionMap,
                         ClassificationAnswer.CLASSIFICATION_ANSWERS_URI);
                 break;
-            }
             case MATCHER_ID_CLASSIFICATION_CHECKBOXES:
-            case MATCHER_ID_CLASSIFICATION_CHECKBOX: {
+            case MATCHER_ID_CLASSIFICATION_CHECKBOX:
                 uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
                         values, sClassificationCheckboxesProjectionMap,
                         ClassificationCheckbox.CLASSIFICATION_CHECKBOXES_URI);
                 break;
-            }
             default:
                 //This could be because of an invalid -1 ID in the # position.
                 throw new IllegalArgumentException("unsupported uri: " + uri);
@@ -630,7 +623,7 @@ public class ItemsContentProvider extends ContentProvider {
                 break;
             }
 
-            case MATCHER_ID_ITEM_NEXT: {
+            case MATCHER_ID_ITEM_NEXT:
                 c = queryItemNext(projection, selection, selectionArgs, orderBy);
 
                 if (c == null) {
@@ -677,7 +670,6 @@ public class ItemsContentProvider extends ContentProvider {
                 requestSync();
 
                 break;
-            }
 
             case MATCHER_ID_FILE:
                 // query the database for a specific file:
@@ -742,7 +734,7 @@ public class ItemsContentProvider extends ContentProvider {
 
                 break;
             }
-            case MATCHER_ID_CLASSIFICATION_CHECKBOX: {
+            case MATCHER_ID_CLASSIFICATION_CHECKBOX:
                 // query the database for a specific item:
                 final UriParts uriParts = parseContentUri(uri);
 
@@ -759,7 +751,6 @@ public class ItemsContentProvider extends ContentProvider {
                 c.setNotificationUri(getContext().getContentResolver(),
                         ClassificationCheckbox.CONTENT_URI); //TODO: More precise?
                 break;
-            }
 
             default:
                 //This could be because of an invalid -1 ID in the # position.
@@ -903,7 +894,7 @@ public class ItemsContentProvider extends ContentProvider {
                         selection, selectionArgs);
                 break;
 
-            case MATCHER_ID_CLASSIFICATION_CHECKBOX: {
+            case MATCHER_ID_CLASSIFICATION_CHECKBOX:
                 final UriParts uriParts = parseContentUri(uri);
 
                 //Prepend our ID=? argument to the selection arguments.
@@ -914,7 +905,6 @@ public class ItemsContentProvider extends ContentProvider {
                         prependToArray(selectionArgs, uriParts.itemId)
                 );
                 break;
-            }
 
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);

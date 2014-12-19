@@ -161,14 +161,12 @@ public class DecisionTree {
                 case "help":
                     question.setHelp(reader.nextString());
                     break;
-                case "answers": {
+                case "answers":
                     readJsonAnswers(reader, question);
                     break;
-                }
-                case "checkboxes": {
+                case "checkboxes":
                     readJsonCheckboxes(reader, question);
                     break;
-                }
                 default:
                     reader.skipValue();
             }
