@@ -52,7 +52,7 @@ public class ExampleViewerFragment extends Fragment {
      * @param strUri
      * @param imageView
      */
-    private void loadBitmap(final String strUri, ImageView imageView) {
+    private void loadBitmap(final String strUri, final ImageView imageView) {
         showLoadingView(true);
 
         //Note: We call cancelRequest in onPause() to avoid a leak,
@@ -72,8 +72,8 @@ public class ExampleViewerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
 
         final Bundle bundle = getArguments();
         if (bundle != null) {
@@ -108,7 +108,7 @@ public class ExampleViewerFragment extends Fragment {
         mUriStr = uriStr;
     }
 
-    private void showLoadingView(boolean show) {
+    private void showLoadingView(final boolean show) {
         if (mLoadingView == null) {
             mLoadingView = mRootView.findViewById(R.id.loading_spinner);
         }

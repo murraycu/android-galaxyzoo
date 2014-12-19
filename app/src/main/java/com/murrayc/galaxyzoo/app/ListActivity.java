@@ -43,7 +43,7 @@ public class ListActivity extends BaseActivity
         implements ListFragment.Callbacks {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
@@ -57,7 +57,7 @@ public class ListActivity extends BaseActivity
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(final String itemId, boolean done, final View sharedElementView) {
+    public void onItemSelected(final String itemId, final boolean done, final View sharedElementView) {
         navigate(itemId, done, sharedElementView);
     }
 

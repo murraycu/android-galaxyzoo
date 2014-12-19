@@ -29,7 +29,7 @@ import android.support.v7.app.ActionBarActivity;
 public class ExampleViewerActivity extends ActionBarActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_example_viewer);
 

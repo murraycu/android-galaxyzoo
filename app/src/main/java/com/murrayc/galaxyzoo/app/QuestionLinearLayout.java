@@ -40,7 +40,7 @@ public class QuestionLinearLayout extends LinearLayout {
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    protected void onLayout(final boolean changed, final int l, final int t, final int r, final int b) {
         super.onLayout(changed, l, t, r, b);
 
         //Remember the greatest height that this has fragment has ever requested,
@@ -54,11 +54,11 @@ public class QuestionLinearLayout extends LinearLayout {
         //Log.info("ZooLinearLayout.onLayout(): measuredHeight=" + measuredHeight);
     }
 
-    public void setRowsCountForMaxHeightExperienced(int rowsCount) {
+    public void setRowsCountForMaxHeightExperienced(final int rowsCount) {
         mCurrentRowsCountForMaxHeight = rowsCount;
     }
 
-    public int getMaximumHeightExperienced(int rowsCount) {
+    public int getMaximumHeightExperienced(final int rowsCount) {
         if (!mMaxHeightsExperienced.containsKey(rowsCount)) {
             return 0;
         }

@@ -40,7 +40,7 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 public class SubjectViewerActivity extends ItemActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (TextUtils.isEmpty(getItemId())) {
@@ -93,7 +93,7 @@ public class SubjectViewerActivity extends ItemActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         // Handle presses on the action bar items
         final int id = item.getItemId();
 

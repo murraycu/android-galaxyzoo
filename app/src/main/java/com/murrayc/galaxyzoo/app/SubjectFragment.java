@@ -78,7 +78,7 @@ public class SubjectFragment extends ItemFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
@@ -88,8 +88,8 @@ public class SubjectFragment extends ItemFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_subject, container, false);
         assert mRootView != null;
 
@@ -101,7 +101,7 @@ public class SubjectFragment extends ItemFragment
             //like in the web UI:
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     doInvert();
                 }
             });
@@ -126,7 +126,7 @@ public class SubjectFragment extends ItemFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         // Inflate the menu items for use in the action bar
         inflater.inflate(R.menu.actionbar_menu_subject, menu);
 
@@ -134,7 +134,7 @@ public class SubjectFragment extends ItemFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
             case R.id.option_menu_item_invert:
@@ -151,7 +151,7 @@ public class SubjectFragment extends ItemFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(final Activity activity) {
         super.onAttach(activity);
     }
 
@@ -260,12 +260,12 @@ public class SubjectFragment extends ItemFragment
         return mInverted;
     }
 
-    void setInverted(boolean inverted) {
+    void setInverted(final boolean inverted) {
         mInverted = inverted;
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle bundle) {
         if (loaderId != URL_LOADER) {
             return null;
         }
@@ -291,13 +291,13 @@ public class SubjectFragment extends ItemFragment
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> cursorLoader, final Cursor cursor) {
         mCursor = cursor;
         updateFromCursor();
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    public void onLoaderReset(final Loader<Cursor> cursorLoader) {
         /*
          * Clears out our reference to the Cursor.
          * This prevents memory leaks.

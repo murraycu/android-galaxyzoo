@@ -272,7 +272,7 @@ public final class LoginUtils {
      * @param prefKeyResId
      * @return
      */
-    private static String getStringPref(Context context, int prefKeyResId) {
+    private static String getStringPref(final Context context, final int prefKeyResId) {
         final AccountManager mgr = AccountManager.get(context);
         final Account account = getAccount(context);
         if (account == null) {
@@ -379,7 +379,7 @@ public final class LoginUtils {
         }
 
         @Override
-        protected LoginDetails doInBackground(Void... params) {
+        protected LoginDetails doInBackground(final Void... params) {
 
             if (mContextReference == null) {
                 return null;
@@ -414,7 +414,7 @@ public final class LoginUtils {
         private final String name;
         private final String apiKey;
 
-        public LoginResult(boolean success, final String name, final String apiKey) {
+        public LoginResult(final boolean success, final String name, final String apiKey) {
             this.success = success;
             this.name = name;
             this.apiKey = apiKey;

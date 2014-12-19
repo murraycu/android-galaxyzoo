@@ -71,7 +71,7 @@ public class ListFragment extends ZooFragment
      */
     private static final Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(final String itemId, boolean done, final View sharedElementView) {
+        public void onItemSelected(final String itemId, final boolean done, final View sharedElementView) {
         }
 
         @Override
@@ -98,7 +98,7 @@ public class ListFragment extends ZooFragment
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle bundle) {
         if (loaderId != URL_LOADER) {
             return null;
         }
@@ -118,7 +118,7 @@ public class ListFragment extends ZooFragment
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> cursorLoader, final Cursor cursor) {
         /*
          * Moves the query results into the adapter, causing the
          * ListView fronting this adapter to re-display.
@@ -127,7 +127,7 @@ public class ListFragment extends ZooFragment
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    public void onLoaderReset(final Loader<Cursor> cursorLoader) {
         /*
          * Clears out the adapter's reference to the Cursor.
          * This prevents memory leaks.
@@ -136,15 +136,15 @@ public class ListFragment extends ZooFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //TableNavActivity will call update() when document loading has finished.
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // We would only call the base class's onCreateView if we wanted the default layout:
         // super.onCreateView(inflater, container, savedInstanceState);
 
@@ -159,7 +159,7 @@ public class ListFragment extends ZooFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
         // Inflate the menu items for use in the action bar
@@ -167,7 +167,7 @@ public class ListFragment extends ZooFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
             /*
@@ -194,7 +194,7 @@ public class ListFragment extends ZooFragment
                 null /* No cursor yet */,
                 new ListCursorAdapter.OnItemClickedListener() {
                     @Override
-                    public void onItemClicked(int position, final View sharedElementView) {
+                    public void onItemClicked(final int position, final View sharedElementView) {
                         onGridItemClicked(position, sharedElementView);
                     }
                 });
@@ -238,7 +238,7 @@ public class ListFragment extends ZooFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(final Activity activity) {
         super.onAttach(activity);
 
         // Activities containing this fragment must implement its callbacks.
@@ -257,14 +257,14 @@ public class ListFragment extends ZooFragment
         mCallbacks = sDummyCallbacks;
     }
 
-    private void onGridItemClicked(int position, final View sharedElementView) {
+    private void onGridItemClicked(final int position, final View sharedElementView) {
         final RecyclerView gridView = getGridView();
         if (gridView == null) {
             Log.error("onGridItemClicked(): gridView is null.");
             return;
         }
 
-        RecyclerView.Adapter adapter = gridView.getAdapter();
+        final RecyclerView.Adapter adapter = gridView.getAdapter();
 
         /*
         //When a ListView has header views, our adaptor will be wrapped by HeaderViewListAdapter:

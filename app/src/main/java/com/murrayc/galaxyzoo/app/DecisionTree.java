@@ -67,14 +67,14 @@ public class DecisionTree {
         dbf.setNamespaceAware(false);
         dbf.setValidating(false);
 
-        DocumentBuilder documentBuilder;
+        final DocumentBuilder documentBuilder;
         try {
             documentBuilder = dbf.newDocumentBuilder();
         } catch (final ParserConfigurationException e) {
             throw new DecisionTreeException("Exception from newDocumentBuilder." + e);
         }
 
-        org.w3c.dom.Document xmlDocument;
+        final org.w3c.dom.Document xmlDocument;
 
         try {
             xmlDocument = documentBuilder.parse(inputStreamTree);
@@ -417,7 +417,7 @@ public class DecisionTree {
         private final String icon;
         private final int examplesCount;
 
-        BaseButton(final String id, final String text, final String icon, int examplesCount) {
+        BaseButton(final String id, final String text, final String icon, final int examplesCount) {
             this.id = id;
             this.text = text;
             this.icon = icon;
@@ -446,7 +446,7 @@ public class DecisionTree {
             return examplesCount;
         }
 
-        public String getExampleIconName(String questionId, int exampleIndex) {
+        public String getExampleIconName(final String questionId, final int exampleIndex) {
             return questionId + "_" + getId() + "_" + exampleIndex;
         }
     }
@@ -459,7 +459,7 @@ public class DecisionTree {
      * It returns and takes String references, but String is immutable too.
      */
     static final class Checkbox extends BaseButton {
-        Checkbox(final String id, final String text, final String icon, int examplesCount) {
+        Checkbox(final String id, final String text, final String icon, final int examplesCount) {
             super(id, text, icon, examplesCount);
         }
     }
@@ -475,7 +475,7 @@ public class DecisionTree {
     static final class Answer extends BaseButton {
         private final String leadsToQuestionId;
 
-        Answer(final String id, final String text, final String icon, final String leadsToQuestionId, int examplesCount) {
+        Answer(final String id, final String text, final String icon, final String leadsToQuestionId, final int examplesCount) {
             super(id, text, icon, examplesCount);
             this.leadsToQuestionId = leadsToQuestionId;
         }

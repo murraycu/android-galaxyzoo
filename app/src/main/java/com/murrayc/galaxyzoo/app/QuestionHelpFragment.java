@@ -49,7 +49,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Bundle bundle = getArguments();
         if (bundle != null) {
@@ -58,8 +58,8 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_question_help, container, false);
 
         //Do most of the UI building only after we know that our
@@ -110,7 +110,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         }
     }
 
-    private void addRowForAnswer(Activity activity, TableLayout tableLayout, DecisionTree.Question question, DecisionTree.BaseButton answer) {
+    private void addRowForAnswer(final Activity activity, final TableLayout tableLayout, final DecisionTree.Question question, final DecisionTree.BaseButton answer) {
         final TableRow row = new TableRow(activity);
         final TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT);
@@ -163,7 +163,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             MarginLayoutParamsCompat.setMarginStart(paramsImage, UiUtils.getPxForDpResource(activity, R.dimen.standard_large_margin));
 
             imageExample.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     // Perform action on click
                     onExampleImageClicked(v, iconName);
                 }

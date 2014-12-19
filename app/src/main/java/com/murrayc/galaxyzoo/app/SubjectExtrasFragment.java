@@ -77,14 +77,14 @@ public class SubjectExtrasFragment extends ItemFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
     }
 
     @Override
-    protected void setItemId(String itemId) {
+    protected void setItemId(final String itemId) {
         super.setItemId(itemId);
 
         /*
@@ -100,8 +100,8 @@ public class SubjectExtrasFragment extends ItemFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_subject_extras, container, false);
         assert mRootView != null;
 
@@ -150,7 +150,7 @@ public class SubjectExtrasFragment extends ItemFragment
         }
         buttonExamine.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 doExamine();
             }
         });
@@ -162,7 +162,7 @@ public class SubjectExtrasFragment extends ItemFragment
         }
         buttonDiscuss.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 doDiscuss();
             }
         });
@@ -219,7 +219,7 @@ public class SubjectExtrasFragment extends ItemFragment
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle bundle) {
         if (loaderId != URL_LOADER) {
             return null;
         }
@@ -245,7 +245,7 @@ public class SubjectExtrasFragment extends ItemFragment
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> cursorLoader, final Cursor cursor) {
         mCursor = cursor;
         updateFromCursor();
 
@@ -265,7 +265,7 @@ public class SubjectExtrasFragment extends ItemFragment
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    public void onLoaderReset(final Loader<Cursor> cursorLoader) {
         /*
          * Clears out our reference to the Cursor.
          * This prevents memory leaks.

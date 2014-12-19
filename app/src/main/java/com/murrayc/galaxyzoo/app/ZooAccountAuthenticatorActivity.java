@@ -48,7 +48,7 @@ public class ZooAccountAuthenticatorActivity extends ActionBarActivity {
      * the request will be canceled.
      * @param result this is returned as the result of the AbstractAccountAuthenticator request
      */
-    public final void setAccountAuthenticatorResult(Bundle result) {
+    public final void setAccountAuthenticatorResult(final Bundle result) {
         mResultBundle = result;
     }
 
@@ -57,7 +57,7 @@ public class ZooAccountAuthenticatorActivity extends ActionBarActivity {
      * icicle is non-zero.
      * @param icicle the save instance data of this Activity, may be null
      */
-    protected void onCreate(Bundle icicle) {
+    protected void onCreate(final Bundle icicle) {
         super.onCreate(icicle);
 
         mAccountAuthenticatorResponse =

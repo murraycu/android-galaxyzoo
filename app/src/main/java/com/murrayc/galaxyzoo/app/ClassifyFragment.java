@@ -90,21 +90,21 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
         builder.setPositiveButton(activity.getString(R.string.error_button_retry), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(final DialogInterface dialog, int which) {
+            public void onClick(final DialogInterface dialog, final int which) {
                 onClickListenerRetry();
             }
         });
 
         builder.setNegativeButton(activity.getString(R.string.error_button_cancel), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(final DialogInterface dialog, int which) {
+            public void onClick(final DialogInterface dialog, final int which) {
                 dialog.cancel();
             }
         });
 
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
-            public void onCancel(DialogInterface dialog) {
+            public void onCancel(final DialogInterface dialog) {
                 dialog.dismiss();
                 mAlertDialog = null;
             }
@@ -115,8 +115,8 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_classify, container, false);
         assert mRootView != null;
 
@@ -130,7 +130,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         createCommonOptionsMenu(menu, inflater);
     }
@@ -148,7 +148,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      * and not nothing.
      * @param loadingInProgress
      */
-    private void showLoadingInProgress(boolean loadingInProgress) {
+    private void showLoadingInProgress(final boolean loadingInProgress) {
         showLoadingView(loadingInProgress);
         showChildFragments(!loadingInProgress);
     }
@@ -164,7 +164,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      *
      * @param show
      */
-    private void showLoadingView(boolean show) {
+    private void showLoadingView(final boolean show) {
         if (mLoadingView == null) {
             mLoadingView = mRootView.findViewById(R.id.loading_spinner);
         }
@@ -174,7 +174,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
     /** Show, or hide, the child fragments.
      */
-    private void showChildFragments(boolean show) {
+    private void showChildFragments(final boolean show) {
         //If we are showing the loading view then we should hide the other fragments,
         //and vice-versa.
         final FragmentManager fragmentManager = getChildFragmentManager();
@@ -348,7 +348,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     //We only bother using this when we have asked for the "next" item,
     //because we want to know its ID.
     @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle bundle) {
         if (loaderId != URL_LOADER) {
             return null;
         }
@@ -377,7 +377,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> cursorLoader, final Cursor cursor) {
         mCursor = cursor;
         mGetNextInProgress = false;
 
@@ -392,7 +392,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    public void onLoaderReset(final Loader<Cursor> cursorLoader) {
         /*
          * Clears out our reference to the Cursor.
          * This prevents memory leaks.

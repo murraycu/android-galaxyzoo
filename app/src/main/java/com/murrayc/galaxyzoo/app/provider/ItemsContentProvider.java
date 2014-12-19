@@ -252,9 +252,9 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(final Uri uri, final String selection, final String[] selectionArgs) {
         final int match = sUriMatcher.match(uri);
-        int affected;
+        final int affected;
 
         switch (match) {
             //TODO: Do not support this because it would delete everything in one go?
@@ -320,7 +320,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(final Uri uri) {
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_ITEMS:
                 return CONTENT_TYPE_ITEMS;
@@ -341,7 +341,7 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    public String[] getStreamTypes(Uri uri, String mimeTypeFilter) {
+    public String[] getStreamTypes(final Uri uri, final String mimeTypeFilter) {
 
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_FILE:
@@ -365,7 +365,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     @Override
-    public ParcelFileDescriptor openFile(Uri uri, String mode)
+    public ParcelFileDescriptor openFile(final Uri uri, final String mode)
             throws FileNotFoundException {
         return super.openFileHelper(uri, mode);
     }
@@ -380,7 +380,7 @@ public class ItemsContentProvider extends ContentProvider {
         // Maybe they don't do it because it's so awkward. murrayc.
         // But if we don't do this then we are leaking the internal database structure out as our API.
 
-        Uri uriInserted;
+        final Uri uriInserted;
 
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_ITEMS:
@@ -432,8 +432,8 @@ public class ItemsContentProvider extends ContentProvider {
         return uriInserted;
     }
 
-    private int updateMappedValues(final String tableName, final ContentValues values, final Map<String, String> projectionMap, String selection,
-                                   String[] selectionArgs) {
+    private int updateMappedValues(final String tableName, final ContentValues values, final Map<String, String> projectionMap, final String selection,
+                                   final String[] selectionArgs) {
         final ContentValues valuesToUse = getMappedContentValues(values, projectionMap);
 
         // insert the initialValues into a new database row
@@ -570,20 +570,20 @@ public class ItemsContentProvider extends ContentProvider {
 
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection,
-                        String[] selectionArgs, String sortOrder) {
+    public Cursor query(final Uri uri, final String[] projection, final String selection,
+                        final String[] selectionArgs, final String sortOrder) {
         //TODO: Avoid a direct implicit mapping between the Cursor column names in "selection" and the
         //underlying SQL database names.
 
         // If no sort order is specified use the default
-        String orderBy;
+        final String orderBy;
         if (TextUtils.isEmpty(sortOrder)) {
             orderBy = DatabaseHelper.DEFAULT_SORT_ORDER;
         } else {
             orderBy = sortOrder;
         }
 
-        int match = sUriMatcher.match(uri);
+        final int match = sUriMatcher.match(uri);
 
         Cursor c;
         switch (match) {
@@ -801,7 +801,7 @@ public class ItemsContentProvider extends ContentProvider {
 
     }
 
-    private String[] prependToArray(final String[] selectionArgs, long value) {
+    private String[] prependToArray(final String[] selectionArgs, final long value) {
         return prependToArray(selectionArgs, Double.toString(value));
     }
 
@@ -840,9 +840,9 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection,
-                      String[] selectionArgs) {
-        int affected;
+    public int update(final Uri uri, final ContentValues values, final String selection,
+                      final String[] selectionArgs) {
+        final int affected;
 
         // Note: We map the values' columns names to the internal database columns names.
         // Strangely, I can't find any example code, or open source code, that bothers to do this,
@@ -1071,18 +1071,18 @@ public class ItemsContentProvider extends ContentProvider {
         private static final String TABLE_NAME_CLASSIFICATION_CHECKBOXES = "classification_checkboxes";
         private static final String DEFAULT_SORT_ORDER = Item.Columns._ID + " ASC";
 
-        DatabaseHelper(Context context) {
+        DatabaseHelper(final Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
         @Override
-        public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        public void onCreate(final SQLiteDatabase sqLiteDatabase) {
             createTable(sqLiteDatabase);
         }
 
         @Override
-        public void onUpgrade(SQLiteDatabase sqLiteDatabase,
-                              int oldv, int newv) {
+        public void onUpgrade(final SQLiteDatabase sqLiteDatabase,
+                              final int oldv, final int newv) {
             //TODO: Don't just lose the data?
             if (oldv != newv) {
                 dropTable(sqLiteDatabase, TABLE_NAME_ITEMS);
@@ -1099,7 +1099,7 @@ public class ItemsContentProvider extends ContentProvider {
                     tableName + ";");
         }
 
-        private void createTable(SQLiteDatabase sqLiteDatabase) {
+        private void createTable(final SQLiteDatabase sqLiteDatabase) {
             String qs = "CREATE TABLE " + TABLE_NAME_ITEMS + " (" +
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +

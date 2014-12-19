@@ -82,7 +82,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
     private boolean mExistingAccountIsAnonymous = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mClient = new ZooniverseClient(this, com.murrayc.galaxyzoo.app.provider.Config.SERVER);
@@ -103,7 +103,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+            public boolean onEditorAction(final TextView textView, final int id, final KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
                     attemptLogin();
                     return true;
@@ -115,10 +115,10 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         setTextViewLink(R.id.textViewForgot, Config.FORGET_PASSWORD_URI, R.string.forgot_password_button_text);
         setTextViewLink(R.id.textViewRegister, Config.REGISTER_URI, R.string.register_button_text);
 
-        Button mUsernameSignInButton = (Button) findViewById(R.id.username_sign_in_button);
+        final Button mUsernameSignInButton = (Button) findViewById(R.id.username_sign_in_button);
         mUsernameSignInButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 attemptLogin();
             }
         });
@@ -151,7 +151,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         final String html = "<a href=\"" + uri + "\">" +
                 getString(strResourceId) + "</a>";
 
-        TextView textView = (TextView) findViewById(textViewResourceId);
+        final TextView textView = (TextView) findViewById(textViewResourceId);
         textView.setText(Html.fromHtml(html));
 
         //This setMovementMethod() voodoo makes the textviews' HTML links clickable:
@@ -204,8 +204,8 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String username = mUsernameView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String username = mUsernameView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -238,7 +238,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         }
     }
 
-    private boolean isPasswordValid(String password) {
+    private boolean isPasswordValid(final String password) {
         return password.length() > 4;
     }
 
@@ -251,13 +251,13 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            final int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             mLoginFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
-                public void onAnimationEnd(Animator animation) {
+                public void onAnimationEnd(final Animator animation) {
                     mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
@@ -266,7 +266,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             mProgressView.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
-                public void onAnimationEnd(Animator animation) {
+                public void onAnimationEnd(final Animator animation) {
                     mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
@@ -286,7 +286,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
 
         private final boolean existingAccountIsAnonymous;
 
-        AccountSaveTask(final Context context, final LoginUtils.LoginResult loginResult, final String existingAccountName, boolean existingAccountIsAnonymous) {
+        AccountSaveTask(final Context context, final LoginUtils.LoginResult loginResult, final String existingAccountName, final boolean existingAccountIsAnonymous) {
             this.contextReference = new WeakReference<>(context);
             this.loginResult = loginResult;
             this.existingAccountName = existingAccountName;
@@ -294,7 +294,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(final Void... params) {
 
             if (contextReference == null) {
                 return null;
@@ -402,7 +402,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         }
 
         @Override
-        protected LoginUtils.LoginResult doInBackground(Void... params) {
+        protected LoginUtils.LoginResult doInBackground(final Void... params) {
             final ContentResolver contentResolver = getContentResolver();
             if (contentResolver == null) {
                 return null;

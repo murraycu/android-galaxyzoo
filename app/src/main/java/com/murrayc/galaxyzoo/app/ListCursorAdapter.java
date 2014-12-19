@@ -52,7 +52,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
 
     private final CursorObserver mDataSetObserver = new CursorObserver();
 
-    public Cursor getItem(int position) {
+    public Cursor getItem(final int position) {
         //TODO Clone or copy it somehow?
         //What does CursorAdapter (for ListView and GridView) do?
         mCursor.moveToPosition(position);
@@ -74,7 +74,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int i) {
         final View v = LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.gridview_cell_fragment_list, null);
         return new ViewHolder(v, this);
@@ -87,7 +87,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
         final String itemId;
 
 
-        public  ImageLoadedCallback(final Context context, final ViewHolder viewHolder, int position, final String itemId) {
+        public  ImageLoadedCallback(final Context context, final ViewHolder viewHolder, final int position, final String itemId) {
             this.contextReference = new WeakReference<>(context);
             this.viewHolderReference = new WeakReference<>(viewHolder);
             this.position = position;
@@ -155,7 +155,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
         mCursor.moveToPosition(i);
 
         final String itemId = mCursor.getString(ListFragment.COLUMN_INDEX_ID);

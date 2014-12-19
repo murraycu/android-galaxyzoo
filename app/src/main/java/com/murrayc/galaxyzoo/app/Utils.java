@@ -79,7 +79,7 @@ public final class Utils {
         return prefs.getBoolean(key, true /* default */);
     }
 
-    static SharedPreferences getPreferences(Context context) {
+    static SharedPreferences getPreferences(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
@@ -101,7 +101,7 @@ public final class Utils {
         public final boolean connected;
         public final boolean notConnectedBecauseNotOnWifi;
 
-        NetworkConnected(boolean connected, boolean notConnectedBecauseNotOnWifi) {
+        NetworkConnected(final boolean connected, final boolean notConnectedBecauseNotOnWifi) {
             this.connected = connected;
             this.notConnectedBecauseNotOnWifi = notConnectedBecauseNotOnWifi;
         }
@@ -109,7 +109,7 @@ public final class Utils {
 
     public static NetworkConnected getNetworkIsConnected(final Context context, final boolean wifiOnly) {
         boolean connected = false;
-        ConnectivityManager connMgr = (ConnectivityManager)
+        final ConnectivityManager connMgr = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connMgr == null) {
             //This happens during our test case, probably because the MockContext doesn't support

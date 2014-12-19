@@ -283,7 +283,7 @@ public class ZooniverseClient {
         return MoreItemsJsonParser.parseMoreItemsResponseContent(response);
     }
 
-    public void requestMoreItemsAsync(int count, final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
+    public void requestMoreItemsAsync(final int count, final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
         throwIfNoNetwork();
 
         Log.info("requestMoreItemsAsync(): count=" + count);
@@ -318,7 +318,7 @@ public class ZooniverseClient {
         final HttpURLConnection conn;
         try {
             conn = openConnection(getPostUploadUri());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Log.error("uploadClassificationSync(): Could not open connection", e);
 
             throw new UploadException("Could not open connection.", e);
@@ -345,7 +345,7 @@ public class ZooniverseClient {
 
         try {
             writeParamsToHttpPost(conn, nameValuePairs);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Log.error("uploadClassificationSync: writeParamsToHttpPost() failed", e);
 
             throw new UploadException("writeParamsToHttpPost() failed.", e);

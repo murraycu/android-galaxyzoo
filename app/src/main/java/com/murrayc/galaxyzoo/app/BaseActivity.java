@@ -38,7 +38,7 @@ import android.view.View;
 //This is a base class for other Activities.
 class BaseActivity extends ActionBarActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         /*
@@ -89,7 +89,7 @@ class BaseActivity extends ActionBarActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         // Handle presses on the action bar items
         final int id = item.getItemId();
 

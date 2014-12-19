@@ -62,7 +62,7 @@ public final class HttpUtils {
         }
     }
 
-    public static void throwIfNoNetwork(final Context context, boolean wifiOnly) {
+    public static void throwIfNoNetwork(final Context context, final boolean wifiOnly) {
         if(!getNetworkIsConnected(context, wifiOnly)) {
             //Throw an exception so the caller knows.
             throw new NoNetworkException(wifiOnly);
@@ -85,7 +85,7 @@ public final class HttpUtils {
      * @param context
      * @return
      */
-    private static boolean getNetworkIsConnected(final Context context, boolean wifiOnly) {
+    private static boolean getNetworkIsConnected(final Context context, final boolean wifiOnly) {
         final Utils.NetworkConnected networkConnected =
                 Utils.getNetworkIsConnected(context, wifiOnly);
         return networkConnected.connected;
@@ -259,7 +259,7 @@ public final class HttpUtils {
          *                 connection was required. False if any connection was required but
          *                 none of any kind was available.
          */
-        public NoNetworkException(boolean wifiOnly) {
+        public NoNetworkException(final boolean wifiOnly) {
             this.wifiOnly = wifiOnly;
         }
 

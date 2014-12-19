@@ -35,7 +35,7 @@ import android.widget.TextView;
 public class ZooFragment extends Fragment {
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
             case R.id.option_menu_item_login:

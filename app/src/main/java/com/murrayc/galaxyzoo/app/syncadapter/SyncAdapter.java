@@ -73,7 +73,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     //Out Runnable tasks use this to post results back to our main thread.
     private final Handler mHandler;
 
-    public SyncAdapter(final Context context, boolean autoInitialize) {
+    public SyncAdapter(final Context context, final boolean autoInitialize) {
         super(context, autoInitialize);
         mHandler = new Handler(Looper.getMainLooper());
 
@@ -85,7 +85,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     @Override
-    public void onPerformSync(final Account account, final Bundle extras, final String authority, final ContentProviderClient provider, SyncResult syncResult) {
+    public void onPerformSync(final Account account, final Bundle extras, final String authority, final ContentProviderClient provider, final SyncResult syncResult) {
         doRegularTasks();
     }
 
@@ -150,7 +150,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private void requestMoreItemsAsync(int count) {
+    private void requestMoreItemsAsync(final int count) {
         if(mRequestMoreItemsTaskInProgress) {
             //Do just one of these at a time,
             //to avoid requesting more while we are processing the results from a first one.
@@ -351,7 +351,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
 
 
-        Cursor c;
+        final Cursor c;
         {
             final String selection = ClassificationAnswer.Columns.ITEM_ID + " = ?"; //We use ? to avoid SQL Injection.
             final String[] selectionArgs = {itemId};
@@ -417,7 +417,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         return mClient.uploadClassificationSync(authName, authApiKey, nameValuePairs);
     }
 
-    private static String getAnnotationPart(int sequence) {
+    private static String getAnnotationPart(final int sequence) {
         return PARAM_PART_CLASSIFICATION + "[annotations][" + sequence + "]";
     }
 
@@ -443,7 +443,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             } catch (final HttpUtils.NoNetworkException e) {
                 //This is normal, if there is no suitable network connection.
                 Log.info("UploadTask(): NoNetworkException");
-            } catch (ZooniverseClient.UploadException e) {
+            } catch (final ZooniverseClient.UploadException e) {
                 Log.error("UploadTask(): UploadException", e);
             }
 
@@ -456,7 +456,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             });
         }
 
-        protected void onPostExecute(boolean result) {
+        protected void onPostExecute(final boolean result) {
             onUploadTaskFinished(result, mItemId);
         }
     }
@@ -484,7 +484,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         mSubjectAdder.addSubjects(listToUse, true /* async */);
     }
 
-    private void onUploadTaskFinished(boolean result, final String itemId) {
+    private void onUploadTaskFinished(final boolean result, final String itemId) {
         if (result) {
             markItemAsUploaded(itemId);
         } else {

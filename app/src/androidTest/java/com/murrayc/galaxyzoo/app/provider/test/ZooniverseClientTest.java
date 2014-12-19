@@ -189,7 +189,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         try {
             final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
             assertTrue((subjects == null) || (subjects.isEmpty()));
-        } catch (ZooniverseClient.RequestMoreItemsException e) {
+        } catch (final ZooniverseClient.RequestMoreItemsException e) {
             assertTrue(e.getCause() instanceof IOException);
         }
 
@@ -234,7 +234,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         //SyncAdapter.doUploadSync() adds an "interface" parameter too,
         //but we are testing a more generic API here:
-        List<NameValuePair> values = new ArrayList<>();
+        final List<NameValuePair> values = new ArrayList<>();
         values.add(new BasicNameValuePair("classification[subject_ids][]", "504e4a38c499611ea6010c6a"));
         values.add(new BasicNameValuePair("classification[favorite][]", "true"));
         values.add(new BasicNameValuePair("classification[annotations][0][sloan-0]", "a-0"));
@@ -275,7 +275,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         final ZooniverseClient client = createZooniverseClient(server);
 
-        List<NameValuePair> values = new ArrayList<>();
+        final List<NameValuePair> values = new ArrayList<>();
         values.add(new BasicNameValuePair("test nonsense", "12345"));
 
         try {

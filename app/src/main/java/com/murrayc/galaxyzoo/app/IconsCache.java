@@ -276,7 +276,7 @@ class IconsCache {
         return true;
     }
 
-    private String getIconAssetPath(String cssName) {
+    private String getIconAssetPath(final String cssName) {
         return ASSET_PATH_ICONS_DIR + ICON_FILE_PREFIX + cssName;
     }
 

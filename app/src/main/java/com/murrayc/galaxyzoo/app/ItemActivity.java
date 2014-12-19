@@ -44,7 +44,7 @@ public class ItemActivity extends BaseActivity implements ItemFragment.Callbacks
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         final Intent intent = getIntent();

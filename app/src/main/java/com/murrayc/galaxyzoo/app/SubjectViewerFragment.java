@@ -67,8 +67,8 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_subject_viewer, container, false);
         assert mRootView != null;
 
@@ -82,7 +82,7 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         createCommonOptionsMenu(menu, inflater);
     }
@@ -95,7 +95,7 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
         update();
     }
 
-    private void showLoadingView(boolean show) {
+    private void showLoadingView(final boolean show) {
         if (mLoadingView == null) {
             mLoadingView = mRootView.findViewById(R.id.loading_spinner);
         }
@@ -204,7 +204,7 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
     //We only bother using this when we have asked for the "next" item,
     //because we want to know its ID.
     @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle bundle) {
         if (loaderId != URL_LOADER) {
             return null;
         }
@@ -233,7 +233,7 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> cursorLoader, final Cursor cursor) {
         mCursor = cursor;
 
         showLoadingView(false);
@@ -249,7 +249,7 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    public void onLoaderReset(final Loader<Cursor> cursorLoader) {
         /*
          * Clears out our reference to the Cursor.
          * This prevents memory leaks.

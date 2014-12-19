@@ -92,7 +92,7 @@ public class ClassifyActivity extends ItemActivity
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected Boolean doInBackground(final Void... params) {
 
             if (mContextReference == null) {
                 return false;
@@ -107,7 +107,7 @@ public class ClassifyActivity extends ItemActivity
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(final Boolean result) {
             if (mContextReference == null) {
                 return;
             }
@@ -137,7 +137,7 @@ public class ClassifyActivity extends ItemActivity
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(final Void... params) {
 
             if (mContextReference == null) {
                 return null;
@@ -338,7 +338,7 @@ public class ClassifyActivity extends ItemActivity
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         // Handle presses on the action bar items
         final int id = item.getItemId();
 

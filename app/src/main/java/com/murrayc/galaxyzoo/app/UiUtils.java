@@ -66,7 +66,7 @@ final class UiUtils {
         toast.show();
     }
 
-    static int getPxForDpResource(final Context context, int resourceId) {
+    static int getPxForDpResource(final Context context, final int resourceId) {
         final Resources r = context.getResources();
         return r.getDimensionPixelSize(resourceId);
     }
@@ -113,7 +113,7 @@ final class UiUtils {
         }
     }
 
-    private static void warnAboutNoNetworkConnection(final Activity activity, boolean notConnectedBecauseNotOnWifi) {
+    private static void warnAboutNoNetworkConnection(final Activity activity, final boolean notConnectedBecauseNotOnWifi) {
         if (notConnectedBecauseNotOnWifi) {
             warnAboutNoWifiNetworkConnection(activity);
         } else {
@@ -150,7 +150,7 @@ final class UiUtils {
      * @param activity
      * @return
      */
-    static boolean warnAboutMissingNetwork(final Activity activity, boolean wifiOnly) {
+    static boolean warnAboutMissingNetwork(final Activity activity, final boolean wifiOnly) {
         //Check for this possible cause.
         // TODO: Avoid copy/pasting with QuestionFragment
         // TODO: Is there any simpler way to just catch the

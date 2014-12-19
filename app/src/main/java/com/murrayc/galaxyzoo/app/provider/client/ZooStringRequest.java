@@ -11,8 +11,8 @@ import java.util.Map;
  * Created by murrayc on 11/24/14.
  */
 public class ZooStringRequest extends StringRequest {
-    public ZooStringRequest(int method, String url, Response.Listener<String> listener,
-                            Response.ErrorListener errorListener) {
+    public ZooStringRequest(final int method, final String url, final Response.Listener<String> listener,
+                            final Response.ErrorListener errorListener) {
         super(method, url, listener, errorListener);
     }
 

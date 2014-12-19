@@ -127,7 +127,7 @@ public class SubjectAdder {
         return noWorkNeeded;
     }
 
-    private void downloadMissingImage(final Uri itemUri, final String uriRemote, final String uriContent, ImageType imageType) {
+    private void downloadMissingImage(final Uri itemUri, final String uriRemote, final String uriContent, final ImageType imageType) {
         Log.info("downloadMissingImage(): imageType=" + imageType + ", uriRemote=" + uriRemote);
 
         try {
@@ -143,7 +143,7 @@ public class SubjectAdder {
      * @param subjects
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    public void addSubjects(final List<ZooniverseClient.Subject> subjects, boolean asyncFileDownloads) {
+    public void addSubjects(final List<ZooniverseClient.Subject> subjects, final boolean asyncFileDownloads) {
         if (subjects == null) {
             return;
         }
@@ -154,7 +154,7 @@ public class SubjectAdder {
     }
 
 
-    private void cacheUrisToFiles(final Uri itemUri, boolean asyncFileDownloads) {
+    private void cacheUrisToFiles(final Uri itemUri, final boolean asyncFileDownloads) {
 
         final ContentResolver resolver = getContext().getContentResolver();
 
@@ -188,7 +188,7 @@ public class SubjectAdder {
         c.close();
     }
 
-    private void cacheUriToFileWithNullChecks(final String uriStandardRemote, final String uriStandard, final Uri itemUri, final ImageType imageType, boolean asyncFileDownloads) {
+    private void cacheUriToFileWithNullChecks(final String uriStandardRemote, final String uriStandard, final Uri itemUri, final ImageType imageType, final boolean asyncFileDownloads) {
         if (TextUtils.isEmpty(uriStandardRemote) || TextUtils.isEmpty(uriStandard)) {
             Log.error("cacheUriToFileWithNullChecks(): Empty uriStandardRemote or uriStandard.");
         } else {
@@ -207,7 +207,7 @@ public class SubjectAdder {
      *
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri, final Uri itemUri, final ImageType imageType, boolean asyncFileDownloads) throws HttpUtils.NoNetworkException {
+    private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri, final Uri itemUri, final ImageType imageType, final boolean asyncFileDownloads) throws HttpUtils.NoNetworkException {
         if (TextUtils.isEmpty(uriFileToCache)) {
             throw new IllegalArgumentException("uriFileToCache is empty or null.");
         }
@@ -234,7 +234,7 @@ public class SubjectAdder {
             final Request<Boolean> request = new HttpUtils.FileCacheRequest(getContext(), uriFileToCache, cacheFileUri,
                     new Response.Listener<Boolean>() {
                         @Override
-                        public void onResponse(Boolean response) {
+                        public void onResponse(final Boolean response) {
                             onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
                         }
                     },
@@ -269,7 +269,7 @@ public class SubjectAdder {
         mRequestQueue.add(request);
     }
 
-    private void onImageDownloadDone(boolean success, final String uriFileToCache, final Uri itemUri, ImageType imageType) {
+    private void onImageDownloadDone(final boolean success, final String uriFileToCache, final Uri itemUri, final ImageType imageType) {
         markImageDownloadAsNotInProgress(uriFileToCache);
         if (success) {
             markImageAsDownloaded(itemUri, imageType, uriFileToCache);
@@ -336,7 +336,7 @@ public class SubjectAdder {
      * @param item
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    void addSubject(final ZooniverseClient.Subject item, boolean asyncFileDownloads) {
+    void addSubject(final ZooniverseClient.Subject item, final boolean asyncFileDownloads) {
         if (subjectIsInDatabase(item.getSubjectId())) {
             //It is already in the database.
             //TODO: Update the row?

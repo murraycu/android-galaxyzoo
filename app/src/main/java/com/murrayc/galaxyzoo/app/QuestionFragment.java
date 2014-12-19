@@ -130,7 +130,7 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //The item ID in savedInstanceState (from onSaveInstanceState())
@@ -156,7 +156,7 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
-    protected void setItemId(String itemId) {
+    protected void setItemId(final String itemId) {
         super.setItemId(itemId);
 
         /*
@@ -172,8 +172,8 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         mRootView = (QuestionLinearLayout) inflater.inflate(R.layout.fragment_question, container, false);
         assert mRootView != null;
 
@@ -207,7 +207,7 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         // Inflate the menu items for use in the action bar
         inflater.inflate(R.menu.actionbar_menu_question, menu);
 
@@ -231,7 +231,7 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
             case R.id.option_menu_item_examples:
@@ -277,7 +277,7 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(final Activity activity) {
         super.onAttach(activity);
 
         // Activities containing this fragment must implement its callbacks.
@@ -401,7 +401,7 @@ public class QuestionFragment extends BaseQuestionFragment
             insertButtonInRow(activity, row, button);
 
             button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     // Perform action on click
                     onAnswerButtonClicked(question.getId(), answer.getId());
                 }
@@ -504,7 +504,7 @@ public class QuestionFragment extends BaseQuestionFragment
         row.addView(button, params);
     }
 
-    private Button createAnswerButton(Activity activity, DecisionTree.Answer answer) {
+    private Button createAnswerButton(final Activity activity, final DecisionTree.Answer answer) {
         final LayoutInflater inflater = LayoutInflater.from(activity);
         final Button button = (Button)inflater.inflate(R.layout.question_answer_button, null);
         button.setText(answer.getText());
@@ -621,7 +621,7 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(final Void... params) {
 
             if (fragmentReference == null) {
                 return null;
@@ -638,7 +638,7 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(final Void result) {
             if (fragmentReference == null) {
                 return;
             }
@@ -755,7 +755,7 @@ public class QuestionFragment extends BaseQuestionFragment
         final Date now = new Date();
         //TODO: Is there a simpler way of getting an ISO-8601-formatted date,
         //or at least a way to avoid writing the format out manually here?
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return dateFormat.format(now);
     }
@@ -795,7 +795,7 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle bundle) {
         if (loaderId != URL_LOADER) {
             return null;
         }
@@ -821,7 +821,7 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> cursorLoader, final Cursor cursor) {
         mCursor = cursor;
         updateFromCursor();
 
@@ -841,7 +841,7 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    public void onLoaderReset(final Loader<Cursor> cursorLoader) {
         /*
          * Clears out our reference to the Cursor.
          * This prevents memory leaks.
@@ -878,11 +878,11 @@ public class QuestionFragment extends BaseQuestionFragment
     static public class ClassificationInProgress implements Parcelable {
         public static final Parcelable.Creator<ClassificationInProgress> CREATOR
                 = new Parcelable.Creator<ClassificationInProgress>() {
-            public ClassificationInProgress createFromParcel(Parcel in) {
+            public ClassificationInProgress createFromParcel(final Parcel in) {
                 return new ClassificationInProgress(in);
             }
 
-            public ClassificationInProgress[] newArray(int size) {
+            public ClassificationInProgress[] newArray(final int size) {
                 return new ClassificationInProgress[size];
             }
         };
@@ -935,7 +935,7 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         @Override
-        public void writeToParcel(final Parcel dest, int flags) {
+        public void writeToParcel(final Parcel dest, final int flags) {
             dest.writeTypedList(answers);
             dest.writeInt(favorite ? 1 : 0);
         }
@@ -948,18 +948,18 @@ public class QuestionFragment extends BaseQuestionFragment
             return favorite;
         }
 
-        public void setFavorite(boolean favorite) {
+        public void setFavorite(final boolean favorite) {
             this.favorite = favorite;
         }
 
         static private class QuestionAnswer implements Parcelable {
             public static final Parcelable.Creator<QuestionAnswer> CREATOR
                     = new Parcelable.Creator<QuestionAnswer>() {
-                public QuestionAnswer createFromParcel(Parcel in) {
+                public QuestionAnswer createFromParcel(final Parcel in) {
                     return new QuestionAnswer(in);
                 }
 
-                public QuestionAnswer[] newArray(int size) {
+                public QuestionAnswer[] newArray(final int size) {
                     return new QuestionAnswer[size];
                 }
             };
@@ -1035,7 +1035,7 @@ public class QuestionFragment extends BaseQuestionFragment
             }
 
             @Override
-            public void writeToParcel(final Parcel dest, int flags) {
+            public void writeToParcel(final Parcel dest, final int flags) {
                 dest.writeString(getQuestionId());
                 dest.writeString(getAnswerId());
 

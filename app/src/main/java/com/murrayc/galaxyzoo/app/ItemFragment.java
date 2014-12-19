@@ -67,7 +67,7 @@ public class ItemFragment extends ZooFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //The item ID in savedInstanceState (from onSaveInstanceState())
@@ -89,7 +89,7 @@ public class ItemFragment extends ZooFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(final Activity activity) {
         super.onAttach(activity);
 
         // Activities containing this fragment must implement its callbacks.
@@ -119,13 +119,13 @@ public class ItemFragment extends ZooFragment {
      * @param menu
      * @param inflater
      */
-    protected void createCommonOptionsMenu(Menu menu, MenuInflater inflater) {
+    protected void createCommonOptionsMenu(final Menu menu, final MenuInflater inflater) {
         // Inflate the menu items for use in the action bar
         inflater.inflate(R.menu.actionbar_menu_item_common, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
             case R.id.option_menu_item_list:
