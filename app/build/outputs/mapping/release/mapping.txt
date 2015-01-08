@@ -8306,7 +8306,6 @@ com.android.volley.toolbox.Volley -> com.a.a.a.q:
     com.android.volley.RequestQueue newRequestQueue(android.content.Context) -> a
 com.murrayc.galaxyzoo.app.BaseActivity -> com.murrayc.galaxyzoo.app.a:
     void onCreate(android.os.Bundle) -> onCreate
-    void navigate(java.lang.String,boolean,android.view.View) -> a
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     void showUpButton() -> j
 com.murrayc.galaxyzoo.app.BaseQuestionFragment -> com.murrayc.galaxyzoo.app.b:
@@ -8445,6 +8444,7 @@ com.murrayc.galaxyzoo.app.DecisionTree$Question -> com.murrayc.galaxyzoo.app.p:
     java.util.List access$100(com.murrayc.galaxyzoo.app.DecisionTree$Question) -> b
 com.murrayc.galaxyzoo.app.ExampleViewerActivity -> com.murrayc.galaxyzoo.app.ExampleViewerActivity:
     void onCreate(android.os.Bundle) -> onCreate
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
 com.murrayc.galaxyzoo.app.ExampleViewerFragment -> com.murrayc.galaxyzoo.app.q:
     android.view.View mLoadingView -> aa
     android.view.View mRootView -> ab
@@ -8509,8 +8509,9 @@ com.murrayc.galaxyzoo.app.ItemFragment$Callbacks -> com.murrayc.galaxyzoo.app.x:
     void abandonItem() -> l
 com.murrayc.galaxyzoo.app.ListActivity -> com.murrayc.galaxyzoo.app.ListActivity:
     void onCreate(android.os.Bundle) -> onCreate
-    void onItemSelected(java.lang.String,boolean,android.view.View) -> b
+    void onItemSelected(java.lang.String,boolean,android.view.View) -> a
     void navigateToNextAvailable() -> k
+    void navigate(java.lang.String,boolean,android.view.View) -> b
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
 com.murrayc.galaxyzoo.app.ListCursorAdapter -> com.murrayc.galaxyzoo.app.y:
     com.murrayc.galaxyzoo.app.ListCursorAdapter$CursorObserver mDataSetObserver -> a
@@ -8572,13 +8573,13 @@ com.murrayc.galaxyzoo.app.ListFragment -> com.murrayc.galaxyzoo.app.ListFragment
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.ListFragment,int,android.view.View) -> a
 com.murrayc.galaxyzoo.app.ListFragment$1 -> com.murrayc.galaxyzoo.app.ae:
-    void onItemSelected(java.lang.String,boolean,android.view.View) -> b
+    void onItemSelected(java.lang.String,boolean,android.view.View) -> a
     void navigateToNextAvailable() -> k
 com.murrayc.galaxyzoo.app.ListFragment$2 -> com.murrayc.galaxyzoo.app.af:
     com.murrayc.galaxyzoo.app.ListFragment this$0 -> a
     void onItemClicked(int,android.view.View) -> a
 com.murrayc.galaxyzoo.app.ListFragment$Callbacks -> com.murrayc.galaxyzoo.app.ag:
-    void onItemSelected(java.lang.String,boolean,android.view.View) -> b
+    void onItemSelected(java.lang.String,boolean,android.view.View) -> a
     void navigateToNextAvailable() -> k
 com.murrayc.galaxyzoo.app.Log -> com.murrayc.galaxyzoo.app.ah:
     java.lang.String defaultString(java.lang.String) -> c

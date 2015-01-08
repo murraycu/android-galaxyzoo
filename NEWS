@@ -1,9 +1,17 @@
+1.33:
+
+* Help: Return to the correct help screen whe pressing the toolbar's
+  back/up button after viewing an example image.
+  https://github.com/murraycu/android-galaxyzoo/issues/14
+
+
 1.32:
 
 * Help: Don't lose the ongoing classification when pressing the toolbar's
   back/up button.
   https://github.com/murraycu/android-galaxyzoo/issues/6
 * Added Italian translation.
+
 
 1.31:
 
