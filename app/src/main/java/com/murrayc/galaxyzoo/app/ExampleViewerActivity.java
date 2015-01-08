@@ -22,6 +22,8 @@ package com.murrayc.galaxyzoo.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 
 
 public class ExampleViewerActivity extends BaseActivity {
@@ -64,5 +66,34 @@ public class ExampleViewerActivity extends BaseActivity {
         }
 
         showUpButton();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        // Handle presses on the action bar items
+        final int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            //The base class just uses NavUtils.navigateUpFromSameTask() but we want to make sure
+            //that the parent activity will be resumed instead of restarted,
+            //to make sure we go back to the correct help for the correct question,
+            //so we use FLAG_ACTIVITY_CLEAR_TOP.
+            //Alternatively, we could just mark QuestionHelpActivity as
+            //android:launchMode="singleTop" in the AndroidManifest.xml but it seems reasonable to
+            //use QuestionHelpActivity from other places one day.
+
+            //We can use this instead of more complex code, checking NavUtils.shouldUpRecreateTask(),
+            //because we know that our activities will never be opened from another app.
+            //See http://developer.android.com/training/implementing-navigation/ancestral.html.
+            final Intent upIntent = NavUtils.getParentActivityIntent(this);
+            if (upIntent != null) {
+                upIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            }
+
+            NavUtils.navigateUpTo(this, upIntent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
