@@ -19,7 +19,10 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.view.View;
 
 
@@ -64,5 +67,32 @@ public class ListActivity extends BaseActivity
     @Override
     public void navigateToNextAvailable() {
         navigate(null, false /* not done */, null); //null means next for itemId
+    }
+
+    /**
+     *
+     * @param itemId
+     * @param done
+     * @param sharedElementView A shared element for use with a transition animation.
+     */
+    private void navigate(final String itemId, final boolean done, final View sharedElementView) {
+        // Start the detail activity
+        // for the selected item ID.
+        final Intent intent = new Intent(this,
+                done ? SubjectViewerActivity.class : ClassifyActivity.class);
+        if (!TextUtils.isEmpty(itemId)) {
+            intent.putExtra(ItemFragment.ARG_ITEM_ID, itemId);
+        }
+
+        // get the common element for the transition in this activity
+        if (sharedElementView != null) {
+
+            //"subjectImageTransition" is also specified as transitionName="subjectImageTransition"
+            //on the ImageView in both gridview_cell_fragment_list.xml and fragment_subject.xml.
+            //TODO: Why do we need to specify it again here?
+            ActivityCompat.startActivity(this, intent, UiUtils.getTransitionOptionsBundle(this, sharedElementView));
+        } else {
+            startActivity(intent);
+        }
     }
 }
