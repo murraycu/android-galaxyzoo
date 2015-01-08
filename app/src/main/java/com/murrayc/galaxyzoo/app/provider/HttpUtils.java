@@ -75,16 +75,6 @@ public final class HttpUtils {
      * @param context
      * @return
      */
-    public static boolean getNetworkIsConnected(final Context context) {
-        return getNetworkIsConnected(context, LoginUtils.getUseWifiOnly(context));
-    }
-
-    /**
-     * Don't call this from the main thread because it uses the Account.
-     *
-     * @param context
-     * @return
-     */
     private static boolean getNetworkIsConnected(final Context context, final boolean wifiOnly) {
         final Utils.NetworkConnected networkConnected =
                 Utils.getNetworkIsConnected(context, wifiOnly);
