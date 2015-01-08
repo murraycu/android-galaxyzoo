@@ -22,11 +22,9 @@ package com.murrayc.galaxyzoo.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 
 
-public class ExampleViewerActivity extends ActionBarActivity {
+public class ExampleViewerActivity extends BaseActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -65,11 +63,6 @@ public class ExampleViewerActivity extends ActionBarActivity {
             }
         }
 
-        // Show the Up button in the action bar.
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null)
-            return;
-
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        showUpButton();
     }
 }
