@@ -20,8 +20,6 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -61,8 +59,40 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     private View mLoadingView = null;
 
     private View mRootView = null;
-    private AlertDialog mAlertDialog = null;
     private boolean mGetNextInProgress = false;
+
+    /**
+     * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ClassifyFragment.Callbacks} interface that does
+     * nothing. Used only when this fragment is not attached to an activity.
+     */
+    private static final Callbacks sDummyCallbacks = new Callbacks() {
+        public void navigateToList() {
+        }
+
+        @Override
+        public void abandonItem() {
+        }
+
+        @Override
+        public void warnAboutNetworkProblemWithRetry() {
+        }
+    };
+
+    /**
+     * The fragment's current callback object, which is notified of list item
+     * clicks.
+     */
+    private Callbacks mCallbacks = sDummyCallbacks;
+
+    /**
+     * This is the recommended way for activities and fragments to communicate,
+     * presumably because, unlike a direct function call, it still keeps the
+     * fragment and activity implementations separate.
+     * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
+     */
+    static interface Callbacks extends ItemFragment.Callbacks {
+        public void warnAboutNetworkProblemWithRetry();
+    }
 
 
     /**
@@ -72,46 +102,28 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     public ClassifyFragment() {
     }
 
-    private void warnAboutNetworkProblemWithRetry(final Activity activity, final String message) {
-        //Dismiss any existing dialog:
-        if (mAlertDialog != null) {
-            mAlertDialog.dismiss();
-            mAlertDialog = null;
+    @Override
+    public void onAttach(final Activity activity) {
+        super.onAttach(activity);
+
+        // Activities containing this fragment must implement its callbacks.
+        if (!(activity instanceof Callbacks)) {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
         }
 
-        //Show the new one:
-        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        mCallbacks = (Callbacks) activity;
+    }
 
-        // http://developer.android.com/design/building-blocks/dialogs.html
-        // says "Most alerts don't need titles.":
-        // builder.setTitle(activity.getString(R.string.error_title_connection_problem));
+    @Override
+    public void onDetach() {
+        super.onDetach();
 
-        builder.setMessage(message);
+        // Reset the active callbacks interface to the dummy implementation.
+        mCallbacks = sDummyCallbacks;
+    }
 
-        builder.setPositiveButton(activity.getString(R.string.error_button_retry), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                onClickListenerRetry();
-            }
-        });
-
-        builder.setNegativeButton(activity.getString(R.string.error_button_cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(final DialogInterface dialog) {
-                dialog.dismiss();
-                mAlertDialog = null;
-            }
-        });
-
-        mAlertDialog = builder.create();
-        mAlertDialog.show();
+    private void warnAboutNetworkProblemWithRetry() {
+        mCallbacks.warnAboutNetworkProblemWithRetry();
     }
 
     @Override
@@ -314,7 +326,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             if(!UiUtils.warnAboutMissingNetwork(activity)) {
                 //Warn that there is some other network problem.
                 //For instance, this happens if the network is apparently connected but not working properly:
-                warnAboutNetworkProblemWithRetry(activity, activity.getString(R.string.error_no_subjects));
+                warnAboutNetworkProblemWithRetry();
             }
 
             return;
@@ -336,13 +348,6 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         }
 
         addOrUpdateChildFragments();
-    }
-
-    private void onClickListenerRetry() {
-        //Try to get the next item again.
-        //It should succeed if we have a working network connection,
-        //or fail again with the same message.
-        update();
     }
 
     //We only bother using this when we have asked for the "next" item,

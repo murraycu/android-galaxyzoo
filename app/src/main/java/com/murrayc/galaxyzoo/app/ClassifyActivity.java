@@ -21,8 +21,11 @@ package com.murrayc.galaxyzoo.app;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -49,9 +52,11 @@ import java.lang.ref.WeakReference;
  */
 public class ClassifyActivity extends ItemActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener,
-            ItemFragment.Callbacks, QuestionFragment.Callbacks{
+            ClassifyFragment.Callbacks, QuestionFragment.Callbacks{
     private boolean mIsStateAlreadySaved = false;
     private boolean mPendingClassificationFinished = false;
+    private AlertDialog mAlertDialog = null;
+
 
 //    public class ItemsContentProviderObserver extends ContentObserver {
 //
@@ -422,6 +427,59 @@ public class ClassifyActivity extends ItemActivity
                 TextUtils.equals(key, getString(R.string.pref_key_keep_count)) ||
                 TextUtils.equals(key, getString(R.string.pref_key_wifi_only))) {
             requestSync();
+        }
+    }
+
+    @Override
+    public void warnAboutNetworkProblemWithRetry() {
+        //Dismiss any existing dialog:
+        if (mAlertDialog != null) {
+            mAlertDialog.dismiss();
+            mAlertDialog = null;
+        }
+
+        //Show the new one:
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // http://developer.android.com/design/building-blocks/dialogs.html
+        // says "Most alerts don't need titles.":
+        // builder.setTitle(activity.getString(R.string.error_title_connection_problem));
+
+        builder.setMessage(getString(R.string.error_no_subjects));
+
+        builder.setPositiveButton(getString(R.string.error_button_retry), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                onClickListenerRetry();
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.error_button_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(final DialogInterface dialog) {
+                dialog.dismiss();
+                mAlertDialog = null;
+            }
+        });
+
+        mAlertDialog = builder.create();
+        mAlertDialog.show();
+    }
+
+    private void onClickListenerRetry() {
+        //Try to get the next item again.
+        //It should succeed if we have a working network connection,
+        //or fail again with the same message.
+        final ClassifyFragment fragmentClassify = getChildFragment();
+        if (fragmentClassify != null) {
+            fragmentClassify.update();
         }
     }
 }

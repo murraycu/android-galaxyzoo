@@ -34,6 +34,7 @@ public class ItemFragment extends ZooFragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item-id";
+
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
@@ -46,6 +47,7 @@ public class ItemFragment extends ZooFragment {
         public void abandonItem() {
         }
     };
+
     /**
      * The fragment's current callback object, which is notified of list item
      * clicks.
