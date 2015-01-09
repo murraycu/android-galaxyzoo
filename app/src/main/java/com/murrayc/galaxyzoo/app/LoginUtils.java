@@ -335,9 +335,7 @@ public final class LoginUtils {
         final Map<String, ?> keys = prefs.getAll();
         for(final Map.Entry<String, ?> entry : keys.entrySet()) {
             final Object value =  entry.getValue();
-            if (value == null) {
-                continue;
-            } else if (value instanceof String) {
+            if (value instanceof String) {
                 copyPrefToAccount(accountManager, account, entry.getKey(), (String) value);
             } else if (value instanceof Integer) {
                 copyPrefToAccount(accountManager, account, entry.getKey(), Integer.toString((Integer) value));
