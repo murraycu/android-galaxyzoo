@@ -55,6 +55,8 @@ public class ClassifyActivity extends ItemActivity
             ClassifyFragment.Callbacks, QuestionFragment.Callbacks{
     private boolean mIsStateAlreadySaved = false;
     private boolean mPendingClassificationFinished = false;
+    private boolean mPendingWarnAboutNetworkProblemWithRetry = false;
+
     private AlertDialog mAlertDialog = null;
 
 
@@ -315,6 +317,13 @@ public class ClassifyActivity extends ItemActivity
             return;
         }
 
+        //See warnAboutNetworkProblemWithRetry().
+        if(mPendingWarnAboutNetworkProblemWithRetry) {
+            mPendingWarnAboutNetworkProblemWithRetry = false;
+            doWarnAboutNetworkProblemWithRetry();
+            return;
+        }
+
         final ClassifyFragment fragmentClassify = getChildFragment();
         if (fragmentClassify != null) {
 
@@ -432,6 +441,18 @@ public class ClassifyActivity extends ItemActivity
 
     @Override
     public void warnAboutNetworkProblemWithRetry() {
+        // Avoid causing this exception when we try to show() an AlertDialog:
+        // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        if (mIsStateAlreadySaved) {
+            //Do it later instead.
+            this.mPendingWarnAboutNetworkProblemWithRetry = true;
+            return;
+        }
+
+        doWarnAboutNetworkProblemWithRetry();
+    }
+
+    private void doWarnAboutNetworkProblemWithRetry() {
         //Dismiss any existing dialog:
         if (mAlertDialog != null) {
             mAlertDialog.dismiss();
