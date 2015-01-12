@@ -326,10 +326,10 @@ public class SubjectAdder {
                 null, null);
         if (affected != 1) {
             Log.error("markImageAsDownloaded(): Failed to mark image download as done.");
-        } else {
+        } //else {
             //Let the ListView (or other UI) know that there is more to display.
             //TODO? notifyRowChangeBySubjectId(subjectId);
-        }
+        //}
     }
 
     /**

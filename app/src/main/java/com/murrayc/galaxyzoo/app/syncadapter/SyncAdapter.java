@@ -487,9 +487,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private void onUploadTaskFinished(final boolean result, final String itemId) {
         if (result) {
             markItemAsUploaded(itemId);
-        } else {
+        } //else {
             //TODO: Inform the user?
-        }
+        //}
 
         mUploadsInProgress--;
     }
