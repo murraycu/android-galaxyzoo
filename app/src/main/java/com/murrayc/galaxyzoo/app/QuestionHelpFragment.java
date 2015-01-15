@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -78,7 +79,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
     public void update() {
         // Use the Builder class for convenient dialog construction
-        final Activity activity = getActivity();
+        final Context context = getActivity();
         final DecisionTree.Question question = getQuestion();
         if (question == null) {
             Log.error("update(): question is null.");
@@ -102,40 +103,40 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
         tableLayout.removeAllViews();
         for (final DecisionTree.Answer answer : question.getAnswers()) {
-            addRowForAnswer(activity, tableLayout, question, answer);
+            addRowForAnswer(context, tableLayout, question, answer);
         }
 
         for (final DecisionTree.Checkbox checkbox : question.getCheckboxes()) {
-            addRowForAnswer(activity, tableLayout, question, checkbox);
+            addRowForAnswer(context, tableLayout, question, checkbox);
         }
     }
 
-    private void addRowForAnswer(final Activity activity, final TableLayout tableLayout, final DecisionTree.Question question, final DecisionTree.BaseButton answer) {
-        final TableRow row = new TableRow(activity);
+    private void addRowForAnswer(final Context context, final TableLayout tableLayout, final DecisionTree.Question question, final DecisionTree.BaseButton answer) {
+        final TableRow row = new TableRow(context);
         final TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, UiUtils.getPxForDpResource(activity, R.dimen.standard_large_margin), 0, 0);
+        params.setMargins(0, UiUtils.getPxForDpResource(context, R.dimen.standard_large_margin), 0, 0);
         tableLayout.addView(row, params);
 
 
-        final LinearLayout layoutVertical = new LinearLayout(activity);
+        final LinearLayout layoutVertical = new LinearLayout(context);
         layoutVertical.setOrientation(LinearLayout.VERTICAL);
 
-        final TextView textViewAnswer = new TextView(activity);
-        textViewAnswer.setTextAppearance(activity, R.style.TextAppearance_AppCompat_Subhead);
+        final TextView textViewAnswer = new TextView(context);
+        textViewAnswer.setTextAppearance(context, R.style.TextAppearance_AppCompat_Subhead);
         textViewAnswer.setText(answer.getText());
         layoutVertical.addView(textViewAnswer,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        final LinearLayout layoutHorizontal = new LinearLayout(activity);
+        final LinearLayout layoutHorizontal = new LinearLayout(context);
         layoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
         final LinearLayout.LayoutParams paramsHorizontal = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        paramsHorizontal.setMargins(0, UiUtils.getPxForDpResource(activity, R.dimen.standard_margin), 0, 0);
+        paramsHorizontal.setMargins(0, UiUtils.getPxForDpResource(context, R.dimen.standard_margin), 0, 0);
         layoutVertical.addView(layoutHorizontal, paramsHorizontal);
 
-        final BitmapDrawable icon = getIcon(activity, answer);
-        final ImageView imageIcon = new ImageView(activity);
+        final BitmapDrawable icon = getIcon(context, answer);
+        final ImageView imageIcon = new ImageView(context);
         imageIcon.setImageDrawable(icon);
         layoutHorizontal.addView(imageIcon);
 
@@ -145,8 +146,8 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         for (int i = 0; i < answer.getExamplesCount(); i++) {
 
             final String iconName = answer.getExampleIconName(question.getId(), i);
-            final BitmapDrawable iconExample = singleton.getIconDrawable(activity, iconName);
-            final ImageButton imageExample = new ImageButton(activity);
+            final BitmapDrawable iconExample = singleton.getIconDrawable(context, iconName);
+            final ImageButton imageExample = new ImageButton(context);
             //Remove the space between the image and the outside of the button:
             imageExample.setPadding(0, 0, 0, 0);
             imageExample.setImageDrawable(iconExample);
@@ -160,7 +161,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
 
             //This requires API level 17: paramsImage.setMarginStart(getPxForDp(activity, MARGIN_MEDIUM_DP));
             //imageExample.setLayoutParams(paramsImage);
-            MarginLayoutParamsCompat.setMarginStart(paramsImage, UiUtils.getPxForDpResource(activity, R.dimen.standard_large_margin));
+            MarginLayoutParamsCompat.setMarginStart(paramsImage, UiUtils.getPxForDpResource(context, R.dimen.standard_large_margin));
 
             imageExample.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
