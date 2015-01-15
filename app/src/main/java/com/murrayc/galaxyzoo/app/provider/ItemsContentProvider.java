@@ -554,16 +554,17 @@ public class ItemsContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mOpenDbHelper = new DatabaseHelper(getContext());
+        final Context context = getContext();
+
+        mOpenDbHelper = new DatabaseHelper(context);
 
         //This is useful to wipe the database when testing.
         //Note that the cached image files in files/ will not be deleted
         //so you will see "the file already exists" errors in the log,
         //but we will then just reuse the files.
         //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
-
-        mZooniverseClient = new ZooniverseClient(getContext(), Config.SERVER);
-        mSubjectAdder = new SubjectAdder(getContext(), mZooniverseClient.getRequestQueue());
+        mZooniverseClient = new ZooniverseClient(context, Config.SERVER);
+        mSubjectAdder = new SubjectAdder(context, mZooniverseClient.getRequestQueue());
 
         //This isn't necessary when using the private getExternalCacheDir():
         //Make sure that the .nomedia file exists,
