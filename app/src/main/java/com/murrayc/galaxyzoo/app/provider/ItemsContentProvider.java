@@ -962,6 +962,10 @@ public class ItemsContentProvider extends ContentProvider {
     private void removeItem(final String itemId, final String[] imageUris) {
         final SQLiteDatabase db = getDb();
 
+        final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(DatabaseHelper.TABLE_NAME_FILES);
+        builder.appendWhere(DatabaseHelper.FilesDbColumns._ID + " = ?");
+
         //Get the cached image files, delete them, and forget them:
         for (final String contentUri : imageUris) {
             if (contentUri == null) {
@@ -973,9 +977,6 @@ public class ItemsContentProvider extends ContentProvider {
             final long fileId = ContentUris.parseId(uri);
             final String strFileId = Double.toString(fileId); //TODO: Is this locale-independent?
 
-            final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-            builder.setTables(DatabaseHelper.TABLE_NAME_FILES);
-            builder.appendWhere(DatabaseHelper.FilesDbColumns._ID + " = ?");
             final String[] selectionArgs = {strFileId};
             final String[] projection = {DatabaseHelper.FilesDbColumns.FILE_DATA};
             final Cursor c = builder.query(db, projection,
