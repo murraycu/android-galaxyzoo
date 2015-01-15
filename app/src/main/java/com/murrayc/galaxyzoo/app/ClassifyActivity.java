@@ -100,12 +100,12 @@ public class ClassifyActivity extends ItemActivity
         protected Boolean doInBackground(final Void... params) {
 
             if (mContextReference == null) {
-                return false;
+                return Boolean.FALSE;
             }
 
             final Context context = mContextReference.get();
             if (context == null) {
-                return false;
+                return Boolean.FALSE;
             }
 
             return LoginUtils.getLoggedIn(context);
