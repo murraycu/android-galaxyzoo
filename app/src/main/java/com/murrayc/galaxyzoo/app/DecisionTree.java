@@ -71,7 +71,7 @@ public class DecisionTree {
         try {
             documentBuilder = dbf.newDocumentBuilder();
         } catch (final ParserConfigurationException e) {
-            throw new DecisionTreeException("Exception from newDocumentBuilder." + e);
+            throw new DecisionTreeException("Exception from newDocumentBuilder.", e);
         }
 
         final org.w3c.dom.Document xmlDocument;
@@ -79,7 +79,7 @@ public class DecisionTree {
         try {
             xmlDocument = documentBuilder.parse(inputStreamTree);
         } catch (final SAXException | IOException e) {
-            throw new DecisionTreeException("Exception from DocumentBuilder.parse()." + e);
+            throw new DecisionTreeException("Exception from DocumentBuilder.parse().", e);
         }
 
         final Element rootNode = xmlDocument.getDocumentElement();
