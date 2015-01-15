@@ -67,6 +67,13 @@ public class SubjectAdder {
             Item.Columns.LOCATION_INVERTED_URI_REMOTE,
             Item.Columns.LOCATION_INVERTED_URI,
     };
+    private static final String WHERE_CLAUSE_DOWNLOAD_NOT_DONE = "(" +
+            Item.Columns.LOCATION_STANDARD_DOWNLOADED + " != 1" +
+            ") OR (" +
+            Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED + " != 1" +
+            ") OR (" +
+            Item.Columns.LOCATION_INVERTED_DOWNLOADED + " != 1" +
+            ")";
 
     public SubjectAdder(final Context context, final RequestQueue requestQueue) {
         this.mContext = context;
@@ -87,7 +94,7 @@ public class SubjectAdder {
         final ContentResolver resolver = getContext().getContentResolver();
 
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_DOWNLOAD_MISSING_IMAGES,
-                getWhereClauseForDownloadNotDone(), new String[]{}, null);
+                WHERE_CLAUSE_DOWNLOAD_NOT_DONE, new String[]{}, null);
 
         //Find out if the image is currently being downloaded:
         while (c.moveToNext()) {
@@ -378,15 +385,5 @@ public class SubjectAdder {
         final boolean result = c.getCount() > 0;
         c.close();
         return result;
-    }
-
-    private static String getWhereClauseForDownloadNotDone() {
-        return "(" +
-                Item.Columns.LOCATION_STANDARD_DOWNLOADED + " != 1" +
-                ") OR (" +
-                Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED + " != 1" +
-                ") OR (" +
-                Item.Columns.LOCATION_INVERTED_DOWNLOADED + " != 1" +
-                ")";
     }
 }

@@ -58,6 +58,8 @@ import java.util.List;
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String COUNT_AS_COUNT = "COUNT(*) AS count";
     private static final String PARAM_PART_CLASSIFICATION = "classification";
+    private static final String WHERE_CLAUSE_NOT_DONE = Item.Columns.DONE + " != 1";
+    private static final String WHERE_CLAUSE_UPLOADED = Item.Columns.UPLOADED + " == 1";
     private int mUploadsInProgress = 0;
 
     private boolean mRequestMoreItemsTaskInProgress = false;
@@ -203,7 +205,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         final ContentResolver resolver = getContentResolver();
 
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_COUNT_AS_COUNT,
-                getWhereClauseForNotDone(), null, null);
+                WHERE_CLAUSE_NOT_DONE, null, null);
         c.moveToFirst();
         final int result = c.getInt(0);
         c.close();
@@ -214,7 +216,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         final ContentResolver resolver = getContentResolver();
 
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_COUNT_AS_COUNT,
-                getWhereClauseForUploaded(), new String[]{}, null);
+                WHERE_CLAUSE_UPLOADED, new String[]{}, null);
 
         c.moveToFirst();
         final int result = c.getInt(0);
@@ -287,7 +289,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             final int countToRemove = count - max;
             //TODO: Use this: final String limit = Integer.toString(countToRemove); //TODO: Is this locale-independent?
             final Cursor c = resolver.query(Item.ITEMS_URI, projection,
-                    getWhereClauseForUploaded(), new String[]{}, orderBy);
+                    WHERE_CLAUSE_UPLOADED, new String[]{}, orderBy);
 
             //Remove them one by one:
             int removed = 0;
@@ -504,14 +506,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         if (affected != 1) {
             Log.error("markItemAsUploaded(): Unexpected affected rows: " + affected);
         }
-    }
-
-    private static String getWhereClauseForNotDone() {
-        return Item.Columns.DONE + " != 1";
-    }
-
-    private static String getWhereClauseForUploaded() {
-        return Item.Columns.UPLOADED + " == 1";
     }
 
     private int getMinCacheSize() {

@@ -215,6 +215,19 @@ public class ItemsContentProvider extends ContentProvider {
             DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI
     };
 
+    /** A where clause to find all the subjects that have not yet been classified,
+     * and which are ready to be classified.
+     */
+    public static final String WHERE_CLAUSE_NOT_DONE = "(" +
+            DatabaseHelper.ItemsDbColumns.DONE + " != 1" +
+            ") AND (" +
+            DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED + " == 1" +
+            ") AND (" +
+            DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED + " == 1" +
+            ") AND (" +
+            DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED + " == 1" +
+            ")";
+
     public ItemsContentProvider() {
     }
 
@@ -769,7 +782,6 @@ public class ItemsContentProvider extends ContentProvider {
 
     private Cursor queryItemNext(final String[] projection, final String selection, final String[] selectionArgs, final String orderBy) {
         // query the database for a single  item that is not yet done:
-        final String whereClause = getWhereClauseForNotDone();
 
         //Prepend our ID=? argument to the selection arguments.
         //This lets us use the ? syntax to avoid SQL injection
@@ -777,7 +789,7 @@ public class ItemsContentProvider extends ContentProvider {
         final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
         builder.setProjectionMap(sItemsProjectionMap);
-        builder.appendWhere(whereClause);
+        builder.appendWhere(WHERE_CLAUSE_NOT_DONE);
 
         //Default to the order of creation,
         //so we are more likely to get the first record that was created synchronously
@@ -790,21 +802,6 @@ public class ItemsContentProvider extends ContentProvider {
         return builder.query(getDb(), projection,
                 selection, selectionArgs,
                 null, null, orderByToUse, "1");
-    }
-
-    //A where clause to find all the subjects that have not yet been classified,
-    //and which are ready to be classified.
-    private String getWhereClauseForNotDone() {
-        return "(" +
-                DatabaseHelper.ItemsDbColumns.DONE + " != 1" +
-                ") AND (" +
-                DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED + " == 1" +
-                ") AND (" +
-                DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_DOWNLOADED + " == 1" +
-                ") AND (" +
-                DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_DOWNLOADED + " == 1" +
-                ")";
-
     }
 
     private String[] prependToArray(final String[] selectionArgs, final long value) {
