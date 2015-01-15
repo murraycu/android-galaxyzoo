@@ -559,7 +559,7 @@ public class DecisionTree {
         }
     }
 
-    public class DecisionTreeException extends Exception {
+    public static class DecisionTreeException extends Exception {
         DecisionTreeException(final String detail, final Exception cause) {
             super(detail, cause);
         }
