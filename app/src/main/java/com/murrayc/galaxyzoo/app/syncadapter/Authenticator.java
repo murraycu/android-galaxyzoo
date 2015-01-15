@@ -100,7 +100,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
     public Bundle getAuthToken(final AccountAuthenticatorResponse response, final Account account, final String authTokenType, final Bundle options) throws NetworkErrorException {
         // If the caller requested an authToken type we don't support, then
         // return an error
-        if (!authTokenType.equals(LoginUtils.ACCOUNT_AUTHTOKEN_TYPE)) {
+        if (!TextUtils.equals(authTokenType, LoginUtils.ACCOUNT_AUTHTOKEN_TYPE)) {
             final Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ERROR_MESSAGE, "invalid authTokenType");
             return result;

@@ -118,7 +118,7 @@ public class DecisionTree {
             reader = new JsonReader(new InputStreamReader(inputStreamTranslation, Utils.STRING_ENCODING));
             reader.beginObject();
             while (reader.hasNext()) {
-                if (reader.nextName().equals("questions")) { //We ignore the "zooniverse" and "quiz_questions" objects
+                if (TextUtils.equals(reader.nextName(), "questions")) { //We ignore the "zooniverse" and "quiz_questions" objects
                     readJsonQuestions(reader);
                 } else {
                     reader.skipValue();
