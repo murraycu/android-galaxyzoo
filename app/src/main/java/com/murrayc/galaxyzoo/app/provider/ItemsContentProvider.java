@@ -209,6 +209,11 @@ public class ItemsContentProvider extends ContentProvider {
     //and block on the result, if the SyncAdapter hasn't done that for us.
     private ZooniverseClient mZooniverseClient = null;
     private SubjectAdder mSubjectAdder = null;
+    private static final String[] PROJECTION_REMOVE_ITEM = {
+            DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI,
+            DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI,
+            DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI
+    };
 
     public ItemsContentProvider() {
     }
@@ -937,13 +942,8 @@ public class ItemsContentProvider extends ContentProvider {
         final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(DatabaseHelper.TABLE_NAME_ITEMS);
         builder.appendWhere(Item.Columns._ID + " = ?"); //We use ? to avoid SQL Injection.
-        final String[] projection = {
-                DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI,
-                DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI,
-                DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI
-        };
         final String[] selectionArgs = {itemId}; //TODO: locale-independent?
-        final Cursor c = builder.query(getDb(), projection,
+        final Cursor c = builder.query(getDb(), PROJECTION_REMOVE_ITEM,
                 null, selectionArgs,
                 null, null, null);
 

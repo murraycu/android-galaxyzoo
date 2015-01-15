@@ -49,6 +49,24 @@ public class SubjectAdder {
      */
     private final Map<String, Date> mImageDownloadsInProgress = new HashMap<>();
     private final RequestQueue mRequestQueue;
+    private static final String[] PROJECTION_DOWNLOAD_MISSING_IMAGES = {Item.Columns._ID,
+            Item.Columns.LOCATION_STANDARD_DOWNLOADED,
+            Item.Columns.LOCATION_STANDARD_URI_REMOTE,
+            Item.Columns.LOCATION_STANDARD_URI,
+            Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED,
+            Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE,
+            Item.Columns.LOCATION_THUMBNAIL_URI,
+            Item.Columns.LOCATION_INVERTED_DOWNLOADED,
+            Item.Columns.LOCATION_INVERTED_URI_REMOTE,
+            Item.Columns.LOCATION_INVERTED_URI};
+    private static final String[] PROJECTION_CACHE_URIS_TO_FILES = {
+            Item.Columns.LOCATION_STANDARD_URI_REMOTE,
+            Item.Columns.LOCATION_STANDARD_URI,
+            Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE,
+            Item.Columns.LOCATION_THUMBNAIL_URI,
+            Item.Columns.LOCATION_INVERTED_URI_REMOTE,
+            Item.Columns.LOCATION_INVERTED_URI,
+    };
 
     public SubjectAdder(final Context context, final RequestQueue requestQueue) {
         this.mContext = context;
@@ -68,17 +86,7 @@ public class SubjectAdder {
         //Get all the items that have an image that is not yet fully downloaded:
         final ContentResolver resolver = getContext().getContentResolver();
 
-        final String[] projection = {Item.Columns._ID,
-                Item.Columns.LOCATION_STANDARD_DOWNLOADED,
-                Item.Columns.LOCATION_STANDARD_URI_REMOTE,
-                Item.Columns.LOCATION_STANDARD_URI,
-                Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED,
-                Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE,
-                Item.Columns.LOCATION_THUMBNAIL_URI,
-                Item.Columns.LOCATION_INVERTED_DOWNLOADED,
-                Item.Columns.LOCATION_INVERTED_URI_REMOTE,
-                Item.Columns.LOCATION_INVERTED_URI};
-        final Cursor c = resolver.query(Item.ITEMS_URI, projection,
+        final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_DOWNLOAD_MISSING_IMAGES,
                 getWhereClauseForDownloadNotDone(), new String[]{}, null);
 
         //Find out if the image is currently being downloaded:
@@ -162,15 +170,7 @@ public class SubjectAdder {
         //This will mark the data as fully downloaded by setting the *Downloaded boolean fields,
         //so we do this only after creating the items record.
 
-        final String[] projection = {
-                Item.Columns.LOCATION_STANDARD_URI_REMOTE,
-                Item.Columns.LOCATION_STANDARD_URI,
-                Item.Columns.LOCATION_THUMBNAIL_URI_REMOTE,
-                Item.Columns.LOCATION_THUMBNAIL_URI,
-                Item.Columns.LOCATION_INVERTED_URI_REMOTE,
-                Item.Columns.LOCATION_INVERTED_URI,
-        };
-        final Cursor c = resolver.query(itemUri, projection,
+        final Cursor c = resolver.query(itemUri, PROJECTION_CACHE_URIS_TO_FILES,
                 null, new String[]{}, null);
         while (c.moveToNext()) {
             final String uriStandardRemote = c.getString(0);

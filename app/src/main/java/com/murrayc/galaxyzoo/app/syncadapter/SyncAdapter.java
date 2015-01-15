@@ -72,6 +72,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     //Out Runnable tasks use this to post results back to our main thread.
     private final Handler mHandler;
+    private static final String[] PROJECTION_UPLOAD = {ClassificationAnswer.Columns.SEQUENCE,
+            ClassificationAnswer.Columns.QUESTION_ID,
+            ClassificationAnswer.Columns.ANSWER_ID};
+    private static final String[] PROJECTION_COUNT_AS_COUNT = new String[]{COUNT_AS_COUNT};
 
     public SyncAdapter(final Context context, final boolean autoInitialize) {
         super(context, autoInitialize);
@@ -198,8 +202,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private int getNotDoneCount() {
         final ContentResolver resolver = getContentResolver();
 
-        final String[] projection = {COUNT_AS_COUNT};
-        final Cursor c = resolver.query(Item.ITEMS_URI, projection,
+        final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_COUNT_AS_COUNT,
                 getWhereClauseForNotDone(), null, null);
         c.moveToFirst();
         final int result = c.getInt(0);
@@ -210,8 +213,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private int getUploadedCount() {
         final ContentResolver resolver = getContentResolver();
 
-        final String[] projection = {COUNT_AS_COUNT};
-        final Cursor c = resolver.query(Item.ITEMS_URI, projection,
+        final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_COUNT_AS_COUNT,
                 getWhereClauseForUploaded(), new String[]{}, null);
 
         c.moveToFirst();
@@ -355,12 +357,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         {
             final String selection = ClassificationAnswer.Columns.ITEM_ID + " = ?"; //We use ? to avoid SQL Injection.
             final String[] selectionArgs = {itemId};
-            final String[] projection = {ClassificationAnswer.Columns.SEQUENCE,
-                    ClassificationAnswer.Columns.QUESTION_ID,
-                    ClassificationAnswer.Columns.ANSWER_ID};
             final String orderBy = ClassificationAnswer.Columns.SEQUENCE + " ASC";
             c = resolver.query(ClassificationAnswer.CONTENT_URI,
-                    projection, selection, selectionArgs, orderBy);
+                    PROJECTION_UPLOAD, selection, selectionArgs, orderBy);
         }
 
         int max_sequence = 0;
