@@ -875,7 +875,7 @@ public class QuestionFragment extends BaseQuestionFragment
      * way, but this lets us avoid having half-complete classifications
      * in the content provider.
      */
-    public static class ClassificationInProgress implements Parcelable {
+    public static final class ClassificationInProgress implements Parcelable {
         public static final Parcelable.Creator<ClassificationInProgress> CREATOR
                 = new Parcelable.Creator<ClassificationInProgress>() {
             public ClassificationInProgress createFromParcel(final Parcel in) {
@@ -940,8 +940,18 @@ public class QuestionFragment extends BaseQuestionFragment
             dest.writeInt(favorite ? 1 : 0);
         }
 
+        /** Returns a deep copy of the list of answers,
+         * to avoid any chance of concurrent use.
+         *
+         * @return
+         */
         List<QuestionAnswer> getAnswers() {
-            return answers;
+            final List<QuestionAnswer> result = new ArrayList<>();
+            for(final QuestionAnswer answer : answers) {
+                result.add(new QuestionAnswer(answer));
+            }
+
+            return result;
         }
 
         boolean isFavorite() {
@@ -974,9 +984,24 @@ public class QuestionFragment extends BaseQuestionFragment
             private final List<String> checkboxIds;
 
             public QuestionAnswer(final String questionId, final String answerId, final List<String> checkboxIds) {
+                //Strings are immutable so we don't need to copy them:
                 this.questionId = questionId;
                 this.answerId = answerId;
-                this.checkboxIds = checkboxIds;
+
+                this.checkboxIds = deepCopyCheckBoxIds(checkboxIds);
+            }
+
+            private static List<String> deepCopyCheckBoxIds(final List<String> strList) {
+                if (strList == null) {
+                    return null;
+                }
+
+                final List<String> result = new ArrayList<>();
+
+                //Strings are immutable so we don't need to copy them:
+                result.addAll(strList);
+
+                return result;
             }
 
             private QuestionAnswer(final Parcel in) {
@@ -984,7 +1009,15 @@ public class QuestionFragment extends BaseQuestionFragment
                 this.questionId = in.readString();
                 this.answerId = in.readString();
 
-                this.checkboxIds = in.createStringArrayList();
+                this.checkboxIds = deepCopyCheckBoxIds(in.createStringArrayList());
+            }
+
+            public QuestionAnswer(final QuestionAnswer answer) {
+                //Strings are immutable so we don't need to copy them:
+                this.questionId = answer.getQuestionId();
+                this.answerId = answer.getAnswerId();
+
+                this.checkboxIds = deepCopyCheckBoxIds(answer.checkboxIds);
             }
 
             @Override
@@ -1025,8 +1058,13 @@ public class QuestionFragment extends BaseQuestionFragment
                 return answerId;
             }
 
+            /** Returns a deep copy of the list of checkbox IDs,
+             * to avoid any chance of concurrent use.
+             *
+             * @return
+             */
             public List<String> getCheckboxIds() {
-                return checkboxIds;
+                return deepCopyCheckBoxIds(checkboxIds);
             }
 
             @Override
