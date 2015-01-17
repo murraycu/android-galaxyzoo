@@ -8767,6 +8767,7 @@ com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnsw
     java.lang.String questionId -> a
     java.lang.String answerId -> b
     java.util.List checkboxIds -> c
+    java.util.List deepCopyCheckBoxIds(java.util.List) -> a
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String getQuestionId() -> a
