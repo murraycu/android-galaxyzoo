@@ -556,7 +556,10 @@ public class QuestionFragment extends BaseQuestionFragment
             //Set the questionID to null to prevent us from starting to save this again
             //if the user presses the "Done" button again while we are waiting for our AsyncTask.
             //(see our check for a null questionId at the start of this method.)
-            final SaveClassificationTask task = new SaveClassificationTask(this, mClassificationInProgress);
+            //We give a _copy_ of the ClassificationInProgress to the AsyncTask,
+            //to be really sure of avoiding concurrent access to it.
+            final SaveClassificationTask task = new SaveClassificationTask(this,
+                    new ClassificationInProgress(mClassificationInProgress));
             task.execute();
             return;
         }
@@ -617,7 +620,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
         SaveClassificationTask(final QuestionFragment fragment, final ClassificationInProgress classificationInProgress) {
             this.fragmentReference = new WeakReference<>(fragment);
-            this.classificationInProgress = classificationInProgress;
+            this.classificationInProgress = classificationInProgress; //The caller gives us a copy.
         }
 
         @Override
@@ -891,6 +894,11 @@ public class QuestionFragment extends BaseQuestionFragment
 
         public ClassificationInProgress() {
             answers = new ArrayList<>();
+        }
+
+        public ClassificationInProgress(final ClassificationInProgress in) {
+            this.answers = in.getAnswers(); //getAnswers() returns a copy.
+            favorite = in.favorite;
         }
 
         public ClassificationInProgress(final Parcel in) {
