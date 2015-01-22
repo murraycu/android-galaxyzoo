@@ -142,7 +142,7 @@ public class ZooFragment extends Fragment {
 
         final AlertDialog dialog = builder.create();
         dialog.setTitle(R.string.app_name);
-        dialog.setIcon(R.drawable.ic_launcher);
+        dialog.setIcon(R.mipmap.ic_launcher);
 
         dialog.show();
     }
