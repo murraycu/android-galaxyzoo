@@ -5,7 +5,7 @@
 
     <!-- Base application theme.
      Defining this lets values-v21/styles.xml reuse it with changes. -->
-    <style name="AppTheme.Base" parent="Theme.AppCompat">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
 
         <!-- Use the Toolbar instead (new in API 21 and AppCompat). -->
