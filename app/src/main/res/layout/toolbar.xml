@@ -13,6 +13,6 @@
     android:layout_height="wrap_content"
     android:background="@color/color_primary"
     app:theme="@style/GalaxyZooThemeToolbarDarkOverflow"
-    app:popupTheme="@style/Theme.AppCompat">
+    app:popupTheme="@style/Theme.AppCompat.NoActionBar">
 
 </android.support.v7.widget.Toolbar>
