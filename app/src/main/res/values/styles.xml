@@ -4,13 +4,10 @@
     <style name="AppTheme" parent="AppTheme.Base" />
 
     <!-- Base application theme.
-     Defining this lets values-v21/styles.xml reuse it with changes. -->
+     Defining this lets values-v21/styles.xml reuse it with changes.
+     We use the NoActionBar version of the theme to use Toolbar instead of ActionBar -
+     alternatively we could have just specified windowActionBar as false. -->
     <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
-
-        <!-- Use the Toolbar instead (new in API 21 and AppCompat). -->
-        <item name="windowActionBar">false</item>
-
         <!-- colorPrimary is used, for instance, for the default ActionBar (but not Toolbar) background.
              We specify the same color for the toolbar background in toolbar.xml. -->
         <item name="colorPrimary">@color/color_primary</item>
