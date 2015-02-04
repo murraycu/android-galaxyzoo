@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -53,6 +54,7 @@ public class ClassifyActivity extends ItemActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener,
             ClassifyFragment.Callbacks, QuestionFragment.Callbacks{
     private boolean mIsStateAlreadySaved = false;
+    private boolean mPendingClassificationFinished = false;
     private boolean mPendingWarnAboutNetworkProblemWithRetry = false;
 
     private AlertDialog mAlertDialog = null;
@@ -308,6 +310,13 @@ public class ClassifyActivity extends ItemActivity
 
         mIsStateAlreadySaved = false;
 
+        //See onClassificationFinished().
+        if(mPendingClassificationFinished) {
+            mPendingClassificationFinished = false;
+            doClassificationFinished();
+            return;
+        }
+
         //See warnAboutNetworkProblemWithRetry().
         if(mPendingWarnAboutNetworkProblemWithRetry) {
             mPendingWarnAboutNetworkProblemWithRetry = false;
@@ -365,6 +374,18 @@ public class ClassifyActivity extends ItemActivity
 
     @Override
     public void onClassificationFinished() {
+        // Avoid causing this exception when ClassifyFragment tries to show() an AlertDialog:
+        // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        if(mIsStateAlreadySaved) {
+            //Do it later instead.
+            this.mPendingClassificationFinished = true;
+            return;
+        }
+
+        doClassificationFinished();
+    }
+
+    private void doClassificationFinished() {
         //Suggest registering or logging in after a certain number of classifications,
         //as the web UI does, but don't ask again.
         if (mClassificationsDoneInSession == 3) {
@@ -377,10 +398,6 @@ public class ClassifyActivity extends ItemActivity
         // That's a problem because this method (onClassificationFinished()) can result from an AsyncTask.onPostExecute(),
         // which is generally discouraged:
         // See http://www.androiddesignpatterns.com/2013/08/fragment-transaction-commit-state-loss.html
-        //
-        // We solve that by making the ClassifyFragment ask this parent ClassifyActivity() to
-        // show the dialog at the correct time in the activity/fragment lifecycle:
-        // See warnAboutNetworkProblemWithRetry
         startNextClassification();
     }
 
