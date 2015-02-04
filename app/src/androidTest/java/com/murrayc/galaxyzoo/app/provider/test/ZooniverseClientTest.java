@@ -307,6 +307,9 @@ public class ZooniverseClientTest extends AndroidTestCase {
             sb.append(line).append("\n");
         }
 
+        bufferedReader.close();
+        isr.close();
+
         return sb.toString();
     }
 

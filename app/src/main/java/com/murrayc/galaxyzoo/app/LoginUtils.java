@@ -78,7 +78,8 @@ public final class LoginUtils {
         //A failure by default.
         LoginResult result = new LoginResult(false, null, null);
 
-        final JsonReader reader = new JsonReader(new InputStreamReader(content, Utils.STRING_ENCODING));
+        final InputStreamReader streamReader = new InputStreamReader(content, Utils.STRING_ENCODING);
+        final JsonReader reader = new JsonReader(streamReader);
         reader.beginObject();
         boolean success = false;
         String apiKey = null;
@@ -113,6 +114,8 @@ public final class LoginUtils {
 
         reader.endObject();
         reader.close();
+
+        streamReader.close();
 
         return result;
     }

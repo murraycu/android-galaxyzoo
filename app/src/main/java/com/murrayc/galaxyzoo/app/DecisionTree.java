@@ -113,9 +113,11 @@ public class DecisionTree {
     }
 
     private void loadTranslation(final InputStream inputStreamTranslation) throws IOException {
+        final InputStreamReader streamReader;
         final JsonReader reader;
         try {
-            reader = new JsonReader(new InputStreamReader(inputStreamTranslation, Utils.STRING_ENCODING));
+            streamReader = new InputStreamReader(inputStreamTranslation, Utils.STRING_ENCODING);
+            reader = new JsonReader(streamReader);
             reader.beginObject();
             while (reader.hasNext()) {
                 if (TextUtils.equals(reader.nextName(), "questions")) { //We ignore the "zooniverse" and "quiz_questions" objects
@@ -126,6 +128,7 @@ public class DecisionTree {
             }
             reader.endObject();
             reader.close();
+            streamReader.close();
         } catch (final UnsupportedEncodingException e) {
             //This is very unlikely for UTF-8, so just ignore it.
             Log.error("DecisionTree: UnsupportedEncodingException parsing JSON", e);
