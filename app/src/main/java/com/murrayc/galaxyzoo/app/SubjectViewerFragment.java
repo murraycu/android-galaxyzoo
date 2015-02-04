@@ -121,8 +121,7 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
         if (fragmentSubject == null) {
             fragmentSubject = new SubjectFragment();
             fragmentSubject.setArguments(arguments);
-            final FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.child_fragment_subject, fragmentSubject).commit();
+            fragmentManager.beginTransaction().replace(R.id.child_fragment_subject, fragmentSubject).commit();
         } else {
             //TODO: Is there some more standard method to do this,
             //to trigger the Fragments' onCreate()?
@@ -136,8 +135,7 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
         if (fragmentQuestion == null) {
             fragmentQuestion = new SubjectExtrasFragment();
             fragmentQuestion.setArguments(arguments);
-            final FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.child_fragment_subject_extras, fragmentQuestion).commit();
+            fragmentManager.beginTransaction().replace(R.id.child_fragment_subject_extras, fragmentQuestion).commit();
         } else {
             //TODO: Is there some more standard method to do this,
             //to trigger the Fragments' onCreate()?

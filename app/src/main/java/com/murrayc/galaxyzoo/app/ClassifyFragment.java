@@ -230,8 +230,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         if (fragmentSubject == null) {
             fragmentSubject = new SubjectFragment();
             fragmentSubject.setArguments(arguments);
-            final FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.child_fragment_subject, fragmentSubject).commit();
+            fragmentManager.beginTransaction().replace(R.id.child_fragment_subject, fragmentSubject).commit();
         } else {
             //TODO: Is there some more standard method to do this,
             //to trigger the Fragments' onCreate()?
@@ -245,8 +244,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         if (fragmentQuestion == null) {
             fragmentQuestion = new QuestionFragment();
             fragmentQuestion.setArguments(arguments);
-            final FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.child_fragment_question, fragmentQuestion).commit();
+            fragmentManager.beginTransaction().replace(R.id.child_fragment_question, fragmentQuestion).commit();
         } else {
             //TODO: Is there some more standard method to do this,
             //to trigger the Fragments' onCreate()?
