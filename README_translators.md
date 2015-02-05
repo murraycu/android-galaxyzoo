@@ -26,6 +26,10 @@ Previously these questions were in the Galaxy-Zoo github repository,
 so you might still find clues for your language's translation there:
 For instance:
 https://github.com/zooniverse/Galaxy-Zoo/tree/master/public/locales
+though the most recent translations now seem to be here instead:
+http://www.galaxyzoo.org/locales/LOCALE.json
+For instance:
+http://www.galaxyzoo.org/locales/fr.json
 
 From those files, we use the translations of the "Decision Tree":
 https://github.com/zooniverse/Galaxy-Zoo/blob/master/app/lib/sloan_tree.coffee
