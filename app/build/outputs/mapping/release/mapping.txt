@@ -1771,17 +1771,23 @@ android.support.v4.view.ViewCompatJellybeanMr1 -> android.support.v4.view.bt:
     int getWindowSystemUiVisibility(android.view.View) -> b
 android.support.v4.view.ViewConfigurationCompat -> android.support.v4.view.bu:
     android.support.v4.view.ViewConfigurationCompat$ViewConfigurationVersionImpl IMPL -> a
-    boolean hasPermanentMenuKey(android.view.ViewConfiguration) -> a
+    int getScaledPagingTouchSlop(android.view.ViewConfiguration) -> a
+    boolean hasPermanentMenuKey(android.view.ViewConfiguration) -> b
 android.support.v4.view.ViewConfigurationCompat$BaseViewConfigurationVersionImpl -> android.support.v4.view.bv:
-    boolean hasPermanentMenuKey(android.view.ViewConfiguration) -> a
+    int getScaledPagingTouchSlop(android.view.ViewConfiguration) -> a
+    boolean hasPermanentMenuKey(android.view.ViewConfiguration) -> b
 android.support.v4.view.ViewConfigurationCompat$FroyoViewConfigurationVersionImpl -> android.support.v4.view.bw:
+    int getScaledPagingTouchSlop(android.view.ViewConfiguration) -> a
 android.support.v4.view.ViewConfigurationCompat$HoneycombViewConfigurationVersionImpl -> android.support.v4.view.bx:
-    boolean hasPermanentMenuKey(android.view.ViewConfiguration) -> a
+    boolean hasPermanentMenuKey(android.view.ViewConfiguration) -> b
 android.support.v4.view.ViewConfigurationCompat$IcsViewConfigurationVersionImpl -> android.support.v4.view.by:
-    boolean hasPermanentMenuKey(android.view.ViewConfiguration) -> a
+    boolean hasPermanentMenuKey(android.view.ViewConfiguration) -> b
 android.support.v4.view.ViewConfigurationCompat$ViewConfigurationVersionImpl -> android.support.v4.view.bz:
-    boolean hasPermanentMenuKey(android.view.ViewConfiguration) -> a
-android.support.v4.view.ViewConfigurationCompatICS -> android.support.v4.view.ca:
+    int getScaledPagingTouchSlop(android.view.ViewConfiguration) -> a
+    boolean hasPermanentMenuKey(android.view.ViewConfiguration) -> b
+android.support.v4.view.ViewConfigurationCompatFroyo -> android.support.v4.view.ca:
+    int getScaledPagingTouchSlop(android.view.ViewConfiguration) -> a
+android.support.v4.view.ViewConfigurationCompatICS -> android.support.v4.view.cb:
     boolean hasPermanentMenuKey(android.view.ViewConfiguration) -> a
 android.support.v4.view.ViewPager -> android.support.v4.view.ViewPager:
     int[] LAYOUT_ATTRS -> a
@@ -1920,34 +1926,34 @@ android.support.v4.view.ViewPager -> android.support.v4.view.ViewPager:
     boolean checkLayoutParams(android.view.ViewGroup$LayoutParams) -> checkLayoutParams
     android.view.ViewGroup$LayoutParams generateLayoutParams(android.util.AttributeSet) -> generateLayoutParams
     int[] access$400() -> e
-android.support.v4.view.ViewPager$1 -> android.support.v4.view.cb:
+android.support.v4.view.ViewPager$1 -> android.support.v4.view.cc:
     int compare(android.support.v4.view.ViewPager$ItemInfo,android.support.v4.view.ViewPager$ItemInfo) -> a
     int compare(java.lang.Object,java.lang.Object) -> compare
-android.support.v4.view.ViewPager$2 -> android.support.v4.view.cc:
+android.support.v4.view.ViewPager$2 -> android.support.v4.view.cd:
     float getInterpolation(float) -> getInterpolation
-android.support.v4.view.ViewPager$Decor -> android.support.v4.view.cd:
-android.support.v4.view.ViewPager$ItemInfo -> android.support.v4.view.ce:
+android.support.v4.view.ViewPager$Decor -> android.support.v4.view.ce:
+android.support.v4.view.ViewPager$ItemInfo -> android.support.v4.view.cf:
     java.lang.Object object -> a
     int position -> b
     boolean scrolling -> c
     float widthFactor -> d
     float offset -> e
-android.support.v4.view.ViewPager$LayoutParams -> android.support.v4.view.cf:
+android.support.v4.view.ViewPager$LayoutParams -> android.support.v4.view.cg:
     boolean isDecor -> a
     int gravity -> b
     float widthFactor -> c
     boolean needsMeasure -> d
     int position -> e
     int childIndex -> f
-android.support.v4.view.ViewPager$OnAdapterChangeListener -> android.support.v4.view.cg:
+android.support.v4.view.ViewPager$OnAdapterChangeListener -> android.support.v4.view.ch:
     void onAdapterChanged(android.support.v4.view.PagerAdapter,android.support.v4.view.PagerAdapter) -> a
-android.support.v4.view.ViewPager$OnPageChangeListener -> android.support.v4.view.ch:
+android.support.v4.view.ViewPager$OnPageChangeListener -> android.support.v4.view.ci:
     void onPageScrolled(int,float,int) -> a
     void onPageSelected(int) -> a
     void onPageScrollStateChanged(int) -> b
-android.support.v4.view.ViewPager$PageTransformer -> android.support.v4.view.ci:
+android.support.v4.view.ViewPager$PageTransformer -> android.support.v4.view.cj:
     void transformPage(android.view.View,float) -> a
-android.support.v4.view.ViewPager$PagerObserver -> android.support.v4.view.cj:
+android.support.v4.view.ViewPager$PagerObserver -> android.support.v4.view.ck:
     android.support.v4.view.ViewPager this$0 -> a
     void onChanged() -> onChanged
     void onInvalidated() -> onInvalidated
@@ -1958,15 +1964,15 @@ android.support.v4.view.ViewPager$SavedState -> android.support.v4.view.ViewPage
     android.os.Parcelable$Creator CREATOR -> CREATOR
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
     java.lang.String toString() -> toString
-android.support.v4.view.ViewPager$SavedState$1 -> android.support.v4.view.ck:
+android.support.v4.view.ViewPager$SavedState$1 -> android.support.v4.view.cl:
     android.support.v4.view.ViewPager$SavedState createFromParcel(android.os.Parcel,java.lang.ClassLoader) -> b
     android.support.v4.view.ViewPager$SavedState[] newArray(int) -> b
     java.lang.Object[] newArray(int) -> a
     java.lang.Object createFromParcel(android.os.Parcel,java.lang.ClassLoader) -> a
-android.support.v4.view.ViewPager$ViewPositionComparator -> android.support.v4.view.cl:
+android.support.v4.view.ViewPager$ViewPositionComparator -> android.support.v4.view.cm:
     int compare(android.view.View,android.view.View) -> a
     int compare(java.lang.Object,java.lang.Object) -> compare
-android.support.v4.view.ViewPropertyAnimatorCompat -> android.support.v4.view.cm:
+android.support.v4.view.ViewPropertyAnimatorCompat -> android.support.v4.view.cn:
     java.lang.ref.WeakReference mView -> b
     java.lang.Runnable mStartAction -> c
     java.lang.Runnable mEndAction -> d
@@ -1986,8 +1992,8 @@ android.support.v4.view.ViewPropertyAnimatorCompat -> android.support.v4.view.cm
     java.lang.Runnable access$000(android.support.v4.view.ViewPropertyAnimatorCompat) -> b
     int access$402(android.support.v4.view.ViewPropertyAnimatorCompat,int) -> a
     int access$400(android.support.v4.view.ViewPropertyAnimatorCompat) -> c
-android.support.v4.view.ViewPropertyAnimatorCompat$1 -> android.support.v4.view.cn:
-android.support.v4.view.ViewPropertyAnimatorCompat$BaseViewPropertyAnimatorCompatImpl -> android.support.v4.view.co:
+android.support.v4.view.ViewPropertyAnimatorCompat$1 -> android.support.v4.view.co:
+android.support.v4.view.ViewPropertyAnimatorCompat$BaseViewPropertyAnimatorCompatImpl -> android.support.v4.view.cp:
     java.util.WeakHashMap mStarterMap -> a
     void setDuration(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,long) -> a
     void alpha(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> a
@@ -2003,12 +2009,12 @@ android.support.v4.view.ViewPropertyAnimatorCompat$BaseViewPropertyAnimatorCompa
     void removeStartMessage(android.view.View) -> a
     void postStartMessage(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> d
     void access$200(android.support.v4.view.ViewPropertyAnimatorCompat$BaseViewPropertyAnimatorCompatImpl,android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> a
-android.support.v4.view.ViewPropertyAnimatorCompat$BaseViewPropertyAnimatorCompatImpl$Starter -> android.support.v4.view.cp:
+android.support.v4.view.ViewPropertyAnimatorCompat$BaseViewPropertyAnimatorCompatImpl$Starter -> android.support.v4.view.cq:
     java.lang.ref.WeakReference mViewRef -> a
     android.support.v4.view.ViewPropertyAnimatorCompat mVpa -> b
     android.support.v4.view.ViewPropertyAnimatorCompat$BaseViewPropertyAnimatorCompatImpl this$0 -> c
     void run() -> run
-android.support.v4.view.ViewPropertyAnimatorCompat$ICSViewPropertyAnimatorCompatImpl -> android.support.v4.view.cq:
+android.support.v4.view.ViewPropertyAnimatorCompat$ICSViewPropertyAnimatorCompatImpl -> android.support.v4.view.cr:
     java.util.WeakHashMap mLayerMap -> b
     void setDuration(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,long) -> a
     void alpha(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> a
@@ -2019,17 +2025,17 @@ android.support.v4.view.ViewPropertyAnimatorCompat$ICSViewPropertyAnimatorCompat
     void cancel(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> a
     void start(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> b
     void setListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorListener) -> a
-android.support.v4.view.ViewPropertyAnimatorCompat$ICSViewPropertyAnimatorCompatImpl$MyVpaListener -> android.support.v4.view.cr:
+android.support.v4.view.ViewPropertyAnimatorCompat$ICSViewPropertyAnimatorCompatImpl$MyVpaListener -> android.support.v4.view.cs:
     android.support.v4.view.ViewPropertyAnimatorCompat mVpa -> a
     void onAnimationStart(android.view.View) -> a
     void onAnimationEnd(android.view.View) -> b
     void onAnimationCancel(android.view.View) -> c
-android.support.v4.view.ViewPropertyAnimatorCompat$JBMr2ViewPropertyAnimatorCompatImpl -> android.support.v4.view.cs:
-android.support.v4.view.ViewPropertyAnimatorCompat$JBViewPropertyAnimatorCompatImpl -> android.support.v4.view.ct:
+android.support.v4.view.ViewPropertyAnimatorCompat$JBMr2ViewPropertyAnimatorCompatImpl -> android.support.v4.view.ct:
+android.support.v4.view.ViewPropertyAnimatorCompat$JBViewPropertyAnimatorCompatImpl -> android.support.v4.view.cu:
     void setListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorListener) -> a
-android.support.v4.view.ViewPropertyAnimatorCompat$KitKatViewPropertyAnimatorCompatImpl -> android.support.v4.view.cu:
+android.support.v4.view.ViewPropertyAnimatorCompat$KitKatViewPropertyAnimatorCompatImpl -> android.support.v4.view.cv:
     void setUpdateListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorUpdateListener) -> a
-android.support.v4.view.ViewPropertyAnimatorCompat$ViewPropertyAnimatorCompatImpl -> android.support.v4.view.cv:
+android.support.v4.view.ViewPropertyAnimatorCompat$ViewPropertyAnimatorCompatImpl -> android.support.v4.view.cw:
     void setDuration(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,long) -> a
     void setInterpolator(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.view.animation.Interpolator) -> a
     void alpha(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> a
@@ -2040,7 +2046,7 @@ android.support.v4.view.ViewPropertyAnimatorCompat$ViewPropertyAnimatorCompatImp
     void start(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> b
     void setListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorListener) -> a
     void setUpdateListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorUpdateListener) -> a
-android.support.v4.view.ViewPropertyAnimatorCompatICS -> android.support.v4.view.cw:
+android.support.v4.view.ViewPropertyAnimatorCompatICS -> android.support.v4.view.cx:
     void setDuration(android.view.View,long) -> a
     void alpha(android.view.View,float) -> a
     void translationX(android.view.View,float) -> b
@@ -2050,43 +2056,43 @@ android.support.v4.view.ViewPropertyAnimatorCompatICS -> android.support.v4.view
     void cancel(android.view.View) -> a
     void start(android.view.View) -> b
     void setListener(android.view.View,android.support.v4.view.ViewPropertyAnimatorListener) -> a
-android.support.v4.view.ViewPropertyAnimatorCompatICS$1 -> android.support.v4.view.cx:
+android.support.v4.view.ViewPropertyAnimatorCompatICS$1 -> android.support.v4.view.cy:
     android.support.v4.view.ViewPropertyAnimatorListener val$listener -> a
     android.view.View val$view -> b
     void onAnimationCancel(android.animation.Animator) -> onAnimationCancel
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
     void onAnimationStart(android.animation.Animator) -> onAnimationStart
-android.support.v4.view.ViewPropertyAnimatorCompatJB -> android.support.v4.view.cy:
+android.support.v4.view.ViewPropertyAnimatorCompatJB -> android.support.v4.view.cz:
     void setListener(android.view.View,android.support.v4.view.ViewPropertyAnimatorListener) -> a
-android.support.v4.view.ViewPropertyAnimatorCompatJB$1 -> android.support.v4.view.cz:
+android.support.v4.view.ViewPropertyAnimatorCompatJB$1 -> android.support.v4.view.da:
     android.support.v4.view.ViewPropertyAnimatorListener val$listener -> a
     android.view.View val$view -> b
     void onAnimationCancel(android.animation.Animator) -> onAnimationCancel
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
     void onAnimationStart(android.animation.Animator) -> onAnimationStart
-android.support.v4.view.ViewPropertyAnimatorCompatKK -> android.support.v4.view.da:
+android.support.v4.view.ViewPropertyAnimatorCompatKK -> android.support.v4.view.db:
     void setUpdateListener(android.view.View,android.support.v4.view.ViewPropertyAnimatorUpdateListener) -> a
-android.support.v4.view.ViewPropertyAnimatorCompatKK$1 -> android.support.v4.view.db:
+android.support.v4.view.ViewPropertyAnimatorCompatKK$1 -> android.support.v4.view.dc:
     android.support.v4.view.ViewPropertyAnimatorUpdateListener val$listener -> a
     android.view.View val$view -> b
     void onAnimationUpdate(android.animation.ValueAnimator) -> onAnimationUpdate
-android.support.v4.view.ViewPropertyAnimatorListener -> android.support.v4.view.dc:
+android.support.v4.view.ViewPropertyAnimatorListener -> android.support.v4.view.dd:
     void onAnimationStart(android.view.View) -> a
     void onAnimationEnd(android.view.View) -> b
     void onAnimationCancel(android.view.View) -> c
-android.support.v4.view.ViewPropertyAnimatorListenerAdapter -> android.support.v4.view.dd:
+android.support.v4.view.ViewPropertyAnimatorListenerAdapter -> android.support.v4.view.de:
     void onAnimationStart(android.view.View) -> a
     void onAnimationEnd(android.view.View) -> b
     void onAnimationCancel(android.view.View) -> c
-android.support.v4.view.ViewPropertyAnimatorUpdateListener -> android.support.v4.view.de:
+android.support.v4.view.ViewPropertyAnimatorUpdateListener -> android.support.v4.view.df:
     void onAnimationUpdate(android.view.View) -> a
-android.support.v4.view.WindowInsetsCompat -> android.support.v4.view.df:
+android.support.v4.view.WindowInsetsCompat -> android.support.v4.view.dg:
     int getSystemWindowInsetLeft() -> a
     int getSystemWindowInsetTop() -> b
     int getSystemWindowInsetRight() -> c
     int getSystemWindowInsetBottom() -> d
     android.support.v4.view.WindowInsetsCompat replaceSystemWindowInsets(int,int,int,int) -> a
-android.support.v4.view.WindowInsetsCompatApi21 -> android.support.v4.view.dg:
+android.support.v4.view.WindowInsetsCompatApi21 -> android.support.v4.view.dh:
     android.view.WindowInsets mSource -> a
     int getSystemWindowInsetLeft() -> a
     int getSystemWindowInsetTop() -> b
@@ -6847,6 +6853,7 @@ android.support.v7.widget.RecyclerView -> android.support.v7.widget.RecyclerView
     void initAdapterManager() -> a
     void setHasFixedSize(boolean) -> setHasFixedSize
     void setClipToPadding(boolean) -> setClipToPadding
+    void setScrollingTouchSlop(int) -> setScrollingTouchSlop
     void setAdapter(android.support.v7.widget.RecyclerView$Adapter) -> setAdapter
     void setAdapterInternal(android.support.v7.widget.RecyclerView$Adapter,boolean,boolean) -> a
     android.support.v7.widget.RecyclerView$Adapter getAdapter() -> getAdapter
@@ -6854,8 +6861,8 @@ android.support.v7.widget.RecyclerView -> android.support.v7.widget.RecyclerView
     void setLayoutManager(android.support.v7.widget.RecyclerView$LayoutManager) -> setLayoutManager
     android.os.Parcelable onSaveInstanceState() -> onSaveInstanceState
     void onRestoreInstanceState(android.os.Parcelable) -> onRestoreInstanceState
-    void addAnimatingView(android.view.View) -> g
-    void removeAnimatingView(android.view.View) -> h
+    void addAnimatingView(android.support.v7.widget.RecyclerView$ViewHolder) -> b
+    boolean removeAnimatingView(android.view.View) -> g
     android.support.v7.widget.RecyclerView$LayoutManager getLayoutManager() -> getLayoutManager
     android.support.v7.widget.RecyclerView$RecycledViewPool getRecycledViewPool() -> getRecycledViewPool
     void setRecycledViewPool(android.support.v7.widget.RecyclerView$RecycledViewPool) -> setRecycledViewPool
@@ -6911,6 +6918,7 @@ android.support.v7.widget.RecyclerView -> android.support.v7.widget.RecyclerView
     boolean predictiveItemAnimationsEnabled() -> x
     void processAdapterUpdatesAndSetAnimationFlags() -> y
     void dispatchLayout() -> i
+    void removeDetachedView(android.view.View,boolean) -> removeDetachedView
     long getChangedHolderKey(android.support.v7.widget.RecyclerView$ViewHolder) -> a
     void processDisappearingList(android.support.v4.util.ArrayMap) -> a
     void animateAppearance(android.support.v7.widget.RecyclerView$ViewHolder,android.graphics.Rect,int,int) -> a
@@ -6942,10 +6950,10 @@ android.support.v7.widget.RecyclerView -> android.support.v7.widget.RecyclerView
     void onChildDetachedFromWindow(android.view.View) -> e
     void offsetChildrenHorizontal(int) -> b
     android.graphics.Rect getItemDecorInsetsForChild(android.view.View) -> f
-    void dispatchChildDetached(android.view.View) -> i
-    void dispatchChildAttached(android.view.View) -> j
-    void removeFromDisappearingList(android.view.View) -> k
-    void addToDisappearingList(android.view.View) -> l
+    void dispatchChildDetached(android.view.View) -> h
+    void dispatchChildAttached(android.view.View) -> i
+    void removeFromDisappearingList(android.view.View) -> j
+    void addToDisappearingList(android.view.View) -> k
     boolean access$100(android.support.v7.widget.RecyclerView) -> a
     boolean access$200(android.support.v7.widget.RecyclerView) -> b
     boolean access$300(android.support.v7.widget.RecyclerView) -> c
@@ -6967,19 +6975,16 @@ android.support.v7.widget.RecyclerView -> android.support.v7.widget.RecyclerView
     boolean access$3000(android.support.v7.widget.RecyclerView) -> j
     void access$3100(android.support.v7.widget.RecyclerView,int) -> b
     boolean access$202(android.support.v7.widget.RecyclerView,boolean) -> c
-    void access$3700(android.support.v7.widget.RecyclerView,android.view.View,boolean) -> a
-    boolean access$3800() -> p
-    android.view.accessibility.AccessibilityManager access$3900(android.support.v7.widget.RecyclerView) -> k
-    android.support.v7.widget.RecyclerViewAccessibilityDelegate access$4000(android.support.v7.widget.RecyclerView) -> l
-    void access$4200(android.support.v7.widget.RecyclerView,android.view.View,boolean) -> b
-    android.support.v7.widget.RecyclerView$RecyclerListener access$4300(android.support.v7.widget.RecyclerView) -> m
-    void access$4500(android.support.v7.widget.RecyclerView,android.view.View) -> c
-    void access$4600(android.support.v7.widget.RecyclerView,android.view.View) -> d
-    void access$4800(android.support.v7.widget.RecyclerView,android.view.View,boolean) -> c
-    void access$4900(android.support.v7.widget.RecyclerView,int,int) -> b
-    android.support.v7.widget.RecyclerView$ViewFlinger access$5100(android.support.v7.widget.RecyclerView) -> n
-    void access$5400(android.support.v7.widget.RecyclerView,android.view.View) -> e
-    void access$5500(android.support.v7.widget.RecyclerView,android.view.View,boolean) -> d
+    boolean access$3700() -> p
+    android.view.accessibility.AccessibilityManager access$3800(android.support.v7.widget.RecyclerView) -> k
+    android.support.v7.widget.RecyclerViewAccessibilityDelegate access$3900(android.support.v7.widget.RecyclerView) -> l
+    android.support.v7.widget.RecyclerView$RecyclerListener access$4100(android.support.v7.widget.RecyclerView) -> m
+    void access$4300(android.support.v7.widget.RecyclerView,android.view.View) -> c
+    void access$4400(android.support.v7.widget.RecyclerView,android.view.View) -> d
+    boolean access$2300(android.support.v7.widget.RecyclerView) -> n
+    void access$4500(android.support.v7.widget.RecyclerView,int,int) -> b
+    android.support.v7.widget.RecyclerView$ViewFlinger access$4700(android.support.v7.widget.RecyclerView) -> o
+    boolean access$5000(android.support.v7.widget.RecyclerView,android.view.View) -> e
 android.support.v7.widget.RecyclerView$1 -> android.support.v7.widget.bj:
     android.support.v7.widget.RecyclerView this$0 -> a
     void run() -> run
@@ -7026,6 +7031,8 @@ android.support.v7.widget.RecyclerView$Adapter -> android.support.v7.widget.bo:
     void onViewDetachedFromWindow(android.support.v7.widget.RecyclerView$ViewHolder) -> c
     void registerAdapterDataObserver(android.support.v7.widget.RecyclerView$AdapterDataObserver) -> a
     void unregisterAdapterDataObserver(android.support.v7.widget.RecyclerView$AdapterDataObserver) -> b
+    void onAttachedToRecyclerView(android.support.v7.widget.RecyclerView) -> a
+    void onDetachedFromRecyclerView(android.support.v7.widget.RecyclerView) -> b
     void notifyDataSetChanged() -> c
 android.support.v7.widget.RecyclerView$AdapterDataObservable -> android.support.v7.widget.bp:
     void notifyChanged() -> a
@@ -7148,7 +7155,7 @@ android.support.v7.widget.RecyclerView$LayoutManager -> android.support.v7.widge
     void offsetChildrenVertical(int) -> h
     void detachAndScrapAttachedViews(android.support.v7.widget.RecyclerView$Recycler) -> a
     void scrapOrRecycleView(android.support.v7.widget.RecyclerView$Recycler,int,android.view.View) -> a
-    void removeAndRecycleScrapInt(android.support.v7.widget.RecyclerView$Recycler,boolean) -> a
+    void removeAndRecycleScrapInt(android.support.v7.widget.RecyclerView$Recycler) -> b
     void measureChildWithMargins(android.view.View,int,int) -> a
     int getChildMeasureSpec(int,int,int,boolean) -> a
     int getDecoratedMeasuredWidth(android.view.View) -> e
@@ -7190,7 +7197,7 @@ android.support.v7.widget.RecyclerView$LayoutManager -> android.support.v7.widge
     void stopSmoothScroller() -> x
     void onSmoothScrollerStopped(android.support.v7.widget.RecyclerView$SmoothScroller) -> a
     void onScrollStateChanged(int) -> i
-    void removeAndRecycleAllViews(android.support.v7.widget.RecyclerView$Recycler) -> b
+    void removeAndRecycleAllViews(android.support.v7.widget.RecyclerView$Recycler) -> c
     void onInitializeAccessibilityNodeInfo(android.support.v4.view.accessibility.AccessibilityNodeInfoCompat) -> a
     void onInitializeAccessibilityNodeInfo(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,android.support.v4.view.accessibility.AccessibilityNodeInfoCompat) -> a
     void onInitializeAccessibilityEvent(android.view.accessibility.AccessibilityEvent) -> a
@@ -7208,7 +7215,7 @@ android.support.v7.widget.RecyclerView$LayoutManager -> android.support.v7.widge
     boolean performAccessibilityActionForItem(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,android.view.View,int,android.os.Bundle) -> a
     boolean access$1700(android.support.v7.widget.RecyclerView$LayoutManager) -> a
     boolean access$1702(android.support.v7.widget.RecyclerView$LayoutManager,boolean) -> a
-    void access$5200(android.support.v7.widget.RecyclerView$LayoutManager,android.support.v7.widget.RecyclerView$SmoothScroller) -> a
+    void access$4800(android.support.v7.widget.RecyclerView$LayoutManager,android.support.v7.widget.RecyclerView$SmoothScroller) -> a
 android.support.v7.widget.RecyclerView$LayoutParams -> android.support.v7.widget.by:
     android.support.v7.widget.RecyclerView$ViewHolder mViewHolder -> a
     android.graphics.Rect mDecorInsets -> b
@@ -7324,7 +7331,7 @@ android.support.v7.widget.RecyclerView$SmoothScroller$Action -> android.support.
     int consecutiveUpdates -> f
     void runIfNecessary(android.support.v7.widget.RecyclerView) -> a
     void validate() -> a
-    void access$5300(android.support.v7.widget.RecyclerView$SmoothScroller$Action,android.support.v7.widget.RecyclerView) -> a
+    void access$4900(android.support.v7.widget.RecyclerView$SmoothScroller$Action,android.support.v7.widget.RecyclerView) -> a
 android.support.v7.widget.RecyclerView$State -> android.support.v7.widget.ci:
     int mTargetPosition -> e
     android.support.v4.util.ArrayMap mPreLayoutHolderMap -> a
@@ -7357,7 +7364,7 @@ android.support.v7.widget.RecyclerView$State -> android.support.v7.widget.ci:
     int access$1002(android.support.v7.widget.RecyclerView$State,int) -> b
     int access$1902(android.support.v7.widget.RecyclerView$State,int) -> c
     boolean access$1500(android.support.v7.widget.RecyclerView$State) -> d
-    int access$5002(android.support.v7.widget.RecyclerView$State,int) -> d
+    int access$4602(android.support.v7.widget.RecyclerView$State,int) -> d
 android.support.v7.widget.RecyclerView$ViewCacheExtension -> android.support.v7.widget.cj:
     android.view.View getViewForPositionAndType(android.support.v7.widget.RecyclerView$Recycler,int,int) -> a
 android.support.v7.widget.RecyclerView$ViewFlinger -> android.support.v7.widget.ck:
@@ -7404,20 +7411,22 @@ android.support.v7.widget.RecyclerView$ViewHolder -> android.support.v7.widget.c
     void unScrap() -> h
     boolean wasReturnedFromScrap() -> i
     void clearReturnedFromScrapFlag() -> j
+    void clearTmpDetachFlag() -> k
     void setScrapContainer(android.support.v7.widget.RecyclerView$Recycler) -> a
-    boolean isInvalid() -> k
-    boolean needsUpdate() -> l
-    boolean isChanged() -> m
-    boolean isBound() -> n
-    boolean isRemoved() -> o
+    boolean isInvalid() -> l
+    boolean needsUpdate() -> m
+    boolean isChanged() -> n
+    boolean isBound() -> o
+    boolean isRemoved() -> p
+    boolean isTmpDetached() -> q
     void setFlags(int,int) -> a
     void addFlags(int) -> a
-    void resetInternal() -> p
+    void resetInternal() -> r
     java.lang.String toString() -> toString
     void setIsRecyclable(boolean) -> a
-    boolean isRecyclable() -> q
-    android.support.v7.widget.RecyclerView$Recycler access$4102(android.support.v7.widget.RecyclerView$ViewHolder,android.support.v7.widget.RecyclerView$Recycler) -> a
-    int access$5600(android.support.v7.widget.RecyclerView$ViewHolder) -> a
+    boolean isRecyclable() -> s
+    android.support.v7.widget.RecyclerView$Recycler access$4002(android.support.v7.widget.RecyclerView$ViewHolder,android.support.v7.widget.RecyclerView$Recycler) -> a
+    int access$5100(android.support.v7.widget.RecyclerView$ViewHolder) -> a
 android.support.v7.widget.RecyclerViewAccessibilityDelegate -> android.support.v7.widget.cm:
     android.support.v7.widget.RecyclerView mRecyclerView -> b
     android.support.v4.view.AccessibilityDelegateCompat mItemDelegate -> c
@@ -7680,8 +7689,7 @@ android.support.v7.widget.StaggeredGridLayoutManager$LayoutParams -> android.sup
     int getSpanIndex() -> a
 android.support.v7.widget.StaggeredGridLayoutManager$LazySpanLookup -> android.support.v7.widget.StaggeredGridLayoutManager$LazySpanLookup:
     int[] mData -> a
-    int mAdapterSize -> b
-    java.util.List mFullSpanItems -> c
+    java.util.List mFullSpanItems -> b
     int forceInvalidateAfter(int) -> a
     int invalidateAfter(int) -> b
     int getSpan(int) -> c
@@ -8302,6 +8310,7 @@ com.android.volley.toolbox.StringRequest -> com.a.a.a.p:
     com.android.volley.Response parseNetworkResponse(com.android.volley.NetworkResponse) -> a
     void deliverResponse(java.lang.Object) -> a
 com.android.volley.toolbox.Volley -> com.a.a.a.q:
+    com.android.volley.RequestQueue newRequestQueue(android.content.Context,com.android.volley.toolbox.HttpStack,int) -> a
     com.android.volley.RequestQueue newRequestQueue(android.content.Context,com.android.volley.toolbox.HttpStack) -> a
     com.android.volley.RequestQueue newRequestQueue(android.content.Context) -> a
 com.murrayc.galaxyzoo.app.BaseActivity -> com.murrayc.galaxyzoo.app.a:
@@ -8316,9 +8325,10 @@ com.murrayc.galaxyzoo.app.BaseQuestionFragment -> com.murrayc.galaxyzoo.app.b:
     android.graphics.drawable.BitmapDrawable getIcon(android.content.Context,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton) -> a
 com.murrayc.galaxyzoo.app.ClassifyActivity -> com.murrayc.galaxyzoo.app.ClassifyActivity:
     boolean mIsStateAlreadySaved -> n
-    boolean mPendingWarnAboutNetworkProblemWithRetry -> o
-    android.app.AlertDialog mAlertDialog -> p
-    int mClassificationsDoneInSession -> q
+    boolean mPendingClassificationFinished -> o
+    boolean mPendingWarnAboutNetworkProblemWithRetry -> p
+    android.app.AlertDialog mAlertDialog -> q
+    int mClassificationsDoneInSession -> r
     void requestSync() -> o
     void onCreate(android.os.Bundle) -> onCreate
     void onPause() -> onPause
@@ -8326,14 +8336,15 @@ com.murrayc.galaxyzoo.app.ClassifyActivity -> com.murrayc.galaxyzoo.app.Classify
     void onExistingLoginRetrieved(com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails) -> a
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     void onClassificationFinished() -> k
-    void checkForLoginAsync() -> p
-    void startNextClassification() -> q
-    com.murrayc.galaxyzoo.app.ClassifyFragment getChildFragment() -> r
+    void doClassificationFinished() -> p
+    void checkForLoginAsync() -> q
+    void startNextClassification() -> r
+    com.murrayc.galaxyzoo.app.ClassifyFragment getChildFragment() -> s
     void abandonItem() -> l
     void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
     void warnAboutNetworkProblemWithRetry() -> m
-    void doWarnAboutNetworkProblemWithRetry() -> s
-    void onClickListenerRetry() -> t
+    void doWarnAboutNetworkProblemWithRetry() -> t
+    void onClickListenerRetry() -> u
     void access$000(com.murrayc.galaxyzoo.app.ClassifyActivity,com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails) -> a
     void access$100(com.murrayc.galaxyzoo.app.ClassifyActivity) -> a
     android.app.AlertDialog access$202(com.murrayc.galaxyzoo.app.ClassifyActivity,android.app.AlertDialog) -> a
@@ -8817,13 +8828,13 @@ com.murrayc.galaxyzoo.app.QuestionLinearLayout -> com.murrayc.galaxyzoo.app.Ques
 com.murrayc.galaxyzoo.app.SettingsActivity -> com.murrayc.galaxyzoo.app.SettingsActivity:
     void onCreate(android.os.Bundle) -> onCreate
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.SettingsFragment -> com.murrayc.galaxyzoo.app.bd:
+com.murrayc.galaxyzoo.app.SettingsFragment -> com.murrayc.galaxyzoo.app.SettingsFragment:
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void onPause() -> onPause
     void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
     void showUserDescriptionAsSummary(android.preference.Preference) -> a
-com.murrayc.galaxyzoo.app.Singleton -> com.murrayc.galaxyzoo.app.be:
+com.murrayc.galaxyzoo.app.Singleton -> com.murrayc.galaxyzoo.app.bd:
     java.util.List mCallbacks -> a
     com.murrayc.galaxyzoo.app.Singleton ourInstance -> b
     boolean initializationInProgress -> c
@@ -8841,20 +8852,20 @@ com.murrayc.galaxyzoo.app.Singleton -> com.murrayc.galaxyzoo.app.be:
     boolean localeIsDifferent(android.content.Context) -> a
     com.murrayc.galaxyzoo.app.Singleton access$202(com.murrayc.galaxyzoo.app.Singleton) -> a
     void access$400() -> c
-com.murrayc.galaxyzoo.app.Singleton$1 -> com.murrayc.galaxyzoo.app.bf:
-com.murrayc.galaxyzoo.app.Singleton$Callbacks -> com.murrayc.galaxyzoo.app.bg:
+com.murrayc.galaxyzoo.app.Singleton$1 -> com.murrayc.galaxyzoo.app.be:
+com.murrayc.galaxyzoo.app.Singleton$Callbacks -> com.murrayc.galaxyzoo.app.bf:
     void onInitialized() -> a
-com.murrayc.galaxyzoo.app.Singleton$InitAsyncTask -> com.murrayc.galaxyzoo.app.bh:
+com.murrayc.galaxyzoo.app.Singleton$InitAsyncTask -> com.murrayc.galaxyzoo.app.bg:
     java.lang.Void doInBackground(android.content.Context[]) -> a
     void onPostExecute(java.lang.Void) -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.murrayc.galaxyzoo.app.Singleton$LocaleDetails -> com.murrayc.galaxyzoo.app.bi:
+com.murrayc.galaxyzoo.app.Singleton$LocaleDetails -> com.murrayc.galaxyzoo.app.bh:
     java.lang.String language -> a
     java.lang.String countryCode -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.murrayc.galaxyzoo.app.SubjectExtrasFragment -> com.murrayc.galaxyzoo.app.bj:
+com.murrayc.galaxyzoo.app.SubjectExtrasFragment -> com.murrayc.galaxyzoo.app.bi:
     java.lang.String[] mColumns -> ab
     android.database.Cursor mCursor -> ac
     java.lang.String mZooniverseId -> ad
@@ -8878,13 +8889,13 @@ com.murrayc.galaxyzoo.app.SubjectExtrasFragment -> com.murrayc.galaxyzoo.app.bj:
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.SubjectExtrasFragment) -> a
     void access$100(com.murrayc.galaxyzoo.app.SubjectExtrasFragment) -> b
-com.murrayc.galaxyzoo.app.SubjectExtrasFragment$1 -> com.murrayc.galaxyzoo.app.bk:
+com.murrayc.galaxyzoo.app.SubjectExtrasFragment$1 -> com.murrayc.galaxyzoo.app.bj:
     com.murrayc.galaxyzoo.app.SubjectExtrasFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.SubjectExtrasFragment$2 -> com.murrayc.galaxyzoo.app.bl:
+com.murrayc.galaxyzoo.app.SubjectExtrasFragment$2 -> com.murrayc.galaxyzoo.app.bk:
     com.murrayc.galaxyzoo.app.SubjectExtrasFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.SubjectFragment -> com.murrayc.galaxyzoo.app.bm:
+com.murrayc.galaxyzoo.app.SubjectFragment -> com.murrayc.galaxyzoo.app.bl:
     java.lang.String[] mColumns -> ab
     android.database.Cursor mCursor -> ac
     android.view.View mRootView -> ad
@@ -8910,17 +8921,17 @@ com.murrayc.galaxyzoo.app.SubjectFragment -> com.murrayc.galaxyzoo.app.bm:
     void onPause() -> m
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.SubjectFragment) -> a
-com.murrayc.galaxyzoo.app.SubjectFragment$1 -> com.murrayc.galaxyzoo.app.bn:
+com.murrayc.galaxyzoo.app.SubjectFragment$1 -> com.murrayc.galaxyzoo.app.bm:
     com.murrayc.galaxyzoo.app.SubjectFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.SubjectFragment$2 -> com.murrayc.galaxyzoo.app.bo:
+com.murrayc.galaxyzoo.app.SubjectFragment$2 -> com.murrayc.galaxyzoo.app.bn:
     com.murrayc.galaxyzoo.app.SubjectFragment this$0 -> a
     void onSuccess() -> a
     void onError() -> b
 com.murrayc.galaxyzoo.app.SubjectViewerActivity -> com.murrayc.galaxyzoo.app.SubjectViewerActivity:
     void onCreate(android.os.Bundle) -> onCreate
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.SubjectViewerFragment -> com.murrayc.galaxyzoo.app.bp:
+com.murrayc.galaxyzoo.app.SubjectViewerFragment -> com.murrayc.galaxyzoo.app.bo:
     java.lang.String[] mColumns -> ab
     android.database.Cursor mCursor -> ac
     android.view.View mLoadingView -> ad
@@ -8937,7 +8948,7 @@ com.murrayc.galaxyzoo.app.SubjectViewerFragment -> com.murrayc.galaxyzoo.app.bp:
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> a
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
-com.murrayc.galaxyzoo.app.UiUtils -> com.murrayc.galaxyzoo.app.bq:
+com.murrayc.galaxyzoo.app.UiUtils -> com.murrayc.galaxyzoo.app.bp:
     void openDiscussionPage(android.content.Context,java.lang.String) -> a
     void showLoggedInToast(android.content.Context) -> a
     int getPxForDpResource(android.content.Context,int) -> a
@@ -8949,7 +8960,7 @@ com.murrayc.galaxyzoo.app.UiUtils -> com.murrayc.galaxyzoo.app.bq:
     void warnAboutNoWifiNetworkConnection(android.app.Activity) -> c
     boolean warnAboutMissingNetwork(android.app.Activity) -> a
     boolean warnAboutMissingNetwork(android.app.Activity,boolean) -> a
-com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.br:
+com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.bq:
     boolean getUseWifiOnlyFromSharedPrefs(android.content.Context) -> a
     boolean getShowDiscussQuestionFromSharedPrefs(android.content.Context) -> b
     android.content.SharedPreferences getPreferences(android.content.Context) -> c
@@ -8959,16 +8970,16 @@ com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.br:
     void abandonItem(android.content.Context,java.lang.String) -> b
     android.net.Uri getItemUri(java.lang.String) -> a
     void initDefaultPrefs(android.content.Context) -> e
-com.murrayc.galaxyzoo.app.Utils$NetworkConnected -> com.murrayc.galaxyzoo.app.bs:
+com.murrayc.galaxyzoo.app.Utils$NetworkConnected -> com.murrayc.galaxyzoo.app.br:
     boolean connected -> a
     boolean notConnectedBecauseNotOnWifi -> b
-com.murrayc.galaxyzoo.app.ZooAccountAuthenticatorActivity -> com.murrayc.galaxyzoo.app.bt:
+com.murrayc.galaxyzoo.app.ZooAccountAuthenticatorActivity -> com.murrayc.galaxyzoo.app.bs:
     android.accounts.AccountAuthenticatorResponse mAccountAuthenticatorResponse -> n
     android.os.Bundle mResultBundle -> o
     void setAccountAuthenticatorResult(android.os.Bundle) -> a
     void onCreate(android.os.Bundle) -> onCreate
     void finish() -> finish
-com.murrayc.galaxyzoo.app.ZooFragment -> com.murrayc.galaxyzoo.app.bu:
+com.murrayc.galaxyzoo.app.ZooFragment -> com.murrayc.galaxyzoo.app.bt:
     boolean onOptionsItemSelected(android.view.MenuItem) -> a
     void requestLogin() -> R
     void showAbout() -> S
