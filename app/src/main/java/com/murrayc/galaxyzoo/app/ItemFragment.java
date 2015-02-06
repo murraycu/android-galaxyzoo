@@ -183,6 +183,8 @@ public class ItemFragment extends ZooFragment {
     }
 
     void abandonItem() {
+        Log.error("ItemFragment.abandonItem(): Abandoning item with itemId=" + getItemId());
+
         Utils.abandonItem(getActivity(), getItemId());
         mCallbacks.abandonItem();
     }

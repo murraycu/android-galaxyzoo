@@ -421,6 +421,8 @@ public class ClassifyActivity extends ItemActivity
 
     @Override
     public void abandonItem() {
+        Log.error("ClassifyActivity(): Abandoning item with itemId=" + getItemId());
+
         startNextClassification();
     }
 

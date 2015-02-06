@@ -66,5 +66,6 @@ public class ItemActivity extends BaseActivity implements ItemFragment.Callbacks
     @Override
     public void abandonItem() {
        //Overriden in ClassifyActivity().
+       Log.error("ItemActivity(): Abandoning item with itemId=" + getItemId());
     }
 }

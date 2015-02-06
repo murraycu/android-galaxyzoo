@@ -145,6 +145,8 @@ public final class Utils {
     }
 
     public static void abandonItem(final Context context, final String itemId) {
+        Log.info("abandonItem(): Abandoning item with itemId=" + itemId);
+
         final Uri itemUri = ContentUris.withAppendedId(
                 Item.ITEMS_URI, Integer.parseInt(itemId));
 

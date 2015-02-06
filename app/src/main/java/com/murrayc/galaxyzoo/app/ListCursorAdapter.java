@@ -145,12 +145,12 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
                 return;
             }
 
+            Log.error("ListCursorAdaptor.onBindViewHolder.onError(): Abandoning item with itemId=" + itemId);
+
             //Something was wrong with the (cached) image,
             //so just abandon this whole item.
             //That seems safer and simpler than trying to recover just one of the 3 images.
             Utils.abandonItem(context, itemId);
-
-            Log.error("ListCursorAdaptor.onBindViewHolder.onError().");
         }
     }
 

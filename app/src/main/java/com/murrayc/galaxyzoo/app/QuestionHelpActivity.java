@@ -107,5 +107,6 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
 
     @Override
     public void abandonItem() {
+        Log.error("QuestionHelpActivity(): Abandoning item.");
     }
 }
