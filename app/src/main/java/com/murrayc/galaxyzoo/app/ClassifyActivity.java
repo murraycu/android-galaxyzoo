@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -37,6 +38,7 @@ import android.view.MenuItem;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
+import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 
@@ -206,6 +208,16 @@ public class ClassifyActivity extends ItemActivity
             //so ignore this.
             Log.info("ClassifyActivity.onCreate(): Ignoring UnsupportedOperationException from getDefaultSharedPreferences().");
         }
+
+        //Let us log errors from Picasso to give us some clues when things go wrong.
+        //Unfortunately, we can't get these errors in the regular onError() callback:
+        //https://github.com/square/picasso/issues/379
+        Picasso picassoForListening = (new Picasso.Builder(this)).listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(final Picasso picasso, final Uri uri, final Exception exception) {
+                Log.error("Picasso onImageLoadFailed() URI=" + uri, exception);
+            }
+        }).build();
 
         /**
          * Ask the SyncProvider to update whenever anything in the ItemContentProvider's
