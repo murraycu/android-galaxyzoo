@@ -212,12 +212,20 @@ public class ClassifyActivity extends ItemActivity
         //Let us log errors from Picasso to give us some clues when things go wrong.
         //Unfortunately, we can't get these errors in the regular onError() callback:
         //https://github.com/square/picasso/issues/379
-        Picasso picassoForListening = (new Picasso.Builder(this)).listener(new Picasso.Listener() {
+        final Picasso picasso = (new Picasso.Builder(this)).listener(new Picasso.Listener() {
             @Override
             public void onImageLoadFailed(final Picasso picasso, final Uri uri, final Exception exception) {
                 Log.error("Picasso onImageLoadFailed() URI=" + uri, exception);
             }
         }).build();
+        //This affects what, for instance, Picasso.with() will return:
+        try {
+            Picasso.setSingletonInstance(picasso);
+        } catch (final IllegalStateException ex) {
+            //Nevermind if this happens. It's not worth crashing the app because of this.
+            //It would just mean that we don't log the errors.
+            Log.error("ClassifyActivity.onCreateView(): It is too late to call Picasso.setSingletonInstance().", ex);
+        }
 
         /**
          * Ask the SyncProvider to update whenever anything in the ItemContentProvider's
