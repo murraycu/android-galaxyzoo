@@ -1,3 +1,9 @@
+1.37 (Beta only. Not released publically):
+
+* Add log output to help investigate this occasional problem:
+  https://github.com/murraycu/android-galaxyzoo/issues/12
+
+
 1.36:
 
 * Try to avoid another occasional crash when finishing a classification.
