@@ -275,6 +275,7 @@ public class ClassifyActivity extends ItemActivity
 
                 ClassifyFragment fragment = (ClassifyFragment) fragmentManager.findFragmentById(R.id.container);
                 if (fragment == null) {
+                    Log.info("ClassifyActivity.onCreate(): Added ClassifyFragment.");
                     // TODO: Find a simpler way to just pass this through to the fragment.
                     // For instance, pass the intent.getExtras() as the bundle?.
                     fragment = new ClassifyFragment();

@@ -271,6 +271,7 @@ public class ItemsContentProvider extends ContentProvider {
 
     @Override
     public int delete(final Uri uri, final String selection, final String[] selectionArgs) {
+        Log.info("delete(): uri=" + uri);
         final int match = sUriMatcher.match(uri);
         final int affected;
 
@@ -958,6 +959,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private void removeItem(final String itemId, final String[] imageUris) {
+        Log.info("removeItem(): itemId=" + itemId);
         final SQLiteDatabase db = getDb();
 
         final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -1082,6 +1084,7 @@ public class ItemsContentProvider extends ContentProvider {
         @Override
         public void onUpgrade(final SQLiteDatabase sqLiteDatabase,
                               final int oldv, final int newv) {
+            Log.info("onUpgrade().");
             //TODO: Don't just lose the data?
             if (oldv != newv) {
                 dropTable(sqLiteDatabase, TABLE_NAME_ITEMS);

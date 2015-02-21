@@ -161,6 +161,8 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      * @param loadingInProgress
      */
     private void showLoadingInProgress(final boolean loadingInProgress) {
+        Log.info("ClassifyFragment.addOrUpdateChildFragments(" + loadingInProgress + ").");
+
         showLoadingView(loadingInProgress);
         showChildFragments(!loadingInProgress);
     }
@@ -168,6 +170,8 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     /** Hide both the loading (progress) view and the child fragments.
      */
     private void hideAll() {
+        Log.info("ClassifyFragment.hideAll().");
+
         showLoadingView(false);
         showChildFragments(false);
     }
@@ -177,6 +181,8 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      * @param show
      */
     private void showLoadingView(final boolean show) {
+        Log.info("ClassifyFragment.showLoadingView(" + show + ").");
+
         if (mLoadingView == null) {
             mLoadingView = mRootView.findViewById(R.id.loading_spinner);
         }
@@ -187,6 +193,8 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     /** Show, or hide, the child fragments.
      */
     private void showChildFragments(final boolean show) {
+        Log.info("ClassifyFragment.showChildFragments(" + show + ").");
+
         //If we are showing the loading view then we should hide the other fragments,
         //and vice-versa.
         final FragmentManager fragmentManager = getChildFragmentManager();
@@ -213,6 +221,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     }
 
     private void addOrUpdateChildFragments() {
+        Log.info("ClassifyFragment.addOrUpdateChildFragments().");
         showLoadingInProgress(false);
 
         final Bundle arguments = new Bundle();
@@ -303,6 +312,8 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     */
 
     private void updateFromCursor() {
+        Log.info("ClassifyFragment.updateFromCursor().");
+
         if (mCursor == null) {
             Log.error("mCursor is null.");
             return;
