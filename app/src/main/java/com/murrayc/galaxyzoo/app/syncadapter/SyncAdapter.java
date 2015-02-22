@@ -113,7 +113,19 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         uploadOutstandingClassifications();
         removeOldSubjects();
 
+        //TODO: Don't bother checking that each image still exists, repeatedly -
+        //instead only check if a special file has been removed from the cache?
+        checkImagesStillExist();
+
         Log.info("doRegularTasks() end");
+    }
+
+    private boolean checkImagesStillExist() {
+        Log.info("checkImagesStillExist(): start");
+        final boolean noWorkNecessary = mSubjectAdder.checkForDeletedCachedImages();
+        Log.info("checkImagesStillExist(): end");
+
+        return noWorkNecessary;
     }
 
     /**
