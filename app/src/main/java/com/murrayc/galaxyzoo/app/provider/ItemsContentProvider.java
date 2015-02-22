@@ -57,6 +57,11 @@ public class ItemsContentProvider extends ContentProvider {
     public static final String URI_PART_CLASSIFICATION_CHECKBOX = "classification-checkbox";
     private static final String URI_PART_CLASSIFICATION = "classification";
 
+    /** The standard _data field used by the ContentProvider/ContentResolver for
+     * the local URI corresponding to the row (identified by a Content URI) in the table.
+     */
+    public static final String URI_PART_DATA = "_data";
+
     /**
      * The MIME type of {@link Item#CONTENT_URI} providing a directory of items.
      */
@@ -1186,7 +1191,7 @@ public class ItemsContentProvider extends ContentProvider {
         }
 
         private static class FilesDbColumns implements BaseColumns {
-            private static final String FILE_DATA = "_data"; //The real URI
+            private static final String FILE_DATA = URI_PART_DATA; //The real URI
         }
 
         private static class ClassificationAnswersDbColumns implements BaseColumns {

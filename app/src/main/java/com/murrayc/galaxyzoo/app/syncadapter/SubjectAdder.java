@@ -35,8 +35,11 @@ import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.ImageType;
 import com.murrayc.galaxyzoo.app.provider.Item;
+import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -67,12 +70,23 @@ public class SubjectAdder {
             Item.Columns.LOCATION_INVERTED_URI_REMOTE,
             Item.Columns.LOCATION_INVERTED_URI,
     };
+    private static final String[] PROJECTION_CHECK_IMAGES = {Item.Columns._ID,
+            Item.Columns.LOCATION_STANDARD_URI,
+            Item.Columns.LOCATION_THUMBNAIL_URI,
+            Item.Columns.LOCATION_INVERTED_URI};
     private static final String WHERE_CLAUSE_DOWNLOAD_NOT_DONE = "(" +
             Item.Columns.LOCATION_STANDARD_DOWNLOADED + " != 1" +
             ") OR (" +
             Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED + " != 1" +
             ") OR (" +
             Item.Columns.LOCATION_INVERTED_DOWNLOADED + " != 1" +
+            ")";
+    private static final String WHERE_CLAUSE_DOWNLOAD_ALL_DONE = "(" +
+            Item.Columns.LOCATION_STANDARD_DOWNLOADED + " == 1" +
+            ") AND (" +
+            Item.Columns.LOCATION_THUMBNAIL_DOWNLOADED + " == 1" +
+            ") AND (" +
+            Item.Columns.LOCATION_INVERTED_DOWNLOADED + " == 1" +
             ")";
 
     public SubjectAdder(final Context context, final RequestQueue requestQueue) {
@@ -152,6 +166,95 @@ public class SubjectAdder {
             //and if we are then not on a wi-fi connection.
             Log.info("downloadMissingImage(): No network connection.");
         }
+    }
+
+    /**
+     * If the cache is cleared (automatically by the system or manually by the user)
+     * then the local URIs in our database will no longer be valid.
+     * Assume that the system (or user) really wanted to free up the space,
+     * so just forget about these items instead of re-downloading the images.
+     * Assume that the system will let the SyncAdaptor download more when it has enough space.
+     *
+     * @return True if no work was needed.
+     */
+    boolean checkForDeletedCachedImages() {
+        boolean noWorkNeeded = true;
+
+        final List<String> itemsToAbandon = new ArrayList<>();
+
+        //Get all the items that have images that were (at least previously) all fully downloaded:
+        final ContentResolver resolver = getContext().getContentResolver();
+
+        final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_CHECK_IMAGES,
+                WHERE_CLAUSE_DOWNLOAD_ALL_DONE, new String[]{}, null);
+
+        //Find out if the images still exist in the cache:
+        while (c.moveToNext()) {
+            final String itemId = c.getString(0);
+            if (TextUtils.isEmpty(itemId)) {
+                continue;
+            }
+
+            final String uriStandard = c.getString(1);
+            if(!cachedImageExists(uriStandard)) {
+                itemsToAbandon.add(itemId);
+                noWorkNeeded = false;
+                continue;
+            }
+
+            final String uriThumbnail = c.getString(2);
+            if(!cachedImageExists(uriThumbnail)) {
+                itemsToAbandon.add(itemId);
+                noWorkNeeded = false;
+                continue;
+            }
+
+            final String uriInverted = c.getString(3);
+            if(!cachedImageExists(uriInverted)) {
+                itemsToAbandon.add(itemId);
+                noWorkNeeded = false;
+                continue;
+            }
+        }
+
+        c.close();
+
+        //Abandon any items whose images didn't exist any more:
+        for (final String itemId : itemsToAbandon) {
+            Log.info("checkForDeletedCachedImages() Abandoning itemId=" + itemId);
+            final Uri itemUri = Utils.getItemUri(itemId);
+            final int affected = resolver.delete(itemUri, null, null);
+            if (affected != 1) {
+                Log.error("checkForDeletedCachedImages(): Unexpected number of rows affected: " + affected);
+            }
+        }
+
+        return noWorkNeeded;
+    }
+
+    private boolean cachedImageExists(final String fileUri) {
+        final ContentResolver resolver = getContext().getContentResolver();
+
+        //We get the actual local URI so we can check if the local cache file exists.
+        //TODO: Is there a simple way to just check that the file exists via the ContentResolver
+        //without this hacky use of the _data field?
+        final Uri fileUriAsUri = Uri.parse(fileUri);
+        final String[] projection = {ItemsContentProvider.URI_PART_DATA};
+        final Cursor c = resolver.query(fileUriAsUri, projection,
+                null, new String[]{}, null);
+        if(!c.moveToNext()) {
+            Log.error("SubjectAdder.cachedImageExists(): query failed.");
+            return false;
+        }
+
+        final String localUri = c.getString(0);
+        if (TextUtils.isEmpty(localUri)) {
+            Log.error("SubjectAdder.cachedImageExists(): _DATA URI was empty.");
+            return false;
+        }
+
+        final File cacheFile = new File(localUri);
+        return cacheFile.exists();
     }
 
     /**
