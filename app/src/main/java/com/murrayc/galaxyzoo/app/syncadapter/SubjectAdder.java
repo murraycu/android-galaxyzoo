@@ -244,10 +244,12 @@ public class SubjectAdder {
                 null, new String[]{}, null);
         if(!c.moveToNext()) {
             Log.error("SubjectAdder.cachedImageExists(): query failed.");
+            c.close();
             return false;
         }
 
         final String localUri = c.getString(0);
+        c.close();
         if (TextUtils.isEmpty(localUri)) {
             Log.error("SubjectAdder.cachedImageExists(): _DATA URI was empty.");
             return false;
