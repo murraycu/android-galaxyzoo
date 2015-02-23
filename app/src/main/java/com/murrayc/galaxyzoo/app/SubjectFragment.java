@@ -195,7 +195,10 @@ public class SubjectFragment extends ItemFragment
             //Wipe the image instead of keeping whatever might be showing already:
             mImageView.setImageDrawable(null);
 
-            UiUtils.warnAboutMissingNetwork(getActivity());
+            //For some reason the actual item has vanished (maybe abandoned) before we've
+            //had a chance to use it.
+            //Let the parent ClassifyFragment deal with it.
+            abandonItem();
 
             return;
         }
