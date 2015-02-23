@@ -185,10 +185,15 @@ public class SubjectAdder {
         //Get all the items that have images that were (at least previously) all fully downloaded:
         final ContentResolver resolver = getContext().getContentResolver();
 
+        //This should be the same orderBy as used by the "next" query in ItemsContentProvider,
+        //though we use the external Column name rather than the internal column name used there,
+        //though they are actually the same.
+        final String orderBy = Item.Columns._ID + " ASC";
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_CHECK_IMAGES,
-                WHERE_CLAUSE_DOWNLOAD_ALL_DONE, new String[]{}, null);
+                WHERE_CLAUSE_DOWNLOAD_ALL_DONE, new String[]{}, orderBy);
 
         //Find out if the images still exist in the cache:
+        boolean firstItemWasAbandoned = false;
         while (c.moveToNext()) {
             final String itemId = c.getString(0);
             if (TextUtils.isEmpty(itemId)) {
@@ -214,6 +219,18 @@ public class SubjectAdder {
                 itemsToAbandon.add(itemId);
                 noWorkNeeded = false;
                 continue;
+            }
+
+            //If the first item did not need to be abandoned,
+            //don't bother checking the rest.
+            //This way, we avoid having to abandon an item
+            //when the user tries to classify a "next" item,
+            //and avoid unnecessary checking when it doesn't look like
+            //the whole cache has been deleted.
+            //If the other items are in fact missing their images
+            //then they will be abandoned when the user tries to view them.
+            if (noWorkNeeded) {
+                break;
             }
         }
 
