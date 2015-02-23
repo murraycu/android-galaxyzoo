@@ -68,6 +68,8 @@ public class SubjectFragment extends ItemFragment
     private View mRootView = null;
     private ImageView mImageView = null;
     private boolean mInverted = false;
+    private String mUriImageStandard;
+    private String mUriImageInverted;
 
 
     /**
@@ -200,7 +202,30 @@ public class SubjectFragment extends ItemFragment
 
         mCursor.moveToFirst(); //There should only be one anyway.
 
+        //Avoid a crash in the unusual case that the ContentProvider
+        //didn't provide an item.
+        if (mCursor.getCount() < 1 || mCursor.getColumnCount() < 1) {
+            return;
+        }
+
+        //Avoid a crash in the unusual case that the ContentProvider
+        //didn't provide an item.
+        if (mCursor.getColumnCount() < 1) {
+            return;
+        }
+
+        mUriImageStandard = null;
+        if (mCursor.getInt(COLUMN_INDEX_LOCATION_STANDARD_DOWNLOADED) == 1) {
+            mUriImageStandard = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI);
+        }
+
+        mUriImageInverted = null;
+        if (mCursor.getInt(COLUMN_INDEX_LOCATION_INVERTED_DOWNLOADED) == 1) {
+            mUriImageInverted = mCursor.getString(COLUMN_INDEX_LOCATION_INVERTED_URI);
+        }
+
         //Look at each group in the layout:
+        //TODO: Remove this check?
         if (mRootView == null) {
             Log.error("SubjectFragment.updateFromCursor(): mRootView is null.");
             return;
@@ -214,28 +239,18 @@ public class SubjectFragment extends ItemFragment
         if (activity == null)
             return;
 
-        //Avoid a crash in the unusual case that the ContentProvider
-        //didn't provide an item.
-        if (mCursor.getCount() < 1 || mCursor.getColumnCount() < 1) {
-            return;
-        }
-
-        //Avoid a crash in the unusual case that the ContentProvider
-        //didn't provide an item.
-        if (mCursor.getCount() < 1 || mCursor.getColumnCount() < 1) {
-            return;
-        }
-
         final boolean inverted = getInverted();
         String imageUriStr = null;
         if (inverted) {
-            if (mCursor.getInt(COLUMN_INDEX_LOCATION_INVERTED_DOWNLOADED) == 1) {
-                imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_INVERTED_URI);
-            }
+            imageUriStr = mUriImageInverted;
         } else {
-            if (mCursor.getInt(COLUMN_INDEX_LOCATION_STANDARD_DOWNLOADED) == 1) {
-                imageUriStr = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI);
-            }
+            imageUriStr = mUriImageStandard;
+        }
+
+        if(TextUtils.isEmpty(imageUriStr)) {
+            //TODO: Remove any previous image or show a placeholder?
+            abandonItem();
+            return;
         }
 
         //Note: We call cancelRequest in onPause() to avoid a leak,
@@ -253,6 +268,7 @@ public class SubjectFragment extends ItemFragment
                 //Something was wrong with the (cached) image,
                 //so just abandon this whole item.
                 //That seems safer and simpler than trying to recover just one of the 3 images.
+                //TODO: Remove any previous image or show a placeholder?
                 SubjectFragment.this.abandonItem();
             }
         });
@@ -295,7 +311,15 @@ public class SubjectFragment extends ItemFragment
     @Override
     public void onLoadFinished(final Loader<Cursor> cursorLoader, final Cursor cursor) {
         mCursor = cursor;
+
+        //All the use of the cursor should be in updateFromCursor(),
+        //because we will release it via destroyLoader().
         updateFromCursor();
+
+        // Avoid this being called twice (actually multiple times), which seems to be an Android bug,
+        // See http://stackoverflow.com/questions/14719814/onloadfinished-called-twice
+        // and https://code.google.com/p/android/issues/detail?id=63179
+        getLoaderManager().destroyLoader(URL_LOADER);
     }
 
     @Override
