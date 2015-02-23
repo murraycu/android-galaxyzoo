@@ -263,7 +263,7 @@ public class SubjectFragment extends ItemFragment
 
             @Override
             public void onError() {
-                Log.error("SubjectFragment.showImage() Picasso's onError(): Abandoning item with itemId=" + getItemId());
+                Log.error("SubjectFragment.showImage(): Picasso's onError(): Abandoning item with itemId=" + getItemId());
 
                 //Something was wrong with the (cached) image,
                 //so just abandon this whole item.
