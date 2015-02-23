@@ -76,6 +76,10 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         @Override
         public void warnAboutNetworkProblemWithRetry() {
         }
+
+        @Override
+        public void listenForNetworkReconnection() {
+        }
     };
 
     /**
@@ -92,6 +96,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      */
     static interface Callbacks extends ItemFragment.Callbacks {
         public void warnAboutNetworkProblemWithRetry();
+        public void listenForNetworkReconnection();
     }
 
 
@@ -124,6 +129,10 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
     private void warnAboutNetworkProblemWithRetry() {
         mCallbacks.warnAboutNetworkProblemWithRetry();
+    }
+
+    private void listenForNetworkReconnection() {
+        mCallbacks.listenForNetworkReconnection();
     }
 
     @Override
@@ -321,7 +330,11 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             //we will show the loading view (progress) again.
             hideAll();
 
-            if(!UiUtils.warnAboutMissingNetwork(activity)) {
+            if(UiUtils.warnAboutMissingNetwork(activity)) {
+                //Try again later when we seem to be connected to a new network.
+                //If that doesn't work then we'll end up here again.
+                listenForNetworkReconnection();
+            } else {
                 //Warn that there is some other network problem.
                 //For instance, this happens if the network is apparently connected but not working properly:
                 warnAboutNetworkProblemWithRetry();

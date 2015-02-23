@@ -22,10 +22,12 @@ package com.murrayc.galaxyzoo.app;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -59,6 +61,7 @@ public class ClassifyActivity extends ItemActivity
     private boolean mPendingWarnAboutNetworkProblemWithRetry = false;
 
     private AlertDialog mAlertDialog = null;
+    private BroadcastReceiver mReceiverNetworkReconnection = null;
 
 
 //    public class ItemsContentProviderObserver extends ContentObserver {
@@ -245,6 +248,8 @@ public class ClassifyActivity extends ItemActivity
         //Make sure that the SyncAdapter starts to download items as soon as possible:
         requestSync();
 
+        //Our NetworkChangeReceiver should only wake up when necessary:
+        stopListeningForNetworkReconnection();
 
         setContentView(R.layout.activity_classify);
 
@@ -328,6 +333,11 @@ public class ClassifyActivity extends ItemActivity
         super.onResumeFragments();
 
         mIsStateAlreadySaved = false;
+
+        //Stop the NetworkChangeReceiver if it is active
+        //We already try again to use the network after resume,
+        //so we don't need to listen for a reconnection yet.
+        stopListeningForNetworkReconnection();
 
         //See onClassificationFinished().
         if(mPendingClassificationFinished) {
@@ -526,5 +536,39 @@ public class ClassifyActivity extends ItemActivity
         if (fragmentClassify != null) {
             fragmentClassify.update();
         }
+    }
+
+    @Override
+    public void listenForNetworkReconnection() {
+        if (mReceiverNetworkReconnection != null) {
+            Log.error("ClassifyActivity.listenForNetworkReconnection(): Already listening.");
+            return;
+        }
+
+        mReceiverNetworkReconnection = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final Utils.NetworkConnected networkConnected =
+                        Utils.getNetworkIsConnected(context, Utils.getUseWifiOnlyFromSharedPrefs(ClassifyActivity.this));
+                if ((networkConnected != null) && (networkConnected.connected)) {
+                    //Try using the network again:
+                    ClassifyActivity.this.stopListeningForNetworkReconnection();
+                    ClassifyActivity.this.startNextClassification();
+                }
+            }
+        };
+
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mReceiverNetworkReconnection, filter);
+    }
+
+    private void stopListeningForNetworkReconnection() {
+        if (mReceiverNetworkReconnection == null) {
+            return;
+        }
+
+        unregisterReceiver(mReceiverNetworkReconnection);
+        mReceiverNetworkReconnection = null;
     }
 }
