@@ -441,7 +441,10 @@ public class ClassifyActivity extends ItemActivity
 
     @Override
     public void abandonItem() {
-        Log.error("ClassifyActivity(): Abandoning item with itemId=" + getItemId());
+        //We don't bother reporting the itemId to the log here,
+        //because it is generally just "next" -
+        //we don't use a Cursor to discover the actual ID - The child ClassifyFragment does that.
+        Log.error("ClassifyActivity(): Abandoning item.");
 
         startNextClassification();
     }
