@@ -30,6 +30,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.mcxiaoke.volley:library:1.0.10'
-    compile 'com.squareup.picasso:picasso:2.4.0'
-    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.0'
+    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.2.0'
 }
