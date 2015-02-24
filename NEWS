@@ -1,7 +1,14 @@
-1.37 (Beta only. Not released publically):
+1.38:
 
-* Add log output to help investigate this occasional problem:
+* Download new cached subjects when the Android system occasionally
+  automatically deletes our cache to temporarily recover storage space,
+  instead of stalling until a restart.
   https://github.com/murraycu/android-galaxyzoo/issues/12
+* When there is no suitable network connection, wait for a reconnection
+  and try again, without the user needing to switch away and back to the
+  application.
+* Android 5.0 (Lollipop): Add the Material Design ripple effect to the buttons.
+  https://github.com/murraycu/android-galaxyzoo/issues/2
 
 
 1.36:

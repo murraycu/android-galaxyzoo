@@ -8328,26 +8328,31 @@ com.murrayc.galaxyzoo.app.ClassifyActivity -> com.murrayc.galaxyzoo.app.Classify
     boolean mPendingClassificationFinished -> o
     boolean mPendingWarnAboutNetworkProblemWithRetry -> p
     android.app.AlertDialog mAlertDialog -> q
-    int mClassificationsDoneInSession -> r
-    void requestSync() -> o
+    android.content.BroadcastReceiver mReceiverNetworkReconnection -> r
+    int mClassificationsDoneInSession -> s
+    void requestSync() -> p
     void onCreate(android.os.Bundle) -> onCreate
     void onPause() -> onPause
     void onResumeFragments() -> b
     void onExistingLoginRetrieved(com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails) -> a
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     void onClassificationFinished() -> k
-    void doClassificationFinished() -> p
-    void checkForLoginAsync() -> q
-    void startNextClassification() -> r
-    com.murrayc.galaxyzoo.app.ClassifyFragment getChildFragment() -> s
+    void doClassificationFinished() -> q
+    void checkForLoginAsync() -> r
+    void startNextClassification() -> s
+    com.murrayc.galaxyzoo.app.ClassifyFragment getChildFragment() -> t
     void abandonItem() -> l
     void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
     void warnAboutNetworkProblemWithRetry() -> m
-    void doWarnAboutNetworkProblemWithRetry() -> t
-    void onClickListenerRetry() -> u
+    void doWarnAboutNetworkProblemWithRetry() -> u
+    void onClickListenerRetry() -> v
+    void listenForNetworkReconnection() -> n
+    void stopListeningForNetworkReconnection() -> w
     void access$000(com.murrayc.galaxyzoo.app.ClassifyActivity,com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails) -> a
     void access$100(com.murrayc.galaxyzoo.app.ClassifyActivity) -> a
     android.app.AlertDialog access$202(com.murrayc.galaxyzoo.app.ClassifyActivity,android.app.AlertDialog) -> a
+    void access$300(com.murrayc.galaxyzoo.app.ClassifyActivity) -> b
+    void access$400(com.murrayc.galaxyzoo.app.ClassifyActivity) -> c
 com.murrayc.galaxyzoo.app.ClassifyActivity$1 -> com.murrayc.galaxyzoo.app.c:
     com.murrayc.galaxyzoo.app.ClassifyActivity this$0 -> a
     void onImageLoadFailed(com.squareup.picasso.Picasso,android.net.Uri,java.lang.Exception) -> a
@@ -8364,18 +8369,21 @@ com.murrayc.galaxyzoo.app.ClassifyActivity$4 -> com.murrayc.galaxyzoo.app.f:
 com.murrayc.galaxyzoo.app.ClassifyActivity$5 -> com.murrayc.galaxyzoo.app.g:
     com.murrayc.galaxyzoo.app.ClassifyActivity this$0 -> a
     void onCancel(android.content.DialogInterface) -> onCancel
-com.murrayc.galaxyzoo.app.ClassifyActivity$CheckLoginTask -> com.murrayc.galaxyzoo.app.h:
+com.murrayc.galaxyzoo.app.ClassifyActivity$6 -> com.murrayc.galaxyzoo.app.h:
+    com.murrayc.galaxyzoo.app.ClassifyActivity this$0 -> a
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.murrayc.galaxyzoo.app.ClassifyActivity$CheckLoginTask -> com.murrayc.galaxyzoo.app.i:
     java.lang.ref.WeakReference mContextReference -> a
     java.lang.Boolean doInBackground(java.lang.Void[]) -> a
     void onPostExecute(java.lang.Boolean) -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.murrayc.galaxyzoo.app.ClassifyActivity$RequestSyncTask -> com.murrayc.galaxyzoo.app.i:
+com.murrayc.galaxyzoo.app.ClassifyActivity$RequestSyncTask -> com.murrayc.galaxyzoo.app.j:
     java.lang.ref.WeakReference mContextReference -> a
     java.lang.Void doInBackground(java.lang.Void[]) -> a
     void onCancelled() -> onCancelled
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.murrayc.galaxyzoo.app.ClassifyFragment -> com.murrayc.galaxyzoo.app.j:
+com.murrayc.galaxyzoo.app.ClassifyFragment -> com.murrayc.galaxyzoo.app.k:
     java.lang.String[] mColumns -> ab
     android.database.Cursor mCursor -> ac
     android.view.View mLoadingView -> ad
@@ -8387,30 +8395,33 @@ com.murrayc.galaxyzoo.app.ClassifyFragment -> com.murrayc.galaxyzoo.app.j:
     void onAttach(android.app.Activity) -> a
     void onDetach() -> r
     void warnAboutNetworkProblemWithRetry() -> Q
+    void listenForNetworkReconnection() -> U
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
     void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> a
     void onSingletonInitialized() -> b_
     void showLoadingInProgress(boolean) -> c
-    void hideAll() -> U
+    void hideAll() -> V
     void showLoadingView(boolean) -> d
     void showChildFragments(boolean) -> e
-    void addOrUpdateChildFragments() -> V
+    void addOrUpdateChildFragments() -> W
     void update() -> L
-    void updateFromCursor() -> W
+    void updateFromCursor() -> X
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> a
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
-com.murrayc.galaxyzoo.app.ClassifyFragment$1 -> com.murrayc.galaxyzoo.app.k:
+com.murrayc.galaxyzoo.app.ClassifyFragment$1 -> com.murrayc.galaxyzoo.app.l:
     void navigateToList() -> c_
     void abandonItem() -> l
     void warnAboutNetworkProblemWithRetry() -> m
-com.murrayc.galaxyzoo.app.ClassifyFragment$Callbacks -> com.murrayc.galaxyzoo.app.l:
+    void listenForNetworkReconnection() -> n
+com.murrayc.galaxyzoo.app.ClassifyFragment$Callbacks -> com.murrayc.galaxyzoo.app.m:
     void warnAboutNetworkProblemWithRetry() -> m
-com.murrayc.galaxyzoo.app.Config -> com.murrayc.galaxyzoo.app.m:
+    void listenForNetworkReconnection() -> n
+com.murrayc.galaxyzoo.app.Config -> com.murrayc.galaxyzoo.app.n:
     java.lang.CharSequence QUESTION_ID_DISCUSS -> a
     java.lang.CharSequence ANSWER_ID_DISCUSS_YES -> b
-com.murrayc.galaxyzoo.app.DecisionTree -> com.murrayc.galaxyzoo.app.n:
+com.murrayc.galaxyzoo.app.DecisionTree -> com.murrayc.galaxyzoo.app.o:
     java.util.Map questionsMap -> a
     void loadTranslation(java.io.InputStream) -> a
     void readJsonQuestions(android.util.JsonReader) -> a
@@ -8430,10 +8441,10 @@ com.murrayc.galaxyzoo.app.DecisionTree -> com.murrayc.galaxyzoo.app.n:
     com.murrayc.galaxyzoo.app.DecisionTree$Question loadQuestion(org.w3c.dom.Element) -> a
     com.murrayc.galaxyzoo.app.DecisionTree$Checkbox loadCheckbox(org.w3c.dom.Element) -> b
     com.murrayc.galaxyzoo.app.DecisionTree$Answer loadAnswer(org.w3c.dom.Element) -> c
-com.murrayc.galaxyzoo.app.DecisionTree$Answer -> com.murrayc.galaxyzoo.app.o:
+com.murrayc.galaxyzoo.app.DecisionTree$Answer -> com.murrayc.galaxyzoo.app.p:
     java.lang.String leadsToQuestionId -> a
     java.lang.String access$200(com.murrayc.galaxyzoo.app.DecisionTree$Answer) -> a
-com.murrayc.galaxyzoo.app.DecisionTree$BaseButton -> com.murrayc.galaxyzoo.app.p:
+com.murrayc.galaxyzoo.app.DecisionTree$BaseButton -> com.murrayc.galaxyzoo.app.q:
     java.lang.String id -> a
     java.lang.String text -> b
     java.lang.String icon -> c
@@ -8444,9 +8455,9 @@ com.murrayc.galaxyzoo.app.DecisionTree$BaseButton -> com.murrayc.galaxyzoo.app.p
     java.lang.String getIcon() -> c
     int getExamplesCount() -> d
     java.lang.String getExampleIconName(java.lang.String,int) -> a
-com.murrayc.galaxyzoo.app.DecisionTree$Checkbox -> com.murrayc.galaxyzoo.app.q:
-com.murrayc.galaxyzoo.app.DecisionTree$DecisionTreeException -> com.murrayc.galaxyzoo.app.r:
-com.murrayc.galaxyzoo.app.DecisionTree$Question -> com.murrayc.galaxyzoo.app.s:
+com.murrayc.galaxyzoo.app.DecisionTree$Checkbox -> com.murrayc.galaxyzoo.app.r:
+com.murrayc.galaxyzoo.app.DecisionTree$DecisionTreeException -> com.murrayc.galaxyzoo.app.s:
+com.murrayc.galaxyzoo.app.DecisionTree$Question -> com.murrayc.galaxyzoo.app.t:
     java.util.List checkboxes -> a
     java.util.List answers -> b
     java.lang.String id -> c
@@ -8469,7 +8480,7 @@ com.murrayc.galaxyzoo.app.DecisionTree$Question -> com.murrayc.galaxyzoo.app.s:
 com.murrayc.galaxyzoo.app.ExampleViewerActivity -> com.murrayc.galaxyzoo.app.ExampleViewerActivity:
     void onCreate(android.os.Bundle) -> onCreate
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.ExampleViewerFragment -> com.murrayc.galaxyzoo.app.t:
+com.murrayc.galaxyzoo.app.ExampleViewerFragment -> com.murrayc.galaxyzoo.app.u:
     android.view.View mLoadingView -> aa
     android.view.View mRootView -> ab
     java.lang.String mUriStr -> ac
@@ -8481,11 +8492,11 @@ com.murrayc.galaxyzoo.app.ExampleViewerFragment -> com.murrayc.galaxyzoo.app.t:
     void setExampleUrl(java.lang.String) -> a
     void showLoadingView(boolean) -> c
     void access$000(com.murrayc.galaxyzoo.app.ExampleViewerFragment,boolean) -> a
-com.murrayc.galaxyzoo.app.ExampleViewerFragment$1 -> com.murrayc.galaxyzoo.app.u:
+com.murrayc.galaxyzoo.app.ExampleViewerFragment$1 -> com.murrayc.galaxyzoo.app.v:
     com.murrayc.galaxyzoo.app.ExampleViewerFragment this$0 -> a
     void onSuccess() -> a
     void onError() -> b
-com.murrayc.galaxyzoo.app.IconsCache -> com.murrayc.galaxyzoo.app.v:
+com.murrayc.galaxyzoo.app.IconsCache -> com.murrayc.galaxyzoo.app.w:
     com.murrayc.galaxyzoo.app.DecisionTree mDecisionTree -> a
     android.support.v4.util.LruCache mWorkflowIcons -> b
     android.support.v4.util.LruCache mExampleIcons -> c
@@ -8497,15 +8508,15 @@ com.murrayc.galaxyzoo.app.IconsCache -> com.murrayc.galaxyzoo.app.v:
     java.lang.String getIconAssetPath(java.lang.String) -> b
     android.graphics.Bitmap getIcon(java.lang.String) -> a
     android.content.Context getContext() -> a
-com.murrayc.galaxyzoo.app.ItemActivity -> com.murrayc.galaxyzoo.app.w:
+com.murrayc.galaxyzoo.app.ItemActivity -> com.murrayc.galaxyzoo.app.x:
     java.lang.String mItemId -> n
-    java.lang.String getItemId() -> n
+    java.lang.String getItemId() -> o
     void setItemId(java.lang.String) -> b
     void onCreate(android.os.Bundle) -> onCreate
     void navigateToList() -> c_
     void abandonItem() -> l
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.ItemFragment -> com.murrayc.galaxyzoo.app.x:
+com.murrayc.galaxyzoo.app.ItemFragment -> com.murrayc.galaxyzoo.app.y:
     com.murrayc.galaxyzoo.app.ItemFragment$Callbacks sDummyCallbacks -> aa
     com.murrayc.galaxyzoo.app.ItemFragment$Callbacks mCallbacks -> ab
     com.murrayc.galaxyzoo.app.Singleton mSingleton -> ac
@@ -8522,13 +8533,13 @@ com.murrayc.galaxyzoo.app.ItemFragment -> com.murrayc.galaxyzoo.app.x:
     void onSingletonInitialized() -> b_
     void initializeSingleton() -> O
     void abandonItem() -> P
-com.murrayc.galaxyzoo.app.ItemFragment$1 -> com.murrayc.galaxyzoo.app.y:
+com.murrayc.galaxyzoo.app.ItemFragment$1 -> com.murrayc.galaxyzoo.app.z:
     void navigateToList() -> c_
     void abandonItem() -> l
-com.murrayc.galaxyzoo.app.ItemFragment$2 -> com.murrayc.galaxyzoo.app.z:
+com.murrayc.galaxyzoo.app.ItemFragment$2 -> com.murrayc.galaxyzoo.app.aa:
     com.murrayc.galaxyzoo.app.ItemFragment this$0 -> a
     void onInitialized() -> a
-com.murrayc.galaxyzoo.app.ItemFragment$Callbacks -> com.murrayc.galaxyzoo.app.aa:
+com.murrayc.galaxyzoo.app.ItemFragment$Callbacks -> com.murrayc.galaxyzoo.app.ab:
     void navigateToList() -> c_
     void abandonItem() -> l
 com.murrayc.galaxyzoo.app.ListActivity -> com.murrayc.galaxyzoo.app.ListActivity:
@@ -8537,7 +8548,7 @@ com.murrayc.galaxyzoo.app.ListActivity -> com.murrayc.galaxyzoo.app.ListActivity
     void navigateToNextAvailable() -> k
     void navigate(java.lang.String,boolean,android.view.View) -> b
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.ListCursorAdapter -> com.murrayc.galaxyzoo.app.ab:
+com.murrayc.galaxyzoo.app.ListCursorAdapter -> com.murrayc.galaxyzoo.app.ac:
     com.murrayc.galaxyzoo.app.ListCursorAdapter$CursorObserver mDataSetObserver -> a
     android.content.Context mContext -> b
     android.database.Cursor mCursor -> c
@@ -8552,11 +8563,11 @@ com.murrayc.galaxyzoo.app.ListCursorAdapter -> com.murrayc.galaxyzoo.app.ab:
     void onBindViewHolder(android.support.v7.widget.RecyclerView$ViewHolder,int) -> a
     android.support.v7.widget.RecyclerView$ViewHolder onCreateViewHolder(android.view.ViewGroup,int) -> a
     com.murrayc.galaxyzoo.app.ListCursorAdapter$OnItemClickedListener access$100(com.murrayc.galaxyzoo.app.ListCursorAdapter) -> a
-com.murrayc.galaxyzoo.app.ListCursorAdapter$1 -> com.murrayc.galaxyzoo.app.ac:
-com.murrayc.galaxyzoo.app.ListCursorAdapter$CursorObserver -> com.murrayc.galaxyzoo.app.ad:
+com.murrayc.galaxyzoo.app.ListCursorAdapter$1 -> com.murrayc.galaxyzoo.app.ad:
+com.murrayc.galaxyzoo.app.ListCursorAdapter$CursorObserver -> com.murrayc.galaxyzoo.app.ae:
     com.murrayc.galaxyzoo.app.ListCursorAdapter this$0 -> a
     void onChanged() -> onChanged
-com.murrayc.galaxyzoo.app.ListCursorAdapter$ImageLoadedCallback -> com.murrayc.galaxyzoo.app.ae:
+com.murrayc.galaxyzoo.app.ListCursorAdapter$ImageLoadedCallback -> com.murrayc.galaxyzoo.app.af:
     java.lang.ref.WeakReference contextReference -> a
     java.lang.ref.WeakReference viewHolderReference -> b
     int position -> c
@@ -8564,9 +8575,9 @@ com.murrayc.galaxyzoo.app.ListCursorAdapter$ImageLoadedCallback -> com.murrayc.g
     com.murrayc.galaxyzoo.app.ListCursorAdapter$ViewHolder getValidViewHolder() -> c
     void onSuccess() -> a
     void onError() -> b
-com.murrayc.galaxyzoo.app.ListCursorAdapter$OnItemClickedListener -> com.murrayc.galaxyzoo.app.af:
+com.murrayc.galaxyzoo.app.ListCursorAdapter$OnItemClickedListener -> com.murrayc.galaxyzoo.app.ag:
     void onItemClicked(int,android.view.View) -> a
-com.murrayc.galaxyzoo.app.ListCursorAdapter$ViewHolder -> com.murrayc.galaxyzoo.app.ag:
+com.murrayc.galaxyzoo.app.ListCursorAdapter$ViewHolder -> com.murrayc.galaxyzoo.app.ah:
     java.lang.ref.WeakReference refParent -> o
     android.widget.ImageView imageView -> i
     android.widget.LinearLayout iconsPanel -> j
@@ -8596,16 +8607,16 @@ com.murrayc.galaxyzoo.app.ListFragment -> com.murrayc.galaxyzoo.app.ListFragment
     android.support.v7.widget.RecyclerView getGridView() -> L
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.ListFragment,int,android.view.View) -> a
-com.murrayc.galaxyzoo.app.ListFragment$1 -> com.murrayc.galaxyzoo.app.ah:
+com.murrayc.galaxyzoo.app.ListFragment$1 -> com.murrayc.galaxyzoo.app.ai:
     void onItemSelected(java.lang.String,boolean,android.view.View) -> a
     void navigateToNextAvailable() -> k
-com.murrayc.galaxyzoo.app.ListFragment$2 -> com.murrayc.galaxyzoo.app.ai:
+com.murrayc.galaxyzoo.app.ListFragment$2 -> com.murrayc.galaxyzoo.app.aj:
     com.murrayc.galaxyzoo.app.ListFragment this$0 -> a
     void onItemClicked(int,android.view.View) -> a
-com.murrayc.galaxyzoo.app.ListFragment$Callbacks -> com.murrayc.galaxyzoo.app.aj:
+com.murrayc.galaxyzoo.app.ListFragment$Callbacks -> com.murrayc.galaxyzoo.app.ak:
     void onItemSelected(java.lang.String,boolean,android.view.View) -> a
     void navigateToNextAvailable() -> k
-com.murrayc.galaxyzoo.app.Log -> com.murrayc.galaxyzoo.app.ak:
+com.murrayc.galaxyzoo.app.Log -> com.murrayc.galaxyzoo.app.al:
     java.lang.String defaultString(java.lang.String) -> c
     void error(java.lang.String,java.lang.Throwable) -> a
     void error(java.lang.String) -> a
@@ -8636,32 +8647,32 @@ com.murrayc.galaxyzoo.app.LoginActivity -> com.murrayc.galaxyzoo.app.LoginActivi
     com.murrayc.galaxyzoo.app.LoginActivity$UserLoginTask access$302(com.murrayc.galaxyzoo.app.LoginActivity,com.murrayc.galaxyzoo.app.LoginActivity$UserLoginTask) -> a
     void access$400(com.murrayc.galaxyzoo.app.LoginActivity,com.murrayc.galaxyzoo.app.LoginUtils$LoginResult) -> a
     android.widget.EditText access$500(com.murrayc.galaxyzoo.app.LoginActivity) -> d
-com.murrayc.galaxyzoo.app.LoginActivity$1 -> com.murrayc.galaxyzoo.app.al:
+com.murrayc.galaxyzoo.app.LoginActivity$1 -> com.murrayc.galaxyzoo.app.am:
     com.murrayc.galaxyzoo.app.LoginActivity this$0 -> a
     boolean onEditorAction(android.widget.TextView,int,android.view.KeyEvent) -> onEditorAction
-com.murrayc.galaxyzoo.app.LoginActivity$2 -> com.murrayc.galaxyzoo.app.am:
+com.murrayc.galaxyzoo.app.LoginActivity$2 -> com.murrayc.galaxyzoo.app.an:
     com.murrayc.galaxyzoo.app.LoginActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.LoginActivity$3 -> com.murrayc.galaxyzoo.app.an:
+com.murrayc.galaxyzoo.app.LoginActivity$3 -> com.murrayc.galaxyzoo.app.ao:
     com.murrayc.galaxyzoo.app.LoginActivity this$0 -> a
     void onPostExecute(com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails) -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
-com.murrayc.galaxyzoo.app.LoginActivity$4 -> com.murrayc.galaxyzoo.app.ao:
+com.murrayc.galaxyzoo.app.LoginActivity$4 -> com.murrayc.galaxyzoo.app.ap:
     boolean val$show -> a
     com.murrayc.galaxyzoo.app.LoginActivity this$0 -> b
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
-com.murrayc.galaxyzoo.app.LoginActivity$5 -> com.murrayc.galaxyzoo.app.ap:
+com.murrayc.galaxyzoo.app.LoginActivity$5 -> com.murrayc.galaxyzoo.app.aq:
     boolean val$show -> a
     com.murrayc.galaxyzoo.app.LoginActivity this$0 -> b
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
-com.murrayc.galaxyzoo.app.LoginActivity$AccountSaveTask -> com.murrayc.galaxyzoo.app.aq:
+com.murrayc.galaxyzoo.app.LoginActivity$AccountSaveTask -> com.murrayc.galaxyzoo.app.ar:
     java.lang.ref.WeakReference contextReference -> a
     com.murrayc.galaxyzoo.app.LoginUtils$LoginResult loginResult -> b
     java.lang.String existingAccountName -> c
     boolean existingAccountIsAnonymous -> d
     java.lang.Void doInBackground(java.lang.Void[]) -> a
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.murrayc.galaxyzoo.app.LoginActivity$UserLoginTask -> com.murrayc.galaxyzoo.app.ar:
+com.murrayc.galaxyzoo.app.LoginActivity$UserLoginTask -> com.murrayc.galaxyzoo.app.as:
     java.lang.String mUsername -> b
     java.lang.String mPassword -> c
     java.lang.Exception exceptionCaught -> d
@@ -8671,7 +8682,7 @@ com.murrayc.galaxyzoo.app.LoginActivity$UserLoginTask -> com.murrayc.galaxyzoo.a
     void onCancelled() -> onCancelled
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.murrayc.galaxyzoo.app.LoginUtils -> com.murrayc.galaxyzoo.app.as:
+com.murrayc.galaxyzoo.app.LoginUtils -> com.murrayc.galaxyzoo.app.at:
     boolean getLoggedIn(android.content.Context) -> a
     com.murrayc.galaxyzoo.app.LoginUtils$LoginResult parseLoginResponseContent(java.io.InputStream) -> a
     com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails getAccountLoginDetails(android.content.Context) -> b
@@ -8689,16 +8700,16 @@ com.murrayc.galaxyzoo.app.LoginUtils -> com.murrayc.galaxyzoo.app.as:
     void copyPrefsToAccount(android.content.Context,android.accounts.AccountManager,android.accounts.Account) -> a
     boolean getUseWifiOnly(android.content.Context) -> d
     void access$000(android.content.Context) -> e
-com.murrayc.galaxyzoo.app.LoginUtils$GetExistingLogin -> com.murrayc.galaxyzoo.app.at:
+com.murrayc.galaxyzoo.app.LoginUtils$GetExistingLogin -> com.murrayc.galaxyzoo.app.au:
     java.lang.ref.WeakReference mContextReference -> a
     com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails doInBackground(java.lang.Void[]) -> a
     void onCancelled() -> onCancelled
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails -> com.murrayc.galaxyzoo.app.au:
+com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails -> com.murrayc.galaxyzoo.app.av:
     java.lang.String name -> a
     java.lang.String authApiKey -> b
     boolean isAnonymous -> c
-com.murrayc.galaxyzoo.app.LoginUtils$LoginResult -> com.murrayc.galaxyzoo.app.av:
+com.murrayc.galaxyzoo.app.LoginUtils$LoginResult -> com.murrayc.galaxyzoo.app.aw:
     boolean success -> a
     java.lang.String name -> b
     java.lang.String apiKey -> c
@@ -8750,14 +8761,14 @@ com.murrayc.galaxyzoo.app.QuestionFragment -> com.murrayc.galaxyzoo.app.Question
     void access$100(com.murrayc.galaxyzoo.app.QuestionFragment,com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress) -> a
     void access$200(com.murrayc.galaxyzoo.app.QuestionFragment) -> a
     com.murrayc.galaxyzoo.app.QuestionFragment$Callbacks access$300(com.murrayc.galaxyzoo.app.QuestionFragment) -> b
-com.murrayc.galaxyzoo.app.QuestionFragment$1 -> com.murrayc.galaxyzoo.app.aw:
+com.murrayc.galaxyzoo.app.QuestionFragment$1 -> com.murrayc.galaxyzoo.app.ax:
     void onClassificationFinished() -> k
-com.murrayc.galaxyzoo.app.QuestionFragment$2 -> com.murrayc.galaxyzoo.app.ax:
+com.murrayc.galaxyzoo.app.QuestionFragment$2 -> com.murrayc.galaxyzoo.app.ay:
     com.murrayc.galaxyzoo.app.DecisionTree$Question val$question -> a
     com.murrayc.galaxyzoo.app.DecisionTree$Answer val$answer -> b
     com.murrayc.galaxyzoo.app.QuestionFragment this$0 -> c
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.QuestionFragment$Callbacks -> com.murrayc.galaxyzoo.app.ay:
+com.murrayc.galaxyzoo.app.QuestionFragment$Callbacks -> com.murrayc.galaxyzoo.app.az:
     void onClassificationFinished() -> k
 com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress -> com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress:
     android.os.Parcelable$Creator CREATOR -> CREATOR
@@ -8771,7 +8782,7 @@ com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress -> com.murra
     java.util.List getAnswers() -> a
     boolean isFavorite() -> b
     void setFavorite(boolean) -> a
-com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$1 -> com.murrayc.galaxyzoo.app.az:
+com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$1 -> com.murrayc.galaxyzoo.app.ba:
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress createFromParcel(android.os.Parcel) -> a
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress[] newArray(int) -> a
     java.lang.Object[] newArray(int) -> newArray
@@ -8789,12 +8800,12 @@ com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnsw
     java.util.List getCheckboxIds() -> c
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnswer$1 -> com.murrayc.galaxyzoo.app.ba:
+com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnswer$1 -> com.murrayc.galaxyzoo.app.bb:
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnswer createFromParcel(android.os.Parcel) -> a
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress$QuestionAnswer[] newArray(int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.murrayc.galaxyzoo.app.QuestionFragment$SaveClassificationTask -> com.murrayc.galaxyzoo.app.bb:
+com.murrayc.galaxyzoo.app.QuestionFragment$SaveClassificationTask -> com.murrayc.galaxyzoo.app.bc:
     java.lang.ref.WeakReference fragmentReference -> a
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress classificationInProgress -> b
     java.lang.Void doInBackground(java.lang.Void[]) -> a
@@ -8809,7 +8820,7 @@ com.murrayc.galaxyzoo.app.QuestionHelpActivity -> com.murrayc.galaxyzoo.app.Ques
     void navigateToList() -> c_
     void abandonItem() -> l
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.QuestionHelpFragment -> com.murrayc.galaxyzoo.app.bc:
+com.murrayc.galaxyzoo.app.QuestionHelpFragment -> com.murrayc.galaxyzoo.app.bd:
     android.view.View mRootView -> aa
     void onCreate(android.os.Bundle) -> d
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
@@ -8818,7 +8829,7 @@ com.murrayc.galaxyzoo.app.QuestionHelpFragment -> com.murrayc.galaxyzoo.app.bc:
     void addRowForAnswer(android.content.Context,android.widget.TableLayout,com.murrayc.galaxyzoo.app.DecisionTree$Question,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton) -> a
     void onExampleImageClicked(android.view.View,java.lang.String) -> a
     void access$000(com.murrayc.galaxyzoo.app.QuestionHelpFragment,android.view.View,java.lang.String) -> a
-com.murrayc.galaxyzoo.app.QuestionHelpFragment$1 -> com.murrayc.galaxyzoo.app.bd:
+com.murrayc.galaxyzoo.app.QuestionHelpFragment$1 -> com.murrayc.galaxyzoo.app.be:
     java.lang.String val$iconName -> a
     com.murrayc.galaxyzoo.app.QuestionHelpFragment this$0 -> b
     void onClick(android.view.View) -> onClick
@@ -8837,7 +8848,7 @@ com.murrayc.galaxyzoo.app.SettingsFragment -> com.murrayc.galaxyzoo.app.Settings
     void onPause() -> onPause
     void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
     void showUserDescriptionAsSummary(android.preference.Preference) -> a
-com.murrayc.galaxyzoo.app.Singleton -> com.murrayc.galaxyzoo.app.be:
+com.murrayc.galaxyzoo.app.Singleton -> com.murrayc.galaxyzoo.app.bf:
     java.util.List mCallbacks -> a
     com.murrayc.galaxyzoo.app.Singleton ourInstance -> b
     boolean initializationInProgress -> c
@@ -8855,20 +8866,20 @@ com.murrayc.galaxyzoo.app.Singleton -> com.murrayc.galaxyzoo.app.be:
     boolean localeIsDifferent(android.content.Context) -> a
     com.murrayc.galaxyzoo.app.Singleton access$202(com.murrayc.galaxyzoo.app.Singleton) -> a
     void access$400() -> c
-com.murrayc.galaxyzoo.app.Singleton$1 -> com.murrayc.galaxyzoo.app.bf:
-com.murrayc.galaxyzoo.app.Singleton$Callbacks -> com.murrayc.galaxyzoo.app.bg:
+com.murrayc.galaxyzoo.app.Singleton$1 -> com.murrayc.galaxyzoo.app.bg:
+com.murrayc.galaxyzoo.app.Singleton$Callbacks -> com.murrayc.galaxyzoo.app.bh:
     void onInitialized() -> a
-com.murrayc.galaxyzoo.app.Singleton$InitAsyncTask -> com.murrayc.galaxyzoo.app.bh:
+com.murrayc.galaxyzoo.app.Singleton$InitAsyncTask -> com.murrayc.galaxyzoo.app.bi:
     java.lang.Void doInBackground(android.content.Context[]) -> a
     void onPostExecute(java.lang.Void) -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.murrayc.galaxyzoo.app.Singleton$LocaleDetails -> com.murrayc.galaxyzoo.app.bi:
+com.murrayc.galaxyzoo.app.Singleton$LocaleDetails -> com.murrayc.galaxyzoo.app.bj:
     java.lang.String language -> a
     java.lang.String countryCode -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.murrayc.galaxyzoo.app.SubjectExtrasFragment -> com.murrayc.galaxyzoo.app.bj:
+com.murrayc.galaxyzoo.app.SubjectExtrasFragment -> com.murrayc.galaxyzoo.app.bk:
     java.lang.String[] mColumns -> ab
     android.database.Cursor mCursor -> ac
     java.lang.String mZooniverseId -> ad
@@ -8892,18 +8903,20 @@ com.murrayc.galaxyzoo.app.SubjectExtrasFragment -> com.murrayc.galaxyzoo.app.bj:
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.SubjectExtrasFragment) -> a
     void access$100(com.murrayc.galaxyzoo.app.SubjectExtrasFragment) -> b
-com.murrayc.galaxyzoo.app.SubjectExtrasFragment$1 -> com.murrayc.galaxyzoo.app.bk:
+com.murrayc.galaxyzoo.app.SubjectExtrasFragment$1 -> com.murrayc.galaxyzoo.app.bl:
     com.murrayc.galaxyzoo.app.SubjectExtrasFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.SubjectExtrasFragment$2 -> com.murrayc.galaxyzoo.app.bl:
+com.murrayc.galaxyzoo.app.SubjectExtrasFragment$2 -> com.murrayc.galaxyzoo.app.bm:
     com.murrayc.galaxyzoo.app.SubjectExtrasFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.SubjectFragment -> com.murrayc.galaxyzoo.app.bm:
+com.murrayc.galaxyzoo.app.SubjectFragment -> com.murrayc.galaxyzoo.app.bn:
     java.lang.String[] mColumns -> ab
     android.database.Cursor mCursor -> ac
     android.view.View mRootView -> ad
     android.widget.ImageView mImageView -> ae
     boolean mInverted -> af
+    java.lang.String mUriImageStandard -> ag
+    java.lang.String mUriImageInverted -> ah
     boolean $assertionsDisabled -> aa
     void onCreate(android.os.Bundle) -> d
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
@@ -8924,17 +8937,17 @@ com.murrayc.galaxyzoo.app.SubjectFragment -> com.murrayc.galaxyzoo.app.bm:
     void onPause() -> m
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.SubjectFragment) -> a
-com.murrayc.galaxyzoo.app.SubjectFragment$1 -> com.murrayc.galaxyzoo.app.bn:
+com.murrayc.galaxyzoo.app.SubjectFragment$1 -> com.murrayc.galaxyzoo.app.bo:
     com.murrayc.galaxyzoo.app.SubjectFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.murrayc.galaxyzoo.app.SubjectFragment$2 -> com.murrayc.galaxyzoo.app.bo:
+com.murrayc.galaxyzoo.app.SubjectFragment$2 -> com.murrayc.galaxyzoo.app.bp:
     com.murrayc.galaxyzoo.app.SubjectFragment this$0 -> a
     void onSuccess() -> a
     void onError() -> b
 com.murrayc.galaxyzoo.app.SubjectViewerActivity -> com.murrayc.galaxyzoo.app.SubjectViewerActivity:
     void onCreate(android.os.Bundle) -> onCreate
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-com.murrayc.galaxyzoo.app.SubjectViewerFragment -> com.murrayc.galaxyzoo.app.bp:
+com.murrayc.galaxyzoo.app.SubjectViewerFragment -> com.murrayc.galaxyzoo.app.bq:
     java.lang.String[] mColumns -> ab
     android.database.Cursor mCursor -> ac
     android.view.View mLoadingView -> ad
@@ -8951,7 +8964,7 @@ com.murrayc.galaxyzoo.app.SubjectViewerFragment -> com.murrayc.galaxyzoo.app.bp:
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> a
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
-com.murrayc.galaxyzoo.app.UiUtils -> com.murrayc.galaxyzoo.app.bq:
+com.murrayc.galaxyzoo.app.UiUtils -> com.murrayc.galaxyzoo.app.br:
     void openDiscussionPage(android.content.Context,java.lang.String) -> a
     void showLoggedInToast(android.content.Context) -> a
     int getPxForDpResource(android.content.Context,int) -> a
@@ -8963,7 +8976,7 @@ com.murrayc.galaxyzoo.app.UiUtils -> com.murrayc.galaxyzoo.app.bq:
     void warnAboutNoWifiNetworkConnection(android.app.Activity) -> c
     boolean warnAboutMissingNetwork(android.app.Activity) -> a
     boolean warnAboutMissingNetwork(android.app.Activity,boolean) -> a
-com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.br:
+com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.bs:
     boolean getUseWifiOnlyFromSharedPrefs(android.content.Context) -> a
     boolean getShowDiscussQuestionFromSharedPrefs(android.content.Context) -> b
     android.content.SharedPreferences getPreferences(android.content.Context) -> c
@@ -8973,16 +8986,16 @@ com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.br:
     void abandonItem(android.content.Context,java.lang.String) -> b
     android.net.Uri getItemUri(java.lang.String) -> a
     void initDefaultPrefs(android.content.Context) -> e
-com.murrayc.galaxyzoo.app.Utils$NetworkConnected -> com.murrayc.galaxyzoo.app.bs:
+com.murrayc.galaxyzoo.app.Utils$NetworkConnected -> com.murrayc.galaxyzoo.app.bt:
     boolean connected -> a
     boolean notConnectedBecauseNotOnWifi -> b
-com.murrayc.galaxyzoo.app.ZooAccountAuthenticatorActivity -> com.murrayc.galaxyzoo.app.bt:
+com.murrayc.galaxyzoo.app.ZooAccountAuthenticatorActivity -> com.murrayc.galaxyzoo.app.bu:
     android.accounts.AccountAuthenticatorResponse mAccountAuthenticatorResponse -> n
     android.os.Bundle mResultBundle -> o
     void setAccountAuthenticatorResult(android.os.Bundle) -> a
     void onCreate(android.os.Bundle) -> onCreate
     void finish() -> finish
-com.murrayc.galaxyzoo.app.ZooFragment -> com.murrayc.galaxyzoo.app.bu:
+com.murrayc.galaxyzoo.app.ZooFragment -> com.murrayc.galaxyzoo.app.bv:
     boolean onOptionsItemSelected(android.view.MenuItem) -> a
     void requestLogin() -> R
     void showAbout() -> S
@@ -9134,17 +9147,20 @@ com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder -> com.murrayc.galaxyzoo.app.
     com.android.volley.RequestQueue mRequestQueue -> c
     java.lang.String[] PROJECTION_DOWNLOAD_MISSING_IMAGES -> d
     java.lang.String[] PROJECTION_CACHE_URIS_TO_FILES -> e
+    java.lang.String[] PROJECTION_CHECK_IMAGES -> f
     boolean downloadMissingImages() -> a
     void downloadMissingImage(android.net.Uri,java.lang.String,java.lang.String,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
+    boolean checkForDeletedCachedImages() -> b
+    boolean cachedImageExists(java.lang.String) -> b
     void addSubjects(java.util.List,boolean) -> a
     void cacheUrisToFiles(android.net.Uri,boolean) -> a
     void cacheUriToFileWithNullChecks(java.lang.String,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,boolean) -> a
     void cacheUriToFile(java.lang.String,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,boolean) -> b
     void addRequestToQueue(com.android.volley.Request) -> a
     void onImageDownloadDone(boolean,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
-    android.content.Context getContext() -> b
-    void throwIfNoNetwork() -> c
-    void markImageDownloadAsNotInProgress(java.lang.String) -> b
+    android.content.Context getContext() -> c
+    void throwIfNoNetwork() -> d
+    void markImageDownloadAsNotInProgress(java.lang.String) -> c
     void markImageAsDownloaded(android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,java.lang.String) -> a
     void addSubject(com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject,boolean) -> a
     boolean subjectIsInDatabase(java.lang.String) -> a
@@ -9174,23 +9190,24 @@ com.murrayc.galaxyzoo.app.syncadapter.SyncAdapter -> com.murrayc.galaxyzoo.app.s
     java.lang.String[] PROJECTION_COUNT_AS_COUNT -> g
     void onPerformSync(android.accounts.Account,android.os.Bundle,java.lang.String,android.content.ContentProviderClient,android.content.SyncResult) -> onPerformSync
     void doRegularTasks() -> a
-    boolean downloadMissingImages() -> b
-    android.content.ContentResolver getContentResolver() -> c
-    boolean downloadMinimumSubjectsAsync() -> d
+    boolean checkImagesStillExist() -> b
+    boolean downloadMissingImages() -> c
+    android.content.ContentResolver getContentResolver() -> d
+    boolean downloadMinimumSubjectsAsync() -> e
     void requestMoreItemsAsync(int) -> a
-    int getNotDoneNeededForCache() -> e
-    int getNotDoneCount() -> f
-    int getUploadedCount() -> g
-    boolean uploadOutstandingClassifications() -> h
-    boolean removeOldSubjects() -> i
+    int getNotDoneNeededForCache() -> f
+    int getNotDoneCount() -> g
+    int getUploadedCount() -> h
+    boolean uploadOutstandingClassifications() -> i
+    boolean removeOldSubjects() -> j
     void removeItem(java.lang.String) -> a
     boolean doUploadSync(java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
     java.lang.String getAnnotationPart(int) -> b
     void onQueryTaskFinished(java.util.List) -> a
     void onUploadTaskFinished(boolean,java.lang.String) -> a
     void markItemAsUploaded(java.lang.String) -> b
-    int getMinCacheSize() -> j
-    int getKeepCount() -> k
+    int getMinCacheSize() -> k
+    int getKeepCount() -> l
     void access$000(com.murrayc.galaxyzoo.app.syncadapter.SyncAdapter,java.util.List) -> a
     boolean access$102(com.murrayc.galaxyzoo.app.syncadapter.SyncAdapter,boolean) -> a
     boolean access$200(com.murrayc.galaxyzoo.app.syncadapter.SyncAdapter,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
@@ -9224,14 +9241,15 @@ com.squareup.picasso.Action -> com.b.a.a:
     com.squareup.picasso.Picasso picasso -> a
     com.squareup.picasso.Request request -> b
     java.lang.ref.WeakReference target -> c
-    boolean skipCache -> d
-    boolean noFade -> e
-    int errorResId -> f
-    android.graphics.drawable.Drawable errorDrawable -> g
-    java.lang.String key -> h
-    java.lang.Object tag -> i
-    boolean willReplay -> j
-    boolean cancelled -> k
+    boolean noFade -> d
+    int memoryPolicy -> e
+    int networkPolicy -> f
+    int errorResId -> g
+    android.graphics.drawable.Drawable errorDrawable -> h
+    java.lang.String key -> i
+    java.lang.Object tag -> j
+    boolean willReplay -> k
+    boolean cancelled -> l
     void complete(android.graphics.Bitmap,com.squareup.picasso.Picasso$LoadedFrom) -> a
     void error() -> a
     void cancel() -> b
@@ -9240,22 +9258,24 @@ com.squareup.picasso.Action -> com.b.a.a:
     java.lang.String getKey() -> e
     boolean isCancelled() -> f
     boolean willReplay() -> g
-    com.squareup.picasso.Picasso getPicasso() -> h
-    com.squareup.picasso.Picasso$Priority getPriority() -> i
-    java.lang.Object getTag() -> j
+    int getMemoryPolicy() -> h
+    int getNetworkPolicy() -> i
+    com.squareup.picasso.Picasso getPicasso() -> j
+    com.squareup.picasso.Picasso$Priority getPriority() -> k
+    java.lang.Object getTag() -> l
 com.squareup.picasso.Action$RequestWeakReference -> com.b.a.b:
     com.squareup.picasso.Action action -> a
 com.squareup.picasso.AssetRequestHandler -> com.b.a.c:
     int ASSET_PREFIX_LENGTH -> a
     android.content.res.AssetManager assetManager -> b
     boolean canHandleRequest(com.squareup.picasso.Request) -> a
-    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request) -> b
-    android.graphics.Bitmap decodeAsset(com.squareup.picasso.Request,java.lang.String) -> a
+    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request,int) -> a
+    java.lang.String getFilePath(com.squareup.picasso.Request) -> b
 com.squareup.picasso.BitmapHunter -> com.b.a.d:
-    java.lang.Object DECODE_LOCK -> s
-    java.lang.ThreadLocal NAME_BUILDER -> t
-    java.util.concurrent.atomic.AtomicInteger SEQUENCE_GENERATOR -> u
-    com.squareup.picasso.RequestHandler ERRORING_HANDLER -> v
+    java.lang.Object DECODE_LOCK -> t
+    java.lang.ThreadLocal NAME_BUILDER -> u
+    java.util.concurrent.atomic.AtomicInteger SEQUENCE_GENERATOR -> v
+    com.squareup.picasso.RequestHandler ERRORING_HANDLER -> w
     int sequence -> a
     com.squareup.picasso.Picasso picasso -> b
     com.squareup.picasso.Dispatcher dispatcher -> c
@@ -9263,17 +9283,19 @@ com.squareup.picasso.BitmapHunter -> com.b.a.d:
     com.squareup.picasso.Stats stats -> e
     java.lang.String key -> f
     com.squareup.picasso.Request data -> g
-    boolean skipMemoryCache -> h
-    com.squareup.picasso.RequestHandler requestHandler -> i
-    com.squareup.picasso.Action action -> j
-    java.util.List actions -> k
-    android.graphics.Bitmap result -> l
-    java.util.concurrent.Future future -> m
-    com.squareup.picasso.Picasso$LoadedFrom loadedFrom -> n
-    java.lang.Exception exception -> o
-    int exifRotation -> p
-    int retryCount -> q
-    com.squareup.picasso.Picasso$Priority priority -> r
+    int memoryPolicy -> h
+    int networkPolicy -> i
+    com.squareup.picasso.RequestHandler requestHandler -> j
+    com.squareup.picasso.Action action -> k
+    java.util.List actions -> l
+    android.graphics.Bitmap result -> m
+    java.util.concurrent.Future future -> n
+    com.squareup.picasso.Picasso$LoadedFrom loadedFrom -> o
+    java.lang.Exception exception -> p
+    int exifRotation -> q
+    int retryCount -> r
+    com.squareup.picasso.Picasso$Priority priority -> s
+    android.graphics.Bitmap decodeStream(java.io.InputStream,com.squareup.picasso.Request) -> a
     void run() -> run
     android.graphics.Bitmap hunt() -> a
     void attach(com.squareup.picasso.Action) -> a
@@ -9281,11 +9303,11 @@ com.squareup.picasso.BitmapHunter -> com.b.a.d:
     com.squareup.picasso.Picasso$Priority computeNewPriority() -> o
     boolean cancel() -> b
     boolean isCancelled() -> c
-    boolean shouldSkipMemoryCache() -> d
     boolean shouldRetry(boolean,android.net.NetworkInfo) -> a
-    boolean supportsReplay() -> e
-    android.graphics.Bitmap getResult() -> f
-    java.lang.String getKey() -> g
+    boolean supportsReplay() -> d
+    android.graphics.Bitmap getResult() -> e
+    java.lang.String getKey() -> f
+    int getMemoryPolicy() -> g
     com.squareup.picasso.Request getData() -> h
     com.squareup.picasso.Action getAction() -> i
     com.squareup.picasso.Picasso getPicasso() -> j
@@ -9297,12 +9319,13 @@ com.squareup.picasso.BitmapHunter -> com.b.a.d:
     com.squareup.picasso.BitmapHunter forRequest(com.squareup.picasso.Picasso,com.squareup.picasso.Dispatcher,com.squareup.picasso.Cache,com.squareup.picasso.Stats,com.squareup.picasso.Action) -> a
     android.graphics.Bitmap applyCustomTransformations(java.util.List,android.graphics.Bitmap) -> a
     android.graphics.Bitmap transformResult(com.squareup.picasso.Request,android.graphics.Bitmap,int) -> a
+    boolean shouldResize(boolean,int,int,int,int) -> a
 com.squareup.picasso.BitmapHunter$1 -> com.b.a.e:
     java.lang.StringBuilder initialValue() -> a
     java.lang.Object initialValue() -> initialValue
 com.squareup.picasso.BitmapHunter$2 -> com.b.a.f:
     boolean canHandleRequest(com.squareup.picasso.Request) -> a
-    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request) -> b
+    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request,int) -> a
 com.squareup.picasso.BitmapHunter$3 -> com.b.a.g:
     com.squareup.picasso.Transformation val$transformation -> a
     java.lang.RuntimeException val$e -> b
@@ -9334,16 +9357,15 @@ com.squareup.picasso.ContactsPhotoRequestHandler -> com.b.a.n:
     android.content.UriMatcher matcher -> b
     android.content.Context context -> a
     boolean canHandleRequest(com.squareup.picasso.Request) -> a
-    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request) -> b
-    java.io.InputStream getInputStream(com.squareup.picasso.Request) -> c
-    android.graphics.Bitmap decodeStream(java.io.InputStream,com.squareup.picasso.Request) -> a
+    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request,int) -> a
+    java.io.InputStream getInputStream(com.squareup.picasso.Request) -> b
 com.squareup.picasso.ContactsPhotoRequestHandler$ContactPhotoStreamIcs -> com.b.a.o:
     java.io.InputStream get(android.content.ContentResolver,android.net.Uri) -> a
 com.squareup.picasso.ContentStreamRequestHandler -> com.b.a.p:
     android.content.Context context -> a
     boolean canHandleRequest(com.squareup.picasso.Request) -> a
-    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request) -> b
-    android.graphics.Bitmap decodeContentStream(com.squareup.picasso.Request) -> c
+    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request,int) -> a
+    java.io.InputStream getInputStream(com.squareup.picasso.Request) -> b
 com.squareup.picasso.DeferredRequestCreator -> com.b.a.q:
     com.squareup.picasso.RequestCreator creator -> a
     java.lang.ref.WeakReference target -> b
@@ -9403,7 +9425,7 @@ com.squareup.picasso.Dispatcher$NetworkBroadcastReceiver -> com.b.a.v:
     void register() -> a
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
 com.squareup.picasso.Downloader -> com.b.a.w:
-    com.squareup.picasso.Downloader$Response load(android.net.Uri,boolean) -> a
+    com.squareup.picasso.Downloader$Response load(android.net.Uri,int) -> a
 com.squareup.picasso.Downloader$Response -> com.b.a.x:
     java.io.InputStream stream -> a
     android.graphics.Bitmap bitmap -> b
@@ -9413,12 +9435,14 @@ com.squareup.picasso.Downloader$Response -> com.b.a.x:
     android.graphics.Bitmap getBitmap() -> b
     long getContentLength() -> c
 com.squareup.picasso.Downloader$ResponseException -> com.b.a.y:
+    boolean localCacheOnly -> a
+    int responseCode -> b
 com.squareup.picasso.FileRequestHandler -> com.b.a.z:
     boolean canHandleRequest(com.squareup.picasso.Request) -> a
-    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request) -> b
+    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request,int) -> a
     int getFileExifRotation(android.net.Uri) -> a
 com.squareup.picasso.ImageViewAction -> com.b.a.aa:
-    com.squareup.picasso.Callback callback -> l
+    com.squareup.picasso.Callback callback -> m
     void complete(android.graphics.Bitmap,com.squareup.picasso.Picasso$LoadedFrom) -> a
     void error() -> a
     void cancel() -> b
@@ -9457,7 +9481,7 @@ com.squareup.picasso.MarkableInputStream -> com.b.a.ac:
 com.squareup.picasso.MediaStoreRequestHandler -> com.b.a.ad:
     java.lang.String[] CONTENT_ORIENTATION -> b
     boolean canHandleRequest(com.squareup.picasso.Request) -> a
-    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request) -> b
+    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request,int) -> a
     com.squareup.picasso.MediaStoreRequestHandler$PicassoKind getPicassoKind(int,int) -> a
     int getExifOrientation(android.content.ContentResolver,android.net.Uri) -> a
 com.squareup.picasso.MediaStoreRequestHandler$PicassoKind -> com.b.a.ae:
@@ -9470,26 +9494,46 @@ com.squareup.picasso.MediaStoreRequestHandler$PicassoKind -> com.b.a.ae:
     com.squareup.picasso.MediaStoreRequestHandler$PicassoKind[] $VALUES -> g
     com.squareup.picasso.MediaStoreRequestHandler$PicassoKind[] values() -> values
     com.squareup.picasso.MediaStoreRequestHandler$PicassoKind valueOf(java.lang.String) -> valueOf
-com.squareup.picasso.NetworkRequestHandler -> com.b.a.af:
+com.squareup.picasso.MemoryPolicy -> com.b.a.af:
+    com.squareup.picasso.MemoryPolicy NO_CACHE -> a
+    com.squareup.picasso.MemoryPolicy NO_STORE -> b
+    int index -> c
+    com.squareup.picasso.MemoryPolicy[] $VALUES -> d
+    com.squareup.picasso.MemoryPolicy[] values() -> values
+    com.squareup.picasso.MemoryPolicy valueOf(java.lang.String) -> valueOf
+    boolean shouldReadFromMemoryCache(int) -> a
+    boolean shouldWriteToMemoryCache(int) -> b
+com.squareup.picasso.NetworkPolicy -> com.b.a.ag:
+    com.squareup.picasso.NetworkPolicy NO_CACHE -> a
+    com.squareup.picasso.NetworkPolicy NO_STORE -> b
+    com.squareup.picasso.NetworkPolicy OFFLINE -> c
+    int index -> d
+    com.squareup.picasso.NetworkPolicy[] $VALUES -> e
+    com.squareup.picasso.NetworkPolicy[] values() -> values
+    com.squareup.picasso.NetworkPolicy valueOf(java.lang.String) -> valueOf
+    boolean shouldReadFromDiskCache(int) -> a
+    boolean shouldWriteToDiskCache(int) -> b
+    boolean isOfflineOnly(int) -> c
+com.squareup.picasso.NetworkRequestHandler -> com.b.a.ah:
     com.squareup.picasso.Downloader downloader -> a
     com.squareup.picasso.Stats stats -> b
     boolean canHandleRequest(com.squareup.picasso.Request) -> a
-    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request) -> b
+    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request,int) -> a
     int getRetryCount() -> a
     boolean shouldRetry(boolean,android.net.NetworkInfo) -> a
     boolean supportsReplay() -> b
-    android.graphics.Bitmap decodeStream(java.io.InputStream,com.squareup.picasso.Request) -> a
-com.squareup.picasso.OkHttpDownloader -> com.b.a.ag:
-    com.squareup.okhttp.OkUrlFactory urlFactory -> a
-    java.net.HttpURLConnection openConnection(android.net.Uri) -> a
-    com.squareup.picasso.Downloader$Response load(android.net.Uri,boolean) -> a
-com.squareup.picasso.Picasso -> com.b.a.ah:
+com.squareup.picasso.NetworkRequestHandler$ContentLengthException -> com.b.a.ai:
+com.squareup.picasso.OkHttpDownloader -> com.b.a.aj:
+    com.squareup.okhttp.OkHttpClient client -> a
+    com.squareup.okhttp.OkHttpClient defaultOkHttpClient() -> a
+    com.squareup.picasso.Downloader$Response load(android.net.Uri,int) -> a
+com.squareup.picasso.Picasso -> com.b.a.ak:
     android.os.Handler HANDLER -> a
     com.squareup.picasso.Picasso singleton -> b
-    com.squareup.picasso.Picasso$Listener listener -> m
-    com.squareup.picasso.Picasso$RequestTransformer requestTransformer -> n
-    com.squareup.picasso.Picasso$CleanupThread cleanupThread -> o
-    java.util.List requestHandlers -> p
+    com.squareup.picasso.Picasso$Listener listener -> n
+    com.squareup.picasso.Picasso$RequestTransformer requestTransformer -> o
+    com.squareup.picasso.Picasso$CleanupThread cleanupThread -> p
+    java.util.List requestHandlers -> q
     android.content.Context context -> c
     com.squareup.picasso.Dispatcher dispatcher -> d
     com.squareup.picasso.Cache cache -> e
@@ -9497,9 +9541,10 @@ com.squareup.picasso.Picasso -> com.b.a.ah:
     java.util.Map targetToAction -> g
     java.util.Map targetToDeferredRequestCreator -> h
     java.lang.ref.ReferenceQueue referenceQueue -> i
-    boolean indicatorsEnabled -> j
-    boolean loggingEnabled -> k
-    boolean shutdown -> l
+    android.graphics.Bitmap$Config defaultBitmapConfig -> j
+    boolean indicatorsEnabled -> k
+    boolean loggingEnabled -> l
+    boolean shutdown -> m
     void cancelRequest(android.widget.ImageView) -> a
     com.squareup.picasso.RequestCreator load(android.net.Uri) -> a
     com.squareup.picasso.RequestCreator load(java.lang.String) -> a
@@ -9516,9 +9561,9 @@ com.squareup.picasso.Picasso -> com.b.a.ah:
     com.squareup.picasso.Picasso with(android.content.Context) -> a
     void setSingletonInstance(com.squareup.picasso.Picasso) -> a
     void access$000(com.squareup.picasso.Picasso,java.lang.Object) -> a
-com.squareup.picasso.Picasso$1 -> com.b.a.ai:
+com.squareup.picasso.Picasso$1 -> com.b.a.al:
     void handleMessage(android.os.Message) -> handleMessage
-com.squareup.picasso.Picasso$Builder -> com.b.a.aj:
+com.squareup.picasso.Picasso$Builder -> com.b.a.am:
     android.content.Context context -> a
     com.squareup.picasso.Downloader downloader -> b
     java.util.concurrent.ExecutorService service -> c
@@ -9526,21 +9571,22 @@ com.squareup.picasso.Picasso$Builder -> com.b.a.aj:
     com.squareup.picasso.Picasso$Listener listener -> e
     com.squareup.picasso.Picasso$RequestTransformer transformer -> f
     java.util.List requestHandlers -> g
-    boolean indicatorsEnabled -> h
-    boolean loggingEnabled -> i
+    android.graphics.Bitmap$Config defaultBitmapConfig -> h
+    boolean indicatorsEnabled -> i
+    boolean loggingEnabled -> j
     com.squareup.picasso.Picasso$Builder listener(com.squareup.picasso.Picasso$Listener) -> a
     com.squareup.picasso.Picasso build() -> a
-com.squareup.picasso.Picasso$CleanupThread -> com.b.a.ak:
+com.squareup.picasso.Picasso$CleanupThread -> com.b.a.an:
     java.lang.ref.ReferenceQueue referenceQueue -> a
     android.os.Handler handler -> b
     void run() -> run
-com.squareup.picasso.Picasso$CleanupThread$1 -> com.b.a.al:
+com.squareup.picasso.Picasso$CleanupThread$1 -> com.b.a.ao:
     java.lang.Exception val$e -> a
     com.squareup.picasso.Picasso$CleanupThread this$0 -> b
     void run() -> run
-com.squareup.picasso.Picasso$Listener -> com.b.a.am:
+com.squareup.picasso.Picasso$Listener -> com.b.a.ap:
     void onImageLoadFailed(com.squareup.picasso.Picasso,android.net.Uri,java.lang.Exception) -> a
-com.squareup.picasso.Picasso$LoadedFrom -> com.b.a.an:
+com.squareup.picasso.Picasso$LoadedFrom -> com.b.a.aq:
     com.squareup.picasso.Picasso$LoadedFrom MEMORY -> a
     com.squareup.picasso.Picasso$LoadedFrom DISK -> b
     com.squareup.picasso.Picasso$LoadedFrom NETWORK -> c
@@ -9548,19 +9594,19 @@ com.squareup.picasso.Picasso$LoadedFrom -> com.b.a.an:
     com.squareup.picasso.Picasso$LoadedFrom[] $VALUES -> e
     com.squareup.picasso.Picasso$LoadedFrom[] values() -> values
     com.squareup.picasso.Picasso$LoadedFrom valueOf(java.lang.String) -> valueOf
-com.squareup.picasso.Picasso$Priority -> com.b.a.ao:
+com.squareup.picasso.Picasso$Priority -> com.b.a.ar:
     com.squareup.picasso.Picasso$Priority LOW -> a
     com.squareup.picasso.Picasso$Priority NORMAL -> b
     com.squareup.picasso.Picasso$Priority HIGH -> c
     com.squareup.picasso.Picasso$Priority[] $VALUES -> d
     com.squareup.picasso.Picasso$Priority[] values() -> values
     com.squareup.picasso.Picasso$Priority valueOf(java.lang.String) -> valueOf
-com.squareup.picasso.Picasso$RequestTransformer -> com.b.a.ap:
+com.squareup.picasso.Picasso$RequestTransformer -> com.b.a.as:
     com.squareup.picasso.Picasso$RequestTransformer IDENTITY -> a
     com.squareup.picasso.Request transformRequest(com.squareup.picasso.Request) -> a
-com.squareup.picasso.Picasso$RequestTransformer$1 -> com.b.a.aq:
+com.squareup.picasso.Picasso$RequestTransformer$1 -> com.b.a.at:
     com.squareup.picasso.Request transformRequest(com.squareup.picasso.Request) -> a
-com.squareup.picasso.PicassoDrawable -> com.b.a.ar:
+com.squareup.picasso.PicassoDrawable -> com.b.a.au:
     android.graphics.Paint DEBUG_PAINT -> e
     boolean debugging -> f
     float density -> g
@@ -9577,19 +9623,19 @@ com.squareup.picasso.PicassoDrawable -> com.b.a.ar:
     void onBoundsChange(android.graphics.Rect) -> onBoundsChange
     void drawDebugIndicator(android.graphics.Canvas) -> a
     android.graphics.Path getTrianglePath(android.graphics.Point,int) -> a
-com.squareup.picasso.PicassoExecutorService -> com.b.a.as:
+com.squareup.picasso.PicassoExecutorService -> com.b.a.av:
     void adjustThreadCount(android.net.NetworkInfo) -> a
     void setThreadCount(int) -> a
     java.util.concurrent.Future submit(java.lang.Runnable) -> submit
-com.squareup.picasso.PicassoExecutorService$PicassoFutureTask -> com.b.a.at:
+com.squareup.picasso.PicassoExecutorService$PicassoFutureTask -> com.b.a.aw:
     com.squareup.picasso.BitmapHunter hunter -> a
     int compareTo(com.squareup.picasso.PicassoExecutorService$PicassoFutureTask) -> a
     int compareTo(java.lang.Object) -> compareTo
-com.squareup.picasso.Request -> com.b.a.au:
-    long TOO_LONG_LOG -> r
+com.squareup.picasso.Request -> com.b.a.ax:
+    long TOO_LONG_LOG -> s
     int id -> a
     long started -> b
-    boolean loadFromLocalCacheOnly -> c
+    int networkPolicy -> c
     android.net.Uri uri -> d
     int resourceId -> e
     java.lang.String stableKey -> f
@@ -9598,12 +9644,13 @@ com.squareup.picasso.Request -> com.b.a.au:
     int targetHeight -> i
     boolean centerCrop -> j
     boolean centerInside -> k
-    float rotationDegrees -> l
-    float rotationPivotX -> m
-    float rotationPivotY -> n
-    boolean hasRotationPivot -> o
-    android.graphics.Bitmap$Config config -> p
-    com.squareup.picasso.Picasso$Priority priority -> q
+    boolean onlyScaleDown -> l
+    float rotationDegrees -> m
+    float rotationPivotX -> n
+    float rotationPivotY -> o
+    boolean hasRotationPivot -> p
+    android.graphics.Bitmap$Config config -> q
+    com.squareup.picasso.Picasso$Priority priority -> r
     java.lang.String toString() -> toString
     java.lang.String logId() -> a
     java.lang.String plainId() -> b
@@ -9612,8 +9659,8 @@ com.squareup.picasso.Request -> com.b.a.au:
     boolean needsTransformation() -> e
     boolean needsMatrixTransform() -> f
     boolean hasCustomTransformations() -> g
-com.squareup.picasso.Request$1 -> com.b.a.av:
-com.squareup.picasso.Request$Builder -> com.b.a.aw:
+com.squareup.picasso.Request$1 -> com.b.a.ay:
+com.squareup.picasso.Request$Builder -> com.b.a.az:
     android.net.Uri uri -> a
     int resourceId -> b
     java.lang.String stableKey -> c
@@ -9621,64 +9668,62 @@ com.squareup.picasso.Request$Builder -> com.b.a.aw:
     int targetHeight -> e
     boolean centerCrop -> f
     boolean centerInside -> g
-    float rotationDegrees -> h
-    float rotationPivotX -> i
-    float rotationPivotY -> j
-    boolean hasRotationPivot -> k
-    java.util.List transformations -> l
-    android.graphics.Bitmap$Config config -> m
-    com.squareup.picasso.Picasso$Priority priority -> n
+    boolean onlyScaleDown -> h
+    float rotationDegrees -> i
+    float rotationPivotX -> j
+    float rotationPivotY -> k
+    boolean hasRotationPivot -> l
+    java.util.List transformations -> m
+    android.graphics.Bitmap$Config config -> n
+    com.squareup.picasso.Picasso$Priority priority -> o
     boolean hasImage() -> a
     boolean hasSize() -> b
     com.squareup.picasso.Request$Builder resize(int,int) -> a
     com.squareup.picasso.Request build() -> c
-com.squareup.picasso.RequestCreator -> com.b.a.ax:
-    int nextId -> a
+com.squareup.picasso.RequestCreator -> com.b.a.ba:
+    java.util.concurrent.atomic.AtomicInteger nextId -> a
     com.squareup.picasso.Picasso picasso -> b
     com.squareup.picasso.Request$Builder data -> c
-    boolean skipMemoryCache -> d
-    boolean noFade -> e
-    boolean deferred -> f
-    boolean setPlaceholder -> g
-    int placeholderResId -> h
-    int errorResId -> i
-    android.graphics.drawable.Drawable placeholderDrawable -> j
-    android.graphics.drawable.Drawable errorDrawable -> k
-    java.lang.Object tag -> l
-    int getRequestId() -> c
+    boolean noFade -> d
+    boolean deferred -> e
+    boolean setPlaceholder -> f
+    int placeholderResId -> g
+    int errorResId -> h
+    int memoryPolicy -> i
+    int networkPolicy -> j
+    android.graphics.drawable.Drawable placeholderDrawable -> k
+    android.graphics.drawable.Drawable errorDrawable -> l
+    java.lang.Object tag -> m
     com.squareup.picasso.RequestCreator unfit() -> a
     com.squareup.picasso.RequestCreator resize(int,int) -> a
     void into(android.widget.ImageView,com.squareup.picasso.Callback) -> a
-    android.graphics.drawable.Drawable getPlaceholderDrawable() -> d
+    android.graphics.drawable.Drawable getPlaceholderDrawable() -> b
     com.squareup.picasso.Request createRequest(long) -> a
-    int access$000() -> b
-com.squareup.picasso.RequestCreator$1 -> com.b.a.ay:
-    java.util.concurrent.atomic.AtomicInteger val$id -> a
-    java.util.concurrent.CountDownLatch val$latch -> b
-    void run() -> run
-com.squareup.picasso.RequestHandler -> com.b.a.az:
+com.squareup.picasso.RequestHandler -> com.b.a.bb:
     boolean canHandleRequest(com.squareup.picasso.Request) -> a
-    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request) -> b
+    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request,int) -> a
     int getRetryCount() -> a
     boolean shouldRetry(boolean,android.net.NetworkInfo) -> a
     boolean supportsReplay() -> b
-    android.graphics.BitmapFactory$Options createBitmapOptions(com.squareup.picasso.Request) -> d
+    android.graphics.BitmapFactory$Options createBitmapOptions(com.squareup.picasso.Request) -> c
     boolean requiresInSampleSize(android.graphics.BitmapFactory$Options) -> a
     void calculateInSampleSize(int,int,android.graphics.BitmapFactory$Options,com.squareup.picasso.Request) -> a
     void calculateInSampleSize(int,int,int,int,android.graphics.BitmapFactory$Options,com.squareup.picasso.Request) -> a
-com.squareup.picasso.RequestHandler$Result -> com.b.a.ba:
+com.squareup.picasso.RequestHandler$Result -> com.b.a.bc:
     com.squareup.picasso.Picasso$LoadedFrom loadedFrom -> a
     android.graphics.Bitmap bitmap -> b
-    int exifOrientation -> c
+    java.io.InputStream stream -> c
+    int exifOrientation -> d
     android.graphics.Bitmap getBitmap() -> a
-    com.squareup.picasso.Picasso$LoadedFrom getLoadedFrom() -> b
-    int getExifOrientation() -> c
-com.squareup.picasso.ResourceRequestHandler -> com.b.a.bb:
+    java.io.InputStream getStream() -> b
+    com.squareup.picasso.Picasso$LoadedFrom getLoadedFrom() -> c
+    int getExifOrientation() -> d
+com.squareup.picasso.ResourceRequestHandler -> com.b.a.bd:
     android.content.Context context -> a
     boolean canHandleRequest(com.squareup.picasso.Request) -> a
-    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request) -> b
+    com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request,int) -> a
     android.graphics.Bitmap decodeResource(android.content.res.Resources,int,com.squareup.picasso.Request) -> a
-com.squareup.picasso.Stats -> com.b.a.bc:
+com.squareup.picasso.Stats -> com.b.a.be:
     android.os.HandlerThread statsThread -> a
     com.squareup.picasso.Cache cache -> b
     android.os.Handler handler -> c
@@ -9706,14 +9751,14 @@ com.squareup.picasso.Stats -> com.b.a.bc:
     com.squareup.picasso.StatsSnapshot createSnapshot() -> e
     void processBitmap(android.graphics.Bitmap,int) -> a
     long getAverage(int,long) -> a
-com.squareup.picasso.Stats$StatsHandler -> com.b.a.bd:
+com.squareup.picasso.Stats$StatsHandler -> com.b.a.bf:
     com.squareup.picasso.Stats stats -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.squareup.picasso.Stats$StatsHandler$1 -> com.b.a.be:
+com.squareup.picasso.Stats$StatsHandler$1 -> com.b.a.bg:
     android.os.Message val$msg -> a
     com.squareup.picasso.Stats$StatsHandler this$0 -> b
     void run() -> run
-com.squareup.picasso.StatsSnapshot -> com.b.a.bf:
+com.squareup.picasso.StatsSnapshot -> com.b.a.bh:
     int maxSize -> a
     int size -> b
     long cacheHits -> c
@@ -9730,21 +9775,26 @@ com.squareup.picasso.StatsSnapshot -> com.b.a.bf:
     long timeStamp -> n
     void dump(java.io.PrintWriter) -> a
     java.lang.String toString() -> toString
-com.squareup.picasso.Transformation -> com.b.a.bg:
+com.squareup.picasso.Transformation -> com.b.a.bi:
     android.graphics.Bitmap transform(android.graphics.Bitmap) -> a
     java.lang.String key() -> a
-com.squareup.picasso.UrlConnectionDownloader -> com.b.a.bh:
-    java.lang.Object lock -> b
+com.squareup.picasso.UrlConnectionDownloader -> com.b.a.bj:
     java.lang.Object cache -> a
-    android.content.Context context -> c
+    java.lang.Object lock -> b
+    java.lang.ThreadLocal CACHE_HEADER_BUILDER -> c
+    android.content.Context context -> d
     java.net.HttpURLConnection openConnection(android.net.Uri) -> a
-    com.squareup.picasso.Downloader$Response load(android.net.Uri,boolean) -> a
+    com.squareup.picasso.Downloader$Response load(android.net.Uri,int) -> a
     void installCacheIfNeeded(android.content.Context) -> a
-com.squareup.picasso.UrlConnectionDownloader$ResponseCacheIcs -> com.b.a.bi:
+com.squareup.picasso.UrlConnectionDownloader$1 -> com.b.a.bk:
+    java.lang.StringBuilder initialValue() -> a
+    java.lang.Object initialValue() -> initialValue
+com.squareup.picasso.UrlConnectionDownloader$ResponseCacheIcs -> com.b.a.bl:
     java.lang.Object install(android.content.Context) -> a
-com.squareup.picasso.Utils -> com.b.a.bj:
+com.squareup.picasso.Utils -> com.b.a.bm:
     java.lang.StringBuilder MAIN_THREAD_KEY_BUILDER -> a
     int getBitmapBytes(android.graphics.Bitmap) -> a
+    java.lang.Object checkNotNull(java.lang.Object,java.lang.String) -> a
     void checkMain() -> a
     boolean isMain() -> b
     java.lang.String getLogIdsForHunter(com.squareup.picasso.BitmapHunter) -> a
@@ -9756,8 +9806,6 @@ com.squareup.picasso.Utils -> com.b.a.bj:
     void closeQuietly(java.io.InputStream) -> a
     boolean parseResponseSourceHeader(java.lang.String) -> a
     com.squareup.picasso.Downloader createDefaultDownloader(android.content.Context) -> a
-    void sneakyRethrow(java.lang.Throwable) -> a
-    void sneakyThrow2(java.lang.Throwable) -> b
     java.io.File createDefaultCacheDir(android.content.Context) -> b
     long calculateDiskCacheSize(java.io.File) -> a
     int calculateMemoryCacheSize(android.content.Context) -> c
@@ -9768,13 +9816,13 @@ com.squareup.picasso.Utils -> com.b.a.bj:
     boolean isWebPFile(java.io.InputStream) -> c
     int getResourceId(android.content.res.Resources,com.squareup.picasso.Request) -> a
     android.content.res.Resources getResources(android.content.Context,com.squareup.picasso.Request) -> a
-com.squareup.picasso.Utils$ActivityManagerHoneycomb -> com.b.a.bk:
+com.squareup.picasso.Utils$ActivityManagerHoneycomb -> com.b.a.bn:
     int getLargeMemoryClass(android.app.ActivityManager) -> a
-com.squareup.picasso.Utils$BitmapHoneycombMR1 -> com.b.a.bl:
+com.squareup.picasso.Utils$BitmapHoneycombMR1 -> com.b.a.bo:
     int getByteCount(android.graphics.Bitmap) -> a
-com.squareup.picasso.Utils$OkHttpLoaderCreator -> com.b.a.bm:
+com.squareup.picasso.Utils$OkHttpLoaderCreator -> com.b.a.bp:
     com.squareup.picasso.Downloader create(android.content.Context) -> a
-com.squareup.picasso.Utils$PicassoThread -> com.b.a.bn:
+com.squareup.picasso.Utils$PicassoThread -> com.b.a.bq:
     void run() -> run
-com.squareup.picasso.Utils$PicassoThreadFactory -> com.b.a.bo:
+com.squareup.picasso.Utils$PicassoThreadFactory -> com.b.a.br:
     java.lang.Thread newThread(java.lang.Runnable) -> newThread
