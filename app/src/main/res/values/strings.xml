@@ -30,6 +30,9 @@
     <string name="action_invert">Invert</string>
 
     <!-- An action. Shown on a button or menu item. -->
+    <string name="action_download_image">Download Image</string>
+
+    <!-- An action. Shown on a button or menu item. -->
     <string name="action_examples">Examples</string>
 
     <!-- An action. Shown on a button or menu item. -->

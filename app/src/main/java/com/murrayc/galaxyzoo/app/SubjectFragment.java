@@ -20,6 +20,8 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -61,15 +63,19 @@ public class SubjectFragment extends ItemFragment
     private static final int COLUMN_INDEX_LOCATION_STANDARD_DOWNLOADED = 2;
     private static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 3;
     private static final int COLUMN_INDEX_LOCATION_INVERTED_DOWNLOADED = 4;
+    private static final int COLUMN_INDEX_LOCATION_STANDARD_URI_REMOTE = 5;
+
     private final String[] mColumns = {Item.Columns._ID,
             Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_STANDARD_DOWNLOADED,
-            Item.Columns.LOCATION_INVERTED_URI, Item.Columns.LOCATION_INVERTED_DOWNLOADED};
+            Item.Columns.LOCATION_INVERTED_URI, Item.Columns.LOCATION_INVERTED_DOWNLOADED,
+            Item.Columns.LOCATION_STANDARD_URI_REMOTE};
     private Cursor mCursor = null;
     private View mRootView = null;
     private ImageView mImageView = null;
     private boolean mInverted = false;
     private String mUriImageStandard;
     private String mUriImageInverted;
+    private String mUriStandardRemote;
 
 
     /**
@@ -142,6 +148,9 @@ public class SubjectFragment extends ItemFragment
             case R.id.option_menu_item_invert:
                 doInvert();
                 return true;
+            case R.id.option_menu_item_download_image:
+                doDownloadImage();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -150,6 +159,40 @@ public class SubjectFragment extends ItemFragment
     private void doInvert() {
         setInverted(!getInverted());
         showImage();
+    }
+
+    private void doDownloadImage() {
+        //We download the image from the remote server again,
+        //even though we already have it in the ContentProvider,
+        //available via the mUriImageStandard content: URI,
+        //just to get it into the DownloadManager UI.
+        //Unfortunately the DownloadManager rejects content: URIs.
+        if (TextUtils.isEmpty(mUriStandardRemote)) {
+            Log.error("doDownloadImage(): mUriStandardRemote was null.");
+            return;
+        }
+
+        final Uri uri = Uri.parse(mUriStandardRemote);
+        if (uri == null) {
+            Log.error("doDownloadImage(): uri was null.");
+            return;
+        }
+
+        final DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+        final Activity activity = getActivity();
+        if (activity == null) {
+            Log.error("doDownloadImage(): activity was null.");
+            return;
+        }
+
+        final Object systemService = activity.getSystemService(Context.DOWNLOAD_SERVICE);
+        if (systemService == null || !(systemService instanceof DownloadManager)) {
+            Log.error("doDownloadImage(): Could not get DOWNLOAD_SERVICE.");
+        }
+        final DownloadManager downloadManager = (DownloadManager)systemService;
+        downloadManager.enqueue(request);
     }
 
     @Override
@@ -226,6 +269,8 @@ public class SubjectFragment extends ItemFragment
         if (mCursor.getInt(COLUMN_INDEX_LOCATION_INVERTED_DOWNLOADED) == 1) {
             mUriImageInverted = mCursor.getString(COLUMN_INDEX_LOCATION_INVERTED_URI);
         }
+
+        mUriStandardRemote = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI_REMOTE);
 
         //Look at each group in the layout:
         //TODO: Remove this check?
