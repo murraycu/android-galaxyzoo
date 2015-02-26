@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: "org.robolectric"
 
 android {
     compileSdkVersion 21
@@ -32,4 +33,6 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.10'
     compile 'com.squareup.picasso:picasso:2.5.0'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.1.0'
+    testCompile "junit:junit:4.12"
+    testCompile "org.robolectric:robolectric:2.4"
 }
