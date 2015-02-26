@@ -60,6 +60,15 @@ public final class Utils {
         //We use the SharedPreferences rather than the copy of our prefs in the Account,
         //to avoid using the Account in the main thread.
         final SharedPreferences prefs = getPreferences(context);
+
+        if (prefs == null) {
+            //This should never happen, but there was at least one crash with a backtrace
+            //suggesting that it can happen:
+            //See https://github.com/murraycu/android-galaxyzoo/issues/16
+            Log.error("getShowDiscussQuestionFromSharedPrefs(): prefs is null.");
+            return true; //A suitable dfault.
+        }
+
         final String key =  context.getString(R.string.pref_key_wifi_only);
         return prefs.getBoolean(key, false /* default */);
     }
@@ -75,6 +84,15 @@ public final class Utils {
         //We use the SharedPreferences rather than the copy of our prefs in the Account,
         //to avoid using the Account in the main thread.
         final SharedPreferences prefs = getPreferences(context);
+
+        if (prefs == null) {
+            //This should never happen, but there was at least one crash with a backtrace
+            //suggesting that it can happen:
+            //See https://github.com/murraycu/android-galaxyzoo/issues/16
+            Log.error("getShowDiscussQuestionFromSharedPrefs(): prefs is null.");
+            return true; //A suitable dfault.
+        }
+
         final String key =  context.getString(R.string.pref_key_show_discuss_question);
         return prefs.getBoolean(key, true /* default */);
     }
