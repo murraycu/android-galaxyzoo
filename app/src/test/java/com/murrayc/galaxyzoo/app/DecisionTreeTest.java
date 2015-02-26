@@ -17,23 +17,22 @@
  * along with android-glom.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.murrayc.galaxyzoo.app.test;
-
-import android.test.AndroidTestCase;
-
-import com.murrayc.galaxyzoo.app.DecisionTree;
+package com.murrayc.galaxyzoo.app;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.junit.Test;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+
 /**
  * Simple test to ensure that the generated bindings are working.
  */
-public class DecisionTreeTest extends AndroidTestCase {
-    @Override
-    public void setUp() {
-    }
+public class DecisionTreeTest  {
 
     private DecisionTree createCorrectDecisionTree() throws DecisionTree.DecisionTreeException, IOException {
         //For some reason DecisionTreeTest.class.getResourceAsStream() doesn't work,
@@ -49,10 +48,7 @@ public class DecisionTreeTest extends AndroidTestCase {
         return decisionTree;
     }
 
-    @Override
-    public void tearDown() {
-    }
-
+    @Test
     public void testSize() throws DecisionTree.DecisionTreeException, IOException {
         final DecisionTree decisionTree = createCorrectDecisionTree();
 
@@ -61,6 +57,7 @@ public class DecisionTreeTest extends AndroidTestCase {
         assertEquals(12, decisionTree.questionsMap.size());
     }
 
+    @Test
     public void testQuestions() throws DecisionTree.DecisionTreeException, IOException {
         final DecisionTree decisionTree = createCorrectDecisionTree();
 
@@ -76,6 +73,7 @@ public class DecisionTreeTest extends AndroidTestCase {
         //TODO: Test getQuestion() and getNextQuestion().
     }
 
+    @Test
     public void testParseBadXml() {
         final String xml = "nonsense";
         final InputStream is = new ByteArrayInputStream(xml.getBytes());
