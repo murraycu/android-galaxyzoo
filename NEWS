@@ -1,3 +1,10 @@
+1.39:
+
+* Add a Download Image menu item.
+* Keep the image inverted after rotation.
+* Update the Italian and French translations.
+
+
 1.38:
 
 * Download new cached subjects when the Android system occasionally
