@@ -107,7 +107,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
 
             //Check that we are still dealing with the same position,
             //because the ImageView might be recycled for use with a different position.
-            if (viewHolder.getPosition() != position) {
+            if (viewHolder.getAdapterPosition() != position) {
                 return null;
             }
 
@@ -187,7 +187,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
                 //only show it while we are waiting for it to download from the internet.
                 viewHolder.progressBar.setVisibility(View.GONE);
                 Picasso.with(mContext).load(imageUriStr).into(viewHolder.imageView,
-                        new ImageLoadedCallback(mContext, viewHolder, viewHolder.getPosition(), itemId));
+                        new ImageLoadedCallback(mContext, viewHolder, viewHolder.getAdapterPosition(), itemId));
             } else {
                 //We are still waiting for it to download:
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
@@ -288,7 +288,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
                 return;
             }
 
-            parent.mListener.onItemClicked(getPosition(), imageView);
+            parent.mListener.onItemClicked(getAdapterPosition(), imageView);
         }
     }
 
