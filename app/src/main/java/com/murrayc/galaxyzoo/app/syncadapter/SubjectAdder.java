@@ -465,7 +465,7 @@ public class SubjectAdder {
      * @param item
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    void addSubject(final ZooniverseClient.Subject item, final boolean asyncFileDownloads) {
+    private void addSubject(final ZooniverseClient.Subject item, final boolean asyncFileDownloads) {
         if (subjectIsInDatabase(item.getSubjectId())) {
             //It is already in the database.
             //TODO: Update the row?
@@ -495,7 +495,7 @@ public class SubjectAdder {
         //TODO: notifyRowChangeById(rowId);
     }
 
-    boolean subjectIsInDatabase(final String subjectId) {
+    private boolean subjectIsInDatabase(final String subjectId) {
         //TODO: Use COUNT_AS_COUNT ?
         final ContentResolver resolver = getContext().getContentResolver();
 

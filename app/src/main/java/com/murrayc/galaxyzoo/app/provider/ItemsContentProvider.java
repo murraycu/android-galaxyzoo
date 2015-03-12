@@ -223,7 +223,7 @@ public class ItemsContentProvider extends ContentProvider {
     /** A where clause to find all the subjects that have not yet been classified,
      * and which are ready to be classified.
      */
-    public static final String WHERE_CLAUSE_NOT_DONE = "(" +
+    private static final String WHERE_CLAUSE_NOT_DONE = "(" +
             DatabaseHelper.ItemsDbColumns.DONE + " != 1" +
             ") AND (" +
             DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED + " == 1" +

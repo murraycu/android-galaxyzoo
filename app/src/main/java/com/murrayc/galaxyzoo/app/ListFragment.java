@@ -183,7 +183,7 @@ public class ListFragment extends ZooFragment
         }
     }
 
-    void update() {
+    private void update() {
         final Activity activity = getActivity();
         if (activity == null) {
             return;
@@ -308,7 +308,7 @@ public class ListFragment extends ZooFragment
         }
     }
 
-    RecyclerView getGridView() {
+    private RecyclerView getGridView() {
         final RecyclerView gridView = (RecyclerView) mRootView.findViewById(R.id.gridView);
         if (gridView == null) {
             Log.error("gridView is null.");

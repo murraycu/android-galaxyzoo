@@ -175,7 +175,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void onExistingLoginRetrieved(final LoginUtils.LoginDetails loginDetails) {
+    private void onExistingLoginRetrieved(final LoginUtils.LoginDetails loginDetails) {
 
         mExistingAccountName = null;
         if (loginDetails == null) {
@@ -194,7 +194,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
      * If there are form errors, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    void attemptLogin() {
+    private void attemptLogin() {
         if (mAuthTask != null) {
             return;
         }

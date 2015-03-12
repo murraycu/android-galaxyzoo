@@ -557,7 +557,7 @@ class IconsCache {
         return result;
     }
 
-    Context getContext() {
+    private Context getContext() {
         return mContext;
     }
 }

@@ -72,12 +72,12 @@ public class ZooFragment extends Fragment {
     }
     */
 
-    void requestLogin() {
+    private void requestLogin() {
         final Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);
     }
 
-    void showAbout() {
+    private void showAbout() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // Get the layout inflater
@@ -147,7 +147,7 @@ public class ZooFragment extends Fragment {
         dialog.show();
     }
 
-    void showSettings() {
+    private void showSettings() {
         final Intent intent = new Intent(getActivity(), SettingsActivity.class);
         startActivity(intent);
     }

@@ -198,7 +198,7 @@ public class Singleton {
      * Find out whether the context's locale is different enough to the one used when
      * this instance was created.
      */
-    boolean localeIsDifferent(final Context context) {
+    private boolean localeIsDifferent(final Context context) {
         //This doesn't care about whether there is really a country-specific
         //translation available. So this will sometimes lead to
         //an unnecessary reload if the country (but not the language)
