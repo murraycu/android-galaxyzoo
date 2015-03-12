@@ -32,9 +32,6 @@ import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -131,8 +128,8 @@ public class ZooniverseClient {
         }
 
         final List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new BasicNameValuePair("username", username));
-        nameValuePairs.add(new BasicNameValuePair("password", password));
+        nameValuePairs.add(new NameValuePair("username", username));
+        nameValuePairs.add(new NameValuePair("password", password));
 
         try {
             conn.setRequestMethod("POST");
@@ -310,6 +307,24 @@ public class ZooniverseClient {
 
     private Context getContext() {
         return mContext;
+    }
+
+    public static class NameValuePair {
+        private final String name;
+        private final String value;
+
+        public NameValuePair(final String name, final String value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        String getName() {
+            return name;
+        }
+
+        String getValue() {
+            return value;
+        }
     }
 
     public boolean uploadClassificationSync(final String authName, final String authApiKey, final List<NameValuePair> nameValuePairs) throws UploadException {

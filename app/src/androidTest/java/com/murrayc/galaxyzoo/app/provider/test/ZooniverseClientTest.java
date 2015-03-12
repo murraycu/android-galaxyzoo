@@ -29,9 +29,6 @@ import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -234,13 +231,13 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         //SyncAdapter.doUploadSync() adds an "interface" parameter too,
         //but we are testing a more generic API here:
-        final List<NameValuePair> values = new ArrayList<>();
-        values.add(new BasicNameValuePair("classification[subject_ids][]", "504e4a38c499611ea6010c6a"));
-        values.add(new BasicNameValuePair("classification[favorite][]", "true"));
-        values.add(new BasicNameValuePair("classification[annotations][0][sloan-0]", "a-0"));
-        values.add(new BasicNameValuePair("classification[annotations][1][sloan-7]", "a-1"));
-        values.add(new BasicNameValuePair("classification[annotations][2][sloan-5]", "a-0"));
-        values.add(new BasicNameValuePair("classification[annotations][3][sloan-6]", "x-5"));
+        final List<ZooniverseClient.NameValuePair> values = new ArrayList<>();
+        values.add(new ZooniverseClient.NameValuePair("classification[subject_ids][]", "504e4a38c499611ea6010c6a"));
+        values.add(new ZooniverseClient.NameValuePair("classification[favorite][]", "true"));
+        values.add(new ZooniverseClient.NameValuePair("classification[annotations][0][sloan-0]", "a-0"));
+        values.add(new ZooniverseClient.NameValuePair("classification[annotations][1][sloan-7]", "a-1"));
+        values.add(new ZooniverseClient.NameValuePair("classification[annotations][2][sloan-5]", "a-0"));
+        values.add(new ZooniverseClient.NameValuePair("classification[annotations][3][sloan-6]", "x-5"));
 
         final boolean result = client.uploadClassificationSync("testAuthName",
                 "testAuthApiKey", values);
@@ -275,8 +272,8 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         final ZooniverseClient client = createZooniverseClient(server);
 
-        final List<NameValuePair> values = new ArrayList<>();
-        values.add(new BasicNameValuePair("test nonsense", "12345"));
+        final List<ZooniverseClient.NameValuePair> values = new ArrayList<>();
+        values.add(new ZooniverseClient.NameValuePair("test nonsense", "12345"));
 
         try {
             final boolean result = client.uploadClassificationSync("testAuthName",
