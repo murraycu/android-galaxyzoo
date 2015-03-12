@@ -217,7 +217,8 @@ public final class LoginUtils {
     public static void removeAccount(final Context context, final String accountName) {
         final AccountManager accountManager = AccountManager.get(context);
         final Account account = new Account(accountName, LoginUtils.ACCOUNT_TYPE);
-        accountManager.removeAccount(account, null, null);
+
+        accountManager.removeAccount(account, null, null, null);
     }
 
     /**
