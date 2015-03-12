@@ -244,7 +244,8 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             //TODO: Is there some more standard method to do this,
             //to trigger the Fragments' onCreate()?
             fragmentSubject.setItemId(getItemId());
-            fragmentSubject.setInverted(false); //Don't stay inverted after a previous classification.
+            //We don't wipe the inverted state (setInverted()) because this can happen after rotation,
+            //not just when starting a new classification.
             fragmentSubject.update();
         }
 
@@ -282,6 +283,15 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
              */
             if(!mGetNextInProgress) {
                 mGetNextInProgress = true;
+
+                //Don't stay inverted after a previous classification.
+                final FragmentManager fragmentManager = getChildFragmentManager();
+                SubjectFragment fragmentSubject = (SubjectFragment) fragmentManager.findFragmentById(R.id.child_fragment_subject);
+                if (fragmentSubject != null) {
+                    fragmentSubject.setInverted(false);
+                }
+
+                //Get the actual ID and other details:
                 getLoaderManager().restartLoader(URL_LOADER, null, this);
             }
         } else {
