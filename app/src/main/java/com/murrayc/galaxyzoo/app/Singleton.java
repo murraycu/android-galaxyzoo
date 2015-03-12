@@ -215,7 +215,7 @@ public class Singleton {
          * When this has been called, getInstance() will return
          * a non-null value.
          */
-        public void onInitialized();
+        void onInitialized();
     }
 
     private static class InitAsyncTask extends AsyncTask<Context, Void, Void> {

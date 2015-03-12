@@ -331,8 +331,8 @@ public class ListFragment extends ZooFragment
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(final String itemId, boolean done, final View sharedElementView);
+        void onItemSelected(final String itemId, boolean done, final View sharedElementView);
 
-        public void navigateToNextAvailable();
+        void navigateToNextAvailable();
     }
 }

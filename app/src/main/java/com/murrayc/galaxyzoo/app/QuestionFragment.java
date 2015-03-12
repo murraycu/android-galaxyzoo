@@ -867,7 +867,7 @@ public class QuestionFragment extends BaseQuestionFragment
         /**
          * We call this when the classification has been finished and saved.
          */
-        public void onClassificationFinished();
+        void onClassificationFinished();
     }
 
     //This is just public so we can test it.

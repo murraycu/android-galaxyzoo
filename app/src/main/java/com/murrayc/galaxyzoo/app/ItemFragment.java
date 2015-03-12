@@ -179,7 +179,7 @@ public class ItemFragment extends ZooFragment {
         /** This is called when the fragment found something about the item
          * that means we should just give up and try another one.
          */
-        public void abandonItem();
+        void abandonItem();
     }
 
     void abandonItem() {
