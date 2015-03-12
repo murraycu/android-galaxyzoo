@@ -18,6 +18,8 @@
   <!--An action. Shown on a button or menu item.-->
   <string name="action_invert">Inverser</string>
   <!--An action. Shown on a button or menu item.-->
+  <string name="action_download_image">Télécharger l\'image</string>
+  <!--An action. Shown on a button or menu item.-->
   <string name="action_examples">Exemples</string>
   <!--An action. Shown on a button or menu item.-->
   <string name="action_login">Se connecter</string>
