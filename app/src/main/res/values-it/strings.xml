@@ -18,6 +18,8 @@
   <!--An action. Shown on a button or menu item.-->
   <string name="action_invert">Inverti</string>
   <!--An action. Shown on a button or menu item.-->
+  <string name="action_download_image">Scarica l\'immagine</string>
+  <!--An action. Shown on a button or menu item.-->
   <string name="action_examples">Esempi</string>
   <!--An action. Shown on a button or menu item.-->
   <string name="action_login">Accesso</string>
@@ -77,7 +79,7 @@
   <!--The title of the login button.-->
   <string name="action_sign_in">Accedi</string>
   <!--The title of the login button that will appear on the on-screen keyboard.-->
-  <string name="action_sign_in_short">Accedo</string>
+  <string name="action_sign_in_short">Accedere</string>
   <!--An error message.-->
   <string name="error_invalid_password">La password inserita è troppo corta.</string>
   <!--An error message.-->
@@ -90,15 +92,15 @@
   <string name="error_no_wifi_network">Nessuna connessione di rete Wi-Fi.</string>
   <!--TODO: Make this clearer for people who don't know what an (Internet) server is?-->
   <!--An error message. We show this when we cannot continue because something is wrong with the network connection.-->
-  <string name="error_could_not_connect">Cannot connect to the server.</string>
+  <string name="error_could_not_connect">Impossibile connettersi al server</string>
   <!--An error message. We show this when we cannot continue because something is wrong with the network connection.-->
-  <string name="error_no_subjects">Cannot download new subjects to classify.</string>
+  <string name="error_no_subjects">Impossibile scaricare nuovi oggetti da classificare</string>
   <!--We offer this button when showing the alert dialog about a network connection problem.-->
   <string name="error_button_retry">Riprova</string>
   <!--We offer this button when showing the alert dialog about a network connection problem.-->
   <string name="error_button_cancel">Annulla</string>
   <!--An informative message. This lets the user know that they are already logged in to the system.-->
-  <string name="message_logged_in">Logged In.</string>
+  <string name="message_logged_in">Connesso</string>
   <!--The title of the Settings screen to show or change the app preferences.-->
   <string name="title_activity_settings">Impostazioni</string>
   <!--The title of the preference that controls how many items are downloaded before they are needed.-->
