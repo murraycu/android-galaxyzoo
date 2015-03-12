@@ -59,8 +59,8 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
         return mCursor;
     }
 
-    public static interface OnItemClickedListener {
-        public void onItemClicked(int position, final View sharedElementView);
+    public interface OnItemClickedListener {
+        void onItemClicked(int position, final View sharedElementView);
     }
 
     private final Context mContext;

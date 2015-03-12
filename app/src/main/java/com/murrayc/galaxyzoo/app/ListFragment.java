@@ -327,7 +327,7 @@ public class ListFragment extends ZooFragment
      * fragment and activity implementations separate.
      * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
      */
-    static interface Callbacks {
+    interface Callbacks {
         /**
          * Callback for when an item has been selected.
          */

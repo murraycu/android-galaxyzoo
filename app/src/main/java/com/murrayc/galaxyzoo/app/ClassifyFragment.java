@@ -94,9 +94,9 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
      * fragment and activity implementations separate.
      * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
      */
-    static interface Callbacks extends ItemFragment.Callbacks {
-        public void warnAboutNetworkProblemWithRetry();
-        public void listenForNetworkReconnection();
+    interface Callbacks extends ItemFragment.Callbacks {
+        void warnAboutNetworkProblemWithRetry();
+        void listenForNetworkReconnection();
     }
 
 

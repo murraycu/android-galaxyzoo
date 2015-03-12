@@ -862,7 +862,7 @@ public class QuestionFragment extends BaseQuestionFragment
      * fragment and activity implementations separate.
      * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
      */
-    static interface Callbacks {
+    interface Callbacks {
 
         /**
          * We call this when the classification has been finished and saved.

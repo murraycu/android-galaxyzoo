@@ -173,8 +173,8 @@ public class ItemFragment extends ZooFragment {
      * fragment and activity implementations separate.
      * http://developer.android.com/guide/components/fragments.html#CommunicatingWithActivity
      */
-    static interface Callbacks {
-        public void navigateToList();
+    interface Callbacks {
+        void navigateToList();
 
         /** This is called when the fragment found something about the item
          * that means we should just give up and try another one.

@@ -207,7 +207,7 @@ public class Singleton {
         return !newDetails.equals(mLocaleDetails);
     }
 
-    public static interface Callbacks {
+    public interface Callbacks {
         /**
          * This is called when the Singleton has been initialized.
          * This will be called immediately if the Singleton has
