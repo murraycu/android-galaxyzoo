@@ -28,6 +28,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.JsonReader;
@@ -218,7 +219,15 @@ public final class LoginUtils {
         final AccountManager accountManager = AccountManager.get(context);
         final Account account = new Account(accountName, LoginUtils.ACCOUNT_TYPE);
 
-        accountManager.removeAccount(account, null, null, null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            //Trying to call this on an older Android version results in a
+            //NoSuchMethodError exception.
+            //There is no AppCompat version of the AccountManager API to
+            //avoid the need for this version check at runtime.
+            accountManager.removeAccount(account, null, null, null);
+        } else {
+            accountManager.removeAccount(account, null, null);
+        }
     }
 
     /**
