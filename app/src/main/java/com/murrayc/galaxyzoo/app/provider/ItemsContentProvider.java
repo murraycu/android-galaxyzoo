@@ -1103,7 +1103,7 @@ public class ItemsContentProvider extends ContentProvider {
                     tableName + ";");
         }
 
-        private void createTable(final SQLiteDatabase sqLiteDatabase) {
+        private static void createTable(final SQLiteDatabase sqLiteDatabase) {
             String qs = "CREATE TABLE " + TABLE_NAME_ITEMS + " (" +
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +

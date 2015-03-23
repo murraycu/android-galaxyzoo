@@ -361,7 +361,7 @@ public class DecisionTree {
         return node.getTextContent();
     }
 
-    private Question loadQuestion(final Element questionNode) {
+    private static Question loadQuestion(final Element questionNode) {
         final Question result = new Question(
                 questionNode.getAttribute("id"),
                 getTextOfChildNode(questionNode, "title"),

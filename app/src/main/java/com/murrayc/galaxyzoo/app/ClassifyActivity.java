@@ -574,5 +574,12 @@ public class ClassifyActivity extends ItemActivity
 
         unregisterReceiver(mReceiverNetworkReconnection);
         mReceiverNetworkReconnection = null;
+
+    private static class DialogCancelOnClickListener implements DialogInterface.OnClickListener {
+        @Override
+        public void onClick(final DialogInterface dialog, final int which) {
+            dialog.cancel();
+        }
     }
+  }
 }
