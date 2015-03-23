@@ -63,6 +63,15 @@ public class ClassifyActivity extends ItemActivity
     private AlertDialog mAlertDialog = null;
     private BroadcastReceiver mReceiverNetworkReconnection = null;
 
+    private static class PicassoListener implements Picasso.Listener {
+        @Override
+        public void onImageLoadFailed(final Picasso picasso, final Uri uri, final Exception exception) {
+            Log.error("Picasso onImageLoadFailed() URI=" + uri, exception);
+        }
+    }
+
+    private static Picasso.Listener picassoListener = new PicassoListener();
+
 
 //    public class ItemsContentProviderObserver extends ContentObserver {
 //
@@ -215,12 +224,7 @@ public class ClassifyActivity extends ItemActivity
         //Let us log errors from Picasso to give us some clues when things go wrong.
         //Unfortunately, we can't get these errors in the regular onError() callback:
         //https://github.com/square/picasso/issues/379
-        final Picasso picasso = (new Picasso.Builder(this)).listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(final Picasso picasso, final Uri uri, final Exception exception) {
-                Log.error("Picasso onImageLoadFailed() URI=" + uri, exception);
-            }
-        }).build();
+        final Picasso picasso = (new Picasso.Builder(this)).listener(picassoListener).build();
         //This affects what, for instance, Picasso.with() will return:
         try {
             Picasso.setSingletonInstance(picasso);
