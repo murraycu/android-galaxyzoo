@@ -73,9 +73,9 @@ public class SubjectFragment extends ItemFragment
     private View mRootView = null;
     private ImageView mImageView = null;
     private boolean mInverted = false;
-    private String mUriImageStandard;
-    private String mUriImageInverted;
-    private String mUriStandardRemote;
+    private String mUriImageStandard = null;
+    private String mUriImageInverted = null;
+    private String mUriStandardRemote = null;
 
 
     /**
