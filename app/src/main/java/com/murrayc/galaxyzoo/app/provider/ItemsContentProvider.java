@@ -809,11 +809,11 @@ public class ItemsContentProvider extends ContentProvider {
                 null, null, orderByToUse, "1");
     }
 
-    private String[] prependToArray(final String[] selectionArgs, final long value) {
+    private static String[] prependToArray(final String[] selectionArgs, final long value) {
         return prependToArray(selectionArgs, Double.toString(value));
     }
 
-    private String[] prependToArray(final String[] array, final String value) {
+    private static String[] prependToArray(final String[] array, final String value) {
         int arrayLength = 0;
         if (array != null) {
             arrayLength = array.length;
@@ -829,7 +829,7 @@ public class ItemsContentProvider extends ContentProvider {
         return result;
     }
 
-    private UriParts parseContentUri(final Uri uri) {
+    private static UriParts parseContentUri(final Uri uri) {
         final UriParts result = new UriParts();
         //ContentUris.parseId(uri) gets the first ID, not the last.
         //final long userId = ContentUris.parseId(uri);
@@ -923,7 +923,7 @@ public class ItemsContentProvider extends ContentProvider {
         return affected;
     }
 
-    private String prependIdToSelection(final String selection) {
+    private static String prependIdToSelection(final String selection) {
         return BaseColumns._ID + " = ?"
                 + (!TextUtils.isEmpty(selection) ?
                 " AND (" + selection + ')' : "");
@@ -1098,7 +1098,7 @@ public class ItemsContentProvider extends ContentProvider {
             }
         }
 
-        private void dropTable(final SQLiteDatabase sqLiteDatabase, final String tableName) {
+        private static void dropTable(final SQLiteDatabase sqLiteDatabase, final String tableName) {
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " +
                     tableName + ";");
         }
@@ -1161,7 +1161,7 @@ public class ItemsContentProvider extends ContentProvider {
             createIndex(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_CHECKBOXES, ClassificationCheckboxesDbColumns.QUESTION_ID);
         }
 
-        private void createIndex(final SQLiteDatabase sqLiteDatabase, final String tableName, final String fieldName) {
+        private static void createIndex(final SQLiteDatabase sqLiteDatabase, final String tableName, final String fieldName) {
             final String qs = "CREATE INDEX " + tableName + "_" + fieldName + "_index" +
                     " ON " + tableName +
                     " ( " + fieldName + " )";
@@ -1213,7 +1213,7 @@ public class ItemsContentProvider extends ContentProvider {
     /** Ask the SyncAdapter to do its work.
      * We call this when we think it's likely that some work is necessary.
      */
-    private void requestSync() {
+    private static void requestSync() {
         final Bundle extras = new Bundle();
         extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 

@@ -223,7 +223,7 @@ public class ZooniverseClient {
         return result.toString();
     }
 
-    private String generateAuthorizationHeader(final String authName, final String authApiKey) {
+    private static String generateAuthorizationHeader(final String authName, final String authApiKey) {
         //See the similar code in Zooniverse's user.coffee source code:
         //https://github.com/zooniverse/Zooniverse/blob/master/src/models/user.coffee#L49
         final String str = authName + ":" + authApiKey;

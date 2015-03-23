@@ -293,7 +293,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         return new ZooniverseClient(getContext(), mockUrl.toString());
     }
 
-    private String getStringFromStream(final InputStream input) throws IOException {
+    private static String getStringFromStream(final InputStream input) throws IOException {
         //Don't bother with try/catch because we are in a test case anyway.
         final InputStreamReader isr = new InputStreamReader(input, Utils.STRING_ENCODING);
         final BufferedReader bufferedReader =  new BufferedReader(isr);

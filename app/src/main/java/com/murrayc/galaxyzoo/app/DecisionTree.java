@@ -150,7 +150,7 @@ public class DecisionTree {
         reader.endObject();
     }
 
-    private void readJsonQuestion(final JsonReader reader, final Question question) throws IOException {
+    private static void readJsonQuestion(final JsonReader reader, final Question question) throws IOException {
         reader.beginObject();
         while (reader.hasNext()) {
             final String name = reader.nextName();
@@ -177,7 +177,7 @@ public class DecisionTree {
         reader.endObject();
     }
 
-    private void readJsonAnswers(final JsonReader reader, final Question question) throws IOException {
+    private static void readJsonAnswers(final JsonReader reader, final Question question) throws IOException {
         final List<Answer> answers = question.answers;
 
         reader.beginObject();
@@ -195,7 +195,7 @@ public class DecisionTree {
         reader.endObject();
     }
 
-    private void readJsonCheckboxes(final JsonReader reader, final Question question) throws IOException {
+    private static void readJsonCheckboxes(final JsonReader reader, final Question question) throws IOException {
         final List<Checkbox> checkboxes = question.checkboxes;
 
         reader.beginObject();
@@ -213,7 +213,7 @@ public class DecisionTree {
         reader.endObject();
     }
 
-    private Answer getAnswerWithId(final List<Answer> answers, final String id) {
+    private static Answer getAnswerWithId(final List<Answer> answers, final String id) {
         for (final Answer answer : answers) {
             if (TextUtils.equals(id, answer.getId())) {
                 return answer;
@@ -224,7 +224,7 @@ public class DecisionTree {
     }
 
 
-    private Checkbox getCheckboxWithId(final List<Checkbox> checkboxes, final String id) {
+    private static Checkbox getCheckboxWithId(final List<Checkbox> checkboxes, final String id) {
         for (final Checkbox checkbox : checkboxes) {
             if (TextUtils.equals(id, checkbox.getId())) {
                 return checkbox;
@@ -308,7 +308,7 @@ public class DecisionTree {
      * @param tagName
      * @return
      */
-    private List<Node> getChildrenByTagName(final Element parentNode, final String tagName) {
+    private static List<Node> getChildrenByTagName(final Element parentNode, final String tagName) {
         final List<Node> result = new ArrayList<>();
 
         final NodeList list = parentNode.getElementsByTagName(tagName);
@@ -335,7 +335,7 @@ public class DecisionTree {
      * @param tagName
      * @return
      */
-    private Node getFirstChildByTagName(final Element parentNode, final String tagName) {
+    private static Node getFirstChildByTagName(final Element parentNode, final String tagName) {
         final NodeList list = parentNode.getElementsByTagName(tagName);
         final int num = list.getLength();
         for (int i = 0; i < num; i++) {
@@ -353,7 +353,7 @@ public class DecisionTree {
         return null;
     }
 
-    private String getTextOfChildNode(final Element element, final String tagName) {
+    private static String getTextOfChildNode(final Element element, final String tagName) {
         final Node node = getFirstChildByTagName(element, tagName);
         if (node == null)
             return null;
@@ -393,7 +393,7 @@ public class DecisionTree {
         return result;
     }
 
-    private Checkbox loadCheckbox(final Element checkboxNode) {
+    private static Checkbox loadCheckbox(final Element checkboxNode) {
         return new Checkbox(
                 checkboxNode.getAttribute("id"),
                 getTextOfChildNode(checkboxNode, "text"),
@@ -401,7 +401,7 @@ public class DecisionTree {
                 Integer.parseInt(checkboxNode.getAttribute("examplesCount")));
     }
 
-    private Answer loadAnswer(final Element answerNode) {
+    private static Answer loadAnswer(final Element answerNode) {
         return new Answer(
                 answerNode.getAttribute("id"),
                 getTextOfChildNode(answerNode, "text"),

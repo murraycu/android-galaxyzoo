@@ -95,7 +95,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         LoginUtils.copyPrefToAccount(getActivity(), key, value);
     }
 
-    private void showUserDescriptionAsSummary(final Preference preference) {
+    private static void showUserDescriptionAsSummary(final Preference preference) {
         if (!(preference instanceof ListPreference)) {
             Log.error("showUserDescriptionAsSummary(): preference is not a ListPreference.");
             return;

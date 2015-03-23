@@ -238,7 +238,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         }
     }
 
-    private boolean isPasswordValid(final String password) {
+    private static boolean isPasswordValid(final String password) {
         return password.length() > 4;
     }
 

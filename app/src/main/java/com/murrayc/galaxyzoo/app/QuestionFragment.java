@@ -754,7 +754,7 @@ public class QuestionFragment extends BaseQuestionFragment
         //The ItemsContentProvider will upload the classification later.
     }
 
-    private String getCurrentDateTimeAsIso8601() {
+    private static String getCurrentDateTimeAsIso8601() {
         final Date now = new Date();
         //TODO: Is there a simpler way of getting an ISO-8601-formatted date,
         //or at least a way to avoid writing the format out manually here?

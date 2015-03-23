@@ -54,7 +54,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
         return generateIntentBundle(intent);
     }
 
-    private Bundle generateIntentBundle(final Intent intent) {
+    private static Bundle generateIntentBundle(final Intent intent) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
         return bundle;

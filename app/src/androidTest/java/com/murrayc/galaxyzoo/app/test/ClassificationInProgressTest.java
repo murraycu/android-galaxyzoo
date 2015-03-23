@@ -58,7 +58,7 @@ public class ClassificationInProgressTest extends AndroidTestCase {
         assertEquals(classificationInProgress, createdFromParcel);
     }
 
-    private QuestionFragment.ClassificationInProgress createTestClassificationInProgress() {
+    private static QuestionFragment.ClassificationInProgress createTestClassificationInProgress() {
         final QuestionFragment.ClassificationInProgress result = new QuestionFragment.ClassificationInProgress();
         result.add("testQuestionId1", "testAnswerId1.1", null);
         result.add("testQuestionId2", "testAnswerId1.2", null);
