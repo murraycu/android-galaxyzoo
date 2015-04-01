@@ -86,6 +86,7 @@ public class MoreItemsJsonParser {
 
         String subjectId = null;
         String zooniverseId = null;
+        String groupId = null;
         Locations locations = null;
 
         while (reader.hasNext()) {
@@ -96,6 +97,9 @@ public class MoreItemsJsonParser {
                     break;
                 case "zooniverse_id":
                     zooniverseId = reader.nextString();
+                    break;
+                case "group_id":
+                    groupId = reader.nextString();
                     break;
                 case "location":
                     locations = parseMoreItemsJsonObjectSubjectLocation(reader);
@@ -112,7 +116,7 @@ public class MoreItemsJsonParser {
             return null;
         }
 
-        return new ZooniverseClient.Subject(subjectId, zooniverseId,
+        return new ZooniverseClient.Subject(subjectId, zooniverseId, groupId,
                 locations.getLocationStandard(), locations.getLocationThumbnail(), locations.getLocationInverted());
     }
 

@@ -477,6 +477,7 @@ public class SubjectAdder {
         final ContentValues values = new ContentValues();
         values.put(Item.Columns.SUBJECT_ID, item.getSubjectId());
         values.put(Item.Columns.ZOONIVERSE_ID, item.getZooniverseId());
+        values.put(Item.Columns.GROUP_ID, item.getGroupId());
 
         //The ItemsContentProvider will take care of creating local file URIs for the remote URis,
         //and this SyncAdapter will request that the remote image files are downloaded into those local file URIs.

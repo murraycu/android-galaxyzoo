@@ -44,7 +44,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class ZooniverseClientTest extends AndroidTestCase {
 
-    public static final String TEST_GROUP_ID = "50251c3b516bcb6ecb000002";
+    public static final String TEST_GROUP_ID = "551456e02f0eef2535000001";
 
     @Override
     public void setUp() throws IOException {
@@ -72,10 +72,16 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         final ZooniverseClient.Subject subject = subjects.get(0);
         assertNotNull(subject);
+
         assertNotNull(subject.getSubjectId());
         assertEquals(subject.getSubjectId(), "504e6b5dc499611ea6020689");
+
         assertNotNull(subject.getZooniverseId());
         assertEquals(subject.getZooniverseId(), "AGZ0002ufd");
+
+        assertNotNull(subject.getGroupId());
+        assertEquals(subject.getGroupId(), TEST_GROUP_ID);
+
         assertNotNull(subject.getLocationStandard());
         assertEquals(subject.getLocationStandard(),
                 "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/1237666273680359558.jpg");

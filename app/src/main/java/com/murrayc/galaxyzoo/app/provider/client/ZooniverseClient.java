@@ -414,14 +414,16 @@ public class ZooniverseClient {
     public static final class Subject {
         private final String mSubjectId;
         private final String mZooniverseId;
+        private final String mGroupId;
         private final String mLocationStandard;
         private final String mLocationThumbnail;
         private final String mLocationInverted;
 
-        public Subject(final String subjectId, final String zooniverseId, final String locationStandard, final String locationThumbnail, final String locationInverted) {
+        public Subject(final String subjectId, final String zooniverseId, final String groupId, final String locationStandard, final String locationThumbnail, final String locationInverted) {
             super();
             this.mSubjectId = subjectId;
             this.mZooniverseId = zooniverseId;
+            this.mGroupId = groupId;
             this.mLocationStandard = locationStandard;
             this.mLocationThumbnail = locationThumbnail;
             this.mLocationInverted = locationInverted;
@@ -433,6 +435,10 @@ public class ZooniverseClient {
 
         public String getZooniverseId() {
             return mZooniverseId;
+        }
+
+        public String getGroupId() {
+            return mGroupId;
         }
 
         public String getLocationStandard() {

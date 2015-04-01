@@ -57,6 +57,7 @@ public final class Item {
         public static final String UPLOADED = "uploaded"; //Integer boolean (1 or 0)
         public static final String SUBJECT_ID = "subjectId";
         public static final String ZOONIVERSE_ID = "zooniverseId";
+        public static final String GROUP_ID = "groupId";
         public static final String LOCATION_STANDARD_URI_REMOTE = "locationStandardUriRemote";
         public static final String LOCATION_STANDARD_URI = "locationStandardUri";
         public static final String LOCATION_STANDARD_DOWNLOADED = "locationStandardDownloaded"; //Integer boolean (1 or 0)

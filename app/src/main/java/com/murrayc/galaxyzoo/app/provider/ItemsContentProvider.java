@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -178,6 +179,7 @@ public class ItemsContentProvider extends ContentProvider {
         sItemsProjectionMap.put(Item.Columns.UPLOADED, DatabaseHelper.ItemsDbColumns.UPLOADED);
         sItemsProjectionMap.put(Item.Columns.SUBJECT_ID, DatabaseHelper.ItemsDbColumns.SUBJECT_ID);
         sItemsProjectionMap.put(Item.Columns.ZOONIVERSE_ID, DatabaseHelper.ItemsDbColumns.ZOONIVERSE_ID);
+        sItemsProjectionMap.put(Item.Columns.GROUP_ID, DatabaseHelper.ItemsDbColumns.GROUP_ID);
         sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI_REMOTE, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI_REMOTE);
         sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_URI, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_URI);
         sItemsProjectionMap.put(Item.Columns.LOCATION_STANDARD_DOWNLOADED, DatabaseHelper.ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED);
@@ -1063,7 +1065,7 @@ public class ItemsContentProvider extends ContentProvider {
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         //After the first official release, try to preserve data when changing this. See onUpgrade()
-        private static final int DATABASE_VERSION = 20;
+        private static final int DATABASE_VERSION = 21;
 
         private static final String DATABASE_NAME = "items.db";
 
@@ -1087,14 +1089,31 @@ public class ItemsContentProvider extends ContentProvider {
         @Override
         public void onUpgrade(final SQLiteDatabase sqLiteDatabase,
                               final int oldv, final int newv) {
-            //TODO: Don't just lose the data?
             if (oldv != newv) {
-                dropTable(sqLiteDatabase, TABLE_NAME_ITEMS);
-                dropTable(sqLiteDatabase, TABLE_NAME_FILES);
-                dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_ANSWERS);
-                dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_CHECKBOXES);
 
-                createTable(sqLiteDatabase);
+                switch(oldv) {
+                    case 20: {
+                        //Add the groupId field to the items:
+                        try {
+                            sqLiteDatabase.execSQL("ALTER TABLE " + TABLE_NAME_ITEMS + " ADD COLUMN "
+                                    + ItemsDbColumns.GROUP_ID + " TEXT;");
+                            break;
+                        } catch( final SQLiteException ex) {
+                            Log.error("onUpgrade: ALTER TABLE ADD COLUMN failed", ex);
+                            //Fall through to the default case to recreate the tables completely.
+                        }
+                    }
+
+                    default: {
+                        dropTable(sqLiteDatabase, TABLE_NAME_ITEMS);
+                        dropTable(sqLiteDatabase, TABLE_NAME_FILES);
+                        dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_ANSWERS);
+                        dropTable(sqLiteDatabase, TABLE_NAME_CLASSIFICATION_CHECKBOXES);
+
+                        createTable(sqLiteDatabase);
+                        break;
+                    }
+                }
             }
         }
 
@@ -1111,6 +1130,7 @@ public class ItemsContentProvider extends ContentProvider {
                     ItemsDbColumns.UPLOADED + " INTEGER DEFAULT 0, " +
                     ItemsDbColumns.SUBJECT_ID + " TEXT, " +
                     ItemsDbColumns.ZOONIVERSE_ID + " TEXT, " +
+                    ItemsDbColumns.GROUP_ID + " TEXT, " +
                     ItemsDbColumns.LOCATION_STANDARD_URI_REMOTE + " TEXT, " +
                     ItemsDbColumns.LOCATION_STANDARD_URI + " TEXT, " +
                     ItemsDbColumns.LOCATION_STANDARD_DOWNLOADED + " INTEGER DEFAULT 0, " +
@@ -1176,6 +1196,7 @@ public class ItemsContentProvider extends ContentProvider {
             //From the REST API:
             static final String SUBJECT_ID = "subjectId";
             static final String ZOONIVERSE_ID = "zooniverseId";
+            static final String GROUP_ID = "groupId";
             static final String LOCATION_STANDARD_URI_REMOTE = "locationStandardUriRemote"; //The original file on the remote server.
             static final String LOCATION_STANDARD_URI = "locationStandardUri"; //The content URI for a file in the files table.
             static final String LOCATION_STANDARD_DOWNLOADED = "locationStandardDownloaded"; //1 or 0. Whether the file has finished downloading.
