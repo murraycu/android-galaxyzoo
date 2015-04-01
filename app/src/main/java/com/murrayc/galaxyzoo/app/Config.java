@@ -30,7 +30,7 @@ final class Config {
     public static final String EXAMINE_URI = "http://www.galaxyzoo.org/#/examine/";
 
     //TODO: Is there a stable URI for this?
-    //public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2014-09-05_13-06-46.css";
+    //public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2015-03-30_14-13-33.css";
 
     //We hard-code this.
     //Alternatively, we could hard-code the removal of this question from the XML

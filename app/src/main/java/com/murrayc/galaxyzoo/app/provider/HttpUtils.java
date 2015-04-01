@@ -229,6 +229,10 @@ public final class HttpUtils {
         ParcelFileDescriptor pfd = null;
         FileOutputStream fout = null;
         try {
+            //Use this instead when using the commented icon-downloading code in IconsCache:
+            //fout = new FileOutputStream(cacheFileContentUri);
+            //fout.write(data);
+
             //FileOutputStream doesn't seem to understand content provider URIs:
             pfd = context.getContentResolver().
                     openFileDescriptor(Uri.parse(cacheFileContentUri), "w");

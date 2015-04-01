@@ -92,23 +92,7 @@ class IconsCache {
 
         long lastModified = 0;
 
-        boolean loadFromNetwork = false;
-        if (Utils.getNetworkIsConnected(context)) {
-            //Check if the files on the server have changed since we last cached them:
-            final String[] uris = {Config.ICONS_URI, Config.EXAMPLES_URI, com.murrayc.galaxyzoo.app.Config.ICONS_CSS_URI};
-            lastModified = 0; //TODO: HttpUtils.getLatestLastModified(uris);
-
-            //If the bundled icon files are too old, get them from the network and cache them:
-            if(lastModified > ASSETS_ICONS_TIMESTAMP) {
-                final SharedPreferences prefs = getPreferences(context);
-
-                final long prevLastModified = prefs.getLong(getPrefKeyIconCacheLastMod(context), 0);
-                if ((lastModified == 0) // Always update if we can't get the last-modified from the server
-                        || (lastModified > prevLastModified)) {
-                    loadFromNetwork = true;
-                }
-            }
-        }
+        boolean loadFromNetwork = true;
 
         if (loadFromNetwork) {
             loadFromNetwork(context, lastModified);
@@ -143,18 +127,6 @@ class IconsCache {
         readIconsFileSync(Config.ICONS_URI, CACHE_FILE_WORKFLOW_ICONS);
         readIconsFileSync(Config.EXAMPLES_URI, CACHE_FILE_EXAMPLE_ICONS);
         readCssFileSync(com.murrayc.galaxyzoo.app.Config.ICONS_CSS_URI, CACHE_FILE_CSS);
-
-        //Remember the dates of the files from the server,
-        //so we can check again next time.
-        final SharedPreferences prefs = getPreferences(context);
-        final SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(getPrefKeyIconCacheLastMod(context), lastModified);
-        editor.apply();
-    }
-
-    private SharedPreferences getPreferences(Context context) {
-        return context.getSharedPreferences("android-galaxyzoo",
-                Context.MODE_PRIVATE);
     }
 
     private static String getPrefKeyIconCacheLastMod(Context context) {
@@ -283,18 +255,26 @@ class IconsCache {
     /*
     private void readIconsFileSync(final String uriStr, final String cacheId) {
         final String cacheFileUri = createCacheFile(cacheId);
-        if(!HttpUtils.cacheUriToFileSync(getContext(), mRequestQueue, uriStr, cacheFileUri)) {
-            Log.error("readIconsFileSync(): cacheUriToFileSync() failed.");
+        try {
+            if(!HttpUtils.cacheUriToFileSync(getContext(), mRequestQueue, uriStr, cacheFileUri)) {
+                Log.error("readIconsFileSync(): cacheUriToFileSync() failed.");
+            }
+        } catch (final HttpUtils.FileCacheException e) {
+            Log.error("readIconsFileSync: Exception from HttpUtils.cacheUriToFileSync", e);
         }
     }
 
     private void readCssFileSync(final String uriStr, final String cacheId) {
         final String cacheFileUri = createCacheFile(cacheId);
-        if(!HttpUtils.cacheUriToFileSync(getContext(), mRequestQueue, uriStr, cacheFileUri)) {
-            Log.error("readCssFileSync(): cacheUriToFileSync() failed.");
-            //TODO: Try again?
-        } else {
-            onCssDownloaded();
+        try {
+            if(!HttpUtils.cacheUriToFileSync(getContext(), mRequestQueue, uriStr, cacheFileUri)) {
+                Log.error("readCssFileSync(): cacheUriToFileSync() failed.");
+                //TODO: Try again?
+            } else {
+                onCssDownloaded();
+            }
+        } catch (final HttpUtils.FileCacheException e) {
+            Log.error("readIconsFileSync: Exception from HttpUtils.cacheUriToFileSync", e);
         }
     }
 
@@ -462,7 +442,7 @@ class IconsCache {
         }
 
         Pattern p;
-        try {
+
             String prefix;
             if (isExampleIcon) {
                 prefix = "\\.example-thumbnail\\.";
@@ -472,7 +452,7 @@ class IconsCache {
 
             p = Pattern.compile(prefix + cssName + "\\{background-position:(-?[0-9]+)(px)? (-?[0-9]+)(px)?\\}");
             //p = Pattern.compile("a.workflow-" + cssName);
-        }
+
 
         final Matcher m = p.matcher(css);
         while (m.find()) {
