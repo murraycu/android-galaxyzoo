@@ -81,6 +81,15 @@ public final class HttpUtils {
         return networkConnected.connected;
     }
 
+    /**
+     *
+     * @param context
+     * @param requestQueue
+     * @param uriFileToCache  A Content URI for a cache file.
+     * @param cacheFileUri
+     * @return
+     * @throws FileCacheException
+     */
     public static boolean cacheUriToFileSync(final Context context, final RequestQueue requestQueue, final String uriFileToCache, final String cacheFileUri) throws FileCacheException {
         Log.info("cacheUriToFileSync(): uriFileToCache=" + uriFileToCache);
 
@@ -118,6 +127,14 @@ public final class HttpUtils {
         private final WeakReference<Context> mContext;
         private final Response.Listener<Boolean> mListener;
 
+        /**
+         *
+         * @param context
+         * @param uriFileToCache
+         * @param cacheFileUri  A Content URI for a cache file.
+         * @param listener
+         * @param errorListener
+         */
         public FileCacheRequest(final Context context, final String uriFileToCache, final String cacheFileUri, final Response.Listener<Boolean> listener, final Response.ErrorListener errorListener) {
             super(Method.GET, uriFileToCache, errorListener);
 
@@ -200,6 +217,13 @@ public final class HttpUtils {
     */
 
 
+    /**
+     *
+     * @param context
+     * @param data
+     * @param cacheFileContentUri A Content URI for a cache file.
+     * @throws IOException
+     */
     private static void parseGetFileResponseContent(final Context context, final byte[] data, final String cacheFileContentUri) throws IOException {
         //Write the content to the file:
         ParcelFileDescriptor pfd = null;

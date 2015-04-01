@@ -156,6 +156,13 @@ public class SubjectAdder {
         return noWorkNeeded;
     }
 
+    /**
+     *
+     * @param itemUri
+     * @param uriRemote
+     * @param uriContent A Content URI for a cache file.
+     * @param imageType
+     */
     private void downloadMissingImage(final Uri itemUri, final String uriRemote, final String uriContent, final ImageType imageType) {
         Log.info("downloadMissingImage(): imageType=" + imageType + ", uriRemote=" + uriRemote);
 
@@ -317,6 +324,14 @@ public class SubjectAdder {
         c.close();
     }
 
+    /**
+     *
+     * @param uriStandardRemote
+     * @param uriStandard A Content URI for a cache file.
+     * @param itemUri
+     * @param imageType
+     * @param asyncFileDownloads
+     */
     private void cacheUriToFileWithNullChecks(final String uriStandardRemote, final String uriStandard, final Uri itemUri, final ImageType imageType, final boolean asyncFileDownloads) {
         if (TextUtils.isEmpty(uriStandardRemote) || TextUtils.isEmpty(uriStandard)) {
             Log.error("cacheUriToFileWithNullChecks(): Empty uriStandardRemote or uriStandard.");
@@ -334,6 +349,7 @@ public class SubjectAdder {
     /**
      * Download bytes from a url and store them in a file, optionally asynchronously in spawned thread.
      *
+     * @param cacheFileUri A Content URI for a cache file.
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
     private void cacheUriToFile(final String uriFileToCache, final String cacheFileUri, final Uri itemUri, final ImageType imageType, final boolean asyncFileDownloads) throws HttpUtils.NoNetworkException {
