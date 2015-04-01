@@ -25,13 +25,10 @@ package com.murrayc.galaxyzoo.app;
  * Created by murrayc on 10/10/14.
  */
 final class Config {
-    //Maybe this whole class should be in the app, not the content provider.
     public static final String TALK_URI = "http://talk.galaxyzoo.org/#/subjects/";
 
-    //Maybe this whole class should be in the app, not the content provider.
     public static final String EXAMINE_URI = "http://www.galaxyzoo.org/#/examine/";
 
-    //Maybe this whole class should be in the app, not the content provider.
     //TODO: Is there a stable URI for this?
     //public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2014-09-05_13-06-46.css";
 
