@@ -44,6 +44,8 @@ import java.util.concurrent.ExecutionException;
  */
 public class ZooniverseClientTest extends AndroidTestCase {
 
+    public static final String TEST_GROUP_ID = "50251c3b516bcb6ecb000002";
+
     @Override
     public void setUp() throws IOException {
     }
@@ -89,7 +91,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         assertEquals(1, server.getRequestCount());
         final RecordedRequest request = server.takeRequest();
         assertEquals("GET", request.getMethod());
-        assertEquals("/groups/50251c3b516bcb6ecb000002/subjects?limit=5", request.getPath());
+        assertEquals("/groups/" + TEST_GROUP_ID + "/subjects?limit=5", request.getPath());
 
         server.shutdown();
     }
@@ -240,7 +242,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         values.add(new ZooniverseClient.NameValuePair("classification[annotations][3][sloan-6]", "x-5"));
 
         final boolean result = client.uploadClassificationSync("testAuthName",
-                "testAuthApiKey", values);
+                "testAuthApiKey", TEST_GROUP_ID, values);
         assertTrue(result);
 
         assertEquals(1, server.getRequestCount());
@@ -249,7 +251,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         //so we notice if something changes unexpectedly:
         final RecordedRequest request = server.takeRequest();
         assertEquals("POST", request.getMethod());
-        assertEquals("/workflows/50251c3b516bcb6ecb000002/classifications", request.getPath());
+        assertEquals("/workflows/" + TEST_GROUP_ID + "/classifications", request.getPath());
         assertNotNull(request.getHeader("Authorization"));
         assertEquals("application/x-www-form-urlencoded", request.getHeader("Content-Type"));
 
@@ -277,7 +279,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         try {
             final boolean result = client.uploadClassificationSync("testAuthName",
-                    "testAuthApiKey", values);
+                    "testAuthApiKey", TEST_GROUP_ID, values);
             assertFalse(result);
         } catch (final ZooniverseClient.UploadException e) {
             //This is (at least with okhttp.mockwebserver) a normal
