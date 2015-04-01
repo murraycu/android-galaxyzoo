@@ -30,6 +30,7 @@ import com.android.volley.toolbox.Volley;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
+import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 
 import java.io.BufferedWriter;
@@ -99,16 +100,20 @@ public class ZooniverseClient {
         connection.setRequestProperty(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.USER_AGENT_MURRAYC);
     }
 
+    /** Get the first part of the Query URI.
+     * The caller should append a number to indicate how many items are being requested.
+     * @return
+     */
     private String getQueryMoreItemsUri() {
         /**
          * REST uri for querying items.
          * Like, the Galaxy-Zoo website's code, this hard-codes the Group ID for the Sloan survey:
          */
-        return mServerBaseUri + "groups/50251c3b516bcb6ecb000002/subjects?limit="; //Should have a number, such as 5, appended.
+        return mServerBaseUri + "groups/" + Config.SUBJECTS_GROUP_ID + "/subjects?limit="; //Should have a number, such as 5, appended.
     }
 
     private String getPostUploadUri() {
-        return mServerBaseUri + "workflows/50251c3b516bcb6ecb000002/classifications";
+        return mServerBaseUri + "workflows/" + Config.SUBJECTS_GROUP_ID + "/classifications";
     }
 
     private String getLoginUri() {
