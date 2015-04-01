@@ -250,6 +250,7 @@ public final class HttpUtils {
          *                 none of any kind was available.
          */
         public NoNetworkException(final boolean wifiOnly) {
+            super();
             this.wifiOnly = wifiOnly;
         }
 

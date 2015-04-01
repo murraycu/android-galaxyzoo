@@ -62,6 +62,7 @@ public class ZooniverseClient {
     private RequestQueue mQueue = null;
 
     public ZooniverseClient(final Context context, final String serverBaseUri) {
+        super();
         mContext = context;
         mServerBaseUri = serverBaseUri;
 
@@ -314,6 +315,7 @@ public class ZooniverseClient {
         private final String value;
 
         public NameValuePair(final String name, final String value) {
+            super();
             this.name = name;
             this.value = value;
         }
@@ -412,6 +414,7 @@ public class ZooniverseClient {
         private final String mLocationInverted;
 
         public Subject(final String subjectId, final String zooniverseId, final String locationStandard, final String locationThumbnail, final String locationInverted) {
+            super();
             this.mSubjectId = subjectId;
             this.mZooniverseId = zooniverseId;
             this.mLocationStandard = locationStandard;

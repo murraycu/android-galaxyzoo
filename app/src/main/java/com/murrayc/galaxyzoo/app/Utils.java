@@ -120,6 +120,7 @@ public final class Utils {
         public final boolean notConnectedBecauseNotOnWifi;
 
         NetworkConnected(final boolean connected, final boolean notConnectedBecauseNotOnWifi) {
+            super();
             this.connected = connected;
             this.notConnectedBecauseNotOnWifi = notConnectedBecauseNotOnWifi;
         }

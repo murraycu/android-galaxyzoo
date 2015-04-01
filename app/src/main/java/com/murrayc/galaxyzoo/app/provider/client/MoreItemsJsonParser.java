@@ -125,6 +125,7 @@ public class MoreItemsJsonParser {
         private final String mLocationInverted;
 
         Locations(final String locationStandard, final String locationThumbnail, final String locationInverted) {
+            super();
             this.mLocationStandard = locationStandard;
             this.mLocationThumbnail = locationThumbnail;
             this.mLocationInverted = locationInverted;
