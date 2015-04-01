@@ -70,7 +70,7 @@ public class ClassifyActivity extends ItemActivity
         }
     }
 
-    private static Picasso.Listener picassoListener = new PicassoListener();
+    private static final Picasso.Listener picassoListener = new PicassoListener();
 
 
 //    public class ItemsContentProviderObserver extends ContentObserver {
