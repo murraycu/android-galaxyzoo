@@ -44,7 +44,9 @@ import java.util.concurrent.ExecutionException;
  */
 public class ZooniverseClientTest extends AndroidTestCase {
 
-    public static final String TEST_GROUP_ID = "551456e02f0eef2535000001";
+    public static final String TEST_GROUP_ID = "551453e12f0eef21f2000001";
+    public static final String TEST_GROUP_ID2 = "551453e12f0eef21f2000001";
+
 
     @Override
     public void setUp() throws IOException {
@@ -74,30 +76,38 @@ public class ZooniverseClientTest extends AndroidTestCase {
         assertNotNull(subject);
 
         assertNotNull(subject.getSubjectId());
-        assertEquals(subject.getSubjectId(), "504e6b5dc499611ea6020689");
+        assertEquals(subject.getSubjectId(), "5500684569736d5964271400");
 
         assertNotNull(subject.getZooniverseId());
-        assertEquals(subject.getZooniverseId(), "AGZ0002ufd");
+        assertEquals(subject.getZooniverseId(), "AGZ00081ls");
 
         assertNotNull(subject.getGroupId());
         assertEquals(subject.getGroupId(), TEST_GROUP_ID);
 
         assertNotNull(subject.getLocationStandard());
         assertEquals(subject.getLocationStandard(),
-                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/1237666273680359558.jpg");
+                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/goods_full_n_27820_standard.jpg");
         assertNotNull(subject.getLocationThumbnail());
         assertEquals(subject.getLocationThumbnail(),
-                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/1237666273680359558.jpg");
+                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/goods_full_n_27820_thumbnail.jpg");
         assertNotNull(subject.getLocationInverted());
         assertEquals(subject.getLocationInverted(),
-                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/inverted/1237666273680359558.jpg");
+                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/inverted/goods_full_n_27820_inverted.jpg");
 
 
         //Test what the server received:
         assertEquals(1, server.getRequestCount());
         final RecordedRequest request = server.takeRequest();
         assertEquals("GET", request.getMethod());
-        assertEquals("/groups/" + TEST_GROUP_ID + "/subjects?limit=5", request.getPath());
+
+        //ZooniverseClient uses one of several possible group IDs at random:
+        //See com.murrayc.galaxyzoo.app.provider.Config
+        final String possiblePath1 = "/groups/" + TEST_GROUP_ID + "/subjects?limit=5";
+        final String possiblePath2 = "/groups/" + "551456e02f0eef2535000001" + "/subjects?limit=5";
+        //TODO: Can we use this?
+        // assertThat(request.getPath(), anyOf(is(possiblePath1), is(possiblePath2)));
+        final String path = request.getPath();
+        assertTrue( path.equals(possiblePath1) || path.equals(possiblePath2));
 
         server.shutdown();
     }
