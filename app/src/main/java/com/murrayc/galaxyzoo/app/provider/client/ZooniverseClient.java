@@ -100,6 +100,10 @@ public class ZooniverseClient {
         connection.setRequestProperty(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.USER_AGENT_MURRAYC);
     }
 
+    private String getGroupIdForNextQuery() {
+        return Config.SUBJECTS_GROUP_ID;
+    }
+
     /** Get the first part of the Query URI.
      * The caller should append a number to indicate how many items are being requested.
      * @return
@@ -109,7 +113,7 @@ public class ZooniverseClient {
          * REST uri for querying items.
          * Like, the Galaxy-Zoo website's code, this hard-codes the Group ID for the Sloan survey:
          */
-        return mServerBaseUri + "groups/" + Config.SUBJECTS_GROUP_ID + "/subjects?limit="; //Should have a number, such as 5, appended.
+        return mServerBaseUri + "groups/" + getGroupIdForNextQuery() + "/subjects?limit="; //Should have a number, such as 5, appended.
     }
 
     private String getPostUploadUri(final String groupId) {
