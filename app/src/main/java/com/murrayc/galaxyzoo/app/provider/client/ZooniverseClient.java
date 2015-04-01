@@ -44,6 +44,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -100,8 +101,13 @@ public class ZooniverseClient {
         connection.setRequestProperty(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.USER_AGENT_MURRAYC);
     }
 
+    /** Return a group ID selected at random.
+     *
+     * @return
+     */
     private String getGroupIdForNextQuery() {
-        return Config.SUBJECTS_GROUP_ID;
+        int idx = new Random().nextInt( Config.SUBJECTS_GROUP_IDS.length);
+        return Config.SUBJECTS_GROUP_IDS[idx];
     }
 
     /** Get the first part of the Query URI.

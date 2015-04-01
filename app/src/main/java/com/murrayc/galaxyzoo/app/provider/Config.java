@@ -28,5 +28,11 @@ package com.murrayc.galaxyzoo.app.provider;
 public final class Config {
 
     public static final String SERVER = "https://api.zooniverse.org/projects/galaxy_zoo/";
-    public static final String SUBJECTS_GROUP_ID = "50251c3b516bcb6ecb000002";
+
+    //See Config.coffee:production:
+    //https://github.com/zooniverse/Galaxy-Zoo/blob/master/app/lib/config.coffee
+    public static final String[] SUBJECTS_GROUP_IDS = {
+            "551456e02f0eef2535000001" /* candels_2epoch */,
+            "551453e12f0eef21f2000001" /* goods_full */
+    };
 }
