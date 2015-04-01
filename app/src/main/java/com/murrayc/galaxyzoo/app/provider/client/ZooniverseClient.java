@@ -112,8 +112,8 @@ public class ZooniverseClient {
         return mServerBaseUri + "groups/" + Config.SUBJECTS_GROUP_ID + "/subjects?limit="; //Should have a number, such as 5, appended.
     }
 
-    private String getPostUploadUri() {
-        return mServerBaseUri + "workflows/" + Config.SUBJECTS_GROUP_ID + "/classifications";
+    private String getPostUploadUri(final String groupId) {
+        return mServerBaseUri + "workflows/" + groupId + "/classifications";
     }
 
     private String getLoginUri() {
@@ -334,12 +334,12 @@ public class ZooniverseClient {
         }
     }
 
-    public boolean uploadClassificationSync(final String authName, final String authApiKey, final List<NameValuePair> nameValuePairs) throws UploadException {
+    public boolean uploadClassificationSync(final String authName, final String authApiKey, final String groupId, final List<NameValuePair> nameValuePairs) throws UploadException {
         throwIfNoNetwork();
 
         final HttpURLConnection conn;
         try {
-            conn = openConnection(getPostUploadUri());
+            conn = openConnection(getPostUploadUri(groupId));
         } catch (final IOException e) {
             Log.error("uploadClassificationSync(): Could not open connection", e);
 

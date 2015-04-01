@@ -253,7 +253,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         final ContentResolver resolver = getContentResolver();
 
         final String[] projection = {Item.Columns._ID,
-                Item.Columns.SUBJECT_ID};
+                Item.Columns.SUBJECT_ID,
+                Item.Columns.GROUP_ID};
         final String whereClause =
                 "(" + Item.Columns.DONE + " == 1) AND " +
                         "(" + Item.Columns.UPLOADED + " != 1)";
@@ -268,9 +269,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         while (c.moveToNext()) {
             final String itemId = c.getString(0);
             final String subjectId = c.getString(1);
+            final String groupId = c.getString(2);
+
 
             mUploadsInProgress++;
-            final UploadTask task = new UploadTask(itemId, subjectId, loginDetails.name, loginDetails.authApiKey);
+            final UploadTask task = new UploadTask(itemId, subjectId, groupId, loginDetails.name, loginDetails.authApiKey);
             final Thread thread = new Thread(task);
             thread.start();
         }
@@ -334,8 +337,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private boolean doUploadSync(final String itemId, final String subjectId, final String authName, final String authApiKey) throws ZooniverseClient.UploadException {
-
+    private boolean doUploadSync(final String itemId, final String subjectId, final String groupId, final String authName, final String authApiKey) throws ZooniverseClient.UploadException {
 
         //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
         //but that did not allow multiple parameters with the same name, which we need.
@@ -424,7 +426,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 getAnnotationPart(max_sequence + 1 ) + "[user_agent]";
         nameValuePairs.add(new ZooniverseClient.NameValuePair(key, HttpUtils.USER_AGENT_MURRAYC));
 
-        return mClient.uploadClassificationSync(authName, authApiKey, nameValuePairs);
+        return mClient.uploadClassificationSync(authName, authApiKey, groupId, nameValuePairs);
     }
 
     private static String getAnnotationPart(final int sequence) {
@@ -434,12 +436,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private class UploadTask implements Runnable {
         private final String mItemId ;
         private final String mSubjectId;
+        private final String mGroupId;
         private final String mAuthName;
         private final String mAuthApiKey;
 
-        public UploadTask(final String itemId, final String subjectId, final String authName, final String authApiKey) {
+        public UploadTask(final String itemId, final String subjectId, final String groupId, final String authName, final String authApiKey) {
             mItemId = itemId;
             mSubjectId = subjectId;
+            mGroupId = groupId;
             mAuthName = authName;
             mAuthApiKey = authApiKey;
         }
@@ -449,7 +453,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             Log.info("UploadTask.run()");
             boolean result = false;
             try {
-                result = doUploadSync(mItemId, mSubjectId, mAuthName, mAuthApiKey);
+                result = doUploadSync(mItemId, mSubjectId, mGroupId, mAuthName, mAuthApiKey);
             } catch (final HttpUtils.NoNetworkException e) {
                 //This is normal, if there is no suitable network connection.
                 Log.info("UploadTask(): NoNetworkException");
