@@ -246,6 +246,7 @@ class IconsCache {
         //}
 
         if (bitmap == null) {
+            Log.error("reloadIcon(): Could not load icon: " + cssName);
             return false;
         }
 
