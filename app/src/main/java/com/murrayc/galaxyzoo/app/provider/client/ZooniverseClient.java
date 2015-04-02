@@ -119,7 +119,7 @@ public class ZooniverseClient {
         }
 
         final Object[] values = groupIds.toArray();
-        int idx = new Random().nextInt( values.length);
+        final int idx = new Random().nextInt(values.length);
         return (String)values[idx];
     }
 

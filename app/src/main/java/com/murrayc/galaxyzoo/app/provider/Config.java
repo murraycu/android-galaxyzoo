@@ -36,7 +36,7 @@ public final class Config {
         final String filename;
         final boolean useForNewQueries;
 
-        public SubjectGroup(final String filename, boolean useForNewQueries) {
+        public SubjectGroup(final String filename, final boolean useForNewQueries) {
             this.filename = filename;
             this.useForNewQueries = useForNewQueries;
         }
@@ -48,7 +48,7 @@ public final class Config {
         public boolean getUseForNewQueries() {
             return useForNewQueries;
         }
-    };
+    }
 
     //See Config.coffee:production:
     //https://github.com/zooniverse/Galaxy-Zoo/blob/master/app/lib/config.coffee
