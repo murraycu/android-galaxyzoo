@@ -1,7 +1,13 @@
+1.41:
+
+* Show the new sets of subjects (goods_full and candels_2epoch).
+
+
 1.40:
 
 * Avoid a crash, introduced in 1.39, when logging in.
   Thanks for using the Report button.
+
 
 1.39:
 
