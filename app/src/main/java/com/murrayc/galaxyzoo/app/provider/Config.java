@@ -19,8 +19,6 @@
 
 package com.murrayc.galaxyzoo.app.provider;
 
-import android.provider.BaseColumns;
-
 import java.util.HashMap;
 import java.util.Map;
 
