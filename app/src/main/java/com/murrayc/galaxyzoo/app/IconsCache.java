@@ -40,6 +40,7 @@ import android.text.TextUtils;
 import java.io.InputStream;
 //import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 //import java.util.regex.Matcher;
 //import java.util.regex.Pattern;
 //import java.util.regex.PatternSyntaxException;
@@ -57,7 +58,7 @@ class IconsCache {
     //private static long ASSETS_ICONS_TIMESTAMP = 1409922463000L; //Update this when bundling new copies of the files.
 
 
-    private final DecisionTree mDecisionTree;
+    private final Map<String, DecisionTree> mDecisionTrees;
     //private final File mCacheDir;
 
     //TODO: Don't put both kinds of icons in the same map:
@@ -77,10 +78,10 @@ class IconsCache {
      * For instance, do this in an AsyncTask, as in Singleton.init().
      *
      * @param context
-     * @param decisionTree
+     * @param decisionTrees
      */
-    public IconsCache(final Context context, final DecisionTree decisionTree) {
-        this.mDecisionTree = decisionTree;
+    public IconsCache(final Context context, final Map<String, DecisionTree> decisionTrees) {
+        this.mDecisionTrees = decisionTrees;
         this.mContext = context;
         /* this.mRequestQueue = Volley.newRequestQueue(context);
 
@@ -138,12 +139,16 @@ class IconsCache {
         mWorkflowIcons.evictAll();
         mExampleIcons.evictAll();
 
-        final List<DecisionTree.Question> questions = mDecisionTree.getAllQuestions();
         boolean allSucceeded = true;
-        for (final DecisionTree.Question question : questions) {
-            if (!reloadIconsForQuestion(question)) {
-                allSucceeded = false;
-                //But keep on trying the other ones.
+
+        //For each tree, try loading all its icons:
+        for (final DecisionTree decisionTree : mDecisionTrees.values()) {
+            final List<DecisionTree.Question> questions = decisionTree.getAllQuestions();
+            for (final DecisionTree.Question question : questions) {
+                if (!reloadIconsForQuestion(question)) {
+                    allSucceeded = false;
+                    //But keep on trying the other ones.
+                }
             }
         }
 
@@ -320,10 +325,12 @@ class IconsCache {
         mWorkflowIcons.evictAll();
         mExampleIcons.evictAll();
 
-        final List<DecisionTree.Question> questions = mDecisionTree.getAllQuestions();
-        boolean allSucceeded = true;
-        for (final DecisionTree.Question question : questions) {
-            cacheIconsForQuestion(question, css);
+        for (final DecisionTree decisionTree : mDecisionTrees.values()) {
+            final List<DecisionTree.Question> questions = decisionTree.getAllQuestions();
+            boolean allSucceeded = true;
+            for (final DecisionTree.Question question : questions) {
+                cacheIconsForQuestion(question, css);
+            }
         }
     }
 

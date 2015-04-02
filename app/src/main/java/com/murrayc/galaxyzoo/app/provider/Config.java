@@ -19,6 +19,11 @@
 
 package com.murrayc.galaxyzoo.app.provider;
 
+import android.provider.BaseColumns;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The various URIs used to communicate with the server.
  * The child URIs are built in ZooniverseClient.
@@ -29,10 +34,43 @@ public final class Config {
 
     public static final String SERVER = "https://api.zooniverse.org/projects/galaxy_zoo/";
 
+    public static class SubjectGroup {
+        final String filename;
+        final boolean useForNewQueries;
+
+        public SubjectGroup(final String filename, boolean useForNewQueries) {
+            this.filename = filename;
+            this.useForNewQueries = useForNewQueries;
+        }
+
+        public String getFilename() {
+            return filename;
+        }
+
+        public boolean getUseForNewQueries() {
+            return useForNewQueries;
+        }
+    };
+
     //See Config.coffee:production:
     //https://github.com/zooniverse/Galaxy-Zoo/blob/master/app/lib/config.coffee
-    public static final String[] SUBJECTS_GROUP_IDS = {
-            "551456e02f0eef2535000001" /* candels_2epoch */,
-            "551453e12f0eef21f2000001" /* goods_full */
-    };
+    public static final Map<String, SubjectGroup> SUBJECT_GROUPS;
+
+    public static final String SUBJECT_GROUP_ID_SLOAN = "50251c3b516bcb6ecb000002";
+
+    static {
+        SUBJECT_GROUPS = new HashMap<>();
+
+        //We don't request items for this group any more, but we still want to load the
+        //tree so can ask questions about items that have already been downloaded and stored in
+        //the cache.
+        //At some point we can remove this when we are sure it is unnecessary.
+        SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SLOAN /* SSID / sloan */,
+                new SubjectGroup("sloan_tree.xml", false));
+
+        SUBJECT_GROUPS.put("551456e02f0eef2535000001" /* candels_2epoch */,
+                new SubjectGroup("candels_tree.xml", true));
+        SUBJECT_GROUPS.put("551453e12f0eef21f2000001" /* goods_full */,
+                new SubjectGroup("goods_full_tree.xml", true));
+    }
 }

@@ -88,6 +88,8 @@ public class QuestionFragment extends BaseQuestionFragment
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     /* private static final int COLUMN_INDEX_ID = 0; */
     private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
+    private static final int COLUMN_INDEX_GROUP_ID = 2;
+
 
     /**
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
@@ -103,7 +105,7 @@ public class QuestionFragment extends BaseQuestionFragment
      * clicks.
      */
     private Callbacks mCallbacks = sDummyCallbacks;
-    private final String[] mColumns = {Item.Columns._ID, Item.Columns.ZOONIVERSE_ID};
+    private final String[] mColumns = {Item.Columns._ID, Item.Columns.ZOONIVERSE_ID, Item.Columns.GROUP_ID};
 
     // A map of checkbox IDs to buttons.
     private final Map<String, ToggleButton> mCheckboxButtons = new HashMap<>();
@@ -141,6 +143,7 @@ public class QuestionFragment extends BaseQuestionFragment
         //rotation.
         if (savedInstanceState != null) {
             setQuestionId(savedInstanceState.getString(ARG_QUESTION_ID));
+            setGroupId(savedInstanceState.getString(ARG_GROUP_ID));
 
             //Get the classification in progress too,
             //instead of losing it when we rotate:
@@ -149,6 +152,7 @@ public class QuestionFragment extends BaseQuestionFragment
             final Bundle bundle = getArguments();
             if (bundle != null) {
                 setQuestionId(bundle.getString(ARG_QUESTION_ID));
+                setGroupId(bundle.getString(ARG_GROUP_ID));
             }
         }
 
@@ -201,6 +205,7 @@ public class QuestionFragment extends BaseQuestionFragment
         //Otherwise, on rotation, onCreateView() will just get the first question ID, if any, that was first used
         //to create the fragment.
         outState.putString(ARG_QUESTION_ID, getQuestionId());
+        outState.putString(ARG_GROUP_ID, getGroupId());
         outState.putParcelable(ARG_QUESTION_CLASSIFICATION_IN_PROGRESS, mClassificationInProgress);
 
         super.onSaveInstanceState(outState);
@@ -273,6 +278,7 @@ public class QuestionFragment extends BaseQuestionFragment
     private void doExamples() {
         final Intent intent = new Intent(getActivity(), QuestionHelpActivity.class);
         intent.putExtra(ARG_QUESTION_ID, getQuestionId());
+        intent.putExtra(ARG_GROUP_ID, getGroupId());
         startActivity(intent);
     }
 
@@ -546,7 +552,7 @@ public class QuestionFragment extends BaseQuestionFragment
      */
     private void showNextQuestion(final String questionId, final String answerId) {
         final Singleton singleton = getSingleton();
-        final DecisionTree tree = singleton.getDecisionTree();
+        final DecisionTree tree = singleton.getDecisionTree(getGroupId());
 
         final DecisionTree.Question nextQuestion = tree.getNextQuestionForAnswer(questionId, answerId);
         if (nextQuestion == null) {
@@ -586,7 +592,7 @@ public class QuestionFragment extends BaseQuestionFragment
 
         //Get the selected checkboxes too:
         final Singleton singleton = getSingleton();
-        final DecisionTree tree = singleton.getDecisionTree();
+        final DecisionTree tree = singleton.getDecisionTree(getGroupId());
         final DecisionTree.Question question = tree.getQuestion(questionId);
         if ((question != null) && question.hasCheckboxes()) {
             checkboxes = new ArrayList<>();
@@ -787,7 +793,6 @@ public class QuestionFragment extends BaseQuestionFragment
 
         mCursor.moveToFirst(); //There should only be one anyway.
 
-        //Look at each group in the layout:
         if (mRootView == null) {
             Log.error("QuestionFragment.updateFromCursor(): mRootView is null.");
             return;
@@ -795,6 +800,14 @@ public class QuestionFragment extends BaseQuestionFragment
 
         final String zooniverseId = mCursor.getString(COLUMN_INDEX_ZOONIVERSE_ID);
         setZooniverseId(zooniverseId);
+
+        String groupId = mCursor.getString(COLUMN_INDEX_GROUP_ID);
+        if (TextUtils.isEmpty(groupId)) {
+            //Assume that this is an old cached item from before we added the group ID
+            //database field, when we only use the sloan group:
+            groupId = com.murrayc.galaxyzoo.app.provider.Config.SUBJECT_GROUP_ID_SLOAN;
+        }
+        setGroupId(groupId);
     }
 
     @Override

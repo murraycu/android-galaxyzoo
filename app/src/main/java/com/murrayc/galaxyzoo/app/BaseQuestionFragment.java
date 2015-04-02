@@ -27,7 +27,17 @@ import android.graphics.drawable.BitmapDrawable;
  */
 public class BaseQuestionFragment extends ItemFragment {
     public static final String ARG_QUESTION_ID = "question-id";
+    public static final String ARG_GROUP_ID = "group-id";
     private String mQuestionId = null;
+    private String mGroupId = null;
+
+    String getGroupId() {
+        return mGroupId;
+    } //TODO: Should this be a long?
+
+    void setGroupId(final String groupId) {
+        mGroupId = groupId;
+    }
 
     String getQuestionId() {
         return mQuestionId;
@@ -39,7 +49,11 @@ public class BaseQuestionFragment extends ItemFragment {
 
     DecisionTree.Question getQuestion() {
         final Singleton singleton = getSingleton();
-        final DecisionTree tree = singleton.getDecisionTree();
+        final DecisionTree tree = singleton.getDecisionTree(getGroupId());
+        if (tree == null) {
+            Log.error("getQuestion(): tree is null.");
+            return null;
+        }
 
         final DecisionTree.Question question = tree.getQuestionOrFirst(getQuestionId());
         if (question != null) {

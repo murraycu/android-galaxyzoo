@@ -35,6 +35,7 @@ import android.support.v4.app.FragmentManager;
 public class QuestionHelpActivity extends BaseActivity implements ItemFragment.Callbacks {
 
     private String mQuestionId = null;
+    private String mGroupId = null;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
 
         final Intent intent = getIntent();
         setQuestionId(intent.getStringExtra(BaseQuestionFragment.ARG_QUESTION_ID));
+        setGroupId(intent.getStringExtra(BaseQuestionFragment.ARG_GROUP_ID));
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -70,6 +72,8 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
                     final Bundle arguments = new Bundle();
                     arguments.putString(BaseQuestionFragment.ARG_QUESTION_ID,
                             getQuestionId());
+                    arguments.putString(BaseQuestionFragment.ARG_GROUP_ID,
+                            getGroupId());
 
                     fragment = new QuestionHelpFragment();
                     fragment.setArguments(arguments);
@@ -80,6 +84,7 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
                     Log.info("QuestionHelpActivity.onCreate(): The QuestionHelpFragment already existed.");
 
                     fragment.setQuestionId(getQuestionId());
+                    fragment.setGroupId(getGroupId());
                     fragment.update();
                 }
             }
@@ -92,9 +97,18 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
         return mQuestionId;
     }
 
+    public String getGroupId() {
+        return mGroupId;
+    }
+
     //This is not private, so we can use it in tests.
     public void setQuestionId(final String questionId) {
         mQuestionId = questionId;
+    }
+
+    //This is not private, so we can use it in tests.
+    public void setGroupId(final String groupId) {
+        mGroupId = groupId;
     }
 
     //We don't actually use this.

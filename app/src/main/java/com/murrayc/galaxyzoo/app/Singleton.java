@@ -25,11 +25,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.murrayc.galaxyzoo.app.provider.*;
+import com.murrayc.galaxyzoo.app.provider.Config;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * A singleton that allows our various Activities to share the same data.
@@ -45,7 +50,7 @@ public class Singleton {
     private static Singleton ourInstance = null;
     private static boolean initializationInProgress = false;
     private IconsCache mIconsCache = null;
-    private DecisionTree mDecisionTree = null;
+    private Map<String, DecisionTree> mDecisionTrees = new HashMap<>();
     private LocaleDetails mLocaleDetails = null;
 
     private Singleton(final Context context) throws DecisionTree.DecisionTreeException {
@@ -67,18 +72,25 @@ public class Singleton {
             }
         }
 
-        final InputStream inputStreamTree = Utils.openAsset(context, ASSET_PATH_DECISION_TREE_DIR + "sloan_tree.xml");
-        if (inputStreamTree == null) {
-            Log.error("Singleton: Error parsing decision tree.");
-        } else {
-            mDecisionTree = new DecisionTree(inputStreamTree, inputStreamTranslation);
-        }
+        //Parse the tree for each group of subjects:
+        for (final Map.Entry<String, Config.SubjectGroup> entry : Config.SUBJECT_GROUPS.entrySet()) {
+            final String groupId = entry.getKey();
+            final Config.SubjectGroup subjectGroup = entry.getValue();
+            final String decisionTreeFilename = subjectGroup.getFilename();
+            final InputStream inputStreamTree = Utils.openAsset(context, ASSET_PATH_DECISION_TREE_DIR + decisionTreeFilename);
+            if (inputStreamTree == null) {
+                Log.error("Singleton: Error parsing decision tree.");
+            } else {
+                final DecisionTree decisionTree = new DecisionTree(inputStreamTree, inputStreamTranslation);
+                mDecisionTrees.put(groupId, decisionTree);
+            }
 
-        if (inputStreamTree != null) {
-            try {
-                inputStreamTree.close();
-            } catch (final IOException e) {
-                Log.error("Singleton: Exception while closing inputStreamTree", e);
+            if (inputStreamTree != null) {
+                try {
+                    inputStreamTree.close();
+                } catch (final IOException e) {
+                    Log.error("Singleton: Exception while closing inputStreamTree", e);
+                }
             }
         }
 
@@ -90,7 +102,7 @@ public class Singleton {
             }
         }
 
-        mIconsCache = new IconsCache(context, mDecisionTree);
+        mIconsCache = new IconsCache(context, mDecisionTrees);
     }
 
     private static LocaleDetails getLocaleDetails(final Context context) {
@@ -171,8 +183,8 @@ public class Singleton {
         return ourInstance;
     }
 
-    public DecisionTree getDecisionTree() {
-        return mDecisionTree;
+    public DecisionTree getDecisionTree(final String groupId) {
+        return mDecisionTrees.get(groupId);
     }
 
     private Bitmap getIcon(final String iconName) {

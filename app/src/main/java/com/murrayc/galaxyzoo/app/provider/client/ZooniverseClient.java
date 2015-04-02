@@ -44,7 +44,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -106,8 +108,20 @@ public class ZooniverseClient {
      * @return
      */
     private String getGroupIdForNextQuery() {
-        int idx = new Random().nextInt( Config.SUBJECTS_GROUP_IDS.length);
-        return Config.SUBJECTS_GROUP_IDS[idx];
+
+        //Get a list of only the groups that should be used for new queries.
+        //TODO: Avoid doing this each time?
+        final List<String> groupIds = new ArrayList<>();
+        for (final Map.Entry<String, Config.SubjectGroup> entry : Config.SUBJECT_GROUPS.entrySet()) {
+            final Config.SubjectGroup group = entry.getValue();
+            if (group.getUseForNewQueries()) {
+                groupIds.add(entry.getKey());
+            }
+        }
+
+        final Object[] values = groupIds.toArray();
+        int idx = new Random().nextInt( values.length);
+        return (String)values[idx];
     }
 
     /** Get the first part of the Query URI.

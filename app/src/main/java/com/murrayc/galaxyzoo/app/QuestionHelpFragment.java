@@ -55,6 +55,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         final Bundle bundle = getArguments();
         if (bundle != null) {
             setQuestionId(bundle.getString(QuestionFragment.ARG_QUESTION_ID));
+            setGroupId(bundle.getString(QuestionFragment.ARG_GROUP_ID));
         }
     }
 
