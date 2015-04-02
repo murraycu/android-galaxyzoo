@@ -106,7 +106,7 @@ public class ZooniverseClient {
      *
      * @return
      */
-    private String getGroupIdForNextQuery() {
+    private static String getGroupIdForNextQuery() {
 
         //Get a list of only the groups that should be used for new queries.
         //TODO: Avoid doing this each time?
