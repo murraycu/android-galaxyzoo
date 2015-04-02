@@ -511,6 +511,7 @@ class IconsCache {
         while (m.find()) {
             if (m.groupCount() < 1) { //Doesn't include the 0 group.
                 Log.info("Regex error. Unexpected groups count:" + m.groupCount());
+                continue;
             } else {
                 final String filename = m.group(1); //Group 0 is the whole pattern.
                 final String path = com.murrayc.galaxyzoo.app.Config.STATIC_SERVER + filename;
@@ -518,13 +519,20 @@ class IconsCache {
                 //Cache the file locally so we don't need to get it over the network next time:
                 //TODO: Use the cache from the volley library?
                 //See http://blog.wittchen.biz.pl/asynchronous-loading-and-caching-bitmaps-with-volley/
-                readIconsFileSync(path, cssName);
+                final String cacheFileUri = createCacheIconFile(cssName);
+                try {
+                    if(!HttpUtils.cacheUriToFileSync(getContext(), mRequestQueue, path, cacheFileUri)) {
+                        Log.error("readIconsFileSync(): cacheUriToFileSync() failed.");
+                    }
+                } catch (final HttpUtils.FileCacheException e) {
+                    Log.error("readIconsFileSync: Exception from HttpUtils.cacheUriToFileSync", e);
+                    continue;
+                }
 
-                final String cacheUri = getCacheIconFileUri(cssName);
-                final String cacheFileIcons = getCacheFileUri(cssName);
-                final Bitmap bmapIcon = BitmapFactory.decodeFile(cacheFileIcons);
+                final Bitmap bmapIcon = BitmapFactory.decodeFile(cacheFileUri);
                 if (bmapIcon == null) {
                     Log.error("attemptLoadIconFromCssWithSingleFile(): Could not decode image: " + path);
+                    continue;
                 }
 
                 //We check for nulls because LruCache throws NullPointerExceptions on null
