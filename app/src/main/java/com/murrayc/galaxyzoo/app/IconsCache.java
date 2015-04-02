@@ -299,13 +299,13 @@ class IconsCache {
         for (final DecisionTree.Answer answer : question.getAnswers()) {
             //Get the icon for the answer:
             final String iconName = answer.getIcon();
-            getIconPositionFromCss(mBmapWorkflowIcons, css, iconName, false);
+            loadIconBasedOnCss(mBmapWorkflowIcons, css, iconName, false);
             getExampleImages(question, css, answer);
         }
 
         for (final DecisionTree.Checkbox checkbox : question.getCheckboxes()) {
             final String iconName = checkbox.getIcon();
-            getIconPositionFromCss(mBmapWorkflowIcons, css, iconName, false);
+            loadIconBasedOnCss(mBmapWorkflowIcons, css, iconName, false);
             getExampleImages(question, css, checkbox);
         }
     }
@@ -315,7 +315,7 @@ class IconsCache {
         //Get the example images for the answer or checkbox:
         for (int i = 0; i < answer.getExamplesCount(); i++) {
             final String exampleIconName = answer.getExampleIconName(question.getId(), i);
-            getIconPositionFromCss(mBmapExampleIcons, css, exampleIconName, true);
+            loadIconBasedOnCss(mBmapExampleIcons, css, exampleIconName, true);
         }
     }
 
@@ -428,19 +428,19 @@ class IconsCache {
     // in the absence of an easy choice of CSS parser.
     // http://sourceforge.net/projects/cssparser/ doesn't seem to be usable on Android because
     // Android's org.w3c.dom doesn't have the css package, with classes such as CSSStyleSheet.
-    void getIconPositionFromCss(final Bitmap icons, final String css, final String cssName, boolean isExampleIcon) {
+    void loadIconBasedOnCss(final Bitmap icons, final String css, final String cssName, boolean isExampleIcon) {
         if (icons == null) {
-            Log.error("getIconPositionFromCss(): icons is null.");
+            Log.error("loadIconBasedOnCss(): icons is null.");
             return;
         }
 
         if (TextUtils.isEmpty(css)) {
-            Log.error("getIconPositionFromCss(): css is empty.");
+            Log.error("loadIconBasedOnCss(): css is empty.");
             return;
         }
 
         if (TextUtils.isEmpty(cssName)) {
-            Log.error("getIconPositionFromCss(): cssName is empty.");
+            Log.error("loadIconBasedOnCss(): cssName is empty.");
             return;
         }
 
