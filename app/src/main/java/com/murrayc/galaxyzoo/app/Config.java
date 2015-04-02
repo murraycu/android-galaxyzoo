@@ -40,7 +40,8 @@ final class Config {
     public static final CharSequence ANSWER_ID_DISCUSS_YES = "a-0";
     public static final String ANSWER_ID_DISCUSS_NO = "a-1";
 
-    private static final String STATIC_IMAGES_SERVER = "http://static.zooniverse.org/www.galaxyzoo.org/images/";
+    public static final String STATIC_SERVER = "http://static.zooniverse.org/www.galaxyzoo.org/";
+    private static final String STATIC_IMAGES_SERVER = STATIC_SERVER + "images/";
 
     //This is one big image file containing many icons,
     //for use with the CSS Sprites technique.

@@ -451,23 +451,34 @@ class IconsCache {
 
         Pattern p;
 
-            String prefix;
-            if (isExampleIcon) {
-                prefix = "\\.example-thumbnail\\.";
-            } else {
-                prefix = "a\\.workflow-";
-            }
+        String prefix;
+        if (isExampleIcon) {
+            prefix = "\\.example-thumbnail\\.";
+        } else {
+            prefix = "a\\.workflow-";
+        }
 
-            p = Pattern.compile(prefix + cssName + "\\{background-position:(-?[0-9]+)(px)? (-?[0-9]+)(px)?\\}");
-            //p = Pattern.compile("a.workflow-" + cssName);
+
+        if(!attemptLoadIconFromCssWithPosition(icons, css, cssName, prefix)) {
+            if(!attemptLoadIconFromCssWithSingleFile(icons, css, cssName, prefix)) {
+                Log.error("loadIconBasedOnCss(): No icons found for cssName=" + cssName);
+            }
+        }
+    }
+
+    private boolean attemptLoadIconFromCssWithPosition(Bitmap icons, String css, String cssName, String prefix) {
+        final String regex = prefix + cssName + "\\{background-position:(-?[0-9]+)(px)? (-?[0-9]+)(px)?\\}";
+        final Pattern p = Pattern.compile(regex);
+        //p = Pattern.compile("a.workflow-" + cssName);
 
 
         final Matcher m = p.matcher(css);
+        boolean someFound = false;
         while (m.find()) {
-            if (m.groupCount() < 4) {
+            if (m.groupCount() < 4) { //Doesn't include the 0 group.
                 Log.info("Regex error. Unexpected groups count:" + m.groupCount());
             } else {
-                final String xStr = m.group(1);
+                final String xStr = m.group(1); //Group 0 is the whole region.
                 final String yStr = m.group(3);
 
                 final int x = -(Integer.parseInt(xStr)); //Change negative (CSS) to positive (Bitmap).
@@ -476,18 +487,8 @@ class IconsCache {
                 //TODO: Avoid hard-coding the 100px, 100px here:
                 try {
                     final Bitmap bmapIcon = Bitmap.createBitmap(icons, x, y, 100, 100);
-
-                    //Cache the file locally so we don't need to get it over the network next time:
-                    //TODO: Use the cache from the volley library?
-                    //See http://blog.wittchen.biz.pl/asynchronous-loading-and-caching-bitmaps-with-volley/
-                    final String cacheFileUri = createCacheIconFile(cssName);
-                    cacheBitmapToFile(bmapIcon, cacheFileUri);
-
-                    //We check for nulls because LruCache throws NullPointerExceptions on null
-                    //keys or values.
-                    if (!TextUtils.isEmpty(cssName) && (bmapIcon != null)) {
-                        mWorkflowIcons.put(cssName, bmapIcon);
-                    }
+                    cacheWorkflowIcon(cssName, bmapIcon);
+                    someFound = true;
                 } catch (final IllegalArgumentException ex) {
                     //We catch this IllegalArgumentException to avoid letting the CSS crash our app
                     //just by having a wrong value.
@@ -495,10 +496,71 @@ class IconsCache {
                 }
             }
         }
+
+        return someFound;
+    }
+
+    private boolean attemptLoadIconFromCssWithSingleFile(Bitmap icons, String css, String cssName, String prefix) {
+        final String regex = prefix + cssName + "\\{background:url\\(\\\"(\\S*)\\\"\\) center/cover\\}";
+        final Pattern p = Pattern.compile(regex);
+        //p = Pattern.compile("a.workflow-" + cssName);
+
+
+        final Matcher m = p.matcher(css);
+        boolean someFound = false;
+        while (m.find()) {
+            if (m.groupCount() < 1) { //Doesn't include the 0 group.
+                Log.info("Regex error. Unexpected groups count:" + m.groupCount());
+            } else {
+                final String filename = m.group(1); //Group 0 is the whole pattern.
+                final String path = com.murrayc.galaxyzoo.app.Config.STATIC_SERVER + filename;
+
+                //Cache the file locally so we don't need to get it over the network next time:
+                //TODO: Use the cache from the volley library?
+                //See http://blog.wittchen.biz.pl/asynchronous-loading-and-caching-bitmaps-with-volley/
+                readIconsFileSync(path, cssName);
+
+                final String cacheUri = getCacheIconFileUri(cssName);
+                final String cacheFileIcons = getCacheFileUri(cssName);
+                final Bitmap bmapIcon = BitmapFactory.decodeFile(cacheFileIcons);
+                if (bmapIcon == null) {
+                    Log.error("attemptLoadIconFromCssWithSingleFile(): Could not decode image: " + path);
+                }
+
+                //We check for nulls because LruCache throws NullPointerExceptions on null
+                //keys or values.
+                if (!TextUtils.isEmpty(cssName) && (bmapIcon != null)) {
+                    mWorkflowIcons.put(cssName, bmapIcon);
+                    someFound = true;
+                }
+            }
+        }
+
+        return someFound;
+    }
+
+    /** Cache the file in the file system and remember it.
+     *
+     * @param cssName
+     * @param bmapIcon
+     */
+    /*
+    private void cacheWorkflowIcon(final String cssName, final Bitmap bmapIcon) {
+        //Cache the file locally so we don't need to get it over the network next time:
+        //TODO: Use the cache from the volley library?
+        //See http://blog.wittchen.biz.pl/asynchronous-loading-and-caching-bitmaps-with-volley/
+        final String cacheFileUri = createCacheIconFile(cssName);
+        cacheBitmapToFile(bmapIcon, cacheFileUri);
+
+        //We check for nulls because LruCache throws NullPointerExceptions on null
+        //keys or values.
+        if (!TextUtils.isEmpty(cssName) && (bmapIcon != null)) {
+            mWorkflowIcons.put(cssName, bmapIcon);
+        }
     }
 
     private void cacheBitmapToFile(final Bitmap bmapIcon, final String cacheFileUri) {
-        final OutputStream stream = new ByteArrayOutputStream();
+        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
         OutputStream fout = null;
         try {
             fout = new FileOutputStream(cacheFileUri);
