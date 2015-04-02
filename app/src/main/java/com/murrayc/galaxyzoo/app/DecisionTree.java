@@ -53,6 +53,7 @@ public class DecisionTree {
 
     //TODO: Make this private and add accessors.
     public final Map<String, Question> questionsMap = new HashMap<>();
+    public String firstQuestionId = null;
 
     /**
      * @param inputStreamTree        The XMl file containing the decision tree.
@@ -95,7 +96,14 @@ public class DecisionTree {
 
             final Element element = (Element) node;
             final Question question = loadQuestion(element);
-            questionsMap.put(question.getId(), question);
+
+            // We assume that the first question in the XML file is the top of the decision tree:
+            final String questionid = question.getId();
+            if (questionsMap.isEmpty()) {
+                firstQuestionId = questionid;
+            }
+
+            questionsMap.put(questionid, question);
         }
 
         //Load the translation if one was provided:
@@ -239,7 +247,7 @@ public class DecisionTree {
             return null;
         }
 
-        return getQuestion("sloan-0"); //TODO: Awful hack. Use an ordered collection?
+        return getQuestion(firstQuestionId);
     }
 
     public Question getQuestionOrFirst(final String questionId) {
