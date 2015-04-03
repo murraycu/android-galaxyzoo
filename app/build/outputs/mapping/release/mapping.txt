@@ -8402,9 +8402,10 @@ com.android.volley.Cache$Entry -> com.a.a.c:
     byte[] data -> a
     java.lang.String etag -> b
     long serverDate -> c
-    long ttl -> d
-    long softTtl -> e
-    java.util.Map responseHeaders -> f
+    long lastModified -> d
+    long ttl -> e
+    long softTtl -> f
+    java.util.Map responseHeaders -> g
     boolean isExpired() -> a
     boolean refreshNeeded() -> b
 com.android.volley.CacheDispatcher -> com.a.a.d:
@@ -8445,9 +8446,13 @@ com.android.volley.ExecutorDelivery$ResponseDeliveryRunnable -> com.a.a.i:
     java.lang.Runnable mRunnable -> d
     com.android.volley.ExecutorDelivery this$0 -> a
     void run() -> run
-com.android.volley.Network -> com.a.a.j:
+com.android.volley.InternalUtils -> com.a.a.j:
+    char[] HEX_CHARS -> a
+    java.lang.String convertToHex(byte[]) -> a
+    java.lang.String sha1Hash(java.lang.String) -> a
+com.android.volley.Network -> com.a.a.k:
     com.android.volley.NetworkResponse performRequest(com.android.volley.Request) -> a
-com.android.volley.NetworkDispatcher -> com.a.a.k:
+com.android.volley.NetworkDispatcher -> com.a.a.l:
     java.util.concurrent.BlockingQueue mQueue -> a
     com.android.volley.Network mNetwork -> b
     com.android.volley.Cache mCache -> c
@@ -8457,29 +8462,31 @@ com.android.volley.NetworkDispatcher -> com.a.a.k:
     void addTrafficStatsTag(com.android.volley.Request) -> a
     void run() -> run
     void parseAndDeliverNetworkError(com.android.volley.Request,com.android.volley.VolleyError) -> a
-com.android.volley.NetworkError -> com.a.a.l:
-com.android.volley.NetworkResponse -> com.a.a.m:
+com.android.volley.NetworkError -> com.a.a.m:
+com.android.volley.NetworkResponse -> com.a.a.n:
     int statusCode -> a
     byte[] data -> b
     java.util.Map headers -> c
     boolean notModified -> d
     long networkTimeMs -> e
-com.android.volley.NoConnectionError -> com.a.a.n:
-com.android.volley.Request -> com.a.a.o:
+com.android.volley.NoConnectionError -> com.a.a.o:
+com.android.volley.Request -> com.a.a.p:
     com.android.volley.VolleyLog$MarkerLog mEventLog -> a
     int mMethod -> b
     java.lang.String mUrl -> c
     java.lang.String mRedirectUrl -> d
-    int mDefaultTrafficStatsTag -> e
-    com.android.volley.Response$ErrorListener mErrorListener -> f
-    java.lang.Integer mSequence -> g
-    com.android.volley.RequestQueue mRequestQueue -> h
-    boolean mShouldCache -> i
-    boolean mCanceled -> j
-    boolean mResponseDelivered -> k
-    long mRequestBirthTime -> l
-    com.android.volley.RetryPolicy mRetryPolicy -> m
-    com.android.volley.Cache$Entry mCacheEntry -> n
+    java.lang.String mIdentifier -> e
+    int mDefaultTrafficStatsTag -> f
+    com.android.volley.Response$ErrorListener mErrorListener -> g
+    java.lang.Integer mSequence -> h
+    com.android.volley.RequestQueue mRequestQueue -> i
+    boolean mShouldCache -> j
+    boolean mCanceled -> k
+    boolean mResponseDelivered -> l
+    long mRequestBirthTime -> m
+    com.android.volley.RetryPolicy mRetryPolicy -> n
+    com.android.volley.Cache$Entry mCacheEntry -> o
+    long sCounter -> p
     int getMethod() -> a
     int getTrafficStatsTag() -> b
     int findDefaultTrafficStatsTag(java.lang.String) -> d
@@ -8519,14 +8526,15 @@ com.android.volley.Request -> com.a.a.o:
     void deliverError(com.android.volley.VolleyError) -> b
     int compareTo(com.android.volley.Request) -> a
     java.lang.String toString() -> toString
+    java.lang.String createIdentifier(int,java.lang.String) -> a
     int compareTo(java.lang.Object) -> compareTo
     com.android.volley.VolleyLog$MarkerLog access$000(com.android.volley.Request) -> b
-com.android.volley.Request$1 -> com.a.a.p:
+com.android.volley.Request$1 -> com.a.a.q:
     java.lang.String val$tag -> a
     long val$threadId -> b
     com.android.volley.Request this$0 -> c
     void run() -> run
-com.android.volley.Request$Priority -> com.a.a.q:
+com.android.volley.Request$Priority -> com.a.a.r:
     com.android.volley.Request$Priority LOW -> a
     com.android.volley.Request$Priority NORMAL -> b
     com.android.volley.Request$Priority HIGH -> c
@@ -8534,7 +8542,7 @@ com.android.volley.Request$Priority -> com.a.a.q:
     com.android.volley.Request$Priority[] $VALUES -> e
     com.android.volley.Request$Priority[] values() -> values
     com.android.volley.Request$Priority valueOf(java.lang.String) -> valueOf
-com.android.volley.RequestQueue -> com.a.a.r:
+com.android.volley.RequestQueue -> com.a.a.s:
     java.util.concurrent.atomic.AtomicInteger mSequenceGenerator -> a
     java.util.Map mWaitingRequests -> b
     java.util.Set mCurrentRequests -> c
@@ -8545,12 +8553,15 @@ com.android.volley.RequestQueue -> com.a.a.r:
     com.android.volley.ResponseDelivery mDelivery -> h
     com.android.volley.NetworkDispatcher[] mDispatchers -> i
     com.android.volley.CacheDispatcher mCacheDispatcher -> j
+    java.util.List mFinishedListeners -> k
     void start() -> a
     void stop() -> b
     int getSequenceNumber() -> c
     com.android.volley.Request add(com.android.volley.Request) -> a
     void finish(com.android.volley.Request) -> b
-com.android.volley.Response -> com.a.a.s:
+com.android.volley.RequestQueue$RequestFinishedListener -> com.a.a.t:
+    void onRequestFinished(com.android.volley.Request) -> a
+com.android.volley.Response -> com.a.a.u:
     java.lang.Object result -> a
     com.android.volley.Cache$Entry cacheEntry -> b
     com.android.volley.VolleyError error -> c
@@ -8558,25 +8569,25 @@ com.android.volley.Response -> com.a.a.s:
     com.android.volley.Response success(java.lang.Object,com.android.volley.Cache$Entry) -> a
     com.android.volley.Response error(com.android.volley.VolleyError) -> a
     boolean isSuccess() -> a
-com.android.volley.Response$ErrorListener -> com.a.a.t:
+com.android.volley.Response$ErrorListener -> com.a.a.v:
     void onErrorResponse(com.android.volley.VolleyError) -> a
-com.android.volley.Response$Listener -> com.a.a.u:
+com.android.volley.Response$Listener -> com.a.a.w:
     void onResponse(java.lang.Object) -> a
-com.android.volley.ResponseDelivery -> com.a.a.v:
+com.android.volley.ResponseDelivery -> com.a.a.x:
     void postResponse(com.android.volley.Request,com.android.volley.Response) -> a
     void postResponse(com.android.volley.Request,com.android.volley.Response,java.lang.Runnable) -> a
     void postError(com.android.volley.Request,com.android.volley.VolleyError) -> a
-com.android.volley.RetryPolicy -> com.a.a.w:
+com.android.volley.RetryPolicy -> com.a.a.y:
     int getCurrentTimeout() -> a
     int getCurrentRetryCount() -> b
     void retry(com.android.volley.VolleyError) -> a
-com.android.volley.ServerError -> com.a.a.x:
-com.android.volley.TimeoutError -> com.a.a.y:
-com.android.volley.VolleyError -> com.a.a.z:
+com.android.volley.ServerError -> com.a.a.z:
+com.android.volley.TimeoutError -> com.a.a.aa:
+com.android.volley.VolleyError -> com.a.a.ab:
     com.android.volley.NetworkResponse networkResponse -> a
     long networkTimeMs -> b
     void setNetworkTimeMs(long) -> a
-com.android.volley.VolleyLog -> com.a.a.aa:
+com.android.volley.VolleyLog -> com.a.a.ac:
     java.lang.String TAG -> a
     boolean DEBUG -> b
     void v(java.lang.String,java.lang.Object[]) -> a
@@ -8584,7 +8595,7 @@ com.android.volley.VolleyLog -> com.a.a.aa:
     void e(java.lang.String,java.lang.Object[]) -> c
     void e(java.lang.Throwable,java.lang.String,java.lang.Object[]) -> a
     java.lang.String buildMessage(java.lang.String,java.lang.Object[]) -> d
-com.android.volley.VolleyLog$MarkerLog -> com.a.a.ab:
+com.android.volley.VolleyLog$MarkerLog -> com.a.a.ad:
     boolean ENABLED -> a
     java.util.List mMarkers -> b
     boolean mFinished -> c
@@ -8592,7 +8603,7 @@ com.android.volley.VolleyLog$MarkerLog -> com.a.a.ab:
     void finish(java.lang.String) -> a
     void finalize() -> finalize
     long getTotalDuration() -> a
-com.android.volley.VolleyLog$MarkerLog$Marker -> com.a.a.ac:
+com.android.volley.VolleyLog$MarkerLog$Marker -> com.a.a.ae:
     java.lang.String name -> a
     long thread -> b
     long time -> c
@@ -8650,9 +8661,10 @@ com.android.volley.toolbox.DiskBasedCache$CacheHeader -> com.a.a.a.f:
     java.lang.String key -> b
     java.lang.String etag -> c
     long serverDate -> d
-    long ttl -> e
-    long softTtl -> f
-    java.util.Map responseHeaders -> g
+    long lastModified -> e
+    long ttl -> f
+    long softTtl -> g
+    java.util.Map responseHeaders -> h
     com.android.volley.toolbox.DiskBasedCache$CacheHeader readHeader(java.io.InputStream) -> a
     com.android.volley.Cache$Entry toCacheEntry(byte[]) -> a
     boolean writeHeader(java.io.OutputStream) -> a
@@ -8673,6 +8685,7 @@ com.android.volley.toolbox.HttpClientStack$HttpPatch -> com.a.a.a.i:
 com.android.volley.toolbox.HttpHeaderParser -> com.a.a.a.j:
     com.android.volley.Cache$Entry parseCacheHeaders(com.android.volley.NetworkResponse) -> a
     long parseDateAsEpoch(java.lang.String) -> a
+    java.lang.String parseCharset(java.util.Map,java.lang.String) -> a
     java.lang.String parseCharset(java.util.Map) -> a
 com.android.volley.toolbox.HttpStack -> com.a.a.a.k:
     org.apache.http.HttpResponse performRequest(com.android.volley.Request,java.util.Map) -> a
@@ -8905,17 +8918,16 @@ com.murrayc.galaxyzoo.app.ExampleViewerFragment$1 -> com.murrayc.galaxyzoo.app.v
     void onSuccess() -> a
     void onError() -> b
 com.murrayc.galaxyzoo.app.IconsCache -> com.murrayc.galaxyzoo.app.w:
-    java.util.Map mDecisionTrees -> a
-    android.support.v4.util.LruCache mWorkflowIcons -> b
-    android.support.v4.util.LruCache mExampleIcons -> c
-    android.content.Context mContext -> d
-    boolean reloadCachedIcons() -> a
+    android.support.v4.util.LruCache mWorkflowIcons -> a
+    android.support.v4.util.LruCache mExampleIcons -> b
+    android.content.Context mContext -> c
+    boolean reloadCachedIcons(java.util.List) -> a
     boolean reloadIconsForQuestion(com.murrayc.galaxyzoo.app.DecisionTree$Question) -> a
     boolean reloadExampleImages(com.murrayc.galaxyzoo.app.DecisionTree$Question,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton) -> a
     boolean reloadIcon(java.lang.String,android.support.v4.util.LruCache) -> a
     java.lang.String getIconAssetPath(java.lang.String) -> b
     android.graphics.Bitmap getIcon(java.lang.String) -> a
-    android.content.Context getContext() -> b
+    android.content.Context getContext() -> a
 com.murrayc.galaxyzoo.app.ItemActivity -> com.murrayc.galaxyzoo.app.x:
     java.lang.String mItemId -> n
     java.lang.String getItemId() -> o
@@ -9785,8 +9797,8 @@ com.squareup.picasso.Callback -> com.b.a.m:
     void onSuccess() -> a
     void onError() -> b
 com.squareup.picasso.ContactsPhotoRequestHandler -> com.b.a.n:
-    android.content.UriMatcher matcher -> b
-    android.content.Context context -> a
+    android.content.UriMatcher matcher -> a
+    android.content.Context context -> b
     boolean canHandleRequest(com.squareup.picasso.Request) -> a
     com.squareup.picasso.RequestHandler$Result load(com.squareup.picasso.Request,int) -> a
     java.io.InputStream getInputStream(com.squareup.picasso.Request) -> b
@@ -10247,13 +10259,16 @@ com.squareup.picasso.Utils -> com.b.a.bm:
     boolean isWebPFile(java.io.InputStream) -> c
     int getResourceId(android.content.res.Resources,com.squareup.picasso.Request) -> a
     android.content.res.Resources getResources(android.content.Context,com.squareup.picasso.Request) -> a
-com.squareup.picasso.Utils$ActivityManagerHoneycomb -> com.b.a.bn:
+    void flushStackLocalLeaks(android.os.Looper) -> a
+com.squareup.picasso.Utils$1 -> com.b.a.bn:
+    void handleMessage(android.os.Message) -> handleMessage
+com.squareup.picasso.Utils$ActivityManagerHoneycomb -> com.b.a.bo:
     int getLargeMemoryClass(android.app.ActivityManager) -> a
-com.squareup.picasso.Utils$BitmapHoneycombMR1 -> com.b.a.bo:
+com.squareup.picasso.Utils$BitmapHoneycombMR1 -> com.b.a.bp:
     int getByteCount(android.graphics.Bitmap) -> a
-com.squareup.picasso.Utils$OkHttpLoaderCreator -> com.b.a.bp:
+com.squareup.picasso.Utils$OkHttpLoaderCreator -> com.b.a.bq:
     com.squareup.picasso.Downloader create(android.content.Context) -> a
-com.squareup.picasso.Utils$PicassoThread -> com.b.a.bq:
+com.squareup.picasso.Utils$PicassoThread -> com.b.a.br:
     void run() -> run
-com.squareup.picasso.Utils$PicassoThreadFactory -> com.b.a.br:
+com.squareup.picasso.Utils$PicassoThreadFactory -> com.b.a.bs:
     java.lang.Thread newThread(java.lang.Runnable) -> newThread

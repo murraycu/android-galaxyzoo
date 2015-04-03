@@ -1,4 +1,9 @@
-1.41:
+1.42:
+
+* Show the example images for the goods_full survey's questions.
+
+
+1.41 (not released publically):
 
 * Show the new sets of subjects (goods_full and candels_2epoch).
 
@@ -42,7 +47,7 @@
   (ConcurrentModificationException).  Thanks for using the Report button.
 
 
-1.34 (not released publically)
+1.34 (not released publically):
 
 * Try to avoid another occasional crash when warning that there is no network
   connection. Thanks for using the Report button.
