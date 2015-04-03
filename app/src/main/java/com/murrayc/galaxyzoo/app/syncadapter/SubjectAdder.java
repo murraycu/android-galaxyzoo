@@ -200,7 +200,6 @@ public class SubjectAdder {
                 WHERE_CLAUSE_DOWNLOAD_ALL_DONE, new String[]{}, orderBy);
 
         //Find out if the images still exist in the cache:
-        boolean firstItemWasAbandoned = false;
         while (c.moveToNext()) {
             final String itemId = c.getString(0);
             if (TextUtils.isEmpty(itemId)) {
