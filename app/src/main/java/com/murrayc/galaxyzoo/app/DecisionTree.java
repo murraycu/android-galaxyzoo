@@ -121,8 +121,8 @@ public class DecisionTree {
     }
 
     private void loadTranslation(final InputStream inputStreamTranslation) throws IOException {
-        final InputStreamReader streamReader;
-        final JsonReader reader;
+        InputStreamReader streamReader = null;
+        JsonReader reader = null;
         try {
             streamReader = new InputStreamReader(inputStreamTranslation, Utils.STRING_ENCODING);
             reader = new JsonReader(streamReader);
@@ -135,11 +135,17 @@ public class DecisionTree {
                 }
             }
             reader.endObject();
-            reader.close();
-            streamReader.close();
         } catch (final UnsupportedEncodingException e) {
             //This is very unlikely for UTF-8, so just ignore it.
             Log.error("DecisionTree: UnsupportedEncodingException parsing JSON", e);
+        } finally {
+            if (streamReader != null) {
+                streamReader.close();
+            }
+
+            if (reader != null) {
+                reader.close();
+            }
         }
     }
 
