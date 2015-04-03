@@ -49,7 +49,7 @@ public class Singleton {
     private static Singleton ourInstance = null;
     private static boolean initializationInProgress = false;
     private IconsCache mIconsCache = null;
-    private Map<String, DecisionTree> mDecisionTrees = new HashMap<>();
+    private final Map<String, DecisionTree> mDecisionTrees = new HashMap<>();
     private LocaleDetails mLocaleDetails = null;
 
     private Singleton(final Context context) throws DecisionTree.DecisionTreeException {
