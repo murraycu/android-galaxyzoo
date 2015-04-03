@@ -40,7 +40,6 @@ import android.text.TextUtils;
 import java.io.InputStream;
 //import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Map;
 //import java.util.regex.Matcher;
 //import java.util.regex.Pattern;
 //import java.util.regex.PatternSyntaxException;
@@ -78,7 +77,7 @@ class IconsCache {
      * @param context
      * @param decisionTrees Decision trees whose icons should be pre-loaded.
      */
-    public IconsCache(final Context context, final Map<String, DecisionTree> decisionTrees) {
+    public IconsCache(final Context context, final List<DecisionTree> decisionTrees) {
         this.mContext = context;
         /* this.mRequestQueue = Volley.newRequestQueue(context);
 
@@ -137,14 +136,14 @@ class IconsCache {
      * @param decisionTrees Decision Trees whose icons should be pre-loaded.
      * @return
      */
-    private boolean reloadCachedIcons(final Map<String, DecisionTree> decisionTrees) {
+    private boolean reloadCachedIcons(final List<DecisionTree> decisionTrees) {
         mWorkflowIcons.evictAll();
         mExampleIcons.evictAll();
 
         boolean allSucceeded = true;
 
         //For each tree, try loading all its icons:
-        for (final DecisionTree decisionTree : decisionTrees.values()) {
+        for (final DecisionTree decisionTree : decisionTrees) {
             final List<DecisionTree.Question> questions = decisionTree.getAllQuestions();
             for (final DecisionTree.Question question : questions) {
                 if (!reloadIconsForQuestion(question)) {

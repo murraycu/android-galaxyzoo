@@ -25,7 +25,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
-import com.murrayc.galaxyzoo.app.provider.*;
 import com.murrayc.galaxyzoo.app.provider.Config;
 
 import java.io.IOException;
@@ -72,10 +71,13 @@ public class Singleton {
             }
         }
 
+        final List<DecisionTree> decisionTreesToPreloadIcons = new ArrayList<>();
+
         //Parse the tree for each group of subjects:
         for (final Map.Entry<String, Config.SubjectGroup> entry : Config.SUBJECT_GROUPS.entrySet()) {
             final String groupId = entry.getKey();
             final Config.SubjectGroup subjectGroup = entry.getValue();
+
             final String decisionTreeFilename = subjectGroup.getFilename();
             final InputStream inputStreamTree = Utils.openAsset(context, ASSET_PATH_DECISION_TREE_DIR + decisionTreeFilename);
             if (inputStreamTree == null) {
@@ -83,6 +85,11 @@ public class Singleton {
             } else {
                 final DecisionTree decisionTree = new DecisionTree(inputStreamTree, inputStreamTranslation);
                 mDecisionTrees.put(groupId, decisionTree);
+
+                //Preload icons only for trees that are likely to be used:
+                if (subjectGroup.getUseForNewQueries()) {
+                    decisionTreesToPreloadIcons.add(decisionTree);
+                }
             }
 
             if (inputStreamTree != null) {
@@ -102,7 +109,7 @@ public class Singleton {
             }
         }
 
-        mIconsCache = new IconsCache(context, mDecisionTrees);
+        mIconsCache = new IconsCache(context, decisionTreesToPreloadIcons);
     }
 
     private static LocaleDetails getLocaleDetails(final Context context) {
