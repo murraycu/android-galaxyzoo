@@ -57,8 +57,6 @@ class IconsCache {
     private static final String ICON_FILE_PREFIX = "icon_";
     //private static long ASSETS_ICONS_TIMESTAMP = 1409922463000L; //Update this when bundling new copies of the files.
 
-
-    private final Map<String, DecisionTree> mDecisionTrees;
     //private final File mCacheDir;
 
     //TODO: Don't put both kinds of icons in the same map:
@@ -78,10 +76,9 @@ class IconsCache {
      * For instance, do this in an AsyncTask, as in Singleton.init().
      *
      * @param context
-     * @param decisionTrees
+     * @param decisionTrees Decision trees whose icons should be pre-loaded.
      */
     public IconsCache(final Context context, final Map<String, DecisionTree> decisionTrees) {
-        this.mDecisionTrees = decisionTrees;
         this.mContext = context;
         /* this.mRequestQueue = Volley.newRequestQueue(context);
 
@@ -102,7 +99,7 @@ class IconsCache {
          */
 
         //Just get the cached icons:
-        if (!reloadCachedIcons()) {
+        if (!reloadCachedIcons(decisionTrees)) {
             //Something went wrong while reloading the icons from the cache files,
             Log.error("IconsCache: reloadCachedIcons() failed.");
 
@@ -135,14 +132,19 @@ class IconsCache {
     }
     */
 
-    private boolean reloadCachedIcons() {
+    /**
+     *
+     * @param decisionTrees Decision Trees whose icons should be pre-loaded.
+     * @return
+     */
+    private boolean reloadCachedIcons(final Map<String, DecisionTree> decisionTrees) {
         mWorkflowIcons.evictAll();
         mExampleIcons.evictAll();
 
         boolean allSucceeded = true;
 
         //For each tree, try loading all its icons:
-        for (final DecisionTree decisionTree : mDecisionTrees.values()) {
+        for (final DecisionTree decisionTree : decisionTrees.values()) {
             final List<DecisionTree.Question> questions = decisionTree.getAllQuestions();
             for (final DecisionTree.Question question : questions) {
                 if (!reloadIconsForQuestion(question)) {
