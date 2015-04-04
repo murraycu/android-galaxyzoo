@@ -61,7 +61,9 @@ public class ZooniverseClient {
     //that the system does, because even when using a Thread (with Thread.MIN_PRIORITY) instead of
     //AsyncTask, the UI is non responsive during this work.
     //For instance, buttons appear to be pressed, but their clicked listeners are not called.
-    private static final int MAXIMUM_DOWNLOAD_ITEMS = 10;
+    //(However, this problem was avoided by using a SyncAdapter: http://www.murrayc.com/permalink/2015/01/22/android-galaxyzoo-network-io-and-ui-responsiveness/ )
+    //It also allows us to get a mix of items from different groups.
+    private static final int MAXIMUM_DOWNLOAD_ITEMS = 5;
     private RequestQueue mQueue = null;
 
     public ZooniverseClient(final Context context, final String serverBaseUri) {
