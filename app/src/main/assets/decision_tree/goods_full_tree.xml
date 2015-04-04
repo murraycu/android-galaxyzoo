@@ -93,7 +93,7 @@
     <answer id="a-2" icon="spiral_3" examplesCount="2" leadsTo="goods_full-15">
       <text>3</text>
     </answer>
-    <answer id="a-3" icon="spiral_4" examplesCount="2" leadsTo="goods_full-15">
+    <answer id="a-3" icon="spiral_4" examplesCount="1" leadsTo="goods_full-15">
       <text>4</text>
     </answer>
     <answer id="a-4" icon="spiral_4-plus" examplesCount="2" leadsTo="goods_full-15">
@@ -215,7 +215,7 @@
     <answer id="a-2" icon="clump_cluster" examplesCount="2" leadsTo="goods_full-5">
       <text>Cluster</text>
     </answer>
-    <answer id="a-3" icon="clump_spiral" examplesCount="2" leadsTo="goods_full-5">
+    <answer id="a-3" icon="clump_spiral" examplesCount="1" leadsTo="goods_full-5">
       <text>Spiral</text>
     </answer>
   </question>
