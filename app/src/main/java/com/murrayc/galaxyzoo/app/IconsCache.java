@@ -329,15 +329,10 @@ class IconsCache {
 
         for (final DecisionTree decisionTree : mDecisionTrees) {
             final List<DecisionTree.Question> questions = decisionTree.getAllQuestions();
-            boolean allSucceeded = true;
             for (final DecisionTree.Question question : questions) {
                 cacheIconsForQuestion(question, css);
             }
         }
-    }
-
-    private String getCacheIconFileUri(final String cssName) {
-        return getCacheFileUri(ICON_FILE_PREFIX + cssName);
     }
 
     private String createCacheIconFile(final String cssName) {
