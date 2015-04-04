@@ -143,7 +143,7 @@
     <title>Odd</title>
     <text>What are the odd features?</text>
     <help/>
-    <answer id="a-0" icon="yes" examplesCount="2" leadsTo="goods_full-16">
+    <answer id="a-0" icon="yes" examplesCount="0" leadsTo="goods_full-16">
       <text>Done</text>
     </answer>
     <checkbox id="x-0" icon="ring" examplesCount="2">
