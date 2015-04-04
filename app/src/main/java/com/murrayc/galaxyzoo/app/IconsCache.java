@@ -54,8 +54,7 @@ class IconsCache {
 
     private static final String ASSET_PATH_ICONS_DIR = "icons/";
     private static final String ICON_FILE_PREFIX = "icon_";
-    //private static long ASSETS_ICONS_TIMESTAMP = 1409922463000L; //Update this when bundling new copies of the files.
-
+    //private final List<DecisionTree> mDecisionTrees;
     //private final File mCacheDir;
 
     //TODO: Don't put both kinds of icons in the same map:
@@ -78,6 +77,7 @@ class IconsCache {
      * @param decisionTrees Decision trees whose icons should be pre-loaded.
      */
     public IconsCache(final Context context, final List<DecisionTree> decisionTrees) {
+        //this.mDecisionTrees = decisionTrees;
         this.mContext = context;
         /* this.mRequestQueue = Volley.newRequestQueue(context);
 
@@ -327,7 +327,7 @@ class IconsCache {
         mWorkflowIcons.evictAll();
         mExampleIcons.evictAll();
 
-        for (final DecisionTree decisionTree : mDecisionTrees.values()) {
+        for (final DecisionTree decisionTree : mDecisionTrees) {
             final List<DecisionTree.Question> questions = decisionTree.getAllQuestions();
             boolean allSucceeded = true;
             for (final DecisionTree.Question question : questions) {
