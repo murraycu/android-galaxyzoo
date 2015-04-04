@@ -37,7 +37,7 @@
     <answer id="a-0" icon="edge_round" examplesCount="2" leadsTo="goods_full-17">
       <text>Rounded</text>
     </answer>
-    <answer id="a-1" icon="edge_boxy" examplesCount="2" leadsTo="goods_full-17">
+    <answer id="a-1" icon="edge_boxy" examplesCount="1" leadsTo="goods_full-17">
       <text>Boxy</text>
     </answer>
     <answer id="a-2" icon="edge_none" examplesCount="2" leadsTo="goods_full-17">
@@ -70,7 +70,7 @@
     <title>Spiral</title>
     <text>How tightly wound do the spiral arms appear?</text>
     <help>Astronomers classify galaxies by how tight their arms are - you might find it easiest to see closest to the centre. Click to see larger images.</help>
-    <answer id="a-0" icon="spiral_tight" examplesCount="2" leadsTo="goods_full-14">
+    <answer id="a-0" icon="spiral_tight" examplesCount="1" leadsTo="goods_full-14">
       <text>Tight</text>
     </answer>
     <answer id="a-1" icon="spiral_medium" examplesCount="2" leadsTo="goods_full-14">
@@ -107,7 +107,7 @@
     <title>Bulge</title>
     <text>How prominent is the central bulge, compared with the rest of the galaxy?</text>
     <help>It's not always easy to tell, but look at the centre of the galaxy for a round bulge of stars which may obscure any bar and the spiral arms in this central region. Click to see larger images.</help>
-    <answer id="a-0" icon="bulge_none" examplesCount="2" leadsTo="goods_full-17">
+    <answer id="a-0" icon="bulge_none" examplesCount="1" leadsTo="goods_full-17">
       <text>No bulge</text>
     </answer>
     <answer id="a-1" icon="bulge_obvious" examplesCount="2" leadsTo="goods_full-17">
@@ -259,7 +259,7 @@
     <answer id="a-0" icon="yes" examplesCount="2" leadsTo="goods_full-17">
       <text>Yes</text>
     </answer>
-    <answer id="a-1" icon="no" examplesCount="2" leadsTo="goods_full-17">
+    <answer id="a-1" icon="no" examplesCount="1" leadsTo="goods_full-17">
       <text>No</text>
     </answer>
   </question>
