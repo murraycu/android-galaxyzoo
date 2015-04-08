@@ -533,8 +533,7 @@ public class QuestionFragment extends BaseQuestionFragment
         storeAnswer(questionId, answerId);
 
         //Open the discussion page if the user chose that.
-        final Singleton singleton = getSingleton();
-        final DecisionTree tree = singleton.getDecisionTree(getGroupId());
+        final DecisionTree tree = getDecisionTree();
         if (tree.isDiscussQuestion(questionId) &&
           TextUtils.equals(answerId, tree.getDiscussQuestionYesAnswerId())) {
             //Open a link to the discussion page.
@@ -553,9 +552,7 @@ public class QuestionFragment extends BaseQuestionFragment
      * @param answerId
      */
     private void showNextQuestion(final String questionId, final String answerId) {
-        final Singleton singleton = getSingleton();
-        final DecisionTree tree = singleton.getDecisionTree(getGroupId());
-
+        final DecisionTree tree = getDecisionTree();
         final DecisionTree.Question nextQuestion = tree.getNextQuestionForAnswer(questionId, answerId);
         if (nextQuestion == null) {
             //The classification is finished.
@@ -596,8 +593,7 @@ public class QuestionFragment extends BaseQuestionFragment
         List<String> checkboxes = null;
 
         //Get the selected checkboxes too:
-        final Singleton singleton = getSingleton();
-        final DecisionTree tree = singleton.getDecisionTree(getGroupId());
+        final DecisionTree tree = getDecisionTree();
         final DecisionTree.Question question = tree.getQuestion(questionId);
         if ((question != null) && question.hasCheckboxes()) {
             checkboxes = new ArrayList<>();
@@ -612,6 +608,11 @@ public class QuestionFragment extends BaseQuestionFragment
 
         //Remember the answer:
         mClassificationInProgress.add(questionId, answerId, checkboxes);
+    }
+
+    private DecisionTree getDecisionTree() {
+        final Singleton singleton = getSingleton();
+        return singleton.getDecisionTree(getGroupId());
     }
 
     private void wipeClassification() {
