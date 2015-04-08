@@ -82,14 +82,19 @@ public class Singleton {
             final InputStream inputStreamTree = Utils.openAsset(context, ASSET_PATH_DECISION_TREE_DIR + decisionTreeFilename);
             if (inputStreamTree == null) {
                 Log.error("Singleton: Error parsing decision tree.");
+                continue;
             } else {
-                final DecisionTree decisionTree = new DecisionTree(inputStreamTree, inputStreamTranslation);
+                DecisionTree decisionTree = new DecisionTree(inputStreamTree, inputStreamTranslation);
                 mDecisionTrees.put(groupId, decisionTree);
 
                 //Preload icons only for trees that are likely to be used:
                 if (subjectGroup.getUseForNewQueries()) {
                     decisionTreesToPreloadIcons.add(decisionTree);
                 }
+
+                //Discover the "Discuss this" question from our Config,
+                //because there is no reliable automatic way to discover it:
+                decisionTree.setDiscussQuestion(subjectGroup.getDiscussQuestion());
             }
 
             if (inputStreamTree != null) {

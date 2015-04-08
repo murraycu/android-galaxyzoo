@@ -46,14 +46,42 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class DecisionTree {
 
+    //TODO: Make this private and add accessors.
+    public final Map<String, Question> questionsMap = new HashMap<>();
+    public String firstQuestionId = null;
+
+    public static class DiscussQuestion {
+        private final String questionId;
+        private final String yesAnswerId;
+        private final String noAnswerId;
+
+        public DiscussQuestion(final String questionId, final String yesAnswerId, final String noAnswerId) {
+            this.questionId = questionId;
+            this.yesAnswerId = yesAnswerId;
+            this.noAnswerId = noAnswerId;
+        }
+
+        public String getQuestionId() {
+            return questionId;
+        }
+
+        public String getYesAnswerId() {
+            return yesAnswerId;
+        }
+
+        public String getNoAnswerId() {
+            return noAnswerId;
+        }
+    }
+
+    private DiscussQuestion mDiscussQuestion;
+
     private static final String NODE_ROOT = "murrayc_zoonverse_questions";
     private static final String NODE_QUESTION = "question";
     private static final String NODE_CHECKBOX = "checkbox";
     private static final String NODE_ANSWER = "answer";
 
-    //TODO: Make this private and add accessors.
-    public final Map<String, Question> questionsMap = new HashMap<>();
-    public String firstQuestionId = null;
+
 
     /**
      * @param inputStreamTree        The XMl file containing the decision tree.
@@ -584,5 +612,34 @@ public class DecisionTree {
         DecisionTreeException(final String detail) {
             super(detail);
         }
+    }
+
+
+    public void setDiscussQuestion(final DiscussQuestion discussQuestion) {
+        mDiscussQuestion = discussQuestion;
+    }
+
+    String getDiscussQuestionYesAnswerId() {
+        if (mDiscussQuestion == null) {
+            return null;
+        }
+
+        return mDiscussQuestion.getYesAnswerId();
+    }
+
+    String getDiscussQuestionNoAnswerId() {
+        if (mDiscussQuestion == null) {
+            return null;
+        }
+
+        return mDiscussQuestion.getNoAnswerId();
+    }
+
+    boolean isDiscussQuestion(final String questionId) {
+        if (mDiscussQuestion == null) {
+            return false;
+        }
+
+        return TextUtils.equals(questionId, mDiscussQuestion.getQuestionId());
     }
 }

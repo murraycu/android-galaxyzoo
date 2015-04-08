@@ -533,8 +533,10 @@ public class QuestionFragment extends BaseQuestionFragment
         storeAnswer(questionId, answerId);
 
         //Open the discussion page if the user chose that.
-        if ((TextUtils.equals(questionId, com.murrayc.galaxyzoo.app.Config.QUESTION_ID_DISCUSS)) &&
-                (TextUtils.equals(answerId, com.murrayc.galaxyzoo.app.Config.ANSWER_ID_DISCUSS_YES))) {
+        final Singleton singleton = getSingleton();
+        final DecisionTree tree = singleton.getDecisionTree(getGroupId());
+        if (tree.isDiscussQuestion(questionId) &&
+          TextUtils.equals(answerId, tree.getDiscussQuestionYesAnswerId())) {
             //Open a link to the discussion page.
             UiUtils.openDiscussionPage(getActivity(), getZooniverseId());
         }
@@ -574,13 +576,16 @@ public class QuestionFragment extends BaseQuestionFragment
 
         //Skip the "Discuss" question, depending on the setting:
         if (!TextUtils.isEmpty(nextQuestionId)
-                && nextQuestionId.equals(Config.QUESTION_ID_DISCUSS)
                 && !Utils.getShowDiscussQuestionFromSharedPrefs(getActivity())) {
-            //Add a "No" for the Discuss question without even showing the question:
-            storeAnswer(nextQuestionId, Config.ANSWER_ID_DISCUSS_NO);
+            if (tree.isDiscussQuestion(nextQuestionId)) {
 
-            showNextQuestion(nextQuestionId, Config.ANSWER_ID_DISCUSS_NO);
-            return;
+                //Add a "No" for the Discuss question without even showing the question:
+                final String noAnswerId = tree.getDiscussQuestionNoAnswerId();
+                storeAnswer(nextQuestionId, noAnswerId);
+
+                showNextQuestion(nextQuestionId, noAnswerId);
+                return;
+            }
         }
 
         setQuestionId(nextQuestionId);

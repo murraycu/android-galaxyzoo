@@ -32,13 +32,6 @@ final class Config {
     //TODO: Is there a stable URI for this?
     //public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2015-03-30_14-13-33.css";
 
-    //We hard-code this.
-    //Alternatively, we could hard-code the removal of this question from the XML
-    //when generating the XML file,
-    //and then always ask the question at the end via Java code.
-    public static final CharSequence QUESTION_ID_DISCUSS = "sloan-11";
-    public static final CharSequence ANSWER_ID_DISCUSS_YES = "a-0";
-    public static final String ANSWER_ID_DISCUSS_NO = "a-1";
 
     public static final String STATIC_SERVER = "http://static.zooniverse.org/www.galaxyzoo.org/";
     private static final String STATIC_IMAGES_SERVER = STATIC_SERVER + "images/";

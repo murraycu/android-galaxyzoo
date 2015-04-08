@@ -19,6 +19,8 @@
 
 package com.murrayc.galaxyzoo.app.provider;
 
+import com.murrayc.galaxyzoo.app.DecisionTree;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,13 +34,21 @@ public final class Config {
 
     public static final String SERVER = "https://api.zooniverse.org/projects/galaxy_zoo/";
 
+    //We hard-code this.
+    //Alternatively, we could hard-code the removal of this question from the XML
+    //when generating the XML file,
+    //and then always ask the question at the end via Java code.
+    public static Map<String, DecisionTree.DiscussQuestion> QUESTION_ID_DISCUSS;
+
     public static class SubjectGroup {
         final String filename;
         final boolean useForNewQueries;
+        final DecisionTree.DiscussQuestion discussQuestion;
 
-        public SubjectGroup(final String filename, final boolean useForNewQueries) {
+        public SubjectGroup(final String filename, final boolean useForNewQueries, final DecisionTree.DiscussQuestion discussQuestion) {
             this.filename = filename;
             this.useForNewQueries = useForNewQueries;
+            this.discussQuestion = discussQuestion;
         }
 
         public String getFilename() {
@@ -47,6 +57,10 @@ public final class Config {
 
         public boolean getUseForNewQueries() {
             return useForNewQueries;
+        }
+
+        public DecisionTree.DiscussQuestion getDiscussQuestion() {
+            return discussQuestion;
         }
     }
 
@@ -64,11 +78,14 @@ public final class Config {
         //the cache.
         //At some point we can remove this when we are sure it is unnecessary.
         SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SLOAN /* SSID / sloan */,
-                new SubjectGroup("sloan_tree.xml", false));
+                new SubjectGroup("sloan_tree.xml", false,
+                  new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
 
         SUBJECT_GROUPS.put("551456e02f0eef2535000001" /* candels_2epoch */,
-                new SubjectGroup("candels_tree.xml", true));
+                new SubjectGroup("candels_tree.xml", true,
+                  new DecisionTree.DiscussQuestion("candels-17", "a-0", "a-1")));
         SUBJECT_GROUPS.put("551453e12f0eef21f2000001" /* goods_full */,
-                new SubjectGroup("goods_full_tree.xml", true));
+                new SubjectGroup("goods_full_tree.xml", true,
+                  new DecisionTree.DiscussQuestion("goods_full-16", "a-0", "a-1")));
     }
 }
