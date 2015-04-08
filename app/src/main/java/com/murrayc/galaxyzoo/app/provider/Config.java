@@ -34,12 +34,6 @@ public final class Config {
 
     public static final String SERVER = "https://api.zooniverse.org/projects/galaxy_zoo/";
 
-    //We hard-code this.
-    //Alternatively, we could hard-code the removal of this question from the XML
-    //when generating the XML file,
-    //and then always ask the question at the end via Java code.
-    public static Map<String, DecisionTree.DiscussQuestion> QUESTION_ID_DISCUSS;
-
     public static class SubjectGroup {
         final String filename;
         final boolean useForNewQueries;
@@ -48,6 +42,11 @@ public final class Config {
         public SubjectGroup(final String filename, final boolean useForNewQueries, final DecisionTree.DiscussQuestion discussQuestion) {
             this.filename = filename;
             this.useForNewQueries = useForNewQueries;
+
+            //We hard-code this.
+            //Alternatively, we could hard-code the removal of this question from the XML
+            //when generating the XML file,
+            //and then always ask the question at the end via Java code.
             this.discussQuestion = discussQuestion;
         }
 
