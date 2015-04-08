@@ -48,8 +48,7 @@ public class BaseQuestionFragment extends ItemFragment {
     }
 
     DecisionTree.Question getQuestion() {
-        final Singleton singleton = getSingleton();
-        final DecisionTree tree = singleton.getDecisionTree(getGroupId());
+        final DecisionTree tree = getDecisionTree();
         if (tree == null) {
             Log.error("getQuestion(): tree is null.");
             return null;
@@ -62,6 +61,11 @@ public class BaseQuestionFragment extends ItemFragment {
         }
 
         return question;
+    }
+
+    DecisionTree getDecisionTree() {
+        final Singleton singleton = getSingleton();
+        return singleton.getDecisionTree(getGroupId());
     }
 
     BitmapDrawable getIcon(final Context context, final DecisionTree.BaseButton answer) {

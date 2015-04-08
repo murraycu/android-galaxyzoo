@@ -610,11 +610,6 @@ public class QuestionFragment extends BaseQuestionFragment
         mClassificationInProgress.add(questionId, answerId, checkboxes);
     }
 
-    private DecisionTree getDecisionTree() {
-        final Singleton singleton = getSingleton();
-        return singleton.getDecisionTree(getGroupId());
-    }
-
     private void wipeClassification() {
         mClassificationInProgress = new ClassificationInProgress();
         setQuestionId(null);
