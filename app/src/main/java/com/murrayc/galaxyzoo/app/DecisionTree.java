@@ -47,8 +47,8 @@ import javax.xml.parsers.ParserConfigurationException;
 public class DecisionTree {
 
     //TODO: Make this private and add accessors.
-    public final Map<String, Question> questionsMap = new HashMap<>();
-    public String firstQuestionId = null;
+    private final Map<String, Question> questionsMap = new HashMap<>();
+    private String firstQuestionId = null;
 
     public static class DiscussQuestion {
         private final String questionId;

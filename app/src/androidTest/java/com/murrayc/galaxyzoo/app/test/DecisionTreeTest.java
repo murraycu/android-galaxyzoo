@@ -57,8 +57,8 @@ public class DecisionTreeTest extends AndroidTestCase {
         final DecisionTree decisionTree = createCorrectDecisionTree();
 
         assertNotNull(decisionTree);
-        assertNotNull(decisionTree.questionsMap);
-        assertEquals(12, decisionTree.questionsMap.size());
+        assertNotNull(decisionTree.getAllQuestions());
+        assertEquals(12, decisionTree.getAllQuestions().size());
     }
 
     public void testQuestions() throws DecisionTree.DecisionTreeException, IOException {

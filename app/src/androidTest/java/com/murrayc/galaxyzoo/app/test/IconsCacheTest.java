@@ -68,7 +68,7 @@ public class IconsCacheTest extends AndroidTestCase {
 
             final DecisionTree decisionTree = new DecisionTree(inputStreamTree, null);
             assertNotNull(decisionTree);
-            assertNotNull(decisionTree.questionsMap);
+            assertNotNull(decisionTree.getAllQuestions());
 
             trees.add(decisionTree);
         }
