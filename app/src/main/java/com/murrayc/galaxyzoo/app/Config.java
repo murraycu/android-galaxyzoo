@@ -24,13 +24,15 @@ package com.murrayc.galaxyzoo.app;
  *
  * Created by murrayc on 10/10/14.
  */
-final class Config {
+public final class Config {
     public static final String TALK_URI = "http://talk.galaxyzoo.org/#/subjects/";
 
     public static final String EXAMINE_URI = "http://www.galaxyzoo.org/#/examine/";
 
     //TODO: Is there a stable URI for this?
     //public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2015-03-30_14-13-33.css";
+    //TODO: Avoid hard-coding the 100px, 100px here:
+    public static final int ICON_WIDTH_HEIGHT = 100; /* px */
 
 
     public static final String STATIC_SERVER = "http://static.zooniverse.org/www.galaxyzoo.org/";

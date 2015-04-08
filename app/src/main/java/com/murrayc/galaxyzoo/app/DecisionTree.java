@@ -487,7 +487,7 @@ public class DecisionTree {
             return icon;
         }
 
-        int getExamplesCount() {
+        public int getExamplesCount() {
             return examplesCount;
         }
 
@@ -517,7 +517,7 @@ public class DecisionTree {
      * because that's generally nice when it's possible.
      * It returns and take String references, but String is immutable too.
      */
-    static final class Answer extends BaseButton {
+    public static final class Answer extends BaseButton {
         private final String leadsToQuestionId;
 
         Answer(final String id, final String text, final String icon, final String leadsToQuestionId, final int examplesCount) {

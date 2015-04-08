@@ -44,7 +44,7 @@ import java.util.List;
 //import java.util.regex.Pattern;
 //import java.util.regex.PatternSyntaxException;
 
-class IconsCache {
+public class IconsCache {
     //TODO: Generate these automatically, making sure they are unique:
     /*
     private static final String CACHE_FILE_WORKFLOW_ICONS = "workflowicons";
@@ -482,7 +482,7 @@ class IconsCache {
 
                 //TODO: Avoid hard-coding the 100px, 100px here:
                 try {
-                    final Bitmap bmapIcon = Bitmap.createBitmap(icons, x, y, 100, 100);
+                    final Bitmap bmapIcon = Bitmap.createBitmap(icons, x, y, Config.ICON_WIDTH_HEIGHT, onfig.ICON_WIDTH_HEIGHT);
                     cacheWorkflowIcon(cssName, bmapIcon);
                     someFound = true;
                 } catch (final IllegalArgumentException ex) {

@@ -158,7 +158,7 @@ public final class Utils {
         return new NetworkConnected(true, false);
     }
 
-    static InputStream openAsset(final Context context, final String filename) {
+    public static InputStream openAsset(final Context context, final String filename) {
         try {
             return context.getAssets().open(filename);
         } catch (final IOException e) {
