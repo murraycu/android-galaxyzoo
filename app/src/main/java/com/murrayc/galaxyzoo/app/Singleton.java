@@ -44,7 +44,6 @@ import java.util.Map;
 public class Singleton {
 
     private static final String JSON_FILE_EXTENSION = ".json";
-    private static final String ASSET_PATH_DECISION_TREE_DIR = "decision_tree/";
     private static List<Callbacks> mCallbacks = new ArrayList<>();
     private static Singleton ourInstance = null;
     private static boolean initializationInProgress = false;
@@ -62,11 +61,11 @@ public class Singleton {
         mLocaleDetails = getLocaleDetails(context);
         if (!TextUtils.isEmpty(mLocaleDetails.language)) {
             //Try finding a translation for a country-specific form of the language:
-            String translationFileName = mLocaleDetails.language + "_" + mLocaleDetails.countryCode + JSON_FILE_EXTENSION;
+            String translationFileName = Utils.ASSET_PATH_DECISION_TREE_DIR + mLocaleDetails.language + "_" + mLocaleDetails.countryCode + JSON_FILE_EXTENSION;
             inputStreamTranslation = Utils.openAsset(context, translationFileName);
             if (inputStreamTranslation == null) {
                 //Try just the language instead:
-                translationFileName = ASSET_PATH_DECISION_TREE_DIR + mLocaleDetails.language + JSON_FILE_EXTENSION;
+                translationFileName = Utils.ASSET_PATH_DECISION_TREE_DIR + mLocaleDetails.language + JSON_FILE_EXTENSION;
                 inputStreamTranslation = Utils.openAsset(context, translationFileName);
             }
         }
@@ -79,7 +78,8 @@ public class Singleton {
             final Config.SubjectGroup subjectGroup = entry.getValue();
 
             final String decisionTreeFilename = subjectGroup.getFilename();
-            final InputStream inputStreamTree = Utils.openAsset(context, ASSET_PATH_DECISION_TREE_DIR + decisionTreeFilename);
+            final InputStream inputStreamTree = Utils.openAsset(context,
+                    Utils.getDecisionTreeFilepath(decisionTreeFilename));
             if (inputStreamTree == null) {
                 Log.error("Singleton: Error parsing decision tree.");
                 continue;

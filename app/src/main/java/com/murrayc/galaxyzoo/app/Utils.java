@@ -48,6 +48,7 @@ public final class Utils {
      * For use when parsing and building raw binary data:
      */
     public static final String STRING_ENCODING = "UTF-8";
+    static final String ASSET_PATH_DECISION_TREE_DIR = "decision_tree/";
 
     /**
      * Ideally you would use LoginUtils.getUseWifiOnly() instead of the copy that is in
@@ -113,6 +114,10 @@ public final class Utils {
             Log.error("getExternalCacheDir(): Unsupported operation from Context.getExternalCacheDir()", e);
             return null;
         }
+    }
+
+    public static String getDecisionTreeFilepath(final String filename) {
+        return ASSET_PATH_DECISION_TREE_DIR + filename;
     }
 
     public static final class NetworkConnected {
