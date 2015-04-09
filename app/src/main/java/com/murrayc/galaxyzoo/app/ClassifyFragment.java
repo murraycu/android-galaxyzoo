@@ -258,8 +258,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         } else {
             //TODO: Is there some more standard method to do this,
             //to trigger the Fragments' onCreate()?
-            fragmentQuestion.setItemId(getItemId());
-            fragmentQuestion.update();
+            fragmentQuestion.setItemId(getItemId()); //This will trigger a later UI update of the fragment.
         }
     }
 
