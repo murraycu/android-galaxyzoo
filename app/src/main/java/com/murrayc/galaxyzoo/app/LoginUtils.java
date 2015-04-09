@@ -110,7 +110,7 @@ public final class LoginUtils {
             result = new LoginResult(true, userName, apiKey);
         } else {
             Log.info("Login failed.");
-            Log.info("Login failure message", message);
+            Log.info("Login failure message: " + message);
         }
 
         reader.endObject();

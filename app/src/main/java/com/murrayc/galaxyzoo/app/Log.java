@@ -47,24 +47,6 @@ public final class Log {
         android.util.Log.e(LOG_TAG, defaultString(message));
     }
 
-    public static void fatal(final String documentID, final String tableName, final String message, final Throwable e) {
-        android.util.Log.e(LOG_TAG, defaultString(documentID) + " - " + defaultString(tableName) + ": "
-                + defaultString(message), e);
-    }
-
-    public static void fatal(final String documentID, final String tableName, final String message) {
-        android.util.Log.e(LOG_TAG, defaultString(documentID) + " - " + defaultString(tableName) + ": "
-                + defaultString(message));
-    }
-
-    public static void fatal(final String documentID, final String message, final Throwable e) {
-        android.util.Log.e(LOG_TAG, defaultString(documentID) + ": " + defaultString(message), e);
-    }
-
-    public static void fatal(final String documentID, final String message) {
-        android.util.Log.e(LOG_TAG, defaultString(documentID) + ": " + defaultString(message));
-    }
-
     // Error methods
     public static void error(final String message, final Throwable e) {
         android.util.Log.e(LOG_TAG, defaultString(message), e);
@@ -72,24 +54,6 @@ public final class Log {
 
     public static void error(final String message) {
         android.util.Log.e(LOG_TAG, defaultString(message));
-    }
-
-    public static void error(final String documentID, final String tableName, final String message, final Throwable e) {
-        error(LOG_TAG, defaultString(documentID) + " - " + defaultString(tableName) + ": "
-                + defaultString(message), e);
-    }
-
-    private static void error(final String documentID, final String tableName, final String message) {
-        android.util.Log.e(LOG_TAG, defaultString(documentID) + " - " + defaultString(tableName) + ": "
-                + defaultString(message));
-    }
-
-    private static void error(final String documentID, final String message, final Throwable e) {
-        error(LOG_TAG, documentID, defaultString(message) + ":" + e.getMessage());
-    }
-
-    public static void error(final String documentID, final String message) {
-        android.util.Log.e(LOG_TAG, defaultString(documentID) + ": " + defaultString(message));
     }
 
     // Warning methods
@@ -101,48 +65,12 @@ public final class Log {
         android.util.Log.w(LOG_TAG, defaultString(message));
     }
 
-    public static void warn(final String documentID, final String tableName, final String message, final Throwable e) {
-        warn(defaultString(documentID) + " - " + defaultString(tableName) + ": "
-                + defaultString(message), e);
-    }
-
-    private static void warn(final String documentID, final String tableName, final String message) {
-        android.util.Log.w(LOG_TAG, defaultString(documentID) + " - " + defaultString(tableName) + ": "
-                + defaultString(message));
-    }
-
-    public static void warn(final String documentID, final String message, final Throwable e) {
-        warn(LOG_TAG, documentID, defaultString(message) + ": " + e.getMessage());
-    }
-
-    public static void warn(final String documentID, final String message) {
-        android.util.Log.w(LOG_TAG, defaultString(documentID) + ": " + defaultString(message));
-    }
-
     // Info methods
     public static void info(final String message, final Throwable e) {
-        info(LOG_TAG, defaultString(message) + ": " + e.getMessage());
+        android.util.Log.i(LOG_TAG, defaultString(message) + ": " + e.getMessage());
     }
 
     public static void info(final String message) {
         android.util.Log.i(LOG_TAG, defaultString(message));
-    }
-
-    public static void info(final String documentID, final String tableName, final String message, final Throwable e) {
-        info(LOG_TAG, defaultString(documentID) + " - " + defaultString(tableName) + ": "
-                + defaultString(message), e);
-    }
-
-    private static void info(final String documentID, final String tableName, final String message) {
-        android.util.Log.i(LOG_TAG, defaultString(documentID) + " - " + defaultString(tableName) + ": "
-                + defaultString(message));
-    }
-
-    private static void info(final String documentID, final String message, final Throwable e) {
-        info(LOG_TAG, documentID, defaultString(message) + ": " + e.getMessage());
-    }
-
-    public static void info(final String documentID, final String message) {
-        android.util.Log.i(LOG_TAG, defaultString(documentID) + ": " + defaultString(message));
     }
 }
