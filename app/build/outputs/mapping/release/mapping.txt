@@ -8742,6 +8742,7 @@ com.murrayc.galaxyzoo.app.BaseQuestionFragment -> com.murrayc.galaxyzoo.app.b:
     java.lang.String getQuestionId() -> L
     void setQuestionId(java.lang.String) -> b
     com.murrayc.galaxyzoo.app.DecisionTree$Question getQuestion() -> M
+    com.murrayc.galaxyzoo.app.DecisionTree getDecisionTree() -> N
     android.graphics.drawable.BitmapDrawable getIcon(android.content.Context,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton) -> a
 com.murrayc.galaxyzoo.app.ClassifyActivity -> com.murrayc.galaxyzoo.app.ClassifyActivity:
     boolean mIsStateAlreadySaved -> n
@@ -8815,7 +8816,7 @@ com.murrayc.galaxyzoo.app.ClassifyFragment -> com.murrayc.galaxyzoo.app.k:
     void onAttach(android.app.Activity) -> a
     void onDetach() -> r
     void warnAboutNetworkProblemWithRetry() -> M
-    void listenForNetworkReconnection() -> R
+    void listenForNetworkReconnection() -> N
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
     void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> a
     void onSingletonInitialized() -> b_
@@ -8838,12 +8839,10 @@ com.murrayc.galaxyzoo.app.ClassifyFragment$1 -> com.murrayc.galaxyzoo.app.l:
 com.murrayc.galaxyzoo.app.ClassifyFragment$Callbacks -> com.murrayc.galaxyzoo.app.m:
     void warnAboutNetworkProblemWithRetry() -> m
     void listenForNetworkReconnection() -> n
-com.murrayc.galaxyzoo.app.Config -> com.murrayc.galaxyzoo.app.n:
-    java.lang.CharSequence QUESTION_ID_DISCUSS -> a
-    java.lang.CharSequence ANSWER_ID_DISCUSS_YES -> b
-com.murrayc.galaxyzoo.app.DecisionTree -> com.murrayc.galaxyzoo.app.o:
+com.murrayc.galaxyzoo.app.DecisionTree -> com.murrayc.galaxyzoo.app.n:
     java.util.Map questionsMap -> a
     java.lang.String firstQuestionId -> b
+    com.murrayc.galaxyzoo.app.DecisionTree$DiscussQuestion mDiscussQuestion -> c
     void loadTranslation(java.io.InputStream) -> a
     void readJsonQuestions(android.util.JsonReader) -> a
     void readJsonQuestion(android.util.JsonReader,com.murrayc.galaxyzoo.app.DecisionTree$Question) -> a
@@ -8851,7 +8850,7 @@ com.murrayc.galaxyzoo.app.DecisionTree -> com.murrayc.galaxyzoo.app.o:
     void readJsonCheckboxes(android.util.JsonReader,com.murrayc.galaxyzoo.app.DecisionTree$Question) -> c
     com.murrayc.galaxyzoo.app.DecisionTree$Answer getAnswerWithId(java.util.List,java.lang.String) -> a
     com.murrayc.galaxyzoo.app.DecisionTree$Checkbox getCheckboxWithId(java.util.List,java.lang.String) -> b
-    com.murrayc.galaxyzoo.app.DecisionTree$Question getFirstQuestion() -> b
+    com.murrayc.galaxyzoo.app.DecisionTree$Question getFirstQuestion() -> d
     com.murrayc.galaxyzoo.app.DecisionTree$Question getQuestionOrFirst(java.lang.String) -> a
     com.murrayc.galaxyzoo.app.DecisionTree$Question getQuestion(java.lang.String) -> b
     com.murrayc.galaxyzoo.app.DecisionTree$Question getNextQuestionForAnswer(java.lang.String,java.lang.String) -> a
@@ -8862,22 +8861,39 @@ com.murrayc.galaxyzoo.app.DecisionTree -> com.murrayc.galaxyzoo.app.o:
     com.murrayc.galaxyzoo.app.DecisionTree$Question loadQuestion(org.w3c.dom.Element) -> a
     com.murrayc.galaxyzoo.app.DecisionTree$Checkbox loadCheckbox(org.w3c.dom.Element) -> b
     com.murrayc.galaxyzoo.app.DecisionTree$Answer loadAnswer(org.w3c.dom.Element) -> c
-com.murrayc.galaxyzoo.app.DecisionTree$Answer -> com.murrayc.galaxyzoo.app.p:
+    void setDiscussQuestion(com.murrayc.galaxyzoo.app.DecisionTree$DiscussQuestion) -> a
+    java.lang.String getDiscussQuestionYesAnswerId() -> b
+    java.lang.String getDiscussQuestionNoAnswerId() -> c
+    boolean isDiscussQuestion(java.lang.String) -> c
+com.murrayc.galaxyzoo.app.DecisionTree$Answer -> com.murrayc.galaxyzoo.app.o:
     java.lang.String leadsToQuestionId -> a
+    java.lang.String getExampleIconName(java.lang.String,int) -> a
+    int getExamplesCount() -> a
+    java.lang.String getIcon() -> b
+    void setText(java.lang.String) -> a
+    java.lang.String getText() -> c
+    java.lang.String getId() -> d
     java.lang.String access$200(com.murrayc.galaxyzoo.app.DecisionTree$Answer) -> a
-com.murrayc.galaxyzoo.app.DecisionTree$BaseButton -> com.murrayc.galaxyzoo.app.q:
+com.murrayc.galaxyzoo.app.DecisionTree$BaseButton -> com.murrayc.galaxyzoo.app.p:
     java.lang.String id -> a
     java.lang.String text -> b
     java.lang.String icon -> c
     int examplesCount -> d
-    java.lang.String getId() -> a
-    java.lang.String getText() -> b
+    java.lang.String getId() -> d
+    java.lang.String getText() -> c
     void setText(java.lang.String) -> a
-    java.lang.String getIcon() -> c
-    int getExamplesCount() -> d
+    java.lang.String getIcon() -> b
+    int getExamplesCount() -> a
     java.lang.String getExampleIconName(java.lang.String,int) -> a
-com.murrayc.galaxyzoo.app.DecisionTree$Checkbox -> com.murrayc.galaxyzoo.app.r:
-com.murrayc.galaxyzoo.app.DecisionTree$DecisionTreeException -> com.murrayc.galaxyzoo.app.s:
+com.murrayc.galaxyzoo.app.DecisionTree$Checkbox -> com.murrayc.galaxyzoo.app.q:
+com.murrayc.galaxyzoo.app.DecisionTree$DecisionTreeException -> com.murrayc.galaxyzoo.app.r:
+com.murrayc.galaxyzoo.app.DecisionTree$DiscussQuestion -> com.murrayc.galaxyzoo.app.s:
+    java.lang.String questionId -> a
+    java.lang.String yesAnswerId -> b
+    java.lang.String noAnswerId -> c
+    java.lang.String getQuestionId() -> a
+    java.lang.String getYesAnswerId() -> b
+    java.lang.String getNoAnswerId() -> c
 com.murrayc.galaxyzoo.app.DecisionTree$Question -> com.murrayc.galaxyzoo.app.t:
     java.util.List checkboxes -> a
     java.util.List answers -> b
@@ -8941,9 +8957,9 @@ com.murrayc.galaxyzoo.app.ItemFragment -> com.murrayc.galaxyzoo.app.y:
     com.murrayc.galaxyzoo.app.ItemFragment$Callbacks mCallbacks -> ab
     com.murrayc.galaxyzoo.app.Singleton mSingleton -> ac
     java.lang.String mItemId -> ad
-    java.lang.String getItemId() -> N
+    java.lang.String getItemId() -> O
     void setItemId(java.lang.String) -> c
-    com.murrayc.galaxyzoo.app.Singleton getSingleton() -> O
+    com.murrayc.galaxyzoo.app.Singleton getSingleton() -> P
     void onCreate(android.os.Bundle) -> d
     void onAttach(android.app.Activity) -> a
     void onDetach() -> r
@@ -8951,8 +8967,8 @@ com.murrayc.galaxyzoo.app.ItemFragment -> com.murrayc.galaxyzoo.app.y:
     boolean onOptionsItemSelected(android.view.MenuItem) -> a
     void onSaveInstanceState(android.os.Bundle) -> g
     void onSingletonInitialized() -> b_
-    void initializeSingleton() -> P
-    void abandonItem() -> Q
+    void initializeSingleton() -> Q
+    void abandonItem() -> R
 com.murrayc.galaxyzoo.app.ItemFragment$1 -> com.murrayc.galaxyzoo.app.z:
     void navigateToList() -> c_
     void abandonItem() -> l
@@ -9042,7 +9058,6 @@ com.murrayc.galaxyzoo.app.Log -> com.murrayc.galaxyzoo.app.al:
     void error(java.lang.String) -> a
     void info(java.lang.String,java.lang.Throwable) -> b
     void info(java.lang.String) -> b
-    void info(java.lang.String,java.lang.String) -> a
 com.murrayc.galaxyzoo.app.LoginActivity -> com.murrayc.galaxyzoo.app.LoginActivity:
     com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient mClient -> n
     com.murrayc.galaxyzoo.app.LoginActivity$UserLoginTask mAuthTask -> o
@@ -9149,7 +9164,7 @@ com.murrayc.galaxyzoo.app.QuestionFragment -> com.murrayc.galaxyzoo.app.Question
     com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress mClassificationInProgress -> ai
     com.murrayc.galaxyzoo.app.QuestionLinearLayout mRootView -> aj
     boolean $assertionsDisabled -> aa
-    java.lang.String getZooniverseId() -> S
+    java.lang.String getZooniverseId() -> T
     void setZooniverseId(java.lang.String) -> d
     void onCreate(android.os.Bundle) -> d
     void setItemId(java.lang.String) -> c
@@ -9159,24 +9174,24 @@ com.murrayc.galaxyzoo.app.QuestionFragment -> com.murrayc.galaxyzoo.app.Question
     void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> a
     void onPrepareOptionsMenu(android.view.Menu) -> a
     boolean onOptionsItemSelected(android.view.MenuItem) -> a
-    void doExamples() -> T
+    void doExamples() -> U
     void onAttach(android.app.Activity) -> a
     void onDetach() -> r
-    void update() -> R
+    void update() -> S
     android.widget.TableRow addRowToTable(android.app.Activity,android.widget.TableLayout) -> a
     void insertButtonInRow(android.content.Context,android.widget.TableRow,android.view.View) -> a
     android.widget.Button createAnswerButton(android.app.Activity,com.murrayc.galaxyzoo.app.DecisionTree$Answer) -> a
     void onAnswerButtonClicked(java.lang.String,java.lang.String) -> a
     void showNextQuestion(java.lang.String,java.lang.String) -> b
     void storeAnswer(java.lang.String,java.lang.String) -> c
-    void wipeClassification() -> U
-    void restartClassification() -> V
+    void wipeClassification() -> V
+    void restartClassification() -> W
     void saveClassificationSync(com.murrayc.galaxyzoo.app.QuestionFragment$ClassificationInProgress) -> a
-    java.lang.String getCurrentDateTimeAsIso8601() -> W
-    void updateFromCursor() -> X
+    java.lang.String getCurrentDateTimeAsIso8601() -> X
+    void updateFromCursor() -> Y
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    void updateIfReady() -> Y
+    void updateIfReady() -> Z
     void onLoaderReset(android.support.v4.content.Loader) -> a
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
     void access$000(com.murrayc.galaxyzoo.app.QuestionFragment,java.lang.String,java.lang.String) -> a
@@ -9250,7 +9265,7 @@ com.murrayc.galaxyzoo.app.QuestionHelpFragment -> com.murrayc.galaxyzoo.app.bd:
     void onCreate(android.os.Bundle) -> d
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
     void onSingletonInitialized() -> b_
-    void update() -> R
+    void update() -> S
     void addRowForAnswer(android.content.Context,android.widget.TableLayout,com.murrayc.galaxyzoo.app.DecisionTree$Question,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton) -> a
     void onExampleImageClicked(android.view.View,java.lang.String) -> a
     void access$000(com.murrayc.galaxyzoo.app.QuestionHelpFragment,android.view.View,java.lang.String) -> a
@@ -9318,7 +9333,7 @@ com.murrayc.galaxyzoo.app.SubjectExtrasFragment -> com.murrayc.galaxyzoo.app.bk:
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
     void onSingletonInitialized() -> b_
     void update() -> L
-    void doDiscuss() -> R
+    void doDiscuss() -> N
     void doExamine() -> S
     void updateFromCursor() -> T
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
@@ -9350,7 +9365,7 @@ com.murrayc.galaxyzoo.app.SubjectFragment -> com.murrayc.galaxyzoo.app.bn:
     void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> a
     boolean onOptionsItemSelected(android.view.MenuItem) -> a
     void doInvert() -> M
-    void doDownloadImage() -> R
+    void doDownloadImage() -> N
     void onAttach(android.app.Activity) -> a
     void onDetach() -> r
     void update() -> L
@@ -9386,7 +9401,7 @@ com.murrayc.galaxyzoo.app.SubjectViewerFragment -> com.murrayc.galaxyzoo.app.bq:
     void showLoadingView(boolean) -> c
     void addOrUpdateChildFragments() -> M
     void update() -> L
-    void updateFromCursor() -> R
+    void updateFromCursor() -> N
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> a
@@ -9408,10 +9423,11 @@ com.murrayc.galaxyzoo.app.Utils -> com.murrayc.galaxyzoo.app.bs:
     boolean getShowDiscussQuestionFromSharedPrefs(android.content.Context) -> b
     android.content.SharedPreferences getPreferences(android.content.Context) -> c
     java.io.File getExternalCacheDir(android.content.Context) -> d
+    java.lang.String getDecisionTreeFilepath(java.lang.String) -> a
     com.murrayc.galaxyzoo.app.Utils$NetworkConnected getNetworkIsConnected(android.content.Context,boolean) -> a
     java.io.InputStream openAsset(android.content.Context,java.lang.String) -> a
     void abandonItem(android.content.Context,java.lang.String) -> b
-    android.net.Uri getItemUri(java.lang.String) -> a
+    android.net.Uri getItemUri(java.lang.String) -> b
     void initDefaultPrefs(android.content.Context) -> e
 com.murrayc.galaxyzoo.app.Utils$NetworkConnected -> com.murrayc.galaxyzoo.app.bt:
     boolean connected -> a
@@ -9438,8 +9454,10 @@ com.murrayc.galaxyzoo.app.provider.Config -> com.murrayc.galaxyzoo.app.provider.
 com.murrayc.galaxyzoo.app.provider.Config$SubjectGroup -> com.murrayc.galaxyzoo.app.provider.d:
     java.lang.String filename -> a
     boolean useForNewQueries -> b
+    com.murrayc.galaxyzoo.app.DecisionTree$DiscussQuestion discussQuestion -> c
     java.lang.String getFilename() -> a
     boolean getUseForNewQueries() -> b
+    com.murrayc.galaxyzoo.app.DecisionTree$DiscussQuestion getDiscussQuestion() -> c
 com.murrayc.galaxyzoo.app.provider.HttpUtils -> com.murrayc.galaxyzoo.app.provider.e:
     void throwIfNoNetwork(android.content.Context) -> a
     void throwIfNoNetwork(android.content.Context,boolean) -> a

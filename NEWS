@@ -1,4 +1,15 @@
-1.42:
+1.43:
+
+* Don't prematurely abandon the classification after the first question
+  when using a new survey group. (Regression in 1.41).
+* Add missing goods_full survey example images and correct their thumbnail sizes.
+* Actually respond to the "Do you want to discuss this?" questions for the 
+  new survey subjects. (Regression in 1.41).
+* Get 5 subjects at a time rather than 10, so we see a different survey group
+  (and its questions) more often.
+
+
+1.42 (not released publically)::
 
 * Show the example images for the goods_full survey's questions.
 
