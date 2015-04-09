@@ -27,7 +27,6 @@ import android.graphics.drawable.BitmapDrawable;
  */
 public class BaseQuestionFragment extends ItemFragment {
     public static final String ARG_QUESTION_ID = "question-id";
-    public static final String ARG_GROUP_ID = "group-id";
     private String mQuestionId = null;
     private String mGroupId = null;
 

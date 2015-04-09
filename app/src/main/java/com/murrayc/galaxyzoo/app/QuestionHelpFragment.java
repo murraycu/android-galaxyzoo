@@ -43,6 +43,7 @@ import android.widget.TextView;
  * A simple {@link Fragment} subclass.
  */
 public class QuestionHelpFragment extends BaseQuestionFragment {
+    public static final String ARG_GROUP_ID = "group-id";
     private View mRootView = null;
 
     public QuestionHelpFragment() {
@@ -55,7 +56,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         final Bundle bundle = getArguments();
         if (bundle != null) {
             setQuestionId(bundle.getString(QuestionFragment.ARG_QUESTION_ID));
-            setGroupId(bundle.getString(QuestionFragment.ARG_GROUP_ID));
+            setGroupId(bundle.getString(ARG_GROUP_ID));
         }
     }
 

@@ -143,7 +143,9 @@ public class QuestionFragment extends BaseQuestionFragment
         //rotation.
         if (savedInstanceState != null) {
             setQuestionId(savedInstanceState.getString(ARG_QUESTION_ID));
-            setGroupId(savedInstanceState.getString(ARG_GROUP_ID));
+
+            //We don't need to get the Group ID (or the Zooniverse ID),
+            //because the base class's setItemId() will always get them from the database.
 
             //Get the classification in progress too,
             //instead of losing it when we rotate:
@@ -152,7 +154,9 @@ public class QuestionFragment extends BaseQuestionFragment
             final Bundle bundle = getArguments();
             if (bundle != null) {
                 setQuestionId(bundle.getString(ARG_QUESTION_ID));
-                setGroupId(bundle.getString(ARG_GROUP_ID));
+
+                //We don't need to get the Group ID (or the Zooniverse ID),
+                //because the base class's setItemId() will always get them from the database.
             }
         }
 
@@ -166,7 +170,7 @@ public class QuestionFragment extends BaseQuestionFragment
         /*
          * Initializes the CursorLoader. The URL_LOADER value is eventually passed
          * to onCreateLoader().
-         * This lets us get the Zooniverse ID for the item, for use in the discussion page's URI.
+         * This lets us get the Zooniverse ID and Group ID for the item.
          * We use restartLoader(), instead of initLoader(),
          * so we can refresh this fragment to show a different subject,
          * even when using the same query ("next") to do that.
@@ -205,8 +209,10 @@ public class QuestionFragment extends BaseQuestionFragment
         //Otherwise, on rotation, onCreateView() will just get the first question ID, if any, that was first used
         //to create the fragment.
         outState.putString(ARG_QUESTION_ID, getQuestionId());
-        outState.putString(ARG_GROUP_ID, getGroupId());
         outState.putParcelable(ARG_QUESTION_CLASSIFICATION_IN_PROGRESS, mClassificationInProgress);
+
+        //We don't need to store the Group ID (or the Zooniverse ID),
+        //because the base class's setItemId() will always get them from the database.
 
         super.onSaveInstanceState(outState);
     }
@@ -278,7 +284,7 @@ public class QuestionFragment extends BaseQuestionFragment
     private void doExamples() {
         final Intent intent = new Intent(getActivity(), QuestionHelpActivity.class);
         intent.putExtra(ARG_QUESTION_ID, getQuestionId());
-        intent.putExtra(ARG_GROUP_ID, getGroupId());
+        intent.putExtra(QuestionHelpFragment.ARG_GROUP_ID, getGroupId());
         startActivity(intent);
     }
 

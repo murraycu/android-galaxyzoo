@@ -47,7 +47,7 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
 
         final Intent intent = getIntent();
         setQuestionId(intent.getStringExtra(BaseQuestionFragment.ARG_QUESTION_ID));
-        setGroupId(intent.getStringExtra(BaseQuestionFragment.ARG_GROUP_ID));
+        setGroupId(intent.getStringExtra(QuestionHelpFragment.ARG_GROUP_ID));
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -72,7 +72,7 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
                     final Bundle arguments = new Bundle();
                     arguments.putString(BaseQuestionFragment.ARG_QUESTION_ID,
                             getQuestionId());
-                    arguments.putString(BaseQuestionFragment.ARG_GROUP_ID,
+                    arguments.putString(QuestionHelpFragment.ARG_GROUP_ID,
                             getGroupId());
 
                     fragment = new QuestionHelpFragment();
