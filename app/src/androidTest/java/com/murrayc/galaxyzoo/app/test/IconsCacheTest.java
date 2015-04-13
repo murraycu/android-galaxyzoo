@@ -80,16 +80,24 @@ public class IconsCacheTest extends AndroidTestCase {
                 assertNotNull(question);
 
                 for (final DecisionTree.Answer answer : question.getAnswers()) {
-                    final int count = answer.getExamplesCount();
-                    for (int i = 0; i < count; ++i) {
-                        final String iconName = answer.getIcon();
-                        checkIcon(iconsCache, iconName);
+                    checkAnswer(iconsCache, question, answer);
+                }
 
-                        final String exampleIconName = answer.getExampleIconName(question.getId(), i);
-                        checkIcon(iconsCache, exampleIconName);
-                    }
+                for (final DecisionTree.Checkbox answer : question.getCheckboxes()) {
+                    checkAnswer(iconsCache, question, answer);
                 }
             }
+        }
+    }
+
+    private void checkAnswer(IconsCache iconsCache, DecisionTree.Question question, DecisionTree.BaseButton answer) {
+        final int count = answer.getExamplesCount();
+        for (int i = 0; i < count; ++i) {
+            final String iconName = answer.getIcon();
+            checkIcon(iconsCache, iconName);
+
+            final String exampleIconName = answer.getExampleIconName(question.getId(), i);
+            checkIcon(iconsCache, exampleIconName);
         }
     }
 

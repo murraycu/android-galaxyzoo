@@ -456,7 +456,7 @@ public class DecisionTree {
      * because that's generally nice when it's possible.
      * It returns and takes String references, but String is immutable too.
      */
-    abstract static class BaseButton {
+    public abstract static class BaseButton {
         private final String id;
         private String text;
         private final String icon;
@@ -503,7 +503,7 @@ public class DecisionTree {
      * because that's generally nice when it's possible.
      * It returns and takes String references, but String is immutable too.
      */
-    static final class Checkbox extends BaseButton {
+    public static final class Checkbox extends BaseButton {
         Checkbox(final String id, final String text, final String icon, final int examplesCount) {
             super(id, text, icon, examplesCount);
         }
