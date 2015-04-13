@@ -24,6 +24,7 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -31,6 +32,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.JsonReader;
 
@@ -69,6 +71,17 @@ public final class LoginUtils {
      */
     public static boolean getLoggedIn(final Context context) {
         final LoginDetails loginDetails = getAccountLoginDetails(context);
+        return getLoggedIn(loginDetails);
+    }
+
+    /**
+     * This is a just a utility method that examines the LoginDetails.
+     * Unlike getLoggedIn(Context), this can be called from any thread.
+     *
+     * @param loginDetails
+     * @return
+     */
+    public static boolean getLoggedIn(final LoginDetails loginDetails) {
         if (loginDetails == null) {
             return false;
         }
@@ -182,6 +195,30 @@ public final class LoginUtils {
             Log.error("getAccountLoginDetails(): getAccountLoginDetails() failed", e);
             return null;
         }
+    }
+
+    public static void logOut(final ZooFragment fragment) {
+        final Activity activity = fragment.getActivity();
+        final AccountRemoveTask task = new AccountRemoveTask(activity) {
+            @Override
+            protected void onPostExecute(final Void result) {
+                super.onPostExecute(result);
+
+                //Make sure that the currently-shown menu will update:
+                fragment.setLoggedIn(false);
+
+                //TODO: This doesn't actually seem to cause the (various) child fragments'
+                //onPrepareOptionsMenu() methods to be called. Maybe it doesn't work with
+                //nested child fragments.
+                if (activity instanceof FragmentActivity) {
+                    final FragmentActivity fragmentActivity = (FragmentActivity) activity;
+                    fragmentActivity.supportInvalidateOptionsMenu();
+                } else {
+                    activity.invalidateOptionsMenu();
+                }
+            }
+        };
+        task.execute();
     }
 
     /**
@@ -435,6 +472,48 @@ public final class LoginUtils {
         protected void onCancelled() {
         }
     }
+
+    /** Run this to log out.
+     */
+    private static class AccountRemoveTask extends AsyncTask<Void, Void, Void> {
+
+        private final WeakReference<Context> contextReference;
+
+        AccountRemoveTask(final Context context) {
+            this.contextReference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+
+            if (contextReference == null) {
+                return null;
+            }
+
+            final Context context = contextReference.get();
+            if (context == null) {
+                return null;
+            }
+
+            LoginUtils.LoginDetails loginDetails = LoginUtils.getAccountLoginDetails(context);
+            if(!LoginUtils.getLoggedIn(loginDetails)) {
+                return null;
+            }
+
+            final String accountName = loginDetails.name;
+            if (TextUtils.isEmpty(accountName)) {
+                return null;
+            }
+
+            final AccountManager accountManager = AccountManager.get(context);
+            LoginUtils.removeAccount(context, accountName);
+
+            LoginUtils.addAnonymousAccount(context);
+
+            return null;
+        }
+    }
+
 
     public static class LoginResult {
         private final boolean success;

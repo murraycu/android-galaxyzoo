@@ -38,6 +38,9 @@
     <!-- An action. Shown on a button or menu item. -->
     <string name="action_login">Login</string>
 
+    <!-- An action. Shown on a button or menu item. -->
+    <string name="action_logout">Log out</string>
+
     <!-- A checkable action with two states. It is either a favorite or not. Shown on a button or menu item. -->
     <string name="action_favorite">Favorite</string>
 
