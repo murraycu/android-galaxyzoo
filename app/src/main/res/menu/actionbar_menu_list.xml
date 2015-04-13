@@ -6,6 +6,9 @@
     <item
         android:id="@+id/option_menu_item_login"
         android:title="@string/action_login" />
+    <item
+        android:id="@+id/option_menu_item_logout"
+        android:title="@string/action_logout" />
     <!-- The More action is only useful for debugging:
     <item
         android:id="@+id/option_menu_item_more"
