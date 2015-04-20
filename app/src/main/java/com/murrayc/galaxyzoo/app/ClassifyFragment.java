@@ -285,7 +285,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
                 //Don't stay inverted after a previous classification.
                 final FragmentManager fragmentManager = getChildFragmentManager();
-                SubjectFragment fragmentSubject = (SubjectFragment) fragmentManager.findFragmentById(R.id.child_fragment_subject);
+                final SubjectFragment fragmentSubject = (SubjectFragment) fragmentManager.findFragmentById(R.id.child_fragment_subject);
                 if (fragmentSubject != null) {
                     fragmentSubject.setInverted(false);
                 }

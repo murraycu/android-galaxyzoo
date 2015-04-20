@@ -551,7 +551,7 @@ public class ClassifyActivity extends ItemActivity
 
         mReceiverNetworkReconnection = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(final Context context, final Intent intent) {
                 final Utils.NetworkConnected networkConnected =
                         Utils.getNetworkIsConnected(context, Utils.getUseWifiOnlyFromSharedPrefs(ClassifyActivity.this));
                 if ((networkConnected != null) && (networkConnected.connected)) {

@@ -84,7 +84,7 @@ public class Singleton {
                 Log.error("Singleton: Error parsing decision tree.");
                 continue;
             } else {
-                DecisionTree decisionTree = new DecisionTree(inputStreamTree, inputStreamTranslation);
+                final DecisionTree decisionTree = new DecisionTree(inputStreamTree, inputStreamTranslation);
                 mDecisionTrees.put(groupId, decisionTree);
 
                 //Preload icons only for trees that are likely to be used:
