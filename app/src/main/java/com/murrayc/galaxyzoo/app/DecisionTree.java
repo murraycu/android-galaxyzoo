@@ -74,7 +74,7 @@ public class DecisionTree {
         }
     }
 
-    private DiscussQuestion mDiscussQuestion;
+    private DiscussQuestion mDiscussQuestion = null;
 
     private static final String NODE_ROOT = "murrayc_zoonverse_questions";
     private static final String NODE_QUESTION = "question";
