@@ -47,7 +47,7 @@ public class IconsCacheTest extends AndroidTestCase {
     public void tearDown() {
     }
 
-    void checkIcon(final IconsCache iconsCache, final String iconName) {
+    static void checkIcon(final IconsCache iconsCache, final String iconName) {
         assertNotNull(iconName);
         assertFalse(iconName.isEmpty());
 
@@ -91,7 +91,7 @@ public class IconsCacheTest extends AndroidTestCase {
         }
     }
 
-    private void checkAnswer(final IconsCache iconsCache, final DecisionTree.Question question, final DecisionTree.BaseButton answer) throws IOException {
+    private static void checkAnswer(final IconsCache iconsCache, final DecisionTree.Question question, final DecisionTree.BaseButton answer) throws IOException {
         final String iconName = answer.getIcon();
         checkIcon(iconsCache, iconName);
 
