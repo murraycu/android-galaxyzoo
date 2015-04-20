@@ -173,6 +173,8 @@ public class ZooniverseClient {
         } catch (final IOException e) {
             Log.error("loginSync(): exception during HTTP connection", e);
 
+            conn.disconnect();
+
             throw new LoginException("Could not create POST.", e);
         }
 
@@ -197,6 +199,10 @@ public class ZooniverseClient {
                 } catch (final IOException e) {
                     Log.error("loginSync(): exception while closing in", e);
                 }
+            }
+
+            if (conn != null) {
+                conn.disconnect();
             }
         }
     }
@@ -378,6 +384,8 @@ public class ZooniverseClient {
         } catch (final IOException e) {
             Log.error("uploadClassificationSync: exception during HTTP connection", e);
 
+            conn.disconnect();
+
             throw new UploadException("exception during HTTP connection", e);
         }
 
@@ -394,6 +402,8 @@ public class ZooniverseClient {
             writeParamsToHttpPost(conn, nameValuePairs);
         } catch (final IOException e) {
             Log.error("uploadClassificationSync: writeParamsToHttpPost() failed", e);
+
+            conn.disconnect();
 
             throw new UploadException("writeParamsToHttpPost() failed.", e);
         }
@@ -424,6 +434,10 @@ public class ZooniverseClient {
                 } catch (final IOException e) {
                     Log.error("uploadClassificationSync: exception while closing in", e);
                 }
+            }
+
+            if (conn != null) {
+                conn.disconnect();
             }
         }
     }
