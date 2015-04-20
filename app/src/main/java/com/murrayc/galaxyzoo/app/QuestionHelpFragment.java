@@ -188,7 +188,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             return;
         }
 
-        final String uri = Config.FULL_EXAMPLE_URI + iconName + ".jpg";
+        final String uri = IconsCache.getExampleImageUri(iconName);
 
         final Intent intent = new Intent(activity, ExampleViewerActivity.class);
         intent.putExtra(ExampleViewerFragment.ARG_EXAMPLE_URL, uri);
@@ -198,4 +198,5 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         //TODO: Why do we need to specify it again here?
         ActivityCompat.startActivity(activity, intent, UiUtils.getTransitionOptionsBundle(activity, imageButton));
     }
+
 }

@@ -118,6 +118,10 @@ public class IconsCache {
         */
     }
 
+    public static String getExampleImageUri(final String iconName) {
+        return Config.FULL_EXAMPLE_URI + iconName + ".jpg";
+    }
+
     /*
     private void loadFromNetwork(final Context context, long lastModified) {
         //Get the updated files from the server and re-process them:

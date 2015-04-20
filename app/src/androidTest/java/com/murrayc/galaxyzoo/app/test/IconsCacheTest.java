@@ -25,11 +25,12 @@ import android.test.AndroidTestCase;
 import com.murrayc.galaxyzoo.app.DecisionTree;
 import com.murrayc.galaxyzoo.app.IconsCache;
 import com.murrayc.galaxyzoo.app.Config;
-import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -90,14 +91,25 @@ public class IconsCacheTest extends AndroidTestCase {
         }
     }
 
-    private void checkAnswer(IconsCache iconsCache, DecisionTree.Question question, DecisionTree.BaseButton answer) {
+    private void checkAnswer(final IconsCache iconsCache, final DecisionTree.Question question, final DecisionTree.BaseButton answer) throws IOException {
+        final String iconName = answer.getIcon();
+        checkIcon(iconsCache, iconName);
+
         final int count = answer.getExamplesCount();
         for (int i = 0; i < count; ++i) {
-            final String iconName = answer.getIcon();
-            checkIcon(iconsCache, iconName);
-
+            //Check that we have a thumbnail icon for the example image:
             final String exampleIconName = answer.getExampleIconName(question.getId(), i);
             checkIcon(iconsCache, exampleIconName);
+
+            //Check that the full example actually exists on the server:
+            final String exampleUri = IconsCache.getExampleImageUri(exampleIconName);
+            final URL url = new URL(exampleUri);
+            final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.connect();
+            assertEquals("Cannot get full example image: " + exampleUri,
+                    con.getResponseCode(), HttpURLConnection.HTTP_OK);
+            con.disconnect();
         }
     }
 
