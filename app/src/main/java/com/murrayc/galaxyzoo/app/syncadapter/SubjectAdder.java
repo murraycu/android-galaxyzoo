@@ -111,7 +111,7 @@ public class SubjectAdder {
         final ContentResolver resolver = getContext().getContentResolver();
 
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_DOWNLOAD_MISSING_IMAGES,
-                WHERE_CLAUSE_DOWNLOAD_NOT_DONE, new String[]{}, null);
+                WHERE_CLAUSE_DOWNLOAD_NOT_DONE, null, null);
 
         //Find out if the image is currently being downloaded:
         while (c.moveToNext()) {
@@ -200,7 +200,7 @@ public class SubjectAdder {
         //though they are actually the same.
         final String orderBy = Item.Columns._ID + " ASC";
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_CHECK_IMAGES,
-                WHERE_CLAUSE_DOWNLOAD_ALL_DONE, new String[]{}, orderBy);
+                WHERE_CLAUSE_DOWNLOAD_ALL_DONE, null, orderBy);
 
         //Find out if the images still exist in the cache:
         while (c.moveToNext()) {
@@ -266,7 +266,7 @@ public class SubjectAdder {
         //without this hacky use of the _data field?
         final Uri fileUriAsUri = Uri.parse(fileUri);
         final Cursor c = resolver.query(fileUriAsUri, PROJECTION_URI_PART_DATA,
-                null, new String[]{}, null);
+                null, null, null);
         if(!c.moveToNext()) {
             Log.error("SubjectAdder.cachedImageExists(): query failed.");
             c.close();
@@ -308,7 +308,7 @@ public class SubjectAdder {
         //so we do this only after creating the items record.
 
         final Cursor c = resolver.query(itemUri, PROJECTION_CACHE_URIS_TO_FILES,
-                null, new String[]{}, null);
+                null, null, null);
         while (c.moveToNext()) {
             final String uriStandardRemote = c.getString(0);
             final String uriStandard = c.getString(1);

@@ -231,7 +231,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         final ContentResolver resolver = getContentResolver();
 
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_COUNT_AS_COUNT,
-                WHERE_CLAUSE_UPLOADED, new String[]{}, null);
+                WHERE_CLAUSE_UPLOADED, null, null);
 
         c.moveToFirst();
         final int result = c.getInt(0);
@@ -262,7 +262,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 "(" + Item.Columns.DONE + " == 1) AND " +
                         "(" + Item.Columns.UPLOADED + " != 1)";
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_ITEMS_OUTSTANDING,
-                whereClause, new String[]{}, null); //TODO: Order by?
+                whereClause, null, null); //TODO: Order by?
 
         if (c.getCount() == 0) {
             c.close();
@@ -303,7 +303,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             final int countToRemove = count - max;
             //TODO: Use this: final String limit = Integer.toString(countToRemove); //TODO: Is this locale-independent?
             final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_ID,
-                    WHERE_CLAUSE_UPLOADED, new String[]{}, orderBy);
+                    WHERE_CLAUSE_UPLOADED, null, orderBy);
 
             //Remove them one by one:
             int removed = 0;
@@ -353,7 +353,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         //Mark it as a favorite if necessary:
         {
             final Cursor c = resolver.query(Utils.getItemUri(itemId),
-                    PROJECTION_FAVORITE, null, new String[]{}, null);
+                    PROJECTION_FAVORITE, null, null, null);
 
             if (c.moveToFirst()) {
                 final int favorite = c.getInt(0);

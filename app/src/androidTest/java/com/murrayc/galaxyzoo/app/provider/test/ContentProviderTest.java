@@ -66,7 +66,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
     public void testInsertThenQueryAll() {
         mMockResolver.insert(Item.CONTENT_URI, getFullContentValues());
 
-        final Cursor cursor = mMockResolver.query(Item.CONTENT_URI, null, null, new String[]{}, null);
+        final Cursor cursor = mMockResolver.query(Item.CONTENT_URI, null, null, null, null);
         assertNotNull(cursor);
         assertEquals(1, cursor.getCount());
         assertTrue(cursor.moveToFirst());
@@ -81,7 +81,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
     public void testInsertThenQuerySpecific() {
         final Uri uri = mMockResolver.insert(Item.CONTENT_URI, getFullContentValues());
 
-        final Cursor cursor = mMockResolver.query(uri, null, null, new String[]{}, null);
+        final Cursor cursor = mMockResolver.query(uri, null, null, null, null);
         assertNotNull(cursor);
         assertEquals(1, cursor.getCount());
         assertTrue(cursor.moveToFirst());
@@ -96,7 +96,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
 
     public void testInsertThenOpenFile() throws IOException {
         final Uri uriItem = mMockResolver.insert(Item.CONTENT_URI, getFullContentValues());
-        final Cursor cursor = mMockResolver.query(uriItem, null, null, new String[]{}, null);
+        final Cursor cursor = mMockResolver.query(uriItem, null, null, null, null);
         assertNotNull(cursor);
         assertEquals(1, cursor.getCount());
         assertTrue(cursor.moveToFirst());
