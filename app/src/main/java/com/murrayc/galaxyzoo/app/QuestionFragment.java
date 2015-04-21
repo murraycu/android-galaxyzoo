@@ -35,6 +35,8 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.RemoteException;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -309,7 +311,7 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     public void update() {
-        final Activity activity = getActivity();
+        final FragmentActivity activity = getActivity();
         if (activity == null)
             return;
 
@@ -559,9 +561,19 @@ public class QuestionFragment extends BaseQuestionFragment
      * @param answerId
      */
     private void showNextQuestion(final String questionId, final String answerId) {
+        final View parentLayout = mRootView.findViewById(R.id.parentLayout);
+        if (parentLayout == null) {
+            Log.error("showNextQuestion(): parentLayout is null.");
+            return;
+        }
+
         final DecisionTree tree = getDecisionTree();
         final DecisionTree.Question nextQuestion = tree.getNextQuestionForAnswer(questionId, answerId);
         if (nextQuestion == null) {
+            //Hide the question buttons to be sure that no interaction is possible until the next
+            //subject is shown:
+            parentLayout.setVisibility(View.INVISIBLE);
+
             //The classification is finished.
             //We save it to the ContentProvider, which will upload it.
             //
@@ -575,6 +587,10 @@ public class QuestionFragment extends BaseQuestionFragment
             task.execute();
             return;
         }
+
+        //Make sure the question is visible. Maybe the fragment was hidden while we were
+        //saving the classification and getting the next subject:
+        parentLayout.setVisibility(View.VISIBLE);
 
         final String nextQuestionId = nextQuestion.getId();
 
