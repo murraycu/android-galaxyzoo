@@ -382,9 +382,10 @@ public class QuestionFragment extends BaseQuestionFragment
             //instead of On/Off, so we don't need a separate label.
             //TODO: Use the icon. See http://stackoverflow.com/questions/18598255/android-create-a-toggle-button-with-image-and-no-text
             //TODO: Avoid the highlight bar thing at the bottom being drawn over the text.
-            button.setText(checkbox.getText());
-            button.setTextOn(checkbox.getText());
-            button.setTextOff(checkbox.getText());
+            final String text = checkbox.getText();
+            button.setText(text);
+            button.setTextOn(text);
+            button.setTextOff(text);
 
             insertButtonInRow(activity, row, button);
 
