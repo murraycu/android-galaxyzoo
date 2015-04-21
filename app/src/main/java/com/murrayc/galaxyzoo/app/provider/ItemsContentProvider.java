@@ -221,6 +221,8 @@ public class ItemsContentProvider extends ContentProvider {
             DatabaseHelper.ItemsDbColumns.LOCATION_THUMBNAIL_URI,
             DatabaseHelper.ItemsDbColumns.LOCATION_INVERTED_URI
     };
+    private static final String[] PROJECTION_FILES_FILE_DATA = {DatabaseHelper.FilesDbColumns.FILE_DATA};
+
 
     /** A where clause to find all the subjects that have not yet been classified,
      * and which are ready to be classified.
@@ -983,8 +985,7 @@ public class ItemsContentProvider extends ContentProvider {
             final String strFileId = Double.toString(fileId); //TODO: Is this locale-independent?
 
             final String[] selectionArgs = {strFileId};
-            final String[] projection = {DatabaseHelper.FilesDbColumns.FILE_DATA};
-            final Cursor c = builder.query(db, projection,
+            final Cursor c = builder.query(db, PROJECTION_FILES_FILE_DATA,
                     null, selectionArgs,
                     null, null, null);
 

@@ -57,6 +57,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String PARAM_PART_CLASSIFICATION = "classification";
     private static final String WHERE_CLAUSE_NOT_DONE = Item.Columns.DONE + " != 1";
     private static final String WHERE_CLAUSE_UPLOADED = Item.Columns.UPLOADED + " == 1";
+    public static final String[] PROJECTION_ITEMS_OUTSTANDING = {Item.Columns._ID,
+            Item.Columns.SUBJECT_ID,
+            Item.Columns.GROUP_ID};
+    public static final String[] PROJECTION_ID = {Item.Columns._ID};
+    public static final String[] PROJECTION_FAVORITE = {Item.Columns.FAVORITE};
+    public static final String[] PROJECTION_CLASSIFICATION_CHECKBOX_ID = {ClassificationCheckbox.Columns.CHECKBOX_ID};
     private int mUploadsInProgress = 0;
 
     private boolean mRequestMoreItemsTaskInProgress = false;
@@ -252,13 +258,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         // query the database for any item whose classification is not yet uploaded.
         final ContentResolver resolver = getContentResolver();
 
-        final String[] projection = {Item.Columns._ID,
-                Item.Columns.SUBJECT_ID,
-                Item.Columns.GROUP_ID};
         final String whereClause =
                 "(" + Item.Columns.DONE + " == 1) AND " +
                         "(" + Item.Columns.UPLOADED + " != 1)";
-        final Cursor c = resolver.query(Item.ITEMS_URI, projection,
+        final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_ITEMS_OUTSTANDING,
                 whereClause, new String[]{}, null); //TODO: Order by?
 
         if (c.getCount() == 0) {
@@ -295,12 +298,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             //Get the oldest done (and uploaded) items:
             final ContentResolver resolver = getContentResolver();
 
-            final String[] projection = {Item.Columns._ID};
             //ISO-8601 dates can be alphabetically sorted to get date-time order:
             final String orderBy = Item.Columns.DATETIME_DONE + " ASC";
             final int countToRemove = count - max;
             //TODO: Use this: final String limit = Integer.toString(countToRemove); //TODO: Is this locale-independent?
-            final Cursor c = resolver.query(Item.ITEMS_URI, projection,
+            final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_ID,
                     WHERE_CLAUSE_UPLOADED, new String[]{}, orderBy);
 
             //Remove them one by one:
@@ -350,9 +352,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         //Mark it as a favorite if necessary:
         {
-            final String[] projection = {Item.Columns.FAVORITE};
             final Cursor c = resolver.query(Utils.getItemUri(itemId),
-                    projection, null, new String[]{}, null);
+                    PROJECTION_FAVORITE, null, new String[]{}, null);
 
             if (c.moveToFirst()) {
                 final int favorite = c.getInt(0);
@@ -400,10 +401,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             //Add the question's answer's selected checkboxes, if any:
             //The sequence will be the same for any selected checkbox for the same answer,
             //so we don't bother getting that, or sorting by that.
-            final String[] projection = {ClassificationCheckbox.Columns.CHECKBOX_ID};
             final String orderBy = ClassificationCheckbox.Columns.CHECKBOX_ID + " ASC";
             final Cursor cursorCheckboxes = resolver.query(ClassificationCheckbox.CONTENT_URI,
-                    projection, selection, selectionArgs, orderBy);
+                    PROJECTION_CLASSIFICATION_CHECKBOX_ID, selection, selectionArgs, orderBy);
 
             while (cursorCheckboxes.moveToNext()) {
                 final String checkboxId = cursorCheckboxes.getString(0);

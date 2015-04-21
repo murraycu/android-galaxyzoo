@@ -74,6 +74,9 @@ public class SubjectAdder {
             Item.Columns.LOCATION_STANDARD_URI,
             Item.Columns.LOCATION_THUMBNAIL_URI,
             Item.Columns.LOCATION_INVERTED_URI};
+    public static final String[] PROJECTION_URI_PART_DATA = {ItemsContentProvider.URI_PART_DATA};
+    public static final String[] PROJECTION_SUBJECT_ID = {Item.Columns.SUBJECT_ID};
+
     private static final String WHERE_CLAUSE_DOWNLOAD_NOT_DONE = "(" +
             Item.Columns.LOCATION_STANDARD_DOWNLOADED + " != 1" +
             ") OR (" +
@@ -262,8 +265,7 @@ public class SubjectAdder {
         //TODO: Is there a simple way to just check that the file exists via the ContentResolver
         //without this hacky use of the _data field?
         final Uri fileUriAsUri = Uri.parse(fileUri);
-        final String[] projection = {ItemsContentProvider.URI_PART_DATA};
-        final Cursor c = resolver.query(fileUriAsUri, projection,
+        final Cursor c = resolver.query(fileUriAsUri, PROJECTION_URI_PART_DATA,
                 null, new String[]{}, null);
         if(!c.moveToNext()) {
             Log.error("SubjectAdder.cachedImageExists(): query failed.");
@@ -515,10 +517,9 @@ public class SubjectAdder {
         //TODO: Use COUNT_AS_COUNT ?
         final ContentResolver resolver = getContext().getContentResolver();
 
-        final String[] projection = {Item.Columns.SUBJECT_ID};
         final String whereClause = Item.Columns.SUBJECT_ID + " = ?"; //We use ? to avoid SQL Injection.
         final String[] selectionArgs = {subjectId};
-        final Cursor c = resolver.query(Item.ITEMS_URI, projection,
+        final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_SUBJECT_ID,
                 whereClause, selectionArgs, null);
         final boolean result = c.getCount() > 0;
         c.close();
