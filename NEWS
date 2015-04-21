@@ -1,3 +1,7 @@
+1.44:
+* Minor internal performance improvements.
+
+
 1.43:
 
 * Don't prematurely abandon the classification after the first question
@@ -9,7 +13,7 @@
   (and its questions) more often.
 
 
-1.42 (not released publically)::
+1.42 (not released publically):
 
 * Show the example images for the goods_full survey's questions.
 

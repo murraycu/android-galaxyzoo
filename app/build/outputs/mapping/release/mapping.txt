@@ -8867,23 +8867,17 @@ com.murrayc.galaxyzoo.app.DecisionTree -> com.murrayc.galaxyzoo.app.n:
     boolean isDiscussQuestion(java.lang.String) -> c
 com.murrayc.galaxyzoo.app.DecisionTree$Answer -> com.murrayc.galaxyzoo.app.o:
     java.lang.String leadsToQuestionId -> a
-    java.lang.String getExampleIconName(java.lang.String,int) -> a
-    int getExamplesCount() -> a
-    java.lang.String getIcon() -> b
-    void setText(java.lang.String) -> a
-    java.lang.String getText() -> c
-    java.lang.String getId() -> d
     java.lang.String access$200(com.murrayc.galaxyzoo.app.DecisionTree$Answer) -> a
 com.murrayc.galaxyzoo.app.DecisionTree$BaseButton -> com.murrayc.galaxyzoo.app.p:
     java.lang.String id -> a
     java.lang.String text -> b
     java.lang.String icon -> c
     int examplesCount -> d
-    java.lang.String getId() -> d
-    java.lang.String getText() -> c
+    java.lang.String getId() -> a
+    java.lang.String getText() -> b
     void setText(java.lang.String) -> a
-    java.lang.String getIcon() -> b
-    int getExamplesCount() -> a
+    java.lang.String getIcon() -> c
+    int getExamplesCount() -> d
     java.lang.String getExampleIconName(java.lang.String,int) -> a
 com.murrayc.galaxyzoo.app.DecisionTree$Checkbox -> com.murrayc.galaxyzoo.app.q:
 com.murrayc.galaxyzoo.app.DecisionTree$DecisionTreeException -> com.murrayc.galaxyzoo.app.r:
@@ -8937,12 +8931,13 @@ com.murrayc.galaxyzoo.app.IconsCache -> com.murrayc.galaxyzoo.app.w:
     android.support.v4.util.LruCache mWorkflowIcons -> a
     android.support.v4.util.LruCache mExampleIcons -> b
     android.content.Context mContext -> c
+    java.lang.String getExampleImageUri(java.lang.String) -> a
     boolean reloadCachedIcons(java.util.List) -> a
     boolean reloadIconsForQuestion(com.murrayc.galaxyzoo.app.DecisionTree$Question) -> a
     boolean reloadExampleImages(com.murrayc.galaxyzoo.app.DecisionTree$Question,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton) -> a
     boolean reloadIcon(java.lang.String,android.support.v4.util.LruCache) -> a
-    java.lang.String getIconAssetPath(java.lang.String) -> b
-    android.graphics.Bitmap getIcon(java.lang.String) -> a
+    java.lang.String getIconAssetPath(java.lang.String) -> c
+    android.graphics.Bitmap getIcon(java.lang.String) -> b
     android.content.Context getContext() -> a
 com.murrayc.galaxyzoo.app.ItemActivity -> com.murrayc.galaxyzoo.app.x:
     java.lang.String mItemId -> n
@@ -9498,6 +9493,7 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider -> com.murrayc.galaxyzoo
     com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient mZooniverseClient -> g
     com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder mSubjectAdder -> h
     java.lang.String[] PROJECTION_REMOVE_ITEM -> i
+    java.lang.String[] PROJECTION_FILES_FILE_DATA -> j
     android.content.ContentValues getMappedContentValues(android.content.ContentValues,java.util.Map) -> a
     void putValueInContentValues(android.content.ContentValues,java.lang.String,java.lang.Object) -> a
     int delete(android.net.Uri,java.lang.String,java.lang.String[]) -> delete
@@ -9602,12 +9598,14 @@ com.murrayc.galaxyzoo.app.syncadapter.AuthenticatorService -> com.murrayc.galaxy
     com.murrayc.galaxyzoo.app.syncadapter.Authenticator mAuthenticator -> a
     android.os.IBinder onBind(android.content.Intent) -> onBind
 com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder -> com.murrayc.galaxyzoo.app.syncadapter.b:
-    android.content.Context mContext -> a
-    java.util.Map mImageDownloadsInProgress -> b
-    com.android.volley.RequestQueue mRequestQueue -> c
-    java.lang.String[] PROJECTION_DOWNLOAD_MISSING_IMAGES -> d
-    java.lang.String[] PROJECTION_CACHE_URIS_TO_FILES -> e
-    java.lang.String[] PROJECTION_CHECK_IMAGES -> f
+    android.content.Context mContext -> c
+    java.util.Map mImageDownloadsInProgress -> d
+    com.android.volley.RequestQueue mRequestQueue -> e
+    java.lang.String[] PROJECTION_DOWNLOAD_MISSING_IMAGES -> f
+    java.lang.String[] PROJECTION_CACHE_URIS_TO_FILES -> g
+    java.lang.String[] PROJECTION_CHECK_IMAGES -> h
+    java.lang.String[] PROJECTION_URI_PART_DATA -> a
+    java.lang.String[] PROJECTION_SUBJECT_ID -> b
     boolean downloadMissingImages() -> a
     void downloadMissingImage(android.net.Uri,java.lang.String,java.lang.String,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
     boolean checkForDeletedCachedImages() -> b
@@ -9641,13 +9639,17 @@ com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder$2 -> com.murrayc.galaxyzoo.ap
 com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder$3 -> com.murrayc.galaxyzoo.app.syncadapter.e:
     int[] $SwitchMap$com$murrayc$galaxyzoo$app$provider$ImageType -> a
 com.murrayc.galaxyzoo.app.syncadapter.SyncAdapter -> com.murrayc.galaxyzoo.app.syncadapter.f:
-    int mUploadsInProgress -> a
-    boolean mRequestMoreItemsTaskInProgress -> b
-    com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient mClient -> c
-    com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder mSubjectAdder -> d
-    android.os.Handler mHandler -> e
-    java.lang.String[] PROJECTION_UPLOAD -> f
-    java.lang.String[] PROJECTION_COUNT_AS_COUNT -> g
+    java.lang.String[] PROJECTION_ITEMS_OUTSTANDING -> a
+    java.lang.String[] PROJECTION_ID -> b
+    java.lang.String[] PROJECTION_FAVORITE -> c
+    java.lang.String[] PROJECTION_CLASSIFICATION_CHECKBOX_ID -> d
+    int mUploadsInProgress -> e
+    boolean mRequestMoreItemsTaskInProgress -> f
+    com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient mClient -> g
+    com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder mSubjectAdder -> h
+    android.os.Handler mHandler -> i
+    java.lang.String[] PROJECTION_UPLOAD -> j
+    java.lang.String[] PROJECTION_COUNT_AS_COUNT -> k
     void onPerformSync(android.accounts.Account,android.os.Bundle,java.lang.String,android.content.ContentProviderClient,android.content.SyncResult) -> onPerformSync
     void doRegularTasks() -> a
     boolean checkImagesStillExist() -> b
