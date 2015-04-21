@@ -19,6 +19,7 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -78,10 +79,11 @@ public class ZooFragment extends Fragment {
     }
 
     private void showAbout() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final Activity activity = getActivity();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         // Get the layout inflater
-        final LayoutInflater inflater = getActivity().getLayoutInflater();
+        final LayoutInflater inflater = activity.getLayoutInflater();
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
