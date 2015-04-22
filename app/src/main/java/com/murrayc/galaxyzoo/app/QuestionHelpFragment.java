@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MarginLayoutParamsCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,7 +125,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         final LinearLayout layoutVertical = new LinearLayout(context);
         layoutVertical.setOrientation(LinearLayout.VERTICAL);
 
-        final TextView textViewAnswer = new TextView(context);
+        final TextView textViewAnswer = new AppCompatTextView(context);
         textViewAnswer.setTextAppearance(context, R.style.TextAppearance_AppCompat_Subhead);
         textViewAnswer.setText(answer.getText());
         layoutVertical.addView(textViewAnswer,
