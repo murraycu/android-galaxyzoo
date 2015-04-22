@@ -28,7 +28,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
@@ -71,7 +71,7 @@ final class UiUtils {
         return r.getDimensionPixelSize(resourceId);
     }
 
-    static void showToolbar(final ActionBarActivity activity) {
+    static void showToolbar(final AppCompatActivity activity) {
         //The layout XML should include our toolbar.xml,
         //which we use instead of an ActionBar,
         //See also our use of <item name="windowActionBar">false</item> in styles.xml.

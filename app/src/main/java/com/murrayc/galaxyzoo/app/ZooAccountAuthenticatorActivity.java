@@ -21,7 +21,7 @@ import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Base class for implementing an Activity that is used to help implement an
@@ -38,7 +38,7 @@ import android.support.v7.app.ActionBarActivity;
  * will be called on the response.
  */
 @SuppressLint("Registered")
-public class ZooAccountAuthenticatorActivity extends ActionBarActivity {
+public class ZooAccountAuthenticatorActivity extends AppCompatActivity {
     private AccountAuthenticatorResponse mAccountAuthenticatorResponse = null;
     private Bundle mResultBundle = null;
 
