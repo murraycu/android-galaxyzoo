@@ -45,8 +45,6 @@ import java.util.concurrent.ExecutionException;
 public class ZooniverseClientTest extends AndroidTestCase {
 
     public static final String TEST_GROUP_ID = "551453e12f0eef21f2000001";
-    public static final String TEST_GROUP_ID2 = "551453e12f0eef21f2000001";
-
 
     @Override
     public void setUp() throws IOException {
