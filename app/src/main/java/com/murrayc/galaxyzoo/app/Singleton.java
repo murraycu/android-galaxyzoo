@@ -57,15 +57,22 @@ public class Singleton {
 
         //Try to find a translation file:
         InputStream inputStreamTranslation = null;
+        String translationFileName = null;
         mLocaleDetails = getLocaleDetails(context);
         if (!TextUtils.isEmpty(mLocaleDetails.language)) {
             //Try finding a translation for a country-specific form of the language:
-            String translationFileName = Utils.getTranslationFilePath(mLocaleDetails.language, mLocaleDetails.countryCode);
+            //We have to get the stream to find out if the asset exists,
+            //so we keep the stream to avoid re-opening it unnecessarily:
+            translationFileName = Utils.getTranslationFilePath(mLocaleDetails.language, mLocaleDetails.countryCode);
             inputStreamTranslation = Utils.openAsset(context, translationFileName);
             if (inputStreamTranslation == null) {
                 //Try just the language instead:
                 translationFileName = Utils.getTranslationFilePath(mLocaleDetails.language, null);
                 inputStreamTranslation = Utils.openAsset(context, translationFileName);
+            }
+
+            if (inputStreamTranslation == null) {
+                translationFileName = null; //To mark that we don't have it.
             }
         }
 
@@ -82,19 +89,23 @@ public class Singleton {
             if (inputStreamTree == null) {
                 Log.error("Singleton: Error parsing decision tree.");
                 continue;
-            } else {
-                final DecisionTree decisionTree = new DecisionTree(inputStreamTree, inputStreamTranslation);
-                mDecisionTrees.put(groupId, decisionTree);
-
-                //Preload icons only for trees that are likely to be used:
-                if (subjectGroup.getUseForNewQueries()) {
-                    decisionTreesToPreloadIcons.add(decisionTree);
-                }
-
-                //Discover the "Discuss this" question from our Config,
-                //because there is no reliable automatic way to discover it:
-                decisionTree.setDiscussQuestion(subjectGroup.getDiscussQuestion());
             }
+
+            if ((inputStreamTranslation == null) && !TextUtils.isEmpty(translationFileName)) {
+                inputStreamTranslation = Utils.openAsset(context, translationFileName);
+            }
+
+            final DecisionTree decisionTree = new DecisionTree(inputStreamTree, inputStreamTranslation);
+            mDecisionTrees.put(groupId, decisionTree);
+
+            //Preload icons only for trees that are likely to be used:
+            if (subjectGroup.getUseForNewQueries()) {
+                decisionTreesToPreloadIcons.add(decisionTree);
+            }
+
+            //Discover the "Discuss this" question from our Config,
+            //because there is no reliable automatic way to discover it:
+            decisionTree.setDiscussQuestion(subjectGroup.getDiscussQuestion());
 
             if (inputStreamTree != null) {
                 try {
@@ -103,15 +114,18 @@ public class Singleton {
                     Log.error("Singleton: Exception while closing inputStreamTree", e);
                 }
             }
+
+            if (inputStreamTranslation != null) {
+                try {
+                    inputStreamTranslation.close();
+                } catch (final IOException e) {
+                    Log.error("Singleton: Exception while closing inputStreamTranslation", e);
+                }
+            }
+            inputStreamTranslation = null; //So we reload it if necessary.
         }
 
-        if (inputStreamTranslation != null) {
-            try {
-                inputStreamTranslation.close();
-            } catch (final IOException e) {
-                Log.error("Singleton: Exception while closing inputStreamTranslation", e);
-            }
-        }
+
 
         mIconsCache = new IconsCache(context, decisionTreesToPreloadIcons);
     }
