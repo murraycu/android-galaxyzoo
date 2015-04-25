@@ -130,8 +130,14 @@ public final class LoginUtils {
      */
     public static LoginDetails getAccountLoginDetails(final Context context) {
         final AccountManager mgr = AccountManager.get(context);
+        if (mgr == null) {
+            Log.error("getAccountLoginDetails(): getAccountLoginDetails() failed because AccountManager.get() returned null.");
+            return null;
+        }
+
         final Account account = getAccount(mgr);
         if (account == null) {
+            Log.error("getAccountLoginDetails(): getAccountLoginDetails() failed because getAccount() returned null. ");
             return null;
         }
 
@@ -153,6 +159,12 @@ public final class LoginUtils {
         final AccountManagerFuture<Bundle> response = mgr.getAuthToken(account, ACCOUNT_AUTHTOKEN_TYPE, null, null, null, null);
         try {
             final Bundle bundle = response.getResult();
+            if (bundle == null) {
+                //TODO: Let the caller catch this?
+                Log.error("getAccountLoginDetails(): getAccountLoginDetails() failed because getAuthToken() returned a null response result bundle.");
+                return null;
+            }
+
             result.authApiKey = bundle.getString(AccountManager.KEY_AUTHTOKEN);
             return result;
         } catch (final OperationCanceledException e) {
