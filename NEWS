@@ -1,3 +1,9 @@
+1.45:
+* Fix a crash at startup when using Italian or French.
+  https://github.com/murraycu/android-galaxyzoo/issues/19
+  Thanks for using the Report button.
+
+
 1.44:
 * Minor internal performance improvements.
 
