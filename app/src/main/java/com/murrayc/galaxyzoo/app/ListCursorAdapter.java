@@ -67,10 +67,9 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
     private Cursor mCursor = null;
     private final OnItemClickedListener mListener;
 
-    ListCursorAdapter(final Context context, final Cursor cursor, final OnItemClickedListener listener) {
+    ListCursorAdapter(final Context context, final OnItemClickedListener listener) {
         mContext = context;
         mListener = listener;
-        changeCursor(cursor);
     }
 
     @Override

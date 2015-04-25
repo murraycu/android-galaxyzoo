@@ -191,7 +191,7 @@ public class ListFragment extends ZooFragment
 
         mAdapter = new ListCursorAdapter(
                 activity,
-                null /* No cursor yet */,
+                /* No cursor yet */
                 new ListCursorAdapter.OnItemClickedListener() {
                     @Override
                     public void onItemClicked(final int position, final View sharedElementView) {
