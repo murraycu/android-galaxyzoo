@@ -22,10 +22,14 @@ package com.murrayc.galaxyzoo.app.test;
 import android.test.AndroidTestCase;
 
 import com.murrayc.galaxyzoo.app.DecisionTree;
+import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Simple test to ensure that the generated bindings are working.
@@ -68,6 +72,48 @@ public class DecisionTreeTest extends AndroidTestCase {
         assertNotNull(decisionTree);
         assertNotNull(decisionTree.getAllQuestions());
         assertEquals(12, decisionTree.getAllQuestions().size());
+    }
+
+    public void testAllDecisionTreesWithAllTranslations() throws DecisionTree.DecisionTreeException, IOException {
+        final List<DecisionTree> trees = new ArrayList<>();
+        for (final Map.Entry<String, com.murrayc.galaxyzoo.app.provider.Config.SubjectGroup> entry : com.murrayc.galaxyzoo.app.provider.Config.SUBJECT_GROUPS.entrySet()) {
+            final com.murrayc.galaxyzoo.app.provider.Config.SubjectGroup subjectGroup = entry.getValue();
+            final String decisionTreeFilename = subjectGroup.getFilename();
+
+            {
+                final InputStream inputStreamTree = Utils.openAsset(getContext(),
+                        Utils.getDecisionTreeFilepath(decisionTreeFilename));
+                assertNotNull(inputStreamTree);
+
+                //Test without a translation:
+                final DecisionTree decisionTree = new DecisionTree(inputStreamTree, null);
+                assertNotNull(decisionTree);
+                assertNotNull(decisionTree.getAllQuestions());
+
+                inputStreamTree.close();
+            }
+
+            //Test with all translations:
+            //TODO: Get them all automatically.
+            final String[] locales = {"fr", "it"};
+            for (final String locale : locales) {
+                final InputStream inputStreamTree = Utils.openAsset(getContext(),
+                        Utils.getDecisionTreeFilepath(decisionTreeFilename));
+                assertNotNull(inputStreamTree);
+
+                final InputStream inputStreamTranslation = Utils.openAsset(getContext(),
+                        Utils.getTranslationFilePath(locale, null));
+                assertNotNull(inputStreamTranslation);
+
+                final DecisionTree decisionTree = new DecisionTree(inputStreamTree, null);
+                assertNotNull(decisionTree);
+                assertNotNull(decisionTree.getAllQuestions());
+
+                inputStreamTranslation.close();
+                inputStreamTree.close();
+
+            }
+        }
     }
 
     public void testQuestionsWithTranslation() throws DecisionTree.DecisionTreeException, IOException {
