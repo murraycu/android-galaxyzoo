@@ -27,6 +27,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 
@@ -49,6 +50,7 @@ public final class Utils {
      */
     public static final String STRING_ENCODING = "UTF-8";
     static final String ASSET_PATH_DECISION_TREE_DIR = "decision_tree/";
+    private static final String JSON_FILE_EXTENSION = ".json";
 
     /**
      * Ideally you would use LoginUtils.getUseWifiOnly() instead of the copy that is in
@@ -118,6 +120,14 @@ public final class Utils {
 
     public static String getDecisionTreeFilepath(final String filename) {
         return ASSET_PATH_DECISION_TREE_DIR + filename;
+    }
+
+    public static String getTranslationFilePath(final String language, final String countryCode) {
+        if (!TextUtils.isEmpty(countryCode)) {
+            return ASSET_PATH_DECISION_TREE_DIR + language + "_" + countryCode + JSON_FILE_EXTENSION;
+        } else {
+            return ASSET_PATH_DECISION_TREE_DIR + language + JSON_FILE_EXTENSION;
+        }
     }
 
     public static final class NetworkConnected {

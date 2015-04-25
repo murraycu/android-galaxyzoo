@@ -43,7 +43,6 @@ import java.util.Map;
  */
 public class Singleton {
 
-    private static final String JSON_FILE_EXTENSION = ".json";
     private static List<Callbacks> mCallbacks = new ArrayList<>();
     private static Singleton ourInstance = null;
     private static boolean initializationInProgress = false;
@@ -61,11 +60,11 @@ public class Singleton {
         mLocaleDetails = getLocaleDetails(context);
         if (!TextUtils.isEmpty(mLocaleDetails.language)) {
             //Try finding a translation for a country-specific form of the language:
-            String translationFileName = Utils.ASSET_PATH_DECISION_TREE_DIR + mLocaleDetails.language + "_" + mLocaleDetails.countryCode + JSON_FILE_EXTENSION;
+            String translationFileName = Utils.getTranslationFilePath(mLocaleDetails.language, mLocaleDetails.countryCode);
             inputStreamTranslation = Utils.openAsset(context, translationFileName);
             if (inputStreamTranslation == null) {
                 //Try just the language instead:
-                translationFileName = Utils.ASSET_PATH_DECISION_TREE_DIR + mLocaleDetails.language + JSON_FILE_EXTENSION;
+                translationFileName = Utils.getTranslationFilePath(mLocaleDetails.language, null);
                 inputStreamTranslation = Utils.openAsset(context, translationFileName);
             }
         }
