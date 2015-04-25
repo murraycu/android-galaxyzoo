@@ -35,16 +35,25 @@ public class DecisionTreeTest extends AndroidTestCase {
     public void setUp() {
     }
 
-    private static DecisionTree createCorrectDecisionTree() throws DecisionTree.DecisionTreeException, IOException {
+    private static DecisionTree createCorrectDecisionTree(final boolean withTranslation) throws DecisionTree.DecisionTreeException, IOException {
         //For some reason DecisionTreeTest.class.getResourceAsStream() doesn't work,
         //so we use DecisionTreeTest.class.getClassLoader().getResourceAsStream(), which does.
-        final InputStream inputStream = DecisionTreeTest.class.getClassLoader().getResourceAsStream("test_decision_tree.xml");
-        assertNotNull(inputStream);
+        final InputStream inputStreamDecisionTree = DecisionTreeTest.class.getClassLoader().getResourceAsStream("test_decision_tree.xml");
+        assertNotNull(inputStreamDecisionTree);
 
-        //TODO: Close the stream.
-        final DecisionTree decisionTree = new DecisionTree(inputStream, null);
+        InputStream inputStreamTranslation = null;
+        if (withTranslation) {
+            inputStreamTranslation = DecisionTreeTest.class.getClassLoader().getResourceAsStream("test_translation.json");
+            assertNotNull(inputStreamTranslation);
+        }
 
-        inputStream.close();
+        final DecisionTree decisionTree = new DecisionTree(inputStreamDecisionTree, inputStreamTranslation);
+
+        if (inputStreamTranslation != null) {
+            inputStreamTranslation.close();
+        }
+
+        inputStreamDecisionTree.close();
 
         return decisionTree;
     }
@@ -54,19 +63,37 @@ public class DecisionTreeTest extends AndroidTestCase {
     }
 
     public void testSize() throws DecisionTree.DecisionTreeException, IOException {
-        final DecisionTree decisionTree = createCorrectDecisionTree();
+        final DecisionTree decisionTree = createCorrectDecisionTree(false);
 
         assertNotNull(decisionTree);
         assertNotNull(decisionTree.getAllQuestions());
         assertEquals(12, decisionTree.getAllQuestions().size());
     }
 
-    public void testQuestions() throws DecisionTree.DecisionTreeException, IOException {
-        final DecisionTree decisionTree = createCorrectDecisionTree();
+    public void testQuestionsWithTranslation() throws DecisionTree.DecisionTreeException, IOException {
+        final DecisionTree decisionTree = createCorrectDecisionTree(true /* withTranslation */);
 
         final String QUESTION_ID = "sloan-3";
         final DecisionTree.Question question = decisionTree.getQuestion(QUESTION_ID);
         assertEquals(QUESTION_ID, question.getId());
+
+        //The French translation, because we are using a translation .json file:
+        assertEquals("Spirale", question.getTitle());
+        assertEquals("Est-ce qu’il y a un signe de motif de bras spiral ?", question.getText());
+
+        final DecisionTree.Question nextQuestion = decisionTree.getNextQuestionForAnswer(QUESTION_ID, "a-1");
+        assertEquals("sloan-4", nextQuestion.getId());
+
+        //TODO: Test getQuestion() and getNextQuestion().
+    }
+
+    public void testQuestionsWithoutTranslation() throws DecisionTree.DecisionTreeException, IOException {
+        final DecisionTree decisionTree = createCorrectDecisionTree(false /* withTranslation */);
+
+        final String QUESTION_ID = "sloan-3";
+        final DecisionTree.Question question = decisionTree.getQuestion(QUESTION_ID);
+        assertEquals(QUESTION_ID, question.getId());
+
         assertEquals("Spiral", question.getTitle());
         assertEquals("Is there any sign of a spiral arm pattern?", question.getText());
 
