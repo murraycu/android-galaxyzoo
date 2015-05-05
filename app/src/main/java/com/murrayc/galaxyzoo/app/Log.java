@@ -29,8 +29,8 @@ public final class Log {
     private static final String LOG_TAG = "android-galaxyzoo"; //TODO: Get this from the build files somehow.
 
     /* A replacement for StringUtils.defaultString(),
-                 * because Android's TextUtils doesn't have it.
-                 */
+     * because Android's TextUtils doesn't have it.
+     */
     private static String defaultString(final String str) {
         if (str == null)
             return "";
