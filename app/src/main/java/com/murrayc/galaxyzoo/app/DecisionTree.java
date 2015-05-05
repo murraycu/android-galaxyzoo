@@ -19,6 +19,7 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.JsonReader;
@@ -296,7 +297,7 @@ public class DecisionTree {
     }
 
     @Nullable
-    public Question getQuestion(final String questionId) {
+    public Question getQuestion(@NonNull final String questionId) {
         if (questionsMap == null) {
             return null;
         }
@@ -310,7 +311,7 @@ public class DecisionTree {
     }
 
     @Nullable
-    public Question getNextQuestionForAnswer(final String questionId, final String answerId) {
+    public Question getNextQuestionForAnswer(@NonNull final String questionId, @NonNull final String answerId) {
         final Question question = getQuestion(questionId);
         if (question == null) {
             return null;
@@ -355,7 +356,7 @@ public class DecisionTree {
      * @param tagName
      * @return
      */
-    private static List<Node> getChildrenByTagName(final Element parentNode, final String tagName) {
+    private static List<Node> getChildrenByTagName(@NonNull final Element parentNode, @NonNull final String tagName) {
         final List<Node> result = new ArrayList<>();
 
         final NodeList list = parentNode.getElementsByTagName(tagName);
@@ -383,7 +384,7 @@ public class DecisionTree {
      * @return
      */
     @Nullable
-    private static Node getFirstChildByTagName(final Element parentNode, final String tagName) {
+    private static Node getFirstChildByTagName(@NonNull final Element parentNode, @NonNull final String tagName) {
         final NodeList list = parentNode.getElementsByTagName(tagName);
         final int num = list.getLength();
         for (int i = 0; i < num; i++) {
@@ -402,7 +403,7 @@ public class DecisionTree {
     }
 
     @Nullable
-    private static String getTextOfChildNode(final Element element, final String tagName) {
+    private static String getTextOfChildNode(@NonNull final Element element, @NonNull final String tagName) {
         final Node node = getFirstChildByTagName(element, tagName);
         if (node == null)
             return null;

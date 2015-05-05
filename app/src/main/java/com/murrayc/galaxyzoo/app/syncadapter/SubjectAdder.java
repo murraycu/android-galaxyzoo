@@ -24,6 +24,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -288,7 +289,7 @@ public class SubjectAdder {
      * @param subjects
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    public void addSubjects(final List<ZooniverseClient.Subject> subjects, final boolean asyncFileDownloads) {
+    public void addSubjects(@NonNull final List<ZooniverseClient.Subject> subjects, final boolean asyncFileDownloads) {
         if (subjects == null) {
             return;
         }

@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -529,7 +530,7 @@ public class QuestionFragment extends BaseQuestionFragment
         return button;
     }
 
-    private void onAnswerButtonClicked(final String questionId, final String answerId) {
+    private void onAnswerButtonClicked(@NonNull final String questionId, @NonNull final String answerId) {
         if (questionId == null) {
             Log.error("onAnswerButtonClicked: questionId was null.");
             return;
@@ -1035,7 +1036,7 @@ public class QuestionFragment extends BaseQuestionFragment
                 this.checkboxIds = deepCopyCheckBoxIds(checkboxIds);
             }
 
-            private static List<String> deepCopyCheckBoxIds(final List<String> strList) {
+            private static List<String> deepCopyCheckBoxIds(@NonNull final List<String> strList) {
                 if (strList == null) {
                     return null;
                 }

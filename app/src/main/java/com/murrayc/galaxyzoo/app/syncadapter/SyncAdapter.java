@@ -30,6 +30,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.volley.Response;
@@ -475,7 +476,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private void onQueryTaskFinished(final List<ZooniverseClient.Subject> result) {
+    private void onQueryTaskFinished(@NonNull final List<ZooniverseClient.Subject> result) {
         mRequestMoreItemsTaskInProgress = false;
 
         if (result == null) {

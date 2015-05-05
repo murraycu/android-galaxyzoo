@@ -430,7 +430,7 @@ public class IconsCache {
     // in the absence of an easy choice of CSS parser.
     // http://sourceforge.net/projects/cssparser/ doesn't seem to be usable on Android because
     // Android's org.w3c.dom doesn't have the css package, with classes such as CSSStyleSheet.
-    void loadIconBasedOnCss(final Bitmap icons, final String css, final String cssName, boolean isExampleIcon) {
+    void loadIconBasedOnCss(@NonNull final Bitmap icons, @NonNull final String css, @NonNull final String cssName, boolean isExampleIcon) {
         if (icons == null) {
             Log.error("loadIconBasedOnCss(): icons is null.");
             return;
