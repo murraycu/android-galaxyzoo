@@ -27,6 +27,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
@@ -104,7 +105,7 @@ public final class Utils {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-
+    @Nullable
     public static File getExternalCacheDir(final Context context) {
         try {
             return context.getExternalCacheDir();
@@ -168,6 +169,7 @@ public final class Utils {
         return new NetworkConnected(true, false);
     }
 
+    @Nullable
     public static InputStream openAsset(final Context context, final String filename) {
         try {
             return context.getAssets().open(filename);

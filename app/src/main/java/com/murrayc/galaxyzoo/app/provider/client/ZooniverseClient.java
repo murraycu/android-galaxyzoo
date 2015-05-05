@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app.provider.client;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import com.android.volley.Request;
@@ -145,6 +146,7 @@ public class ZooniverseClient {
         return mServerBaseUri + "login";
     }
 
+    @Nullable
     public LoginUtils.LoginResult loginSync(final String username, final String password) throws LoginException {
         HttpUtils.throwIfNoNetwork(getContext(),
                 false); //Ignore the wifi-only setting because this will be when the user is explicitly requesting a login.
@@ -234,6 +236,7 @@ public class ZooniverseClient {
         }
     }
 
+    @Nullable
     private static String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
         final StringBuilder result = new StringBuilder();
         boolean first = true;
@@ -260,6 +263,7 @@ public class ZooniverseClient {
         return result.toString();
     }
 
+    @Nullable
     private static String generateAuthorizationHeader(final String authName, final String authApiKey) {
         //See the similar code in Zooniverse's user.coffee source code:
         //https://github.com/zooniverse/Zooniverse/blob/master/src/models/user.coffee#L49

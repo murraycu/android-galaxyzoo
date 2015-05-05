@@ -35,6 +35,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
@@ -470,6 +471,7 @@ public class ItemsContentProvider extends ContentProvider {
                 selection, selectionArgs);
     }
 
+    @Nullable
     private Uri insertMappedValues(final String tableName, final ContentValues values, final Map<String, String> projectionMap, final Uri uriPrefix) {
         final ContentValues valuesToUse = getMappedContentValues(values, projectionMap);
 
@@ -533,6 +535,7 @@ public class ItemsContentProvider extends ContentProvider {
      * @param filename
      * @return
      */
+    @Nullable
     private String createCacheFile(final String filename) throws IOException {
         final Context context = getContext();
         if (context == null) {

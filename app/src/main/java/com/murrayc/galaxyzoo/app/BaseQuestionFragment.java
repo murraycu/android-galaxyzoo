@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.Nullable;
 
 /**
  * Created by murrayc on 8/28/14.
@@ -46,6 +47,7 @@ public class BaseQuestionFragment extends ItemFragment {
         mQuestionId = questionId;
     }
 
+    @Nullable
     DecisionTree.Question getQuestion() {
         final DecisionTree tree = getDecisionTree();
         if (tree == null) {

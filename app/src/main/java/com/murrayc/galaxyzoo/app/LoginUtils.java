@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.JsonReader;
 
@@ -128,6 +129,7 @@ public final class LoginUtils {
      * @param context
      * @return
      */
+    @Nullable
     public static LoginDetails getAccountLoginDetails(final Context context) {
         final AccountManager mgr = AccountManager.get(context);
         if (mgr == null) {
@@ -297,6 +299,7 @@ public final class LoginUtils {
      * @param prefKeyResId
      * @return
      */
+    @Nullable
     private static String getStringPref(final Context context, final int prefKeyResId) {
         final AccountManager mgr = AccountManager.get(context);
         final Account account = getAccount(context);
@@ -315,6 +318,7 @@ public final class LoginUtils {
      * @param mgr
      * @return
      */
+    @Nullable
     private static Account getAccount(final AccountManager mgr) {
         final Account[] accts = mgr.getAccountsByType(ACCOUNT_TYPE);
         if((accts == null) || (accts.length < 1)) {

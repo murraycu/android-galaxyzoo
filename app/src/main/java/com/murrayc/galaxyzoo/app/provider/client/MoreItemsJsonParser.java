@@ -19,6 +19,7 @@
 
 package com.murrayc.galaxyzoo.app.provider.client;
 
+import android.support.annotation.Nullable;
 import android.util.JsonReader;
 
 import com.murrayc.galaxyzoo.app.Log;
@@ -81,6 +82,7 @@ public class MoreItemsJsonParser {
         return result;
     }
 
+    @Nullable
     private static ZooniverseClient.Subject parseMoreItemsJsonObjectSubject(final JsonReader reader) throws IOException {
         reader.beginObject();
 

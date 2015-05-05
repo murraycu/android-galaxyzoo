@@ -23,6 +23,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.provider.Config;
@@ -216,6 +217,7 @@ public class Singleton {
         return mIconsCache.getIcon(iconName);
     }
 
+    @Nullable
     public BitmapDrawable getIconDrawable(final Context context, final String iconName) {
         final Bitmap bitmap = getIcon(iconName);
         if (bitmap == null) {

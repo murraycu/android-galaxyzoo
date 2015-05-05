@@ -19,6 +19,7 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.JsonReader;
 
@@ -255,6 +256,7 @@ public class DecisionTree {
         reader.endObject();
     }
 
+    @Nullable
     private static Answer getAnswerWithId(final List<Answer> answers, final String id) {
         for (final Answer answer : answers) {
             if (TextUtils.equals(id, answer.getId())) {
@@ -265,7 +267,7 @@ public class DecisionTree {
         return null;
     }
 
-
+    @Nullable
     private static Checkbox getCheckboxWithId(final List<Checkbox> checkboxes, final String id) {
         for (final Checkbox checkbox : checkboxes) {
             if (TextUtils.equals(id, checkbox.getId())) {
@@ -276,6 +278,7 @@ public class DecisionTree {
         return null;
     }
 
+    @Nullable
     private Question getFirstQuestion() {
         if (questionsMap == null) {
             return null;
@@ -292,6 +295,7 @@ public class DecisionTree {
         }
     }
 
+    @Nullable
     public Question getQuestion(final String questionId) {
         if (questionsMap == null) {
             return null;
@@ -305,6 +309,7 @@ public class DecisionTree {
         return questionsMap.get(questionId);
     }
 
+    @Nullable
     public Question getNextQuestionForAnswer(final String questionId, final String answerId) {
         final Question question = getQuestion(questionId);
         if (question == null) {
@@ -377,6 +382,7 @@ public class DecisionTree {
      * @param tagName
      * @return
      */
+    @Nullable
     private static Node getFirstChildByTagName(final Element parentNode, final String tagName) {
         final NodeList list = parentNode.getElementsByTagName(tagName);
         final int num = list.getLength();
@@ -395,6 +401,7 @@ public class DecisionTree {
         return null;
     }
 
+    @Nullable
     private static String getTextOfChildNode(final Element element, final String tagName) {
         final Node node = getFirstChildByTagName(element, tagName);
         if (node == null)
@@ -619,6 +626,7 @@ public class DecisionTree {
         mDiscussQuestion = discussQuestion;
     }
 
+    @Nullable
     String getDiscussQuestionYesAnswerId() {
         if (mDiscussQuestion == null) {
             return null;
@@ -627,6 +635,7 @@ public class DecisionTree {
         return mDiscussQuestion.getYesAnswerId();
     }
 
+    @Nullable
     String getDiscussQuestionNoAnswerId() {
         if (mDiscussQuestion == null) {
             return null;

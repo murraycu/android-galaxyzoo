@@ -23,6 +23,7 @@ import android.content.Context;
 //import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 
@@ -348,6 +349,7 @@ public class IconsCache {
         return file.getAbsolutePath();
     }
 
+    @Nullable
     private String createCacheFile(final String cacheId) {
         final File file = new File(mCacheDir.getPath(), cacheId);
         try {
@@ -598,6 +600,7 @@ public class IconsCache {
     }
     */
 
+    @Nullable
     public Bitmap getIcon(final String iconName) {
         //Avoid a NullPointerException from LruCache.get() if we pass a null key.
         if (TextUtils.isEmpty(iconName)) {

@@ -22,6 +22,7 @@ package com.murrayc.galaxyzoo.app;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -94,6 +95,7 @@ class ListCursorAdapter extends RecyclerView.Adapter<ListCursorAdapter.ViewHolde
 
         }
 
+        @Nullable
         private ViewHolder getValidViewHolder() {
             if (viewHolderReference == null) {
                 return null;
