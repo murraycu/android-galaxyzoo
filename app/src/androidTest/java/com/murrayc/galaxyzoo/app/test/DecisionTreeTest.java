@@ -23,6 +23,7 @@ import android.test.AndroidTestCase;
 
 import com.murrayc.galaxyzoo.app.DecisionTree;
 import com.murrayc.galaxyzoo.app.Utils;
+import com.murrayc.galaxyzoo.app.provider.Config;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -76,8 +77,8 @@ public class DecisionTreeTest extends AndroidTestCase {
 
     public void testAllDecisionTreesWithAllTranslations() throws DecisionTree.DecisionTreeException, IOException {
         final List<DecisionTree> trees = new ArrayList<>();
-        for (final Map.Entry<String, com.murrayc.galaxyzoo.app.provider.Config.SubjectGroup> entry : com.murrayc.galaxyzoo.app.provider.Config.SUBJECT_GROUPS.entrySet()) {
-            final com.murrayc.galaxyzoo.app.provider.Config.SubjectGroup subjectGroup = entry.getValue();
+        for (final Map.Entry<String, Config.SubjectGroup> entry : Config.SUBJECT_GROUPS.entrySet()) {
+            final Config.SubjectGroup subjectGroup = entry.getValue();
             final String decisionTreeFilename = subjectGroup.getFilename();
 
             {

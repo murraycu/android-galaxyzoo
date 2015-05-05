@@ -178,7 +178,7 @@ public class SubjectExtrasFragment extends ItemFragment
         final Activity activity = getActivity();
 
         //Open a link to the examine page:
-        final String uriTalk = com.murrayc.galaxyzoo.app.Config.EXAMINE_URI + getZooniverseId();
+        final String uriTalk = Config.EXAMINE_URI + getZooniverseId();
 
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriTalk));
         activity.startActivity(intent);

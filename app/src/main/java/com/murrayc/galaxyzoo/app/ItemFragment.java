@@ -36,7 +36,7 @@ public class ItemFragment extends ZooFragment {
     public static final String ARG_ITEM_ID = "item-id";
 
     /**
-     * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
+     * A dummy implementation of the {@link ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
      */
     private static final Callbacks sDummyCallbacks = new Callbacks() {

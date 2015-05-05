@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.JsonReader;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -105,7 +106,7 @@ public class DecisionTree {
             throw new DecisionTreeException("Exception from newDocumentBuilder.", e);
         }
 
-        final org.w3c.dom.Document xmlDocument;
+        final Document xmlDocument;
 
         try {
             xmlDocument = documentBuilder.parse(inputStreamTree);

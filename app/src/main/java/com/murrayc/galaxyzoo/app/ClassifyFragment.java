@@ -41,8 +41,8 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 /**
  * A fragment representing a single subject.
- * This fragment is either contained in a {@link com.murrayc.galaxyzoo.app.ListActivity}
- * in two-pane mode (on tablets) or a {@link com.murrayc.galaxyzoo.app.ClassifyActivity}
+ * This fragment is either contained in a {@link ListActivity}
+ * in two-pane mode (on tablets) or a {@link ClassifyActivity}
  * on handsets.
  */
 public class ClassifyFragment extends ItemFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -62,7 +62,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     private boolean mGetNextInProgress = false;
 
     /**
-     * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ClassifyFragment.Callbacks} interface that does
+     * A dummy implementation of the {@link ClassifyFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
      */
     private static final Callbacks sDummyCallbacks = new Callbacks() {

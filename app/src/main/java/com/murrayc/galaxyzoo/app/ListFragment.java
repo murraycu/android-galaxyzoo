@@ -46,7 +46,7 @@ import com.murrayc.galaxyzoo.app.provider.Item;
  * 'activated' state upon selection. This helps indicate which item is
  * currently being viewed in a {@link ClassifyFragment}.
  * <p/>
- * Activities containing this fragment MUST implement the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks}
+ * Activities containing this fragment MUST implement the {@link ListFragment.Callbacks}
  * interface.
  */
 public class ListFragment extends ZooFragment
@@ -66,7 +66,7 @@ public class ListFragment extends ZooFragment
     private static final int URL_LOADER = 0;
 
     /**
-     * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
+     * A dummy implementation of the {@link ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
      */
     private static final Callbacks sDummyCallbacks = new Callbacks() {

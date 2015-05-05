@@ -28,6 +28,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,10 +49,10 @@ import java.lang.ref.WeakReference;
  * An activity showing a single subject. This
  * activity is only used on handset devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link com.murrayc.galaxyzoo.app.ListActivity}.
+ * in a {@link ListActivity}.
  * <p/>
  * This activity is mostly just a 'shell' activity containing nothing
- * more than a {@link com.murrayc.galaxyzoo.app.ClassifyFragment}.
+ * more than a {@link ClassifyFragment}.
  */
 public class ClassifyActivity extends ItemActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener,
@@ -563,7 +564,7 @@ public class ClassifyActivity extends ItemActivity
         };
 
         final IntentFilter filter = new IntentFilter();
-        filter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mReceiverNetworkReconnection, filter);
     }
 

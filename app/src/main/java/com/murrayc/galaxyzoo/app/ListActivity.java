@@ -39,7 +39,7 @@ import android.view.View;
  * (if present) is a {@link ClassifyFragment}.
  * <p/>
  * This activity also implements the required
- * {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface
+ * {@link ListFragment.Callbacks} interface
  * to listen for item selections.
  */
 public class ListActivity extends BaseActivity
@@ -56,7 +56,7 @@ public class ListActivity extends BaseActivity
     }
 
     /**
-     * Callback method from {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks}
+     * Callback method from {@link ListFragment.Callbacks}
      * indicating that the item with the given ID was selected.
      */
     @Override
