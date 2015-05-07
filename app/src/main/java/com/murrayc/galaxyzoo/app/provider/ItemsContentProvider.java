@@ -1168,7 +1168,7 @@ public class ItemsContentProvider extends ContentProvider {
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ClassificationAnswersDbColumns.SEQUENCE + " INTEGER DEFAULT 0, " +
-                    ClassificationAnswersDbColumns.ITEM_ID + " INTEGER, " + /* Foreign key. See TABLE_NAME_CLASSIFICATIONS . _ID. */
+                    ClassificationAnswersDbColumns.ITEM_ID + " INTEGER, " +
                     ClassificationAnswersDbColumns.QUESTION_ID + " TEXT, " +
                     ClassificationAnswersDbColumns.ANSWER_ID + " TEXT)";
             sqLiteDatabase.execSQL(qs);
@@ -1178,7 +1178,7 @@ public class ItemsContentProvider extends ContentProvider {
                     BaseColumns._ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ClassificationCheckboxesDbColumns.SEQUENCE + " INTEGER DEFAULT 0, " +
-                    ClassificationCheckboxesDbColumns.ITEM_ID + " INTEGER, " + /* Foreign key. See TABLE_NAME_CLASSIFICATIONS . _ID. */
+                    ClassificationCheckboxesDbColumns.ITEM_ID + " INTEGER, " +
                     ClassificationCheckboxesDbColumns.QUESTION_ID + " TEXT, " +
                     ClassificationCheckboxesDbColumns.CHECKBOX_ID + " TEXT)";
             sqLiteDatabase.execSQL(qs);
