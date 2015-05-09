@@ -446,7 +446,14 @@ public class ClassifyActivity extends ItemActivity
         final ClassifyFragment fragmentClassify = getChildFragment();
         if (fragmentClassify != null) {
             fragmentClassify.setItemId(ItemsContentProvider.URI_PART_ITEM_ID_NEXT);
-            fragmentClassify.update();
+
+            //Avoid using fragment transactions after onSaveInstanceState(),
+            //by delaying it until onResumeFragments, which always checks for URI_PART_ITEM_ID_NEXT
+            //and then does an update() anyway.
+            //See https://github.com/murraycu/android-galaxyzoo/issues/21
+            if (!mIsStateAlreadySaved) {
+                fragmentClassify.update();
+            }
         }
     }
 
