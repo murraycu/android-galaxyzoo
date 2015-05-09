@@ -56,7 +56,7 @@ import java.lang.ref.WeakReference;
  */
 public class ClassifyActivity extends ItemActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener,
-            ClassifyFragment.Callbacks, QuestionFragment.Callbacks{
+            ClassifyFragment.Callbacks, QuestionFragment.Callbacks {
     private boolean mIsStateAlreadySaved = false;
     private boolean mPendingClassificationFinished = false;
     private boolean mPendingWarnAboutNetworkProblemWithRetry = false;
