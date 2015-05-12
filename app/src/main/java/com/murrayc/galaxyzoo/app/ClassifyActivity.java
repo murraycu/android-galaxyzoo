@@ -29,7 +29,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -41,7 +40,6 @@ import android.view.MenuItem;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
-import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 
@@ -63,15 +61,6 @@ public class ClassifyActivity extends ItemActivity
 
     private AlertDialog mAlertDialog = null;
     private BroadcastReceiver mReceiverNetworkReconnection = null;
-
-    private static class PicassoListener implements Picasso.Listener {
-        @Override
-        public void onImageLoadFailed(final Picasso picasso, final Uri uri, final Exception exception) {
-            Log.error("Picasso onImageLoadFailed() URI=" + uri, exception);
-        }
-    }
-
-    private static final Picasso.Listener picassoListener = new PicassoListener();
 
 
 //    public class ItemsContentProviderObserver extends ContentObserver {
@@ -220,19 +209,6 @@ public class ClassifyActivity extends ItemActivity
             //This happens during our test case, because the MockContext doesn't support this,
             //so ignore this.
             Log.info("ClassifyActivity.onCreate(): Ignoring UnsupportedOperationException from getDefaultSharedPreferences().");
-        }
-
-        //Let us log errors from Picasso to give us some clues when things go wrong.
-        //Unfortunately, we can't get these errors in the regular onError() callback:
-        //https://github.com/square/picasso/issues/379
-        final Picasso picasso = (new Picasso.Builder(this)).listener(picassoListener).build();
-        //This affects what, for instance, Picasso.with() will return:
-        try {
-            Picasso.setSingletonInstance(picasso);
-        } catch (final IllegalStateException ex) {
-            //Nevermind if this happens. It's not worth crashing the app because of this.
-            //It would just mean that we don't log the errors.
-            Log.error("ClassifyActivity.onCreateView(): It is too late to call Picasso.setSingletonInstance().", ex);
         }
 
         /**

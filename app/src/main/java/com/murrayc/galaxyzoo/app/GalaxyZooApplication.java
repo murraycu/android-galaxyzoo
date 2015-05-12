@@ -20,13 +20,17 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Application;
+import android.net.Uri;
 
 import com.squareup.leakcanary.LeakCanary;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by murrayc on 5/12/15.
  */
 public class GalaxyZooApplication extends Application {
+
+    static final Picasso.Listener picassoListener = new PicassoListener();
 
     @Override
     public void onCreate() {
@@ -34,5 +38,25 @@ public class GalaxyZooApplication extends Application {
 
         //Catch leaks, in debug builds (release builds use a no-op).
         LeakCanary.install(this);
+
+        //Let us log errors from Picasso to give us some clues when things go wrong.
+        //Unfortunately, we can't get these errors in the regular onError() callback:
+        //https://github.com/square/picasso/issues/379
+        final Picasso picasso = (new Picasso.Builder(this)).listener(GalaxyZooApplication.picassoListener).build();
+        //This affects what, for instance, Picasso.with() will return:
+        try {
+            Picasso.setSingletonInstance(picasso);
+        } catch (final IllegalStateException ex) {
+            //Nevermind if this happens. It's not worth crashing the app because of this.
+            //It would just mean that we don't log the errors.
+            Log.error("GalaxyZooApplication.onCreate(): It is too late to call Picasso.setSingletonInstance().", ex);
+        }
+    }
+
+    private static class PicassoListener implements Picasso.Listener {
+        @Override
+        public void onImageLoadFailed(final Picasso picasso, final Uri uri, final Exception exception) {
+            Log.error("Picasso onImageLoadFailed() URI=" + uri, exception);
+        }
     }
 }
