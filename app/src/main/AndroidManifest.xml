@@ -38,7 +38,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:supportsRtl="true" >
+        android:supportsRtl="true"
+        android:name="GalaxyZooApplication">
 
         <!-- We use launchMode="singleTop" because we don't need multiple instances of the list.
         Otherwise, Up would create a new instance, because Up is meant to ignore the back stack. -->
