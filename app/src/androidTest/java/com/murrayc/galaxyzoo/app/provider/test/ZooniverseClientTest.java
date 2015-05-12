@@ -63,7 +63,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
                 MoreItemsJsonParserTest.class.getClassLoader().getResourceAsStream("test_more_items_response.json"));
         assertNotNull(strResponse);
         server.enqueue(new MockResponse().setBody(strResponse));
-        server.play();
+        server.start();
 
         final ZooniverseClient client = createZooniverseClient(server);
 
@@ -119,7 +119,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
                 MoreItemsJsonParserTest.class.getClassLoader().getResourceAsStream("test_login_response_success.json"));
         assertNotNull(strResponse);
         server.enqueue(new MockResponse().setBody(strResponse));
-        server.play();
+        server.start();
 
         final ZooniverseClient client = createZooniverseClient(server);
 
@@ -153,7 +153,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         response.setResponseCode(HttpURLConnection.HTTP_OK);
         response.setBody("test nonsense failure message");
         server.enqueue(response);
-        server.play();
+        server.start();
 
         final ZooniverseClient client = createZooniverseClient(server);
 
@@ -175,7 +175,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         final MockWebServer server = new MockWebServer();
 
         server.enqueue(new MockResponse().setBody("test bad login response"));
-        server.play();
+        server.start();
 
         final ZooniverseClient client = createZooniverseClient(server);
 
@@ -196,7 +196,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         final MockWebServer server = new MockWebServer();
 
         server.enqueue(new MockResponse().setBody("some nonsense to try to break things {"));
-        server.play();
+        server.start();
 
         final ZooniverseClient client = createZooniverseClient(server);
 
@@ -219,7 +219,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         response.setResponseCode(HttpURLConnection.HTTP_NOT_FOUND);
         response.setBody("test nonsense failure message");
         server.enqueue(response);
-        server.play();
+        server.start();
 
         final ZooniverseClient client = createZooniverseClient(server);
 
@@ -243,7 +243,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         response.setResponseCode(HttpURLConnection.HTTP_CREATED);
         response.setBody("TODO");
         server.enqueue(response);
-        server.play();
+        server.start();
 
         final ZooniverseClient client = createZooniverseClient(server);
 
