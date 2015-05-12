@@ -21,6 +21,8 @@ package com.murrayc.galaxyzoo.app;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.LeakCanary;
+
 /**
  * Created by murrayc on 5/12/15.
  */
@@ -30,6 +32,7 @@ public class GalaxyZooApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-
+        //Catch leaks, in debug builds (release builds use a no-op).
+        LeakCanary.install(this);
     }
 }
