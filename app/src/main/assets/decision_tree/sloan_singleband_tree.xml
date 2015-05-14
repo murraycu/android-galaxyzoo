@@ -32,7 +32,7 @@
         <answer examplesCount="0" icon="yes" id="a-0" leadsTo="sloan_singleband-8">
             <text>Yes</text>
         </answer>
-        <answer examplesCount="2" icon="no" id="a-1" leadsTo="sloan_singleband-2">
+        <answer examplesCount="0" icon="no" id="a-1" leadsTo="sloan_singleband-2">
             <text>No</text>
         </answer>
     </question>
