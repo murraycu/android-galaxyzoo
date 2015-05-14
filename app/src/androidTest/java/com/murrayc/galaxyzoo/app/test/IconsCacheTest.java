@@ -25,6 +25,7 @@ import android.test.AndroidTestCase;
 import com.murrayc.galaxyzoo.app.DecisionTree;
 import com.murrayc.galaxyzoo.app.IconsCache;
 import com.murrayc.galaxyzoo.app.Config;
+import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.IOException;
@@ -52,6 +53,7 @@ public class IconsCacheTest extends AndroidTestCase {
         assertFalse(iconName.isEmpty());
 
         final Bitmap exampleBitmap = iconsCache.getIcon(iconName);
+        //Log.info("checking iconName=" + iconName);
         assertNotNull(exampleBitmap);
 
         assertEquals(Config.ICON_WIDTH_HEIGHT, exampleBitmap.getHeight());
