@@ -54,7 +54,7 @@ public class IconsCacheTest extends AndroidTestCase {
 
         final Bitmap exampleBitmap = iconsCache.getIcon(iconName);
         //Log.info("checking iconName=" + iconName);
-        assertNotNull(exampleBitmap);
+        assertNotNull("getIcon() returned null for: " + iconName, exampleBitmap);
 
         assertEquals(Config.ICON_WIDTH_HEIGHT, exampleBitmap.getHeight());
         assertEquals(Config.ICON_WIDTH_HEIGHT, exampleBitmap.getWidth());
