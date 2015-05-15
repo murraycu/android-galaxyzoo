@@ -9765,6 +9765,7 @@ com.murrayc.galaxyzoo.app.DecisionTree$BaseButton -> com.murrayc.galaxyzoo.app.o
     java.lang.String getIcon() -> c
     int getExamplesCount() -> d
     java.lang.String getExampleIconName(java.lang.String,int) -> a
+    java.lang.String getExampleIconNameWithCommonMistake(java.lang.String,int) -> b
 com.murrayc.galaxyzoo.app.DecisionTree$Checkbox -> com.murrayc.galaxyzoo.app.p:
 com.murrayc.galaxyzoo.app.DecisionTree$DecisionTreeException -> com.murrayc.galaxyzoo.app.q:
 com.murrayc.galaxyzoo.app.DecisionTree$DiscussQuestion -> com.murrayc.galaxyzoo.app.r:
@@ -9801,16 +9802,22 @@ com.murrayc.galaxyzoo.app.ExampleViewerFragment -> com.murrayc.galaxyzoo.app.t:
     android.view.View mLoadingView -> aa
     android.view.View mRootView -> ab
     java.lang.String mUriStr -> ac
-    android.widget.ImageView mImageView -> ad
-    void loadBitmap(java.lang.String,android.widget.ImageView) -> a
+    java.lang.String mUriStrAlternative -> ad
+    android.widget.ImageView mImageView -> ae
+    void loadBitmap(java.lang.String,java.lang.String,android.widget.ImageView) -> a
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
     void onPause() -> m
     void update() -> K
     void setExampleUrl(java.lang.String) -> a
+    void setExampleUrlAlternative(java.lang.String) -> b
     void showLoadingView(boolean) -> c
     void access$000(com.murrayc.galaxyzoo.app.ExampleViewerFragment,boolean) -> a
+    void access$100(com.murrayc.galaxyzoo.app.ExampleViewerFragment,java.lang.String,java.lang.String,android.widget.ImageView) -> a
 com.murrayc.galaxyzoo.app.ExampleViewerFragment$1 -> com.murrayc.galaxyzoo.app.u:
-    com.murrayc.galaxyzoo.app.ExampleViewerFragment this$0 -> a
+    java.lang.String val$strUri -> a
+    java.lang.String val$strUriAlternative -> b
+    android.widget.ImageView val$imageView -> c
+    com.murrayc.galaxyzoo.app.ExampleViewerFragment this$0 -> d
     void onSuccess() -> a
     void onError() -> b
 com.murrayc.galaxyzoo.app.GalaxyZooApplication -> com.murrayc.galaxyzoo.app.GalaxyZooApplication:
@@ -10154,11 +10161,12 @@ com.murrayc.galaxyzoo.app.QuestionHelpFragment -> com.murrayc.galaxyzoo.app.be:
     void onSingletonInitialized() -> b_
     void update() -> S
     void addRowForAnswer(android.content.Context,android.widget.TableLayout,com.murrayc.galaxyzoo.app.DecisionTree$Question,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton) -> a
-    void onExampleImageClicked(android.view.View,java.lang.String) -> a
-    void access$000(com.murrayc.galaxyzoo.app.QuestionHelpFragment,android.view.View,java.lang.String) -> a
+    void onExampleImageClicked(android.view.View,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton,int) -> a
+    void access$000(com.murrayc.galaxyzoo.app.QuestionHelpFragment,android.view.View,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton,int) -> a
 com.murrayc.galaxyzoo.app.QuestionHelpFragment$1 -> com.murrayc.galaxyzoo.app.bf:
-    java.lang.String val$iconName -> a
-    com.murrayc.galaxyzoo.app.QuestionHelpFragment this$0 -> b
+    com.murrayc.galaxyzoo.app.DecisionTree$BaseButton val$answer -> a
+    int val$answerIndex -> b
+    com.murrayc.galaxyzoo.app.QuestionHelpFragment this$0 -> c
     void onClick(android.view.View) -> onClick
 com.murrayc.galaxyzoo.app.QuestionLinearLayout -> com.murrayc.galaxyzoo.app.QuestionLinearLayout:
     java.util.Map mMaxHeightsExperienced -> a

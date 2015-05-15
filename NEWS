@@ -1,11 +1,13 @@
-1.46 (not released publically):
+1.47
 
-* Use galaxy subjects from the new sloan_singleband survey group.
-  (The server has broken previous versions by disabling requests of the previous
-  survey groups.)
-  However, both the app and the website are not yet working completely for this
-  new survey group:
-  https://github.com/zooniverse/Galaxy-Zoo/pull/198
+* Use galaxy subjects from the new sloan_singleband survey group,
+  allowing subjects to be downloaded again since the server suddenly stopped
+  providing subjects from the existing survey groups.
+* Avoid a crash when starting a new classification exactly when there is a
+  change in the network connection.
+  Thanks for using the Report button.
+  https://github.com/murraycu/android-galaxyzoo/issues/21
+
 
 1.45:
 * Fix a crash at startup when using Italian or French.
