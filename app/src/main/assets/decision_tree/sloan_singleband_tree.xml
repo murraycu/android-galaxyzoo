@@ -5,7 +5,7 @@
     <question id="sloan_singleband-0" xmlns="">
         <title>Shape</title>
         <text>Is the galaxy simply smooth and rounded, with no sign of a disk?</text>
-        <help>The aim here is to divide featureless galaxies from all the rest. If you can see any interesting features at all, click "features or disk." Just occasionally you might see something that isn't a galaxy at all - the long streak of a satellite, for example, or a image swamped by light from a bright star. If this happens, just click "star or artifact". Click to see larger images.
+        <help>The aim here is to divide featureless galaxies from all the rest. If you can see any interesting features at all, click "features or disk." Just occasionally you might see something that isn't a galaxy at all - the long streak of a satellite, for example, or an image swamped by light from a bright star. If this happens, just click "star or artifact". Click to see larger images.
         </help>
         <answer examplesCount="0" icon="smooth_round" id="a-0" leadsTo="sloan_singleband-7">
             <text>Smooth</text>
