@@ -115,8 +115,7 @@
         <answer examplesCount="2" icon="bulge_obvious" id="a-2" leadsTo="sloan_singleband-5">
             <text>Obvious</text>
         </answer>
-        <answer examplesCount="0" icon="bulge_dominant, examples: 2" id="a-3"
-            leadsTo="sloan_singleband-5">
+        <answer examplesCount="0" icon="bulge_dominant" id="a-3" leadsTo="sloan_singleband-5">
             <text>Dominant</text>
         </answer>
     </question>
