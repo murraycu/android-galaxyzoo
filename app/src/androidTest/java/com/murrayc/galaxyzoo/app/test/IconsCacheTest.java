@@ -25,7 +25,6 @@ import android.test.AndroidTestCase;
 import com.murrayc.galaxyzoo.app.DecisionTree;
 import com.murrayc.galaxyzoo.app.IconsCache;
 import com.murrayc.galaxyzoo.app.Config;
-import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.IOException;
@@ -93,6 +92,16 @@ public class IconsCacheTest extends AndroidTestCase {
         }
     }
 
+    private static boolean checkFileExistsAtUri(final String uri) throws IOException {
+        final URL url = new URL(uri);
+        final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.connect();
+        final boolean exists = con.getResponseCode() == HttpURLConnection.HTTP_OK;
+        con.disconnect();
+        return exists;
+    }
+
     private static void checkAnswer(final IconsCache iconsCache, final DecisionTree.Question question, final DecisionTree.BaseButton answer) throws IOException {
         final String iconName = answer.getIcon();
         checkIcon(iconsCache, iconName);
@@ -105,13 +114,16 @@ public class IconsCacheTest extends AndroidTestCase {
 
             //Check that the full example actually exists on the server:
             final String exampleUri = IconsCache.getExampleImageUri(exampleIconName);
-            final URL url = new URL(exampleUri);
-            final HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.connect();
-            assertEquals("Cannot get full example image: " + exampleUri,
-                    con.getResponseCode(), HttpURLConnection.HTTP_OK);
-            con.disconnect();
+            assertTrue("Cannot get full example image:"  + exampleUri,
+                    checkFileExistsAtUri(exampleUri));
+            /*
+            if (!checkFileExistsAtUri(exampleUri)) {
+                final String exampleIconName2 = answer.getExampleIconNameWithCommonMistake(question.getId(), i);
+                final String exampleUri2 = IconsCache.getExampleImageUri(exampleIconName2);
+                assertTrue("Cannot get full example image even by checking for a common mistake in the URL:"  + exampleUri,
+                        checkFileExistsAtUri(exampleUri2));
+            }
+            */
         }
     }
 
