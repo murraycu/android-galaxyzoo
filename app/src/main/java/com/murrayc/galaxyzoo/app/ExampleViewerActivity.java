@@ -37,6 +37,7 @@ public class ExampleViewerActivity extends BaseActivity {
 
         final Intent intent = getIntent();
         final String uriStr = intent.getStringExtra(ExampleViewerFragment.ARG_EXAMPLE_URL);
+        final String uriStrAlternative = intent.getStringExtra(ExampleViewerFragment.ARG_EXAMPLE_URL_ALTERNATIVE);
 
         if (savedInstanceState == null) {
 
@@ -50,6 +51,7 @@ public class ExampleViewerActivity extends BaseActivity {
                 if (fragment == null) {
                     final Bundle arguments = new Bundle();
                     arguments.putString(ExampleViewerFragment.ARG_EXAMPLE_URL, uriStr);
+                    arguments.putString(ExampleViewerFragment.ARG_EXAMPLE_URL_ALTERNATIVE, uriStrAlternative);
 
                     fragment = new ExampleViewerFragment();
                     fragment.setArguments(arguments);

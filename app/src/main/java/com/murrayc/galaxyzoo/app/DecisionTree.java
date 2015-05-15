@@ -503,6 +503,20 @@ public class DecisionTree {
         public String getExampleIconName(final String questionId, final int exampleIndex) {
             return questionId + "_" + getId() + "_" + exampleIndex;
         }
+
+        /**
+         * The full examples are often incorrectly named, which makes the web UI break too,
+         * but which the developers often don't notice (or check for), meaning that users of
+         * the web UI cannot view the full example images.
+         * Using this method, we can find those images even with their wrong names.
+         *
+         * @param questionId
+         * @param exampleIndex
+         * @return
+         */
+        public String getExampleIconNameWithCommonMistake(final String questionId, final int exampleIndex) {
+            return (questionId).replace("-", "_") + "_" + getId() + "_" + exampleIndex;
+        }
     }
 
     /**

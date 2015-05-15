@@ -166,10 +166,11 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             //imageExample.setLayoutParams(paramsImage);
             MarginLayoutParamsCompat.setMarginStart(paramsImage, UiUtils.getPxForDpResource(context, R.dimen.standard_large_margin));
 
+            final int answerIndex = i;
             imageExample.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
                     // Perform action on click
-                    onExampleImageClicked(v, iconName);
+                    onExampleImageClicked(v, answer, answerIndex);
                 }
             });
 
@@ -180,7 +181,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
                 new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
     }
 
-    private void onExampleImageClicked(final View imageButton, final String iconName) {
+    private void onExampleImageClicked(final View imageButton, final DecisionTree.BaseButton answer, final int answerIndex) {
         //These images are not cached,
         //so we will need a network connection.
         final Activity activity = getActivity();
@@ -189,10 +190,17 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             return;
         }
 
+        final String questionId = getQuestionId();
+        final String iconName = answer.getExampleIconName(questionId, answerIndex);
         final String uri = IconsCache.getExampleImageUri(iconName);
+
+        final String iconNameAlternative = answer.getExampleIconNameWithCommonMistake(questionId, answerIndex);
+        final String uriAlternative = IconsCache.getExampleImageUri(iconNameAlternative);
 
         final Intent intent = new Intent(activity, ExampleViewerActivity.class);
         intent.putExtra(ExampleViewerFragment.ARG_EXAMPLE_URL, uri);
+        intent.putExtra(ExampleViewerFragment.ARG_EXAMPLE_URL_ALTERNATIVE, uriAlternative);
+
 
         //"subjectImageTransition" is also specified as transitionName="subjectImageTransition"
         //on the ImageButton here (when we created it) and in fragment_subject.xml.

@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,11 @@ import com.squareup.picasso.Picasso;
  */
 public class ExampleViewerFragment extends Fragment {
     public static final String ARG_EXAMPLE_URL = "example-url";
+    public static final String ARG_EXAMPLE_URL_ALTERNATIVE = "example-url-alternative";
     private View mLoadingView = null;
     private View mRootView = null;
     private String mUriStr = null;
+    private String mUriStrAlternative = null;
     private ImageView mImageView = null;
 
     public ExampleViewerFragment() {
@@ -52,7 +55,7 @@ public class ExampleViewerFragment extends Fragment {
      * @param strUri
      * @param imageView
      */
-    private void loadBitmap(final String strUri, final ImageView imageView) {
+    private void loadBitmap(final String strUri, final String strUriAlternative, final ImageView imageView) {
         showLoadingView(true);
 
         //Note: We call cancelRequest in onPause() to avoid a leak,
@@ -66,7 +69,14 @@ public class ExampleViewerFragment extends Fragment {
             @Override
             public void onError() {
                 showLoadingView(false);
-                Log.error("ExampleViewerFragment.loadBitmap.onError().");
+                Log.error("ExampleViewerFragment.loadBitmap.onError() with url=" + strUri);
+
+                //Try the alternative - there are often typos in the filenames,
+                //and the fixes for these mistakes can take some time to be applied.
+                if (!TextUtils.isEmpty(strUriAlternative)) {
+                    Log.info("ExampleViewerFragment.loadBitmap.onError(): Trying with alternative URL=" + strUriAlternative);
+                    loadBitmap(strUriAlternative, null, imageView);
+                }
             }
         });
     }
@@ -78,6 +88,8 @@ public class ExampleViewerFragment extends Fragment {
         final Bundle bundle = getArguments();
         if (bundle != null) {
             setExampleUrl(bundle.getString(ARG_EXAMPLE_URL));
+            setExampleUrlAlternative(bundle.getString(ARG_EXAMPLE_URL_ALTERNATIVE));
+
         }
 
         mRootView = inflater.inflate(R.layout.fragment_example_viewer, container, false);
@@ -100,12 +112,16 @@ public class ExampleViewerFragment extends Fragment {
 
     public void update() {
         if (mImageView != null) {
-            loadBitmap(mUriStr, mImageView);
+            loadBitmap(mUriStr, mUriStrAlternative, mImageView);
         }
     }
 
     public void setExampleUrl(final String uriStr) {
         mUriStr = uriStr;
+    }
+
+    public void setExampleUrlAlternative(final String uriStr) {
+        mUriStrAlternative = uriStr;
     }
 
     private void showLoadingView(final boolean show) {
