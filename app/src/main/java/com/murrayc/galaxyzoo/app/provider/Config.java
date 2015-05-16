@@ -88,6 +88,6 @@ public final class Config {
 
         SUBJECT_GROUPS.put("5514521e2f0eef2012000001" /* sloan_singleband */,
                 new SubjectGroup("sloan_singleband_tree.xml", true,
-                        new DecisionTree.DiscussQuestion("goods_full-16", "a-0", "a-1")));
+                        new DecisionTree.DiscussQuestion("sloan_singleband-11", "a-0", "a-1")));
     }
 }
