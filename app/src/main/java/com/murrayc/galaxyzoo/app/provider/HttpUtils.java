@@ -22,6 +22,7 @@ package com.murrayc.galaxyzoo.app.provider;
 import android.content.Context;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.Nullable;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -36,8 +37,11 @@ import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -119,6 +123,34 @@ public final class HttpUtils {
         }
 
         return response;
+    }
+
+    @Nullable
+    public static String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
+        final StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (final NameValuePair pair : nameValuePairs) {
+            if (first) {
+                first = false;
+            } else {
+                result.append("&");
+            }
+
+            try {
+                result.append(URLEncoder.encode(pair.getName(), Utils.STRING_ENCODING));
+                result.append("=");
+                result.append(URLEncoder.encode(pair.getValue(), Utils.STRING_ENCODING));
+            } catch (final UnsupportedEncodingException e) {
+                //This is incredibly unlikely for the UTF-8 encoding,
+                //so we just log it instead of trying to recover from it.
+                Log.error("getPostDataBytes(): Exception", e);
+                return null;
+            }
+        }
+
+        Log.info("galaxyzoodebug: content:" + result);
+        return result.toString();
     }
 
     public static class FileCacheRequest extends Request<Boolean> {
@@ -290,6 +322,25 @@ public final class HttpUtils {
     public static class FileCacheException extends Exception {
         FileCacheException(final String detail, final Exception cause) {
             super(detail, cause);
+        }
+    }
+
+    public static class NameValuePair {
+        private final String name;
+        private final String value;
+
+        public NameValuePair(final String name, final String value) {
+            super();
+            this.name = name;
+            this.value = value;
+        }
+
+        String getName() {
+            return name;
+        }
+
+        String getValue() {
+            return value;
         }
     }
 }

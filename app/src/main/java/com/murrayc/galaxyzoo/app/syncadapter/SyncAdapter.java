@@ -344,9 +344,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         //Note: I tried using HttpPost.getParams().setParameter() instead of the NameValuePairs,
         //but that did not allow multiple parameters with the same name, which we need.
-        final List<ZooniverseClient.NameValuePair> nameValuePairs = new ArrayList<>();
+        final List<HttpUtils.NameValuePair> nameValuePairs = new ArrayList<>();
 
-        nameValuePairs.add(new ZooniverseClient.NameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
+        nameValuePairs.add(new HttpUtils.NameValuePair(PARAM_PART_CLASSIFICATION + "[subject_ids][]",
                 subjectId));
 
         final ContentResolver resolver = getContentResolver();
@@ -359,7 +359,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             if (c.moveToFirst()) {
                 final int favorite = c.getInt(0);
                 if (favorite == 1) {
-                    nameValuePairs.add(new ZooniverseClient.NameValuePair(PARAM_PART_CLASSIFICATION + "[favorite][]",
+                    nameValuePairs.add(new HttpUtils.NameValuePair(PARAM_PART_CLASSIFICATION + "[favorite][]",
                             "true"));
                 }
             }
@@ -392,7 +392,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             //TODO: Is the string representation of sequence locale-dependent?
             final String questionKey =
                     getAnnotationPart(sequence) + "[" + questionId + "]";
-            nameValuePairs.add(new ZooniverseClient.NameValuePair(questionKey, answerId));
+            nameValuePairs.add(new HttpUtils.NameValuePair(questionKey, answerId));
 
 
             final String selection = "(" + ClassificationCheckbox.Columns.ITEM_ID + " = ?) AND " +
@@ -411,7 +411,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
                 //TODO: The Galaxy-Zoo server expects us to reuse the parameter name,
                 //TODO: Is the string representation of sequence locale-dependent?
-                nameValuePairs.add(new ZooniverseClient.NameValuePair(questionKey, checkboxId));
+                nameValuePairs.add(new HttpUtils.NameValuePair(questionKey, checkboxId));
             }
 
             cursorCheckboxes.close();
@@ -425,7 +425,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         //See https://github.com/murraycu/android-galaxyzoo/issues/11
         final String key =
                 getAnnotationPart(max_sequence + 1 ) + "[user_agent]";
-        nameValuePairs.add(new ZooniverseClient.NameValuePair(key, HttpUtils.USER_AGENT_MURRAYC));
+        nameValuePairs.add(new HttpUtils.NameValuePair(key, HttpUtils.USER_AGENT_MURRAYC));
 
         return mClient.uploadClassificationSync(authName, authApiKey, groupId, nameValuePairs);
     }

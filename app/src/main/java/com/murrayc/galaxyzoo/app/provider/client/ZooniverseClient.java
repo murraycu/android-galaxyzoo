@@ -42,7 +42,6 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -160,9 +159,9 @@ public class ZooniverseClient {
             throw new LoginException("Could not open connection.", e);
         }
 
-        final List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new NameValuePair("username", username));
-        nameValuePairs.add(new NameValuePair("password", password));
+        final List<HttpUtils.NameValuePair> nameValuePairs = new ArrayList<>();
+        nameValuePairs.add(new HttpUtils.NameValuePair("username", username));
+        nameValuePairs.add(new HttpUtils.NameValuePair("password", password));
 
         try {
             conn.setRequestMethod("POST");
@@ -209,7 +208,7 @@ public class ZooniverseClient {
         }
     }
 
-    private static void writeParamsToHttpPost(final HttpURLConnection conn, final List<NameValuePair> nameValuePairs) throws IOException {
+    private static void writeParamsToHttpPost(final HttpURLConnection conn, final List<HttpUtils.NameValuePair> nameValuePairs) throws IOException {
         OutputStream out = null;
         try {
             out = conn.getOutputStream();
@@ -218,7 +217,7 @@ public class ZooniverseClient {
             try {
                 writer = new BufferedWriter(
                         new OutputStreamWriter(out, Utils.STRING_ENCODING));
-                writer.write(getPostDataBytes(nameValuePairs));
+                writer.write(HttpUtils.getPostDataBytes(nameValuePairs));
                 writer.flush();
             } finally {
                 if (writer != null) {
@@ -234,33 +233,6 @@ public class ZooniverseClient {
                 }
             }
         }
-    }
-
-    @Nullable
-    private static String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
-        final StringBuilder result = new StringBuilder();
-        boolean first = true;
-
-        for (final NameValuePair pair : nameValuePairs) {
-            if (first) {
-                first = false;
-            } else {
-                result.append("&");
-            }
-
-            try {
-                result.append(URLEncoder.encode(pair.getName(), Utils.STRING_ENCODING));
-                result.append("=");
-                result.append(URLEncoder.encode(pair.getValue(), Utils.STRING_ENCODING));
-            } catch (final UnsupportedEncodingException e) {
-                //This is incredibly unlikely for the UTF-8 encoding,
-                //so we just log it instead of trying to recover from it.
-                Log.error("getPostDataBytes(): Exception", e);
-                return null;
-            }
-        }
-
-        return result.toString();
     }
 
     @Nullable
@@ -350,26 +322,7 @@ public class ZooniverseClient {
         return mContext;
     }
 
-    public static class NameValuePair {
-        private final String name;
-        private final String value;
-
-        public NameValuePair(final String name, final String value) {
-            super();
-            this.name = name;
-            this.value = value;
-        }
-
-        String getName() {
-            return name;
-        }
-
-        String getValue() {
-            return value;
-        }
-    }
-
-    public boolean uploadClassificationSync(final String authName, final String authApiKey, final String groupId, final List<NameValuePair> nameValuePairs) throws UploadException {
+    public boolean uploadClassificationSync(final String authName, final String authApiKey, final String groupId, final List<HttpUtils.NameValuePair> nameValuePairs) throws UploadException {
         throwIfNoNetwork();
 
         final HttpURLConnection conn;

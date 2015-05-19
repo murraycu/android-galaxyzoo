@@ -24,6 +24,7 @@ import android.util.MalformedJsonException;
 
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
+import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -249,13 +250,13 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         //SyncAdapter.doUploadSync() adds an "interface" parameter too,
         //but we are testing a more generic API here:
-        final List<ZooniverseClient.NameValuePair> values = new ArrayList<>();
-        values.add(new ZooniverseClient.NameValuePair("classification[subject_ids][]", "504e4a38c499611ea6010c6a"));
-        values.add(new ZooniverseClient.NameValuePair("classification[favorite][]", "true"));
-        values.add(new ZooniverseClient.NameValuePair("classification[annotations][0][sloan-0]", "a-0"));
-        values.add(new ZooniverseClient.NameValuePair("classification[annotations][1][sloan-7]", "a-1"));
-        values.add(new ZooniverseClient.NameValuePair("classification[annotations][2][sloan-5]", "a-0"));
-        values.add(new ZooniverseClient.NameValuePair("classification[annotations][3][sloan-6]", "x-5"));
+        final List<HttpUtils.NameValuePair> values = new ArrayList<>();
+        values.add(new HttpUtils.NameValuePair("classification[subject_ids][]", "504e4a38c499611ea6010c6a"));
+        values.add(new HttpUtils.NameValuePair("classification[favorite][]", "true"));
+        values.add(new HttpUtils.NameValuePair("classification[annotations][0][sloan-0]", "a-0"));
+        values.add(new HttpUtils.NameValuePair("classification[annotations][1][sloan-7]", "a-1"));
+        values.add(new HttpUtils.NameValuePair("classification[annotations][2][sloan-5]", "a-0"));
+        values.add(new HttpUtils.NameValuePair("classification[annotations][3][sloan-6]", "x-5"));
 
         final boolean result = client.uploadClassificationSync("testAuthName",
                 "testAuthApiKey", TEST_GROUP_ID, values);
@@ -290,8 +291,8 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         final ZooniverseClient client = createZooniverseClient(server);
 
-        final List<ZooniverseClient.NameValuePair> values = new ArrayList<>();
-        values.add(new ZooniverseClient.NameValuePair("test nonsense", "12345"));
+        final List<HttpUtils.NameValuePair> values = new ArrayList<>();
+        values.add(new HttpUtils.NameValuePair("test nonsense", "12345"));
 
         try {
             final boolean result = client.uploadClassificationSync("testAuthName",
