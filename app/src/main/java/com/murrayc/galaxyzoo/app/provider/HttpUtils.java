@@ -150,7 +150,7 @@ public final class HttpUtils {
             }
         }
 
-        Log.info("galaxyzoodebug: content:" + result);
+        //Log.info("galaxyzoodebug: content:" + result);
         return result.toString();
     }
 
