@@ -21,7 +21,6 @@ package com.murrayc.galaxyzoo.app.provider.client;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.util.Base64;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -235,24 +233,6 @@ public class ZooniverseClient {
         }
     }
 
-    @Nullable
-    private static String generateAuthorizationHeader(final String authName, final String authApiKey) {
-        //See the similar code in Zooniverse's user.coffee source code:
-        //https://github.com/zooniverse/Zooniverse/blob/master/src/models/user.coffee#L49
-        final String str = authName + ":" + authApiKey;
-        byte[] asBytes = null;
-        try {
-            asBytes = str.getBytes(Utils.STRING_ENCODING);
-        } catch (final UnsupportedEncodingException e) {
-            //This is incredibly unlikely for the UTF-8 encoding,
-            //so we just log it instead of trying to recover from it.
-            Log.error("generateAuthorizationHeader(): String.getBytes() failed", e);
-            return null;
-        }
-
-        return "Basic " + Base64.encodeToString(asBytes, Base64.DEFAULT);
-    }
-
     /** This will not always provide as many items as requested.
      *
      * @param count
@@ -352,7 +332,7 @@ public class ZooniverseClient {
         //classifications in your profile.
         //See https://github.com/zooniverse/Galaxy-Zoo/issues/184
         if ((authName != null) && (authApiKey != null)) {
-            conn.setRequestProperty("Authorization", generateAuthorizationHeader(authName, authApiKey));
+            conn.setRequestProperty("Authorization", HttpUtils.generateAuthorizationHeader(authName, authApiKey));
         }
 
         try {

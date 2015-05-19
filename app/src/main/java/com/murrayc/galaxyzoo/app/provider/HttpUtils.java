@@ -23,6 +23,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.Nullable;
+import android.util.Base64;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -151,6 +152,24 @@ public final class HttpUtils {
 
         Log.info("galaxyzoodebug: content:" + result);
         return result.toString();
+    }
+
+    @Nullable
+    public static String generateAuthorizationHeader(final String authName, final String authApiKey) {
+        //See the similar code in Zooniverse's user.coffee source code:
+        //https://github.com/zooniverse/Zooniverse/blob/master/src/models/user.coffee#L49
+        final String str = authName + ":" + authApiKey;
+        byte[] asBytes = null;
+        try {
+            asBytes = str.getBytes(Utils.STRING_ENCODING);
+        } catch (final UnsupportedEncodingException e) {
+            //This is incredibly unlikely for the UTF-8 encoding,
+            //so we just log it instead of trying to recover from it.
+            Log.error("generateAuthorizationHeader(): String.getBytes() failed", e);
+            return null;
+        }
+
+        return "Basic " + Base64.encodeToString(asBytes, Base64.NO_WRAP);
     }
 
     public static class FileCacheRequest extends Request<Boolean> {

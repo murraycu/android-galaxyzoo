@@ -40,6 +40,12 @@ public class HttpUtilsTest extends AndroidTestCase {
     public void tearDown() {
     }
 
+
+    public void testGenerateAuthorizationHeader() throws IOException {
+        final String header = HttpUtils.generateAuthorizationHeader("somename", "somekey123");
+        assertEquals("Basic c29tZW5hbWU6c29tZWtleTEyMw==", header);
+    }
+
     public void testGetPostDataBytes() throws IOException {
         final List<HttpUtils.NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new HttpUtils.NameValuePair("classification[subject_ids][]",
