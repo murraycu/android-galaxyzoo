@@ -90,7 +90,7 @@ public class ZooniverseClient {
         setConnectionUserAgent(conn);
 
         //Set a reasonable timeout.
-        //Otherwise there is not timeout so we might never know if it fails,
+        //Otherwise there is no timeout so we might never know if it fails,
         //so never have the chance to try again.
         conn.setConnectTimeout(HttpUtils.TIMEOUT_MILLIS);
         conn.setReadTimeout(HttpUtils.TIMEOUT_MILLIS);
