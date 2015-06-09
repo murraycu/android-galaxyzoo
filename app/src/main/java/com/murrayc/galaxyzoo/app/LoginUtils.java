@@ -505,7 +505,6 @@ public final class LoginUtils {
                 return null;
             }
 
-            final AccountManager accountManager = AccountManager.get(context);
             LoginUtils.removeAccount(context, accountName);
 
             LoginUtils.addAnonymousAccount(context);
