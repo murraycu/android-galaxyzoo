@@ -19,6 +19,7 @@
 
 package com.murrayc.galaxyzoo.app;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
@@ -28,10 +29,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
@@ -43,6 +46,7 @@ import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * An activity showing a single subject. This
@@ -56,13 +60,54 @@ import java.lang.ref.WeakReference;
 public class ClassifyActivity extends ItemActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener,
             ClassifyFragment.Callbacks, QuestionFragment.Callbacks {
+    private static final String[] PERMISSIONS_REQUIRED = {
+            /* These don't seem to be necessary on SDK 23 (Android Marshmallow 6.0)
+             * though they were necessary, in AndroidManifest.xml, on SDK 21 (Android Lollipop 5.1).
+             * even though they are documented as not being needed for getExternalCacheDir on
+             * SDK versions >= 18.
+             */
+            //Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            //Manifest.permission.READ_EXTERNAL_STORAGE,
+
+            Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.READ_SYNC_SETTINGS,
+            Manifest.permission.WRITE_SYNC_SETTINGS
+
+            //This is needed on SDK <= 22, for instance for AccountManager.getAccountsByType().
+            //Presumably it is not defined in android.Manifest because we don't need
+            //to request it at runtime because requesting at runtime is only possible
+            //since SDK 23.
+            //Manifest.permission.GET_ACCOUNTS,
+
+            //This is needed on SDK <= 22, for instance for AccountManager.getAuthToken().
+            //Presumably it is not defined in android.Manifest because we don't need
+            //to request it at runtime because requesting at runtime is only possible
+            //since SDK 23.
+            //Manifest.permission.USE_CREDENTIALS,
+
+            //This is needed on SDK <= 22, for instance for AccountManager.setAuthToken(),
+            //addAccount() and removeAccount().
+            //Presumably it is not defined in android.Manifest because we don't need
+            //to request it at runtime because requesting at runtime is only possible
+            //since SDK 23.
+            //Manifest.permission.MANAGE_ACCOUNTS,
+
+            //This is needed on SDK <= 22, for instance for AccountManager.addAccountExplicitly()
+            //and getUserData().
+            //Presumably it is not defined in android.Manifest because we don't need
+            //to request it at runtime because requesting at runtime is only possible
+            //since SDK 23.
+            //Manifest.permission.AUTHENTICATE_ACCOUNTS,
+            };
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
     private boolean mIsStateAlreadySaved = false;
     private boolean mPendingClassificationFinished = false;
     private boolean mPendingWarnAboutNetworkProblemWithRetry = false;
 
     private AlertDialog mAlertDialog = null;
     private BroadcastReceiver mReceiverNetworkReconnection = null;
-
 
 //    public class ItemsContentProviderObserver extends ContentObserver {
 //
@@ -194,6 +239,50 @@ public class ClassifyActivity extends ItemActivity
     //public static final String AUTHORITY = Item.AUTHORITY;
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_CODE)
+        {
+            int permissionIndex = 0;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    if (permissionIndex < permissions.length) {
+                        Log.error("onRequestPermissionsResult(): failed for permission: " + permissions[permissionIndex]);
+                    } else {
+                        Log.error("onRequestPermissionsResult(): failed for a permission.");
+                    }
+                }
+
+                permissionIndex++;
+            }
+        }
+
+        updateAfterPermissionsCheck();
+    }
+
+    private void checkPermissions() {
+        //Check for all the permissions, because we need them all.
+        //TODO: Get the list of permissions from AndroidManifest.xml ?
+        final ArrayList<String> permissionsMissing = new ArrayList<>();
+        for (final String permission : PERMISSIONS_REQUIRED) {
+            if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsMissing.add(permission);
+            }
+        }
+
+        if (!permissionsMissing.isEmpty()) {
+            final String[] array = new String[permissionsMissing.size()];
+            permissionsMissing.toArray(array);
+            Log.error("ClassifyActivity.checkPermissions(): requesting permissions because checkSelfPermission() failed for permissions: " + permissionsMissing);
+
+            //We will get the result asynchronously in onRequestPermissionsResult().
+            requestPermissions(array, PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -227,11 +316,11 @@ public class ClassifyActivity extends ItemActivity
         resolver.registerContentObserver(Item.ITEMS_URI, true, observer);
         */
 
-        //Make sure that the SyncAdapter starts to download items as soon as possible:
-        requestSync();
-
         //Our NetworkChangeReceiver should only wake up when necessary:
         stopListeningForNetworkReconnection();
+
+        //Make sure that the SyncAdapter starts to download items as soon as possible:
+        requestSync();
 
         setContentView(R.layout.activity_classify);
 
@@ -276,6 +365,10 @@ public class ClassifyActivity extends ItemActivity
                     fragment.update();
                 }
             }
+
+            //Check that we have permissions and asynchronously request them if necessary,
+            //later updating our UI to use them:
+            checkPermissions();
         }
 
         /*
@@ -297,6 +390,12 @@ public class ClassifyActivity extends ItemActivity
         };
         task.execute();
     }
+
+    private void updateAfterPermissionsCheck()
+    {
+        requestSync();
+    }
+
 
     @Override
     public void onPause() {
