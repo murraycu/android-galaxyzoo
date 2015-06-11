@@ -131,7 +131,16 @@ public class DecisionTreeTest extends AndroidTestCase {
         final DecisionTree.Question nextQuestion = decisionTree.getNextQuestionForAnswer(QUESTION_ID, "a-1");
         assertEquals("sloan-4", nextQuestion.getId());
 
-        //TODO: Test getQuestion() and getNextQuestion().
+        final List<DecisionTree.Answer> answers = question.getAnswers();
+        assertNotNull(answers);
+        DecisionTree.Answer answer = answers.get(0);
+        assertNotNull(answer);
+        assertEquals("Spirale", answer.getText());
+        answer = answers.get(1);
+        assertNotNull(answer);
+        assertEquals("Pas de spirale", answer.getText());
+
+        checkAnswersForQuestionSloan4(question);
     }
 
     public void testQuestionsWithoutTranslation() throws DecisionTree.DecisionTreeException, IOException {
@@ -147,7 +156,28 @@ public class DecisionTreeTest extends AndroidTestCase {
         final DecisionTree.Question nextQuestion = decisionTree.getNextQuestionForAnswer(QUESTION_ID, "a-1");
         assertEquals("sloan-4", nextQuestion.getId());
 
-        //TODO: Test getQuestion() and getNextQuestion().
+        final List<DecisionTree.Answer> answers = question.getAnswers();
+        assertNotNull(answers);
+        DecisionTree.Answer answer = answers.get(0);
+        assertNotNull(answer);
+        assertEquals("Spiral", answer.getText());
+        answer = answers.get(1);
+        assertNotNull(answer);
+        assertEquals("No Spiral", answer.getText());
+
+        checkAnswersForQuestionSloan4(question);
+    }
+
+    private static void checkAnswersForQuestionSloan4(final DecisionTree.Question question) {
+        final List<DecisionTree.Answer> answers = question.getAnswers();
+        assertNotNull(answers);
+        assertEquals(2, answers.size());
+
+        final DecisionTree.Answer answer = answers.get(0);
+        assertNotNull(answer);
+        assertEquals("a-0", answer.getId());
+        assertEquals("yes", answer.getIcon());
+        assertEquals(2, answer.getExamplesCount());
     }
 
     public void testParseBadXml() {
