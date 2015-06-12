@@ -140,6 +140,10 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             protected void onPostExecute(final LoginUtils.LoginDetails loginDetails) {
                 super.onPostExecute(loginDetails);
 
+                if (mException != null) {
+                    Log.error("LoginActivity.oncreate(): GetExistingLogin asynctask failed, probably due to a missing permission:", mException);
+                }
+
                 onExistingLoginRetrieved(loginDetails);
             }
         };

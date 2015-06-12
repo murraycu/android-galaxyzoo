@@ -450,6 +450,7 @@ public final class LoginUtils {
     public static class GetExistingLogin extends AsyncTask<Void, Void, LoginDetails> {
 
         private final WeakReference<Context> mContextReference;
+        Exception mException;
 
         GetExistingLogin(final Context context) {
             mContextReference = new WeakReference<>(context);
@@ -467,15 +468,21 @@ public final class LoginUtils {
                 return null;
             }
 
-            final LoginDetails result = getAccountLoginDetails(context);
-            if (result == null) {
-                //Add an anonymous Account,
-                //because our SyncAdapter will not run if there is no associated Account,
-                //and we want it to run to get the items to classify, and to upload
-                //anonymous classifications.
-                LoginUtils.addAnonymousAccount(context);
+            LoginDetails result = null;
 
-                return getAccountLoginDetails(context);
+            try {
+                result = getAccountLoginDetails(context);
+                if (result == null) {
+                    //Add an anonymous Account,
+                    //because our SyncAdapter will not run if there is no associated Account,
+                    //and we want it to run to get the items to classify, and to upload
+                    //anonymous classifications.
+                    LoginUtils.addAnonymousAccount(context);
+
+                    return getAccountLoginDetails(context);
+                }
+            } catch (final SecurityException ex) {
+                mException = ex;
             }
 
             return result;
