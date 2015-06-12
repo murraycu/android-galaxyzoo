@@ -222,6 +222,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_COUNT_AS_COUNT,
                 WHERE_CLAUSE_NOT_DONE, null, null);
+        if (c == null) {
+            Log.error("getNotDoneCount(): Cursor is null.");
+            return 0;
+        }
+
         c.moveToFirst();
         final int result = c.getInt(0);
         c.close();
@@ -233,6 +238,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_COUNT_AS_COUNT,
                 WHERE_CLAUSE_UPLOADED, null, null);
+        if (c == null) {
+            Log.error("getUploadedCount(): Cursor is null.");
+            return 0;
+        }
 
         c.moveToFirst();
         final int result = c.getInt(0);
@@ -264,6 +273,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                         "(" + Item.Columns.UPLOADED + " != 1)";
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_ITEMS_OUTSTANDING,
                 whereClause, null, null); //TODO: Order by?
+        if (c == null) {
+            Log.error("uploadOutstandingClassifications(): Cursor is null.");
+            return false;
+        }
 
         if (c.getCount() == 0) {
             c.close();
@@ -305,6 +318,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             //TODO: Use this: final String limit = Integer.toString(countToRemove); //TODO: Is this locale-independent?
             final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_ID,
                     WHERE_CLAUSE_UPLOADED, null, orderBy);
+            if (c == null) {
+                Log.error("removeOldSubjects(): Cursor is null.");
+                return false;
+            }
 
             //Remove them one by one:
             int removed = 0;
@@ -355,6 +372,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         {
             final Cursor c = resolver.query(Utils.getItemUri(itemId),
                     PROJECTION_FAVORITE, null, null, null);
+            if (c == null) {
+                Log.error("doUploadSync(): Cursor is null.");
+                return false;
+            }
 
             if (c.moveToFirst()) {
                 final int favorite = c.getInt(0);
@@ -375,6 +396,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             final String orderBy = ClassificationAnswer.Columns.SEQUENCE + " ASC";
             c = resolver.query(ClassificationAnswer.CONTENT_URI,
                     PROJECTION_UPLOAD, selection, selectionArgs, orderBy);
+            if (c == null) {
+                Log.error("doUploadSync(): Cursor is null.");
+                return false;
+            }
         }
 
         int max_sequence = 0;
@@ -405,6 +430,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             final String orderBy = ClassificationCheckbox.Columns.CHECKBOX_ID + " ASC";
             final Cursor cursorCheckboxes = resolver.query(ClassificationCheckbox.CONTENT_URI,
                     PROJECTION_CLASSIFICATION_CHECKBOX_ID, selection, selectionArgs, orderBy);
+            if (cursorCheckboxes == null) {
+                Log.error("doUploadSync(): cursorCheckboxes is null.");
+                return false;
+            }
 
             while (cursorCheckboxes.moveToNext()) {
                 final String checkboxId = cursorCheckboxes.getString(0);

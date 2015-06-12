@@ -113,6 +113,10 @@ public class SubjectAdder {
 
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_DOWNLOAD_MISSING_IMAGES,
                 WHERE_CLAUSE_DOWNLOAD_NOT_DONE, null, null);
+        if (c == null) {
+            Log.error("downloadMissingImages(): Cursor is null.");
+            return false;
+        }
 
         //Find out if the image is currently being downloaded:
         while (c.moveToNext()) {
@@ -202,6 +206,10 @@ public class SubjectAdder {
         final String orderBy = Item.Columns._ID + " ASC";
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_CHECK_IMAGES,
                 WHERE_CLAUSE_DOWNLOAD_ALL_DONE, null, orderBy);
+        if (c == null) {
+            Log.error("checkForDeletedCachedImages(): Cursor is null.");
+            return false;
+        }
 
         //Find out if the images still exist in the cache:
         while (c.moveToNext()) {
@@ -268,7 +276,12 @@ public class SubjectAdder {
         final Uri fileUriAsUri = Uri.parse(fileUri);
         final Cursor c = resolver.query(fileUriAsUri, PROJECTION_URI_PART_DATA,
                 null, null, null);
-        if(!c.moveToNext()) {
+        if(c == null) {
+            Log.error("SubjectAdder.cachedImageExists(): Cursor is null.");
+            return false;
+        }
+
+        if(c.moveToNext()) {
             Log.error("SubjectAdder.cachedImageExists(): query failed.");
             c.close();
             return false;
@@ -310,6 +323,11 @@ public class SubjectAdder {
 
         final Cursor c = resolver.query(itemUri, PROJECTION_CACHE_URIS_TO_FILES,
                 null, null, null);
+        if (c == null) {
+            Log.error("cacheUrisToFiles(): Cursor is null.");
+            return;
+        }
+
         while (c.moveToNext()) {
             final String uriStandardRemote = c.getString(0);
             final String uriStandard = c.getString(1);
@@ -522,6 +540,11 @@ public class SubjectAdder {
         final String[] selectionArgs = {subjectId};
         final Cursor c = resolver.query(Item.ITEMS_URI, PROJECTION_SUBJECT_ID,
                 whereClause, selectionArgs, null);
+        if (c == null) {
+            Log.error("subjectIsInDatabase(): Cursor is null.");
+            return false;
+        }
+
         final boolean result = c.getCount() > 0;
         c.close();
         return result;
