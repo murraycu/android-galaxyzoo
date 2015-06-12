@@ -388,6 +388,10 @@ public class ClassifyActivity extends ItemActivity
             protected void onPostExecute(final LoginUtils.LoginDetails loginDetails) {
                 super.onPostExecute(loginDetails);
 
+                if (mException != null) {
+                    Log.error("ClassifyActivity.onCreate(): GetExistingLogin asynctask failed, probably due to a missing permission:", mException);
+                }
+
                 onExistingLoginRetrieved(loginDetails);
             }
         };
