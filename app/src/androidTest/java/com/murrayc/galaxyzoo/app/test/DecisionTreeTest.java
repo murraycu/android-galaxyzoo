@@ -163,7 +163,7 @@ public class DecisionTreeTest extends AndroidTestCase {
         assertEquals("Spiral", answer.getText());
         answer = answers.get(1);
         assertNotNull(answer);
-        assertEquals("No Spiral", answer.getText());
+        assertEquals("No spiral", answer.getText());
 
         checkAnswersForQuestionSloan4(question);
     }
