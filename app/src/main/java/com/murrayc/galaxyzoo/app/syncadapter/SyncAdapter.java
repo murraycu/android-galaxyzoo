@@ -432,6 +432,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     PROJECTION_CLASSIFICATION_CHECKBOX_ID, selection, selectionArgs, orderBy);
             if (cursorCheckboxes == null) {
                 Log.error("doUploadSync(): cursorCheckboxes is null.");
+                c.close();
                 return false;
             }
 
