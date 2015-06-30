@@ -40,10 +40,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -119,7 +119,7 @@ public class ZooniverseClient {
         }
 
         final Object[] values = groupIds.toArray();
-        final int idx = new Random().nextInt(values.length);
+        final int idx = new SecureRandom().nextInt(values.length);
         return (String)values[idx];
     }
 
