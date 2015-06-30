@@ -143,6 +143,9 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         imageIcon.setImageDrawable(icon);
         layoutHorizontal.addView(imageIcon);
 
+        final LinearLayout.LayoutParams paramsImage = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         // TODO: Use a custom FlowTable class to avoid items going off the right edge of the screen
         // when there are too many.
         final Singleton singleton = getSingleton();
@@ -158,9 +161,6 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             //Needed to make the image expand as a transition into the SubjectViewerActivity,
             //which uses the same name in fragment_subject.xml
             ViewCompat.setTransitionName(imageExample, getString(R.string.transition_subject_image));
-
-            final LinearLayout.LayoutParams paramsImage = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
             //This requires API level 17: paramsImage.setMarginStart(getPxForDp(activity, MARGIN_MEDIUM_DP));
             //imageExample.setLayoutParams(paramsImage);
