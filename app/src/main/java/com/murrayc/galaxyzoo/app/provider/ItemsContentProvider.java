@@ -1016,15 +1016,21 @@ public class ItemsContentProvider extends ContentProvider {
         if (db.delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
                 DatabaseHelper.ClassificationAnswersDbColumns.ITEM_ID + " = ?",
                 whereArgs) <= 0) {
-            Log.error("removeItem(): Could not remove the classification answers rows.");
+            //This would only be an error worth reporting if we know that this item
+            //has a classification already.
+            //Log.error("removeItem(): Could not remove the classification answers rows.");
         }
 
         // Remove the related classification checkboxes:
         // We don't check that at least 1 row was deleted,
         // because there are not always answers with checkboxes.
-        db.delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
+        if (db.delete(DatabaseHelper.TABLE_NAME_CLASSIFICATION_CHECKBOXES,
                 DatabaseHelper.ClassificationCheckboxesDbColumns.ITEM_ID + " = ?",
-                whereArgs);
+                whereArgs) <= 0) {
+            //This would only be an error worth reporting if we know that this item
+            //has a classification already.
+            //Log.error("removeItem(): Could not remove the classification answers rows.");
+        }
 
         //Delete the item:
         if (db.delete(DatabaseHelper.TABLE_NAME_ITEMS,
