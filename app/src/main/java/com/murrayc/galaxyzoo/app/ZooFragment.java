@@ -40,7 +40,7 @@ public class ZooFragment extends Fragment {
     private boolean loggedIn = false;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -66,7 +66,7 @@ public class ZooFragment extends Fragment {
         task.execute();
     }
 
-    public void setLoggedIn(boolean loggedIn) {
+    public void setLoggedIn(final boolean loggedIn) {
         this.loggedIn = loggedIn;
     }
 

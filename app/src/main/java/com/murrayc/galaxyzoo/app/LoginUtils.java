@@ -495,7 +495,7 @@ public final class LoginUtils {
                 return null;
             }
 
-            LoginUtils.LoginDetails loginDetails = LoginUtils.getAccountLoginDetails(context);
+            final LoginUtils.LoginDetails loginDetails = LoginUtils.getAccountLoginDetails(context);
             if(!LoginUtils.getLoggedIn(loginDetails)) {
                 return null;
             }
