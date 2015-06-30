@@ -23,6 +23,8 @@
   <string name="action_examples">Exemples</string>
   <!--An action. Shown on a button or menu item.-->
   <string name="action_login">Se connecter</string>
+  <!--An action. Shown on a button or menu item.-->
+  <string name="action_logout">Se déconnecter</string>
   <!--A checkable action with two states. It is either a favorite or not. Shown on a button or menu item.-->
   <string name="action_favorite">Favoris</string>
   <!--An action. Shown on a button or menu item.-->

@@ -23,6 +23,8 @@
   <string name="action_examples">Esempi</string>
   <!--An action. Shown on a button or menu item.-->
   <string name="action_login">Accesso</string>
+  <!--An action. Shown on a button or menu item.-->
+  <string name="action_logout">Termina sessione</string>
   <!--A checkable action with two states. It is either a favorite or not. Shown on a button or menu item.-->
   <string name="action_favorite">Preferito</string>
   <!--An action. Shown on a button or menu item.-->
