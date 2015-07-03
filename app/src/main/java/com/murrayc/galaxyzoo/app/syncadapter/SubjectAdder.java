@@ -281,7 +281,7 @@ public class SubjectAdder {
             return false;
         }
 
-        if(c.moveToNext()) {
+        if(!c.moveToNext()) {
             Log.error("SubjectAdder.cachedImageExists(): query failed.");
             c.close();
             return false;
