@@ -315,19 +315,44 @@ public class QuestionFragment extends BaseQuestionFragment
         if (activity == null)
             return;
 
-        if (getSingleton() == null) {
-            //The parent fragment's onSingletonInitialized has been called
-            //but this fragment's onSingletonInitialized hasn't been called yet.
-            //That's OK. update() will be called, indirectly, later by this fragment's onSingletonInitialized().
-            return;
-        }
-
         if (mRootView == null) {
             //This can happen when update() is called by the parent fragment
             //after this fragment has been instantiated after an orientation change,
             //but before onCreateView() has been called. It's not a problem
             //because onCreateView() will call this method again after setting mRootView.
             //Log.error("QuestionFragment.update(): mRootView is null.");
+            return;
+        }
+
+        //Wipe the question details,
+        //to ensure that we don't have old question details if somethng goes wrong when we
+        //try to get and show the correct question details.
+        final TextView textViewTitle = (TextView) mRootView.findViewById(R.id.textViewTitle);
+        if (textViewTitle == null) {
+            Log.error("update(): textViewTitle is null.");
+            return;
+        }
+        textViewTitle.setText("");
+
+        //Show the text:
+        final TextView textViewText = (TextView) mRootView.findViewById(R.id.textViewText);
+        if (textViewText == null) {
+            Log.error("update(): textViewText is null.");
+            return;
+        }
+        textViewText.setText("");
+
+        final TableLayout layoutAnswers = (TableLayout) mRootView.findViewById(R.id.layoutAnswers);
+        if (layoutAnswers == null) {
+            Log.error("update(): layoutAnswers is null.");
+            return;
+        }
+        layoutAnswers.removeAllViews();
+
+        if (getSingleton() == null) {
+            //The parent fragment's onSingletonInitialized has been called
+            //but this fragment's onSingletonInitialized hasn't been called yet.
+            //That's OK. update() will be called, indirectly, later by this fragment's onSingletonInitialized().
             return;
         }
 
@@ -338,29 +363,11 @@ public class QuestionFragment extends BaseQuestionFragment
         }
 
         //Show the title:
-        final TextView textViewTitle = (TextView) mRootView.findViewById(R.id.textViewTitle);
-        if (textViewTitle == null) {
-            Log.error("update(): textViewTitle is null.");
-            return;
-        }
         textViewTitle.setText(question.getTitle());
 
         //Show the text:
-        final TextView textViewText = (TextView) mRootView.findViewById(R.id.textViewText);
-        if (textViewText == null) {
-            Log.error("update(): textViewText is null.");
-            return;
-        }
         textViewText.setText(question.getText());
 
-
-        final TableLayout layoutAnswers = (TableLayout) mRootView.findViewById(R.id.layoutAnswers);
-        if (layoutAnswers == null) {
-            Log.error("update(): layoutAnswers is null.");
-            return;
-        }
-
-        layoutAnswers.removeAllViews();
         layoutAnswers.setShrinkAllColumns(true);
         layoutAnswers.setStretchAllColumns(true);
 
