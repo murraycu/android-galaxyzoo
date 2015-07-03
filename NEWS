@@ -1,6 +1,18 @@
+1.49
+
+* Use galaxy subjects from the sloan survey group,
+  allowing subjects to be downloaded again since the server (again) suddenly stopped
+  providing subjects from the existing survey group.
+* Change "Log In" to "Log Out" when you are logged in.
+  However, you will need to log out and back in again manually if you change
+  your password, due to this server bug:
+  https://github.com/zooniverse/Galaxy-Zoo/issues/184
+
+
 1.48
 
 * Make the "Would you like to discuss this object?" question work again.
+
 
 1.47
 
