@@ -51,7 +51,14 @@ public class Singleton {
     private final Map<String, DecisionTree> mDecisionTrees = new HashMap<>();
     private LocaleDetails mLocaleDetails = null;
 
-    private Singleton(final Context context) throws DecisionTree.DecisionTreeException {
+    /**
+     * Don't use this: Use Singleton::init() and then call getInstance().
+     * This is only public so we can test it.
+     *
+     * @param context
+     * @throws DecisionTree.DecisionTreeException
+     */
+    public Singleton(final Context context) throws DecisionTree.DecisionTreeException {
         //This needs to be done as soon as the app opens.
         //See http://developer.android.com/guide/topics/ui/settings.html#Fragment
         Utils.initDefaultPrefs(context);

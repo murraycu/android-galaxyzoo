@@ -24,6 +24,7 @@ import android.util.MalformedJsonException;
 
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
+import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -104,11 +105,13 @@ public class ZooniverseClientTest extends AndroidTestCase {
         //ZooniverseClient uses one of several possible group IDs at random:
         //See com.murrayc.galaxyzoo.app.provider.Config
         final String possiblePath1 = "/groups/" + TEST_GROUP_ID + "/subjects?limit=5";
-        final String possiblePath2 = "/groups/" + "5514521e2f0eef2012000001" + "/subjects?limit=5";
+        final String possiblePath2 = "/groups/" + Config.SUBJECT_GROUP_ID_SLOAN_SINGLEBAND + "/subjects?limit=5";
+        final String possiblePath3 = "/groups/" + Config.SUBJECT_GROUP_ID_SLOAN + "/subjects?limit=5";
+
         //TODO: Can we use this?
         // assertThat(request.getPath(), anyOf(is(possiblePath1), is(possiblePath2)));
         final String path = request.getPath();
-        assertTrue( path.equals(possiblePath1) || path.equals(possiblePath2));
+        assertTrue( path.equals(possiblePath1) || path.equals(possiblePath2) || path.equals(possiblePath3));
 
         server.shutdown();
     }

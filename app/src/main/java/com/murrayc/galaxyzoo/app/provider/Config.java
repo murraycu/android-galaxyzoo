@@ -68,6 +68,10 @@ public final class Config {
     public static final Map<String, SubjectGroup> SUBJECT_GROUPS;
 
     public static final String SUBJECT_GROUP_ID_SLOAN = "50251c3b516bcb6ecb000002";
+    public static final String SUBJECT_GROUP_ID_SLOAN_SINGLEBAND = "5514521e2f0eef2012000001";
+    public static final String SUBJECT_GROUP_ID_GOODS_FULL = "551453e12f0eef21f2000001";
+
+
 
     static {
         SUBJECT_GROUPS = new HashMap<>();
@@ -83,10 +87,10 @@ public final class Config {
         SUBJECT_GROUPS.put("551456e02f0eef2535000001" /* candels_2epoch */,
                 new SubjectGroup("candels_tree.xml", false,
                   new DecisionTree.DiscussQuestion("candels-17", "a-0", "a-1")));
-        SUBJECT_GROUPS.put("551453e12f0eef21f2000001" /* goods_full */,
+        SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GOODS_FULL /* goods_full */,
                 new SubjectGroup("goods_full_tree.xml", false,
                   new DecisionTree.DiscussQuestion("goods_full-16", "a-0", "a-1")));
-        SUBJECT_GROUPS.put("5514521e2f0eef2012000001" /* sloan_singleband */,
+        SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SLOAN_SINGLEBAND /* sloan_singleband */,
                 new SubjectGroup("sloan_singleband_tree.xml", false,
                         new DecisionTree.DiscussQuestion("sloan_singleband-11", "a-0", "a-1")));
     }
