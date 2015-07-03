@@ -72,22 +72,22 @@ public final class Config {
     static {
         SUBJECT_GROUPS = new HashMap<>();
 
-        //We don't request items for these groups any more, but we still want to load the
+        SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SLOAN /* SSID / sloan */,
+                new SubjectGroup("sloan_tree.xml", true,
+                  new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
+
+        //We don't request items for all these groups any more, but we still want to load the
         //trees so can ask questions about items that have already been downloaded and stored in
         //the cache.
-        //At some point we can remove these when we are sure they are unnecessary.
-        SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SLOAN /* SSID / sloan */,
-                new SubjectGroup("sloan_tree.xml", false,
-                  new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
+        //At some point we can remove some when we are sure they are unnecessary.
         SUBJECT_GROUPS.put("551456e02f0eef2535000001" /* candels_2epoch */,
                 new SubjectGroup("candels_tree.xml", false,
                   new DecisionTree.DiscussQuestion("candels-17", "a-0", "a-1")));
         SUBJECT_GROUPS.put("551453e12f0eef21f2000001" /* goods_full */,
                 new SubjectGroup("goods_full_tree.xml", false,
                   new DecisionTree.DiscussQuestion("goods_full-16", "a-0", "a-1")));
-
         SUBJECT_GROUPS.put("5514521e2f0eef2012000001" /* sloan_singleband */,
-                new SubjectGroup("sloan_singleband_tree.xml", true,
+                new SubjectGroup("sloan_singleband_tree.xml", false,
                         new DecisionTree.DiscussQuestion("sloan_singleband-11", "a-0", "a-1")));
     }
 }
