@@ -118,6 +118,10 @@ public class ZooniverseClient {
             }
         }
 
+        if(groupIds.size() == 1) {
+            return groupIds.get(0);
+        }
+
         final Object[] values = groupIds.toArray();
         final int idx = new SecureRandom().nextInt(values.length);
         return (String)values[idx];
