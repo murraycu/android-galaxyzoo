@@ -422,10 +422,12 @@ public class QuestionFragment extends BaseQuestionFragment
             final Button button = createAnswerButton(activity, answer);
             insertButtonInRow(activity, row, button);
 
+            final String questionId = question.getId();
+            final String answerId = answer.getId();
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
                     // Perform action on click
-                    onAnswerButtonClicked(question.getId(), answer.getId());
+                    onAnswerButtonClicked(questionId, answerId);
                 }
             });
 
@@ -540,6 +542,11 @@ public class QuestionFragment extends BaseQuestionFragment
     private void onAnswerButtonClicked(@NonNull final String questionId, @NonNull final String answerId) {
         if (questionId == null) {
             Log.error("onAnswerButtonClicked: questionId was null.");
+            return;
+        }
+
+        if (!TextUtils.equals(questionId, getQuestionId())) {
+            Log.error("onAnswerButtonClicked: Unexpected questionId received: " + questionId + ", expected: " + getQuestionId());
             return;
         }
 
