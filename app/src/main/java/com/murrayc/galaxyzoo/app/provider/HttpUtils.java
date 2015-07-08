@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.RequestFuture;
+import com.murrayc.galaxyzoo.app.BuildConfig;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
@@ -228,7 +229,7 @@ public final class HttpUtils {
 
     @NonNull
     public static String getUserAgent() {
-        return HttpUtils.USER_AGENT_MURRAYC;
+        return HttpUtils.USER_AGENT_MURRAYC + "/" + BuildConfig.VERSION_NAME;
     }
 
     /*
