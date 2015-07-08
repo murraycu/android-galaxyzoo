@@ -588,6 +588,15 @@ public class QuestionFragment extends BaseQuestionFragment
             //subject is shown:
             parentLayout.setVisibility(View.INVISIBLE);
 
+            //Try to prevent an invalid classification from being uploaded,
+            //though we are not quite sure why that might happen.
+            //See https://github.com/murraycu/android-galaxyzoo/issues/22
+            if(!mClassificationInProgress.hasEnoughAnswers()) {
+                Log.error("showNextQuestion(): Abandoning classification that doesn't have enough answers.");
+                abandonItem();
+                return;
+            }
+
             //The classification is finished.
             //We save it to the ContentProvider, which will upload it.
             //
@@ -1012,6 +1021,15 @@ public class QuestionFragment extends BaseQuestionFragment
             }
 
             return result;
+        }
+
+        /**
+         * This assumes that we always add the discuss question/answer by default even
+         * when the user doesn't want to be asked.
+         * @return
+         */
+        boolean hasEnoughAnswers() {
+            return (answers.size() > 1);
         }
 
         boolean isFavorite() {
