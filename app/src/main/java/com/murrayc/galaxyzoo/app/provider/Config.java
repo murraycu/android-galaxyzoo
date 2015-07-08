@@ -150,7 +150,7 @@ public final class Config {
 
 
 
-        SUBJECT_GROUPS_TO_USE_FOR_NEW_QUERIES = new ArrayList<String>();
+        SUBJECT_GROUPS_TO_USE_FOR_NEW_QUERIES = new ArrayList<>();
         for (final Map.Entry<String, SubjectGroup> entry : SUBJECT_GROUPS.entrySet()) {
             final Config.SubjectGroup group = entry.getValue();
             if (group.getUseForNewQueries()) {
