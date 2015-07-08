@@ -1,3 +1,9 @@
+1.50
+
+* Add the app-version to the user-agent when uploading.
+* Check for internal classifications problems before uploading.
+
+
 1.49
 
 * Use galaxy subjects from the sloan survey group,
