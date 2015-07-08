@@ -668,26 +668,48 @@ public class ItemsContentProvider extends ContentProvider {
                         //This is a (small) duplicate of what SyncProvider does.
                         //TODO: Find a way to ask the SyncProvider to do exactly this and no more,
                         //and block until it has finished?
-                        try {
-                            final List<ZooniverseClient.Subject> subjects = mZooniverseClient.requestMoreItemsSync(1);
-                            mSubjectAdder.addSubjects(subjects, false /* not async - we need it immediately. */);
-                        } catch (final HttpUtils.NoNetworkException e) {
+                        // Try this more than once, in case we are using multiple groups
+                        // and some of the groups are no longer available from the server.
+                        // This doesn't guarantee that we will try all groups, but it makes
+                        // it much more likely that we will hit one that works.
+                        boolean found = false;
+                        for(int i = 0; i < 3; i++) {
+                            List<ZooniverseClient.Subject> subjects = null;
+                            try {
+                                subjects = mZooniverseClient.requestMoreItemsSync(1);
+                            } catch (final HttpUtils.NoNetworkException e) {
+                                //Return the empty cursor,
+                                //and let the caller guess at the cause.
+                                //If we let the exception be thrown by this query() method then
+                                //it will causes an app crash in AsyncTask.done(), as used by CursorLoader.
+                                //TODO: Find a better way to respond to errors when using CursorLoader?
+                                Log.error("ItemsContentProvider.query(): next: requestMoreItemsSync threw NoNetworkException.");
+                            } catch (final ZooniverseClient.RequestMoreItemsException e) {
+                                //Return the empty cursor,
+                                //and let the caller guess at the cause.
+                                //If we let the exception be thrown by this query() method then
+                                //it will causes an app crash in AsyncTask.done(), as used by CursorLoader.
+                                //TODO: Find a better way to respond to errors when using CursorLoader?
+                                Log.error("ItemsContentProvider.query(): next: requestMoreItemsSync threw RequestMoreItemsException.");
+                            }
+
+                            if ((subjects == null) || (subjects.isEmpty())) {
+                                Log.error("ItemsContentProvider.query(): next: requestMoreItemsSync returned no items.");
+                            } else {
+                                found = true;
+                                mSubjectAdder.addSubjects(subjects, false /* not async - we need it immediately. */);
+                                break;
+                            }
+                        }
+
+                        if (!found) {
                             //Return the empty cursor,
                             //and let the caller guess at the cause.
-                            //If we let the exception be thrown by this query() method then
-                            //it will causes an app crash in AsyncTask.done(), as used by CursorLoader.
-                            //TODO: Find a better way to respond to errors when using CursorLoader?
-                            return c;
-                        } catch (final ZooniverseClient.RequestMoreItemsException e) {
-                            //Return the empty cursor,
-                            //and let the caller guess at the cause.
-                            //If we let the exception be thrown by this query() method then
-                            //it will causes an app crash in AsyncTask.done(), as used by CursorLoader.
-                            //TODO: Find a better way to respond to errors when using CursorLoader?
-                            Log.error("ZooniverseClient.requestMoreItemsSync() failed", e);
+                            Log.error("ItemsContentProvider.query(): next: requestMoreItemsSync returned no items even after multiple attempts");
                             return c;
                         }
 
+                        //Close the cursor and try again, now that we expect to succeed:
                         c.close();
                         c = queryItemNext(projection, selection, selectionArgs, orderBy);
                     }
