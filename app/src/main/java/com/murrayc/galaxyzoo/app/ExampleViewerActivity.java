@@ -88,9 +88,10 @@ public class ExampleViewerActivity extends BaseActivity {
             //because we know that our activities will never be opened from another app.
             //See http://developer.android.com/training/implementing-navigation/ancestral.html.
             final Intent upIntent = NavUtils.getParentActivityIntent(this);
-            if (upIntent != null) {
-                upIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            if (upIntent == null) {
+                return false;
             }
+            upIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             NavUtils.navigateUpTo(this, upIntent);
             return true;
