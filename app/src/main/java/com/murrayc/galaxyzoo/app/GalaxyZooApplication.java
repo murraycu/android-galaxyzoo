@@ -30,7 +30,7 @@ import com.squareup.picasso.Picasso;
  */
 public class GalaxyZooApplication extends Application {
 
-    static final Picasso.Listener picassoListener = new PicassoListener();
+    private static final Picasso.Listener picassoListener = new PicassoListener();
 
     @Override
     public void onCreate() {

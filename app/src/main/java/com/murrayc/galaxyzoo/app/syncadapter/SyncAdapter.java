@@ -58,12 +58,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String PARAM_PART_CLASSIFICATION = "classification";
     private static final String WHERE_CLAUSE_NOT_DONE = Item.Columns.DONE + " != 1";
     private static final String WHERE_CLAUSE_UPLOADED = Item.Columns.UPLOADED + " == 1";
-    public static final String[] PROJECTION_ITEMS_OUTSTANDING = {Item.Columns._ID,
+    private static final String[] PROJECTION_ITEMS_OUTSTANDING = {Item.Columns._ID,
             Item.Columns.SUBJECT_ID,
             Item.Columns.GROUP_ID};
-    public static final String[] PROJECTION_ID = {Item.Columns._ID};
-    public static final String[] PROJECTION_FAVORITE = {Item.Columns.FAVORITE};
-    public static final String[] PROJECTION_CLASSIFICATION_CHECKBOX_ID = {ClassificationCheckbox.Columns.CHECKBOX_ID};
+    private static final String[] PROJECTION_ID = {Item.Columns._ID};
+    private static final String[] PROJECTION_FAVORITE = {Item.Columns.FAVORITE};
+    private static final String[] PROJECTION_CLASSIFICATION_CHECKBOX_ID = {ClassificationCheckbox.Columns.CHECKBOX_ID};
     private int mUploadsInProgress = 0;
 
     private boolean mRequestMoreItemsTaskInProgress = false;

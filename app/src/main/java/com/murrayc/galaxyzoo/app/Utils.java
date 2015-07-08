@@ -50,7 +50,7 @@ public final class Utils {
      * For use when parsing and building raw binary data:
      */
     public static final String STRING_ENCODING = "UTF-8";
-    static final String ASSET_PATH_DECISION_TREE_DIR = "decision_tree/";
+    private static final String ASSET_PATH_DECISION_TREE_DIR = "decision_tree/";
     private static final String JSON_FILE_EXTENSION = ".json";
 
     /**

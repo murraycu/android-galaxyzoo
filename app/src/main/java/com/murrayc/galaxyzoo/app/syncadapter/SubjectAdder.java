@@ -75,8 +75,8 @@ public class SubjectAdder {
             Item.Columns.LOCATION_STANDARD_URI,
             Item.Columns.LOCATION_THUMBNAIL_URI,
             Item.Columns.LOCATION_INVERTED_URI};
-    public static final String[] PROJECTION_URI_PART_DATA = {ItemsContentProvider.URI_PART_DATA};
-    public static final String[] PROJECTION_SUBJECT_ID = {Item.Columns.SUBJECT_ID};
+    private static final String[] PROJECTION_URI_PART_DATA = {ItemsContentProvider.URI_PART_DATA};
+    private static final String[] PROJECTION_SUBJECT_ID = {Item.Columns.SUBJECT_ID};
 
     private static final String WHERE_CLAUSE_DOWNLOAD_NOT_DONE = "(" +
             Item.Columns.LOCATION_STANDARD_DOWNLOADED + " != 1" +

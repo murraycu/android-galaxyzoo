@@ -54,7 +54,7 @@ public class ZooFragment extends Fragment {
     /** Asynchronously cache the log in status in loggedIn.
      * Derived classes can call this in their onCreateView.
      **/
-    protected void cacheLoggedInStatus() {
+    private void cacheLoggedInStatus() {
         final LoginUtils.GetExistingLogin task = new LoginUtils.GetExistingLogin(getActivity()) {
             @Override
             protected void onPostExecute(final LoginUtils.LoginDetails loginDetails) {

@@ -120,7 +120,7 @@ public class ExampleViewerFragment extends Fragment {
         mUriStr = uriStr;
     }
 
-    public void setExampleUrlAlternative(final String uriStr) {
+    private void setExampleUrlAlternative(final String uriStr) {
         mUriStrAlternative = uriStr;
     }
 

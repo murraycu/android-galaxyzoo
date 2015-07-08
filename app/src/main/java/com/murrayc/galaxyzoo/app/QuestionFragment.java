@@ -310,7 +310,7 @@ public class QuestionFragment extends BaseQuestionFragment
         mCallbacks = sDummyCallbacks;
     }
 
-    public void update() {
+    private void update() {
         final FragmentActivity activity = getActivity();
         if (activity == null)
             return;
