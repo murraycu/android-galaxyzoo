@@ -43,7 +43,6 @@ import java.net.URL;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -103,14 +102,7 @@ public class ZooniverseClient {
 
         //Get a list of only the groups that should be used for new queries.
         //TODO: Avoid doing this each time?
-        final List<String> groupIds = new ArrayList<>();
-        for (final Map.Entry<String, Config.SubjectGroup> entry : Config.SUBJECT_GROUPS.entrySet()) {
-            final Config.SubjectGroup group = entry.getValue();
-            if (group.getUseForNewQueries()) {
-                groupIds.add(entry.getKey());
-            }
-        }
-
+        final List<String> groupIds = Config.getSubjectGroupsToUseForNewQueries();
         if(groupIds.size() == 1) {
             return groupIds.get(0);
         }

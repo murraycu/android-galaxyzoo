@@ -21,7 +21,9 @@ package com.murrayc.galaxyzoo.app.provider;
 
 import com.murrayc.galaxyzoo.app.DecisionTree;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +46,10 @@ public final class Config {
     //(However, this problem was avoided by using a SyncAdapter: http://www.murrayc.com/permalink/2015/01/22/android-galaxyzoo-network-io-and-ui-responsiveness/ )
     //It also allows us to get a mix of items from different groups.
     public static final int MAXIMUM_DOWNLOAD_ITEMS = 5;
+
+    public static List<String> getSubjectGroupsToUseForNewQueries() {
+        return SUBJECT_GROUPS_TO_USE_FOR_NEW_QUERIES;
+    }
 
     public static class SubjectGroup {
         final String filename;
@@ -74,10 +80,11 @@ public final class Config {
         }
     }
 
+    public static final Map<String, SubjectGroup> SUBJECT_GROUPS;
+    private static final List<String> SUBJECT_GROUPS_TO_USE_FOR_NEW_QUERIES;
+
     //See Config.coffee:production:
     //https://github.com/zooniverse/Galaxy-Zoo/blob/master/app/lib/config.coffee
-    public static final Map<String, SubjectGroup> SUBJECT_GROUPS;
-
     public static final String SUBJECT_GROUP_ID_SLOAN = "50251c3b516bcb6ecb000002";
     public static final String SUBJECT_GROUP_ID_SLOAN_SINGLEBAND = "5514521e2f0eef2012000001";
     public static final String SUBJECT_GROUP_ID_GOODS_FULL = "551453e12f0eef21f2000001";
@@ -104,5 +111,14 @@ public final class Config {
         SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SLOAN_SINGLEBAND /* sloan_singleband */,
                 new SubjectGroup("sloan_singleband_tree.xml", false,
                         new DecisionTree.DiscussQuestion("sloan_singleband-11", "a-0", "a-1")));
+
+
+        SUBJECT_GROUPS_TO_USE_FOR_NEW_QUERIES = new ArrayList<String>();
+        for (final Map.Entry<String, SubjectGroup> entry : SUBJECT_GROUPS.entrySet()) {
+            final Config.SubjectGroup group = entry.getValue();
+            if (group.getUseForNewQueries()) {
+                SUBJECT_GROUPS_TO_USE_FOR_NEW_QUERIES.add(entry.getKey());
+            }
+        }
     }
 }
