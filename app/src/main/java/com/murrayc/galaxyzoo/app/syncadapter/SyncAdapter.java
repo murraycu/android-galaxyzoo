@@ -87,6 +87,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize);
         mHandler = new Handler(Looper.getMainLooper());
 
+        //Uncomment this to make debugger breakpoints work: android.os.Debug.waitForDebugger();
+
         mClient = new ZooniverseClient(context, Config.SERVER);
         mSubjectAdder = new SubjectAdder(context, mClient.getRequestQueue());
 
