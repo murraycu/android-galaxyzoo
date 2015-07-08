@@ -32,7 +32,10 @@ import java.util.Map;
  */
 public final class Config {
 
+    //The real server:
     public static final String SERVER = "https://api.zooniverse.org/projects/galaxy_zoo/";
+    //For testing:
+    //public static final String SERVER = "https://dev.zooniverse.org/projects/galaxy_zoo/";
 
     public static class SubjectGroup {
         final String filename;
