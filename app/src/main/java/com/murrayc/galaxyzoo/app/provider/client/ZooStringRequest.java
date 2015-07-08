@@ -20,6 +20,11 @@ class ZooStringRequest extends StringRequest {
     public Map<String, String> getHeaders(){
         final Map<String, String> headers = new HashMap<>();
         headers.put(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.getUserAgent());
+
+        //This is required by the newer API, so let's start asking for it already:
+        //See http://docs.panoptes.apiary.io/#introduction/authentication
+        headers.put(HttpUtils.HTTP_REQUEST_HEADER_PARAM_ACCEPT, HttpUtils.CONTENT_TYPE_JSON);
+
         return headers;
     }
 }
