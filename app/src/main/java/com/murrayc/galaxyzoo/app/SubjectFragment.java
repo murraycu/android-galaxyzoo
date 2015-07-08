@@ -190,7 +190,9 @@ public class SubjectFragment extends ItemFragment
         final Object systemService = activity.getSystemService(Context.DOWNLOAD_SERVICE);
         if (systemService == null || !(systemService instanceof DownloadManager)) {
             Log.error("doDownloadImage(): Could not get DOWNLOAD_SERVICE.");
+            return;
         }
+        
         final DownloadManager downloadManager = (DownloadManager)systemService;
         downloadManager.enqueue(request);
     }
