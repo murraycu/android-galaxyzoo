@@ -22,6 +22,7 @@ package com.murrayc.galaxyzoo.app.provider;
 import android.content.Context;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
@@ -56,7 +57,7 @@ import java.util.concurrent.TimeoutException;
 public final class HttpUtils {
 
     public static final String HTTP_REQUEST_HEADER_PARAM_USER_AGENT = "User-Agent";
-    public static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";
+    private static final String USER_AGENT_MURRAYC = "murrayc.com-android-galaxyzoo";
     public static final int TIMEOUT_MILLIS = 20000; //20 seconds. Long but not too short for GPRS connections and not endless.
 
     public static void throwIfNoNetwork(final Context context) {
@@ -220,9 +221,14 @@ public final class HttpUtils {
         @Override
         public Map<String, String> getHeaders(){
             final Map<String, String> headers = new HashMap<>();
-            headers.put(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.USER_AGENT_MURRAYC);
+            headers.put(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, getUserAgent());
             return headers;
         }
+    }
+
+    @NonNull
+    public static String getUserAgent() {
+        return HttpUtils.USER_AGENT_MURRAYC;
     }
 
     /*

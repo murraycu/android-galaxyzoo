@@ -99,7 +99,7 @@ public class ZooniverseClient {
     }
 
     private static void setConnectionUserAgent(final HttpURLConnection connection) {
-        connection.setRequestProperty(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.USER_AGENT_MURRAYC);
+        connection.setRequestProperty(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.getUserAgent());
     }
 
     /** Return a group ID selected at random.

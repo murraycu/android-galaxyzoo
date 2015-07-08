@@ -19,7 +19,7 @@ class ZooStringRequest extends StringRequest {
     @Override
     public Map<String, String> getHeaders(){
         final Map<String, String> headers = new HashMap<>();
-        headers.put(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.USER_AGENT_MURRAYC);
+        headers.put(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.getUserAgent());
         return headers;
     }
 }
