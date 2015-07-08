@@ -122,19 +122,17 @@ public class Singleton {
                     Log.error("Singleton: Exception while closing inputStreamTree", e);
                 }
             }
-
-            if (inputStreamTranslation != null) {
-                try {
-                    inputStreamTranslation.close();
-                } catch (final IOException e) {
-                    Log.error("Singleton: Exception while closing inputStreamTranslation", e);
-                }
-            }
-            inputStreamTranslation = null; //So we reload it if necessary.
         }
 
-
-
+        if (inputStreamTranslation != null) {
+            try {
+                inputStreamTranslation.close();
+            } catch (final IOException e) {
+                Log.error("Singleton: Exception while closing inputStreamTranslation", e);
+            }
+        }
+        inputStreamTranslation = null; //So we reload it if necessary.
+        
         mIconsCache = new IconsCache(context, decisionTreesToPreloadIcons);
     }
 
