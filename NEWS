@@ -1,3 +1,10 @@
+1.51
+
+* Help: Allow viewing of full images again.
+* Avoid a crash when starting on Italian or French systems.
+  (A regression in version 1.50).
+
+
 1.50
 
 * Add the app-version to the user-agent when uploading.
