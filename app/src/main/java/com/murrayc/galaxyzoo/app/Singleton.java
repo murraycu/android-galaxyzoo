@@ -99,6 +99,7 @@ public class Singleton {
                 continue;
             }
 
+            //We have to reload inputStreamTranslation because we cannot just reuse it:
             if ((inputStreamTranslation == null) && !TextUtils.isEmpty(translationFileName)) {
                 inputStreamTranslation = Utils.openAsset(context, translationFileName);
             }
@@ -123,6 +124,8 @@ public class Singleton {
                 }
             }
 
+            //Make sure that we reload this instead of trying to reuse it,
+            //because we cannot reuse it:
             if (inputStreamTranslation != null) {
                 try {
                     inputStreamTranslation.close();
@@ -133,6 +136,16 @@ public class Singleton {
             inputStreamTranslation = null; //So we reload it if necessary.
         }
 
+        //Just in case the for() never iterates even once,
+        //which would be very odd:
+        if (inputStreamTranslation != null) {
+            try {
+                inputStreamTranslation.close();
+            } catch (final IOException e) {
+                Log.error("Singleton: Exception while closing inputStreamTranslation", e);
+            }
+        }
+        inputStreamTranslation = null; //So we reload it if necessary.
 
 
         mIconsCache = new IconsCache(context, decisionTreesToPreloadIcons);
