@@ -35,7 +35,7 @@ public final class Config {
     public static final int ICON_WIDTH_HEIGHT = 100; /* px */
 
 
-    private static final String STATIC_SERVER = "http://static.zooniverse.org/www.galaxyzoo.org/";
+    private static final String STATIC_SERVER = "https://static.zooniverse.org/www.galaxyzoo.org/";
     private static final String STATIC_IMAGES_SERVER = STATIC_SERVER + "images/";
 
     //This is one big image file containing many icons,
