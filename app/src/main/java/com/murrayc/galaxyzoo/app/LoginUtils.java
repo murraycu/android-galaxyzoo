@@ -277,6 +277,7 @@ public final class LoginUtils {
             //avoid the need for this version check at runtime.
             accountManager.removeAccount(account, null, null, null);
         } else {
+            //noinspection deprecation
             accountManager.removeAccount(account, null, null);
         }
     }
