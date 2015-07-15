@@ -10343,8 +10343,9 @@ com.murrayc.galaxyzoo.app.Singleton -> com.murrayc.galaxyzoo.app.bi:
     com.murrayc.galaxyzoo.app.IconsCache mIconsCache -> d
     java.util.Map mDecisionTrees -> e
     com.murrayc.galaxyzoo.app.Singleton$LocaleDetails mLocaleDetails -> f
+    boolean loggedIn -> g
     com.murrayc.galaxyzoo.app.Singleton$LocaleDetails getLocaleDetails(android.content.Context) -> a
-    void onInitTaskFinished() -> c
+    void onInitTaskFinished() -> d
     void init(android.content.Context,com.murrayc.galaxyzoo.app.Singleton$Callbacks) -> a
     com.murrayc.galaxyzoo.app.Singleton getInstance() -> a
     com.murrayc.galaxyzoo.app.DecisionTree getDecisionTree(java.lang.String) -> a
@@ -10352,8 +10353,10 @@ com.murrayc.galaxyzoo.app.Singleton -> com.murrayc.galaxyzoo.app.bi:
     android.graphics.drawable.BitmapDrawable getIconDrawable(android.content.Context,java.lang.String) -> a
     android.graphics.drawable.BitmapDrawable getIconDrawable(android.content.Context,com.murrayc.galaxyzoo.app.DecisionTree$BaseButton) -> a
     boolean localeIsDifferent(android.content.Context) -> b
+    void setCachedLoggedIn(boolean) -> a
+    boolean getCachedLoggedIn() -> b
     com.murrayc.galaxyzoo.app.Singleton access$202(com.murrayc.galaxyzoo.app.Singleton) -> a
-    void access$300() -> b
+    void access$300() -> c
 com.murrayc.galaxyzoo.app.Singleton$1 -> com.murrayc.galaxyzoo.app.bj:
 com.murrayc.galaxyzoo.app.Singleton$Callbacks -> com.murrayc.galaxyzoo.app.bk:
     void onInitialized() -> a
@@ -10488,17 +10491,17 @@ com.murrayc.galaxyzoo.app.ZooAccountAuthenticatorActivity -> com.murrayc.galaxyz
     void onCreate(android.os.Bundle) -> onCreate
     void finish() -> finish
 com.murrayc.galaxyzoo.app.ZooFragment -> com.murrayc.galaxyzoo.app.by:
-    boolean loggedIn -> aa
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
     void onResume() -> l
     void cacheLoggedInStatus() -> K
-    void setLoggedIn(boolean) -> d
+    void setCachedLoggedIn(boolean) -> d
+    boolean getCachedLoggedIn() -> L
     boolean onOptionsItemSelected(android.view.MenuItem) -> a
     void onPrepareOptionsMenu(android.view.Menu) -> a
-    void requestLogin() -> L
-    void requestLogout() -> M
-    void showAbout() -> N
-    void showSettings() -> O
+    void requestLogin() -> M
+    void requestLogout() -> N
+    void showAbout() -> O
+    void showSettings() -> P
 com.murrayc.galaxyzoo.app.ZooFragment$1 -> com.murrayc.galaxyzoo.app.bz:
     com.murrayc.galaxyzoo.app.ZooFragment this$0 -> a
     void onPostExecute(com.murrayc.galaxyzoo.app.LoginUtils$LoginDetails) -> a

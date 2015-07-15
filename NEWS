@@ -1,3 +1,10 @@
+1.52
+
+* Upload: Fix a problem with the uploads.
+  (A regression in version 1.50).
+* Menu: Really show Login again after the user has logged out.
+
+
 1.51
 
 * Help: Allow viewing of full images again.
