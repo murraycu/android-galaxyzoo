@@ -324,9 +324,10 @@ public class ZooniverseClient {
             conn.setRequestProperty("Authorization", HttpUtils.generateAuthorizationHeader(authName, authApiKey));
         }
 
-        //This is required by the newer API, so let's start asking for it already:
+        //This will be required by the newer API, but we don't ask for it already
+        //because the current server wants it to be "application/x-www-form-urlencoded" instead,
         //See http://docs.panoptes.apiary.io/#introduction/authentication
-        conn.setRequestProperty(HttpUtils.HTTP_REQUEST_HEADER_PARAM_CONTENT_TYPE, HttpUtils.CONTENT_TYPE_JSON);
+        //conn.setRequestProperty(HttpUtils.HTTP_REQUEST_HEADER_PARAM_CONTENT_TYPE, HttpUtils.CONTENT_TYPE_JSON);
 
         try {
             writeParamsToHttpPost(conn, nameValuePairs);
