@@ -51,6 +51,10 @@ public class Singleton {
     private final Map<String, DecisionTree> mDecisionTrees = new HashMap<>();
     private LocaleDetails mLocaleDetails = null;
 
+    //A cache of the logged in status,
+    //to avoid the need for an async check via the AccountManager.
+    private static boolean loggedIn;
+
     /**
      * Don't use this: Use Singleton::init() and then call getInstance().
      * This is only public so we can test it.
@@ -264,6 +268,14 @@ public class Singleton {
         //changes, but that is rare enough not to be a problem.
         final LocaleDetails newDetails = getLocaleDetails(context);
         return !newDetails.equals(mLocaleDetails);
+    }
+
+    public void setCachedLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
+    public boolean getCachedLoggedIn() {
+        return loggedIn;
     }
 
     public interface Callbacks {

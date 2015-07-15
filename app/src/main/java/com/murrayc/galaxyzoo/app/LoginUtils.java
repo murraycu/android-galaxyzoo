@@ -205,7 +205,7 @@ public final class LoginUtils {
                 super.onPostExecute(result);
 
                 //Make sure that the currently-shown menu will update:
-                fragment.setLoggedIn(false);
+                fragment.setCachedLoggedIn(false);
 
                 //TODO: This doesn't actually seem to cause the (various) child fragments'
                 //onPrepareOptionsMenu() methods to be called. Maybe it doesn't work with

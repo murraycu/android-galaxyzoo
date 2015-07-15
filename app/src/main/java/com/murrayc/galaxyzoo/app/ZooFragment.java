@@ -37,8 +37,6 @@ import android.widget.TextView;
  * Created by murrayc on 8/7/14.
  */
 public class ZooFragment extends Fragment {
-    private boolean loggedIn = false;
-
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -60,14 +58,34 @@ public class ZooFragment extends Fragment {
             protected void onPostExecute(final LoginUtils.LoginDetails loginDetails) {
                 super.onPostExecute(loginDetails);
 
-                ZooFragment.this.setLoggedIn(LoginUtils.getLoggedIn(loginDetails));
+                ZooFragment.this.setCachedLoggedIn(LoginUtils.getLoggedIn(loginDetails));
             }
         };
         task.execute();
     }
 
-    public void setLoggedIn(final boolean loggedIn) {
-        this.loggedIn = loggedIn;
+    public void setCachedLoggedIn(final boolean loggedIn) {
+        final Singleton singleton = Singleton.getInstance();
+
+        //This can happen before the Singleton has been initialized, during startup.
+        //It doesn't matter at that point.
+        if (singleton == null) {
+            return;
+        }
+
+        singleton.setCachedLoggedIn(loggedIn);
+    }
+
+    private boolean getCachedLoggedIn() {
+        final Singleton singleton = Singleton.getInstance();
+
+        //This can happen before the Singleton has been initialized, during startup.
+        //It doesn't matter at that point.
+        if (singleton == null) {
+            return false;
+        }
+
+        return singleton.getCachedLoggedIn();
     }
 
     @Override
@@ -106,6 +124,7 @@ public class ZooFragment extends Fragment {
             return;
         }
 
+        final boolean loggedIn = getCachedLoggedIn();
         itemLogin.setVisible(!loggedIn);
         itemLogout.setVisible(loggedIn);
     }
