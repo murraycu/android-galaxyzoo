@@ -205,6 +205,9 @@ public class ClassifyActivity extends ItemActivity
             }
 
             final AccountManager mgr = AccountManager.get(context);
+
+            //Note this needs the GET_ACCOUNTS permission on
+            //SDK <=22
             final Account[] accts = mgr.getAccountsByType(LoginUtils.ACCOUNT_TYPE);
             if((accts == null) || (accts.length < 1)) {
                 //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");

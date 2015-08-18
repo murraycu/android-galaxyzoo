@@ -330,6 +330,8 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
 
             final Account account = new Account(accountName, LoginUtils.ACCOUNT_TYPE);
             if (addingAccount) {
+                //Note that this requires the AUTHENTICATE_ACCOUNTS permission on
+                //SDK <=22:
                 accountManager.addAccountExplicitly(account, null, null);
                 LoginUtils.copyPrefsToAccount(context, accountManager, account);
 
@@ -343,6 +345,8 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             //if this activity was launched from our Authenticator, for instance if our
             //Authenticator found that the accounts' existing auth token was invalid.
             //Presumably it is necessary if this activity is launched from our app.
+            //Note that this requires the AUTHENTICATE_ACCOUNTS permission on
+            //SDK <=22.
             accountManager.setAuthToken(account, LoginUtils.ACCOUNT_AUTHTOKEN_TYPE, loginResult.getApiKey());
 
             return null;

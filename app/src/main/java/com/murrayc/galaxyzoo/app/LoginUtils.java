@@ -171,6 +171,8 @@ public final class LoginUtils {
 
         result.name = account.name;
 
+        //Note that this requires the USE_CREDENTIALS permission on
+        //SDK <=22.
         final AccountManagerFuture<Bundle> response = mgr.getAuthToken(account, ACCOUNT_AUTHTOKEN_TYPE, null, null, null, null);
         try {
             final Bundle bundle = response.getResult();
@@ -230,6 +232,8 @@ public final class LoginUtils {
     private static void addAnonymousAccount(final Context context) {
         final AccountManager accountManager = AccountManager.get(context);
         final Account account = new Account(ACCOUNT_NAME_ANONYMOUS, LoginUtils.ACCOUNT_TYPE);
+        //Note that this requires the AUTHENTICATE_ACCOUNTS permission on
+        //SDK <=22:
         accountManager.addAccountExplicitly(account, null, null);
 
         //In case it has not been called yet.
@@ -278,6 +282,8 @@ public final class LoginUtils {
             accountManager.removeAccount(account, null, null, null);
         } else {
             //noinspection deprecation
+            //Note that this needs the MANAGE_ACCOUNT permission on
+            //SDK <=22.
             accountManager.removeAccount(account, null, null);
         }
     }
@@ -345,6 +351,8 @@ public final class LoginUtils {
             return null;
         }
 
+        //Note that this requires the AUTHENTICATE_ACCOUNTS permission on
+        //SDK <=22.
         return mgr.getUserData(account, context.getString(prefKeyResId));
     }
 
@@ -358,6 +366,8 @@ public final class LoginUtils {
      */
     @Nullable
     private static Account getAccount(final AccountManager mgr) {
+        //Note this needs the GET_ACCOUNTS permission on
+        //SDK <=22
         final Account[] accts = mgr.getAccountsByType(ACCOUNT_TYPE);
         if((accts == null) || (accts.length < 1)) {
             //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
@@ -392,6 +402,8 @@ public final class LoginUtils {
     }
 
     private static void copyPrefToAccount(final AccountManager mgr, final Account account, final String key, final String value) {
+        //Note that this requires the AUTHENTICATE_ACCOUNTS permission on
+        //SDK <=22.
         mgr.setUserData(account, key, value);
     }
 
