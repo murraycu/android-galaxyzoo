@@ -31,6 +31,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Html;
@@ -44,7 +45,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
@@ -356,7 +356,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         }
 
         if(loggedIn) {
-            UiUtils.showLoggedInToast(this);
+            UiUtils.showLoggedInMessage(mLoginFormView);
         }
 
 
@@ -430,14 +430,15 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             // A null result means that we didn't even get a response from the server for some reason:
             if (result == null) {
                 //Respond appropriately:
+                final View viewForSnackbar = LoginActivity.this.mLoginFormView;
                 if (exceptionCaught instanceof HttpUtils.NoNetworkException) {
-                    UiUtils.warnAboutNoNetworkConnection(LoginActivity.this, (HttpUtils.NoNetworkException)exceptionCaught);
+                    UiUtils.warnAboutNoNetworkConnection(viewForSnackbar, (HttpUtils.NoNetworkException)exceptionCaught);
                 } else {
                     //There was some other connection error:
                     Log.error("UserLoginTask(): Exception from ZooniverseClient.loginSync()", exceptionCaught);
 
-                    final Toast toast = Toast.makeText(LoginActivity.this, getString(R.string.error_could_not_connect), Toast.LENGTH_LONG);
-                    toast.show();
+                    final Snackbar snackbar = Snackbar.make(viewForSnackbar, R.string.error_could_not_connect, Snackbar.LENGTH_LONG);
+                    snackbar.show();
                 }
 
                 return;

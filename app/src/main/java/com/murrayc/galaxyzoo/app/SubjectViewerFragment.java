@@ -176,7 +176,7 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
 
         if (mCursor.getCount() <= 0) { //In case the query returned no rows.
             Log.error("SubjectViewerFragment.updateFromCursor(): The ContentProvider query returned no rows.");
-            UiUtils.warnAboutMissingNetwork(activity);
+            UiUtils.warnAboutMissingNetwork(activity, mRootView);
 
             return;
         }

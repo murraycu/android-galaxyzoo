@@ -340,7 +340,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
             //we will show the loading view (progress) again.
             hideAll();
 
-            if(UiUtils.warnAboutMissingNetwork(activity)) {
+            if(UiUtils.warnAboutMissingNetwork(activity, mRootView)) {
                 //Try again later when we seem to be connected to a new network.
                 //If that doesn't work then we'll end up here again.
                 listenForNetworkReconnection();

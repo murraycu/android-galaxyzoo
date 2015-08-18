@@ -26,12 +26,12 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 
@@ -41,9 +41,9 @@ import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 final class UiUtils {
 
     /*
-    static void warnAboutNoItemsToDo(final Activity activity) {
-        final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_subjects), Toast.LENGTH_LONG);
-        toast.show();
+    static void warnAboutNoItemsToDo(final View view) {
+        final Snackbar snackbar = Snackbar.makeText(view, R.string.error_no_subjects, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
     */
 
@@ -61,9 +61,13 @@ final class UiUtils {
         context.startActivity(intent);
     }
 
-    static void showLoggedInToast(final Context context) {
-        final Toast toast = Toast.makeText(context, context.getString(R.string.message_logged_in), Toast.LENGTH_LONG);
-        toast.show();
+    /**
+     *
+     * @param view Any view (including a child view), for use with Snackbar.make().
+     */
+    static void showLoggedInMessage(final View view) {
+        final Snackbar snackbar = Snackbar.make(view, R.string.message_logged_in, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     static int getPxForDpResource(final Context context, final int resourceId) {
@@ -97,7 +101,7 @@ final class UiUtils {
         return options.toBundle();
     }
 
-    public static void warnAboutNoNetworkConnection(final Activity activity, final HttpUtils.NoNetworkException ex) {
+    public static void warnAboutNoNetworkConnection(final View view, final HttpUtils.NoNetworkException ex) {
         //This null check would be correct, but seems harsh because this code will only run
         //in response to an exception, so we cannot expect to test it completely.
         /*
@@ -107,28 +111,28 @@ final class UiUtils {
         */
 
         if ((ex != null) && ex.getWifiOnly()) {
-            warnAboutNoWifiNetworkConnection(activity);
+            warnAboutNoWifiNetworkConnection(view);
         } else {
-            warnAboutNoNetworkConnectionAtAll(activity);
+            warnAboutNoNetworkConnectionAtAll(view);
         }
     }
 
-    private static void warnAboutNoNetworkConnection(final Activity activity, final boolean notConnectedBecauseNotOnWifi) {
+    private static void warnAboutNoNetworkConnection(final View view, final boolean notConnectedBecauseNotOnWifi) {
         if (notConnectedBecauseNotOnWifi) {
-            warnAboutNoWifiNetworkConnection(activity);
+            warnAboutNoWifiNetworkConnection(view);
         } else {
-            warnAboutNoNetworkConnectionAtAll(activity);
+            warnAboutNoNetworkConnectionAtAll(view);
         }
     }
 
-    private static void warnAboutNoNetworkConnectionAtAll(final Activity activity) {
-        final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_network), Toast.LENGTH_LONG);
-        toast.show();
+    private static void warnAboutNoNetworkConnectionAtAll(final View view) {
+        final Snackbar snackbar = Snackbar.make(view, R.string.error_no_network, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
-    private static void warnAboutNoWifiNetworkConnection(final Activity activity) {
-        final Toast toast = Toast.makeText(activity, activity.getString(R.string.error_no_wifi_network), Toast.LENGTH_LONG);
-        toast.show();
+    private static void warnAboutNoWifiNetworkConnection(final View view) {
+        final Snackbar snackbar = Snackbar.make(view, R.string.error_no_wifi_network, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
 
@@ -140,8 +144,8 @@ final class UiUtils {
      * @param activity
      * @return
      */
-    static boolean warnAboutMissingNetwork(final Activity activity) {
-        return warnAboutMissingNetwork(activity, Utils.getUseWifiOnlyFromSharedPrefs(activity));
+    static boolean warnAboutMissingNetwork(final Activity activity, final View view) {
+        return warnAboutMissingNetwork(activity, view, Utils.getUseWifiOnlyFromSharedPrefs(activity));
     }
 
     /**
@@ -150,7 +154,7 @@ final class UiUtils {
      * @param activity
      * @return
      */
-    static boolean warnAboutMissingNetwork(final Activity activity, final boolean wifiOnly) {
+    static boolean warnAboutMissingNetwork(final Activity activity, final View view, final boolean wifiOnly) {
         //Check for this possible cause.
         // TODO: Avoid copy/pasting with QuestionFragment
         // TODO: Is there any simpler way to just catch the
@@ -158,7 +162,7 @@ final class UiUtils {
         final Utils.NetworkConnected networkConnected = Utils.getNetworkIsConnected(activity,
                 wifiOnly);
         if (!networkConnected.connected) {
-            warnAboutNoNetworkConnection(activity, networkConnected.notConnectedBecauseNotOnWifi);
+            warnAboutNoNetworkConnection(view, networkConnected.notConnectedBecauseNotOnWifi);
             return true;
         }
 

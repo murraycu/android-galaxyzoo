@@ -196,7 +196,7 @@ public class SubjectExtrasFragment extends ItemFragment
 
         if (mCursor.getCount() <= 0) { //In case the query returned no rows.
             Log.error("SubjectExtrasFragment.updateFromCursor(): The ContentProvider query returned no rows.");
-            UiUtils.warnAboutMissingNetwork(activity, Utils.getUseWifiOnlyFromSharedPrefs(activity));
+            UiUtils.warnAboutMissingNetwork(activity, mRootView, Utils.getUseWifiOnlyFromSharedPrefs(activity));
 
             return;
         }

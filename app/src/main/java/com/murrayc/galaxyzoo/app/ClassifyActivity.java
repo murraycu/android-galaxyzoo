@@ -37,6 +37,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
@@ -352,7 +353,8 @@ public class ClassifyActivity extends ItemActivity
             //TODO: Is there a better way to do this?
             //Hiding the login option menu item would still leave some doubt,
             //and graying it out would be against the Android design guidelines.
-            UiUtils.showLoggedInToast(this);
+            final View parentLayout = findViewById(R.id.root_view);
+            UiUtils.showLoggedInMessage(parentLayout);
         }
 
         //Request a sync in case sync has not happened before because there was not yet

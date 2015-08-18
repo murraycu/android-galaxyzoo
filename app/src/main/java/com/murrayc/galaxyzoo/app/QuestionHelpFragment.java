@@ -186,7 +186,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         //so we will need a network connection.
         final Activity activity = getActivity();
         final boolean requireWiFi = false; //This is an explicit request. But TODO: Ask for confirmation if wifi-only is on.
-        if(UiUtils.warnAboutMissingNetwork(activity, requireWiFi)) {
+        if(UiUtils.warnAboutMissingNetwork(activity, imageButton, requireWiFi)) {
             return;
         }
 
