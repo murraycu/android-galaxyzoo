@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -237,8 +238,10 @@ public class ListFragment extends ZooFragment
     }
 
     @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(final Context context) {
+        super.onAttach(context);
+
+        final Activity activity = getActivity();
 
         // Activities containing this fragment must implement its callbacks.
         if (!(activity instanceof Callbacks)) {

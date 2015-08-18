@@ -20,6 +20,7 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -108,8 +109,10 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
     }
 
     @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(final Context context) {
+        super.onAttach(context);
+
+        final Activity activity = getActivity();
 
         // Activities containing this fragment must implement its callbacks.
         if (!(activity instanceof Callbacks)) {
