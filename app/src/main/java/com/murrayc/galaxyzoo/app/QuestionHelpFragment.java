@@ -126,7 +126,7 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         layoutVertical.setOrientation(LinearLayout.VERTICAL);
 
         final TextView textViewAnswer = new AppCompatTextView(context);
-        textViewAnswer.setTextAppearance(context, R.style.TextAppearance_AppCompat_Subhead);
+        textViewAnswer.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
         textViewAnswer.setText(answer.getText());
         layoutVertical.addView(textViewAnswer,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
