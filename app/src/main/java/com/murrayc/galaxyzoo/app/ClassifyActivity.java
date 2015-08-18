@@ -35,6 +35,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
@@ -270,7 +271,7 @@ public class ClassifyActivity extends ItemActivity
         //TODO: Get the list of permissions from AndroidManifest.xml ?
         final ArrayList<String> permissionsMissing = new ArrayList<>();
         for (final String permission : PERMISSIONS_REQUIRED) {
-            if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 permissionsMissing.add(permission);
             }
         }
@@ -281,7 +282,7 @@ public class ClassifyActivity extends ItemActivity
             Log.error("ClassifyActivity.checkPermissions(): requesting permissions because checkSelfPermission() failed for permissions: " + permissionsMissing);
 
             //We will get the result asynchronously in onRequestPermissionsResult().
-            requestPermissions(array, PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, array, PERMISSION_REQUEST_CODE);
         }
     }
 
