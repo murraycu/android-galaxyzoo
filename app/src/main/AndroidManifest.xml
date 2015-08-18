@@ -39,7 +39,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:supportsRtl="true"
-        android:name="GalaxyZooApplication">
+        android:name="GalaxyZooApplication"
+        android:fullBackupContent="false"> <!-- We have nothing worth backing up. -->
 
         <!-- We use launchMode="singleTop" because we don't need multiple instances of the list.
         Otherwise, Up would create a new instance, because Up is meant to ignore the back stack. -->
