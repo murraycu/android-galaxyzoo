@@ -268,7 +268,7 @@ public class Singleton {
         return !newDetails.equals(mLocaleDetails);
     }
 
-    public void setCachedLoggedIn(boolean loggedIn) {
+    public void setCachedLoggedIn(final boolean loggedIn) {
         this.loggedIn = loggedIn;
     }
 

@@ -243,14 +243,14 @@ public class ClassifyActivity extends ItemActivity
     //public static final String AUTHORITY = Item.AUTHORITY;
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions,
+                                           @NonNull final int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSION_REQUEST_CODE)
         {
             int permissionIndex = 0;
-            for (int result : grantResults) {
+            for (final int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     if (permissionIndex < permissions.length) {
                         Log.error("onRequestPermissionsResult(): failed for permission: " + permissions[permissionIndex]);
