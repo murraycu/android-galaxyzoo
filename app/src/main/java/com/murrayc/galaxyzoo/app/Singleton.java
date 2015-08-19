@@ -149,8 +149,6 @@ public class Singleton {
                 Log.error("Singleton: Exception while closing inputStreamTranslation", e);
             }
         }
-        inputStreamTranslation = null; //So we reload it if necessary.
-
 
         mIconsCache = new IconsCache(context, decisionTreesToPreloadIcons);
     }
