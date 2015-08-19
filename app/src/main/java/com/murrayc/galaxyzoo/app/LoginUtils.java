@@ -284,6 +284,7 @@ public final class LoginUtils {
             //noinspection deprecation
             //Note that this needs the MANAGE_ACCOUNT permission on
             //SDK <=22.
+            //noinspection deprecation
             accountManager.removeAccount(account, null, null);
         }
     }
