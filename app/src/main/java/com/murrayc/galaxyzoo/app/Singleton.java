@@ -269,7 +269,7 @@ public class Singleton {
     }
 
     public void setCachedLoggedIn(final boolean loggedIn) {
-        this.loggedIn = loggedIn;
+        Singleton.loggedIn = loggedIn;
     }
 
     public boolean getCachedLoggedIn() {
