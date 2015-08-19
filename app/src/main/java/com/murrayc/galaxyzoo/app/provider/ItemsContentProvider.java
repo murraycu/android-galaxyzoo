@@ -36,6 +36,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -281,7 +282,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(final Uri uri, final String selection, final String[] selectionArgs) {
+    public int delete(@NonNull final Uri uri, final String selection, final String[] selectionArgs) {
         final int match = sUriMatcher.match(uri);
         final int affected;
 
@@ -349,7 +350,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(final Uri uri) {
+    public String getType(@NonNull final Uri uri) {
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_ITEMS:
                 return CONTENT_TYPE_ITEMS;
@@ -370,7 +371,7 @@ public class ItemsContentProvider extends ContentProvider {
         }
     }
 
-    public String[] getStreamTypes(final Uri uri, final String mimeTypeFilter) {
+    public String[] getStreamTypes(@NonNull final Uri uri, @NonNull final String mimeTypeFilter) {
 
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_FILE:
@@ -394,14 +395,14 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     @Override
-    public ParcelFileDescriptor openFile(final Uri uri, final String mode)
+    public ParcelFileDescriptor openFile(@NonNull final Uri uri, @NonNull final String mode)
             throws FileNotFoundException {
         return super.openFileHelper(uri, mode);
     }
 
     //TODO: Is this actually used by anything?
     @Override
-    public Uri insert(final Uri uri, final ContentValues values) {
+    public Uri insert(@NonNull final Uri uri, final ContentValues values) {
 
         // Note: We map the values' columns names to the internal database columns names.
         // Strangely, I can't find any example code, or open source code, that bothers to do this,
@@ -602,7 +603,7 @@ public class ItemsContentProvider extends ContentProvider {
 
 
     @Override
-    public Cursor query(final Uri uri, final String[] projection, final String selection,
+    public Cursor query(@NonNull final Uri uri, final String[] projection, final String selection,
                         final String[] selectionArgs, final String sortOrder) {
         //TODO: Avoid a direct implicit mapping between the Cursor column names in "selection" and the
         //underlying SQL database names.
@@ -878,7 +879,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(final Uri uri, final ContentValues values, final String selection,
+    public int update(@NonNull final Uri uri, final ContentValues values, final String selection,
                       final String[] selectionArgs) {
         final int affected;
 
