@@ -48,7 +48,7 @@ import okio.Buffer;
  */
 public class ZooniverseClientTest extends AndroidTestCase {
 
-    public static final String TEST_GROUP_ID = "551453e12f0eef21f2000001";
+    private static final String TEST_GROUP_ID = "551453e12f0eef21f2000001";
 
     @Override
     public void setUp() throws IOException {

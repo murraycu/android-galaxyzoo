@@ -47,7 +47,7 @@ public class IconsCacheTest extends AndroidTestCase {
     public void tearDown() {
     }
 
-    static void checkIcon(final IconsCache iconsCache, final String iconName) {
+    private static void checkIcon(final IconsCache iconsCache, final String iconName) {
         assertNotNull(iconName);
         assertFalse(iconName.isEmpty());
 

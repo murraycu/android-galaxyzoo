@@ -97,7 +97,7 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
         return mQuestionId;
     }
 
-    public String getGroupId() {
+    private String getGroupId() {
         return mGroupId;
     }
 
@@ -106,8 +106,7 @@ public class QuestionHelpActivity extends BaseActivity implements ItemFragment.C
         mQuestionId = questionId;
     }
 
-    //This is not private, so we can use it in tests.
-    public void setGroupId(final String groupId) {
+    private void setGroupId(final String groupId) {
         mGroupId = groupId;
     }
 
