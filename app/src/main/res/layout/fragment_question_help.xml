@@ -18,6 +18,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textIsSelectable="false" />
 
+        <!-- Despite what android-lint might say, the id here is used,
+        in this very same layout with layout_below. -->
         <TextView
             android:id="@+id/textViewExamples"
             android:layout_width="wrap_content"

@@ -11,6 +11,8 @@
 
     <include layout="@layout/toolbar" />
 
+    <!-- The fragment ID is unused in the code but is needed by Android
+    to preserve state across activity restarts. -->
     <fragment
         android:id="@+id/table_nav"
         android:name="com.murrayc.galaxyzoo.app.ListFragment"
