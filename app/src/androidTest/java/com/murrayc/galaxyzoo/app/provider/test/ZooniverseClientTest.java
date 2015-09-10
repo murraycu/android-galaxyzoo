@@ -27,6 +27,7 @@ import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
+import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
@@ -36,7 +37,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -311,7 +311,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
     }
 
     private ZooniverseClient createZooniverseClient(final MockWebServer server) {
-        final URL mockUrl = server.getUrl("/");
+        final HttpUrl mockUrl = server.url("/");
         return new ZooniverseClient(getContext(), mockUrl.toString());
     }
 
