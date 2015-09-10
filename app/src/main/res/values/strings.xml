@@ -176,7 +176,7 @@
     <string name="pref_description_wifi_only">To reduce carrier data charges, don\'t download over mobile networks.</string>
 
     <string name="pref_title_show_discuss_question">Offer Discussion</string>
-    <string name="pref_description_show_discuss_question">Whether to show the \"Would you like to discuss this object?\" question.</string>
+    <string name="pref_description_show_discuss_question">Whether to show the “Would you like to discuss this object?” question.</string>
 
     //The android:transitionName used for the ImageView that shows the subject.
     //Activities can use the same transitionName on small versions of the image,

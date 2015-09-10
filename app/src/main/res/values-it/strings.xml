@@ -112,7 +112,7 @@
   <string name="pref_title_wifi_only">Scarica solo tramite Wi-Fi</string>
   <string name="pref_description_wifi_only">Per ridurre i costi applicati dall\'operatore per i dati, non scaricare tramite reti mobili.</string>
   <string name="pref_title_show_discuss_question">Proponi una discussione</string>
-  <string name="pref_description_show_discuss_question">Fare vedere la domanda \"Vorresti discutere a proposito di quest\'oggetto?\" oppure no</string>
+  <string name="pref_description_show_discuss_question">Fare vedere la domanda “Vorresti discutere a proposito di quest\'oggetto?” oppure no</string>
   <!--The possible numbers of items that may be downloaded in advance before they are needed.-->
   <string-array name="pref_cache_size_entries">
     <item>5 argomenti</item>
