@@ -1131,11 +1131,11 @@ public class ItemsContentProvider extends ContentProvider {
                         try {
                             sqLiteDatabase.execSQL("ALTER TABLE " + TABLE_NAME_ITEMS + " ADD COLUMN "
                                     + ItemsDbColumns.GROUP_ID + " TEXT;");
-                            break;
                         } catch( final SQLiteException ex) {
                             Log.error("onUpgrade: ALTER TABLE ADD COLUMN failed", ex);
                             //Fall through to the default case to recreate the tables completely.
                         }
+                        break;
                     }
 
                     default: {
