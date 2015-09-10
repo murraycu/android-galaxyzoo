@@ -17,6 +17,7 @@
         android:id="@+id/table_nav"
         android:name="com.murrayc.galaxyzoo.app.ListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_list" />
 
 </LinearLayout>
