@@ -13,7 +13,8 @@
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textIsSelectable="false" />
 
     <TextView
         android:id="@+id/textViewText"
@@ -21,7 +22,8 @@
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/standard_margin"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:minLines="2" />
+        android:minLines="2"
+        android:textIsSelectable="false" />
 
     <TableLayout
         android:id="@+id/layoutAnswers"
