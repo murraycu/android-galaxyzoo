@@ -21,6 +21,7 @@ package com.murrayc.galaxyzoo.app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -126,7 +127,12 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
         layoutVertical.setOrientation(LinearLayout.VERTICAL);
 
         final TextView textViewAnswer = new AppCompatTextView(context);
-        textViewAnswer.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textViewAnswer.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
+        } else {
+            //noinspection deprecation
+            textViewAnswer.setTextAppearance(context, R.style.TextAppearance_AppCompat_Subhead);
+        }
         textViewAnswer.setText(answer.getText());
         layoutVertical.addView(textViewAnswer,
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
