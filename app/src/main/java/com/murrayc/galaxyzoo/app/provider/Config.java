@@ -86,7 +86,7 @@ public final class Config {
     //See Config.coffee:production:
     //https://github.com/zooniverse/Galaxy-Zoo/blob/master/app/lib/config.coffee
     public static final String SUBJECT_GROUP_ID_DECALS = "55db7cf01766276e7b000001";
-    //TODO: public static final String SUBJECT_GROUP_ID_ILLUSTRIS = "55db71251766276613000001";
+    public static final String SUBJECT_GROUP_ID_ILLUSTRIS = "55db71251766276613000001";
     public static final String SUBJECT_GROUP_ID_SLOAN = "50251c3b516bcb6ecb000002";
     public static final String SUBJECT_GROUP_ID_SLOAN_SINGLEBAND = "5514521e2f0eef2012000001";
     public static final String SUBJECT_GROUP_ID_GOODS_FULL = "551453e12f0eef21f2000001";
@@ -101,6 +101,9 @@ public final class Config {
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_DECALS, //SSID / Decals
                     new SubjectGroup("decals_tree.xml", true,
                             new DecisionTree.DiscussQuestion("decals-11", "a-0", "a-1")));
+            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_ILLUSTRIS, //SSID / Decals
+                    new SubjectGroup("illustris_tree.xml", true,
+                            new DecisionTree.DiscussQuestion("illustris-11", "a-0", "a-1")));
 
             //We don't request items for all these groups any more, but we still want to load the
             //trees so can ask questions about items that have already been downloaded and stored in
