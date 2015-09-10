@@ -44,16 +44,22 @@ public final class Log {
     }
 
     private static void fatal(final String message) {
-        android.util.Log.e(LOG_TAG, defaultString(message));
+        if(android.util.Log.isLoggable(LOG_TAG, android.util.Log.ERROR)) {
+            android.util.Log.e(LOG_TAG, defaultString(message));
+        }
     }
 
     // Error methods
     public static void error(final String message, final Throwable e) {
-        android.util.Log.e(LOG_TAG, defaultString(message), e);
+        if(android.util.Log.isLoggable(LOG_TAG, android.util.Log.ERROR)) {
+            android.util.Log.e(LOG_TAG, defaultString(message), e);
+        }
     }
 
     public static void error(final String message) {
-        android.util.Log.e(LOG_TAG, defaultString(message));
+        if(android.util.Log.isLoggable(LOG_TAG, android.util.Log.ERROR)) {
+            android.util.Log.e(LOG_TAG, defaultString(message));
+        }
     }
 
     // Warning methods
@@ -62,15 +68,21 @@ public final class Log {
     }
 
     private static void warn(final String message) {
-        android.util.Log.w(LOG_TAG, defaultString(message));
+        if(android.util.Log.isLoggable(LOG_TAG, android.util.Log.WARN)) {
+            android.util.Log.w(LOG_TAG, defaultString(message));
+        }
     }
 
     // Info methods
     public static void info(final String message, final Throwable e) {
-        android.util.Log.i(LOG_TAG, defaultString(message) + ": " + e.getMessage());
+        if(android.util.Log.isLoggable(LOG_TAG, android.util.Log.INFO)) {
+            android.util.Log.i(LOG_TAG, defaultString(message) + ": " + e.getMessage());
+        }
     }
 
     public static void info(final String message) {
-        android.util.Log.i(LOG_TAG, defaultString(message));
+        if(android.util.Log.isLoggable(LOG_TAG, android.util.Log.INFO)) {
+            android.util.Log.i(LOG_TAG, defaultString(message));
+        }
     }
 }
