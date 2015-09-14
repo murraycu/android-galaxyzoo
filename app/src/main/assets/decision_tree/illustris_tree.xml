@@ -87,31 +87,20 @@
     <title>Bulge</title>
     <text>How prominent is the central bulge, compared with the rest of the galaxy?</text>
     <help>It's not always easy to tell, but look at the centre of the galaxy for a round bulge of stars which may obscure any bar and the spiral arms in this central region. Click to see larger images.</help>
-    <answer id="a-0" icon="bulge_none" examplesCount="0" leadsTo="illustris-5">
+    <answer id="a-0" icon="bulge_none" examplesCount="0" leadsTo="illustris-6">
       <text>No bulge</text>
     </answer>
-    <answer id="a-1" icon="bulge_noticeable" examplesCount="0" leadsTo="illustris-5">
+    <answer id="a-1" icon="bulge_noticeable" examplesCount="0" leadsTo="illustris-6">
       <text>Just noticeable</text>
     </answer>
-    <answer id="a-2" icon="bulge_obvious" examplesCount="0" leadsTo="illustris-5">
+    <answer id="a-2" icon="bulge_obvious" examplesCount="0" leadsTo="illustris-6">
       <text>Obvious</text>
     </answer>
-    <answer id="a-3" icon="bulge_dominant" examplesCount="0" leadsTo="illustris-5">
+    <answer id="a-3" icon="bulge_dominant" examplesCount="0" leadsTo="illustris-6">
       <text>Dominant</text>
     </answer>
   </question>
   <question id="illustris-5">
-    <title>Odd</title>
-    <text>Is there anything odd?</text>
-    <help>We're looking for signs that the galaxy is merging, is disturbed, or has other unusual features. Click to see larger images.</help>
-    <answer id="a-0" icon="yes" examplesCount="0" leadsTo="illustris-6">
-      <text>Yes</text>
-    </answer>
-    <answer id="a-1" icon="no" examplesCount="0" leadsTo="illustris-11">
-      <text>No</text>
-    </answer>
-  </question>
-  <question id="illustris-6">
     <title>Odd</title>
     <text>Do you see any of these odd features in the image?</text>
     <help/>
@@ -140,17 +129,28 @@
       <text>Dust lane</text>
     </checkbox>
   </question>
+ <question id="illustris-6">
+    <title>Odd</title>
+    <text>Is there anything odd?</text>
+    <help>We're looking for signs that the galaxy is merging, is disturbed, or has other unusual features. Click to see larger images.</help>
+    <answer id="a-0" icon="yes" examplesCount="0" leadsTo="illustris-5">
+      <text>Yes</text>
+    </answer>
+    <answer id="a-1" icon="no" examplesCount="0" leadsTo="illustris-11">
+      <text>No</text>
+    </answer>
+  </question>
   <question id="illustris-7">
     <title>Round</title>
     <text>How rounded is it?</text>
     <help/>
-    <answer id="a-0" icon="smooth_round" examplesCount="5" leadsTo="illustris-5">
+    <answer id="a-0" icon="smooth_round" examplesCount="5" leadsTo="illustris-6">
       <text>Completely round</text>
     </answer>
-    <answer id="a-1" icon="smooth_in-between" examplesCount="5" leadsTo="illustris-5">
+    <answer id="a-1" icon="smooth_in-between" examplesCount="5" leadsTo="illustris-6">
       <text>In between</text>
     </answer>
-    <answer id="a-2" icon="smooth_cigar" examplesCount="5" leadsTo="illustris-5">
+    <answer id="a-2" icon="smooth_cigar" examplesCount="5" leadsTo="illustris-6">
       <text>Cigar shaped</text>
     </answer>
   </question>
@@ -158,13 +158,13 @@
     <title>Bulge</title>
     <text>Does the galaxy have a bulge at its center? If so, what shape?</text>
     <help>Concentrate on the centre of the galaxy - if it has a smooth, uninterrupted, needle or lens-shape then click "no bulge." Otherwise your options are "rounded" bulge or "boxy" (but boxy bulges are rare). Click to see larger images.</help>
-    <answer id="a-0" icon="edge_round" examplesCount="5" leadsTo="illustris-5">
+    <answer id="a-0" icon="edge_round" examplesCount="5" leadsTo="illustris-6">
       <text>Rounded</text>
     </answer>
-    <answer id="a-1" icon="edge_boxy" examplesCount="5" leadsTo="illustris-5">
+    <answer id="a-1" icon="edge_boxy" examplesCount="5" leadsTo="illustris-6">
       <text>Boxy</text>
     </answer>
-    <answer id="a-2" icon="edge_none" examplesCount="5" leadsTo="illustris-5">
+    <answer id="a-2" icon="edge_none" examplesCount="5" leadsTo="illustris-6">
       <text>No bulge</text>
     </answer>
   </question>
