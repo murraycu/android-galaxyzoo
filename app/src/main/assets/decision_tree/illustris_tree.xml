@@ -31,22 +31,22 @@
     <title>Spiral</title>
     <text>How many spiral arms are there?</text>
     <help/>
-    <answer id="a-0" icon="spiral_1" examplesCount="5" leadsTo="illustris-4">
+    <answer id="a-0" icon="spiral_1" examplesCount="0" leadsTo="illustris-4">
       <text>1</text>
     </answer>
-    <answer id="a-1" icon="spiral_2" examplesCount="5" leadsTo="illustris-4">
+    <answer id="a-1" icon="spiral_2" examplesCount="0" leadsTo="illustris-4">
       <text>2</text>
     </answer>
-    <answer id="a-2" icon="spiral_3" examplesCount="5" leadsTo="illustris-4">
+    <answer id="a-2" icon="spiral_3" examplesCount="0" leadsTo="illustris-4">
       <text>3</text>
     </answer>
-    <answer id="a-3" icon="spiral_4" examplesCount="5" leadsTo="illustris-4">
+    <answer id="a-3" icon="spiral_4" examplesCount="0" leadsTo="illustris-4">
       <text>4</text>
     </answer>
-    <answer id="a-4" icon="spiral_4-plus" examplesCount="2" leadsTo="illustris-4">
+    <answer id="a-4" icon="spiral_4-plus" examplesCount="0" leadsTo="illustris-4">
       <text>More than 4</text>
     </answer>
-    <answer id="a-5" icon="spiral_cant-tell" examplesCount="5" leadsTo="illustris-4">
+    <answer id="a-5" icon="spiral_cant-tell" examplesCount="0" leadsTo="illustris-4">
       <text>Can't tell</text>
     </answer>
   </question>
@@ -87,16 +87,16 @@
     <title>Bulge</title>
     <text>How prominent is the central bulge, compared with the rest of the galaxy?</text>
     <help>It's not always easy to tell, but look at the centre of the galaxy for a round bulge of stars which may obscure any bar and the spiral arms in this central region. Click to see larger images.</help>
-    <answer id="a-0" icon="bulge_none" examplesCount="0" leadsTo="illustris-6">
+    <answer id="a-0" icon="bulge_none" examplesCount="5" leadsTo="illustris-6">
       <text>No bulge</text>
     </answer>
-    <answer id="a-1" icon="bulge_noticeable" examplesCount="0" leadsTo="illustris-6">
+    <answer id="a-1" icon="bulge_noticeable" examplesCount="5" leadsTo="illustris-6">
       <text>Just noticeable</text>
     </answer>
-    <answer id="a-2" icon="bulge_obvious" examplesCount="0" leadsTo="illustris-6">
+    <answer id="a-2" icon="bulge_obvious" examplesCount="5" leadsTo="illustris-6">
       <text>Obvious</text>
     </answer>
-    <answer id="a-3" icon="bulge_dominant" examplesCount="0" leadsTo="illustris-6">
+    <answer id="a-3" icon="bulge_dominant" examplesCount="5" leadsTo="illustris-6">
       <text>Dominant</text>
     </answer>
   </question>
