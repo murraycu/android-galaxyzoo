@@ -451,7 +451,7 @@ public final class LoginUtils {
     public static class GetExistingLogin extends AsyncTask<Void, Void, LoginDetails> {
 
         private final WeakReference<Context> mContextReference;
-        Exception mException;
+        Exception mException = null;
 
         GetExistingLogin(final Context context) {
             mContextReference = new WeakReference<>(context);
