@@ -105,8 +105,8 @@ public class ZooniverseClientTest extends AndroidTestCase {
         //ZooniverseClient uses one of several possible group IDs at random:
         //See com.murrayc.galaxyzoo.app.provider.Config
         final String possiblePath1 = "/groups/" + TEST_GROUP_ID + "/subjects?limit=5";
-        final String possiblePath2 = "/groups/" + Config.SUBJECT_GROUP_ID_SLOAN_SINGLEBAND + "/subjects?limit=5";
-        final String possiblePath3 = "/groups/" + Config.SUBJECT_GROUP_ID_SLOAN + "/subjects?limit=5";
+        final String possiblePath2 = "/groups/" + Config.SUBJECT_GROUP_ID_DECALS+ "/subjects?limit=5";
+        final String possiblePath3 = "/groups/" + Config.SUBJECT_GROUP_ID_ILLUSTRIS + "/subjects?limit=5";
 
         //TODO: Can we use this?
         // assertThat(request.getPath(), anyOf(is(possiblePath1), is(possiblePath2)));
