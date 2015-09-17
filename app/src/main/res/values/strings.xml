@@ -189,6 +189,7 @@
         <item>10 subjects</item>
         <item>20 subjects</item>
         <item>50 subjects</item>
+        <item>200 subjects</item>
     </string-array>
 
     <string-array name="pref_cache_size_values" translatable="false">
@@ -196,6 +197,7 @@
         <item>10</item>
         <item>20</item>
         <item>50</item>
+        <item>200</item>
     </string-array>
 
     <!-- The possible numbers of old items that may be kept on the device. -->
