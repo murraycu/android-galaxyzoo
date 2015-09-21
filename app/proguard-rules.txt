@@ -19,3 +19,8 @@
 # For Picasso.
 # See https://github.com/square/picasso/blob/master/README.md
 -dontwarn com.squareup.okhttp.**
+
+-dontwarn org.apache.http.**
+-dontwarn android.net.http.AndroidHttpClient
+-dontwarn com.google.android.gms.**
+-dontwarn com.android.volley.toolbox.**
