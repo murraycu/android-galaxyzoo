@@ -119,6 +119,7 @@
     <item>10 argomenti</item>
     <item>20 argomenti</item>
     <item>50 argomenti</item>
+    <item>200 argomenti</item>
   </string-array>
   <!--The possible numbers of old items that may be kept on the device.-->
   <string-array name="pref_keep_count_entries">
