@@ -53,7 +53,7 @@ public class Singleton {
 
     //A cache of the logged in status,
     //to avoid the need for an async check via the AccountManager.
-    private static boolean loggedIn;
+    private boolean loggedIn;
 
     /**
      * Don't use this: Use Singleton::init() and then call getInstance().
@@ -269,7 +269,7 @@ public class Singleton {
     }
 
     public void setCachedLoggedIn(final boolean loggedIn) {
-        Singleton.loggedIn = loggedIn;
+        this.loggedIn = loggedIn;
     }
 
     public boolean getCachedLoggedIn() {

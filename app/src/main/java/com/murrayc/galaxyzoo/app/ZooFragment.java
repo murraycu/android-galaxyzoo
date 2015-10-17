@@ -68,7 +68,7 @@ public class ZooFragment extends Fragment {
         task.execute();
     }
 
-    public void setCachedLoggedIn(final boolean loggedIn) {
+    public static void setCachedLoggedIn(final boolean loggedIn) {
         final Singleton singleton = Singleton.getInstance();
 
         //This can happen before the Singleton has been initialized, during startup.
