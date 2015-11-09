@@ -54,6 +54,7 @@ public class ClassificationInProgressTest extends AndroidTestCase {
 
         // Reconstruct object from parcel and asserts:
         final QuestionFragment.ClassificationInProgress createdFromParcel = QuestionFragment.ClassificationInProgress.CREATOR.createFromParcel(parcel);
+        //noinspection ObjectEquality
         assertFalse("Parcel is the same.", classificationInProgress == createdFromParcel);
         assertEquals(classificationInProgress, createdFromParcel);
     }
