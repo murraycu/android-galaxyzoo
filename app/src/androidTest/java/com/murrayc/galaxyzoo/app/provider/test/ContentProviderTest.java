@@ -122,7 +122,8 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
     //TODO: Test filtering of mime types?
     public void testGetStreamTypes() {
         final Uri uri = Uri.parse(Item.FILE_URI + "/1");
-        final String[] mimeTypes = mMockResolver.getStreamTypes(uri, null);
+        final String[] mimeTypes = mMockResolver.getStreamTypes(uri,
+                "*/*" /* cannot be null */);
         assertNotNull(mimeTypes);
         assertEquals(1, mimeTypes.length);
     }
@@ -130,7 +131,8 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
     public void testGetStreamTypesWrongUri() {
         //Only a file uri should provide a data stream:
         try {
-            final String[] mimeTypes = mMockResolver.getStreamTypes(Item.CONTENT_URI, null);
+            final String[] mimeTypes = mMockResolver.getStreamTypes(Item.CONTENT_URI,
+                    "*/*" /* cannot be null */);
             assertNull(mimeTypes);
             fail(); //This should not be reached: The exception should always be thrown.
         } catch (final IllegalArgumentException e) {
