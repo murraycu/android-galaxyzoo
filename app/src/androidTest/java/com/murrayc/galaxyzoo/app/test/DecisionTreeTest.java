@@ -94,7 +94,7 @@ public class DecisionTreeTest extends AndroidTestCase {
 
             //Test with all translations:
             //TODO: Get them all automatically.
-            final String[] locales = {"fr", "it"};
+            final String[] locales = {"de", "fr", "it"};
             for (final String locale : locales) {
                 final InputStream inputStreamTree = Utils.openAsset(getContext(),
                         Utils.getDecisionTreeFilepath(decisionTreeFilename));
