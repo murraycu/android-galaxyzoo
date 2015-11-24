@@ -223,14 +223,12 @@ public class DecisionTree {
     }
 
     private static void readJsonAnswers(final JsonReader reader, final Question question) throws IOException {
-        final List<Answer> answers = question.answers;
-
         reader.beginObject();
         while (reader.hasNext()) {
             final String answerId = reader.nextName();
 
             //Get the previously created answer from the decision tree and add the translated text:
-            final Answer answer = getAnswerWithId(answers, answerId);
+            final Answer answer = question.getAnswerWithId(answerId);
             if (answer != null) {
                 answer.setText(reader.nextString());
             } else {
@@ -241,14 +239,12 @@ public class DecisionTree {
     }
 
     private static void readJsonCheckboxes(final JsonReader reader, final Question question) throws IOException {
-        final List<Checkbox> checkboxes = question.checkboxes;
-
         reader.beginObject();
         while (reader.hasNext()) {
             final String answerId = reader.nextName();
 
             //Get the previously created checkbox from the decision tree and add the translated text:
-            final Checkbox checkbox = getCheckboxWithId(checkboxes, answerId);
+            final Checkbox checkbox = question.getCheckboxWithId(answerId);
             if (checkbox != null) {
                 checkbox.setText(reader.nextString());
             } else {
@@ -256,28 +252,6 @@ public class DecisionTree {
             }
         }
         reader.endObject();
-    }
-
-    @Nullable
-    private static Answer getAnswerWithId(final List<Answer> answers, final String id) {
-        for (final Answer answer : answers) {
-            if (TextUtils.equals(id, answer.getId())) {
-                return answer;
-            }
-        }
-
-        return null;
-    }
-
-    @Nullable
-    private static Checkbox getCheckboxWithId(final List<Checkbox> checkboxes, final String id) {
-        for (final Checkbox checkbox : checkboxes) {
-            if (TextUtils.equals(id, checkbox.getId())) {
-                return checkbox;
-            }
-        }
-
-        return null;
     }
 
     @Nullable
@@ -624,6 +598,30 @@ public class DecisionTree {
 
         public List<Answer> getAnswers() {
             return Collections.unmodifiableList(answers);
+        }
+
+        @Nullable
+        private Answer getAnswerWithId(final String id) {
+            //TODO: Performance:
+            for (final Answer answer : answers) {
+                if (TextUtils.equals(id, answer.getId())) {
+                    return answer;
+                }
+            }
+
+            return null;
+        }
+
+        @Nullable
+        private Checkbox getCheckboxWithId(final String id) {
+            //TODO: Performance:
+            for (final Checkbox checkbox : checkboxes) {
+                if (TextUtils.equals(id, checkbox.getId())) {
+                    return checkbox;
+                }
+            }
+
+            return null;
         }
     }
 
