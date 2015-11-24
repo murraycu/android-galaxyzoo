@@ -228,7 +228,7 @@ public class DecisionTree {
             final String answerId = reader.nextName();
 
             //Get the previously created answer from the decision tree and add the translated text:
-            final Answer answer = question.getAnswerWithId(answerId);
+            final Answer answer = question.getAnswer(answerId);
             if (answer != null) {
                 answer.setText(reader.nextString());
             } else {
@@ -244,7 +244,7 @@ public class DecisionTree {
             final String answerId = reader.nextName();
 
             //Get the previously created checkbox from the decision tree and add the translated text:
-            final Checkbox checkbox = question.getCheckboxWithId(answerId);
+            final Checkbox checkbox = question.getCheckbox(answerId);
             if (checkbox != null) {
                 checkbox.setText(reader.nextString());
             } else {
@@ -291,8 +291,8 @@ public class DecisionTree {
         if (question == null) {
             return null;
         }
- 
-        final Answer answer = question.getAnswerWithId(answerId);
+
+        final Answer answer = question.getAnswer(answerId);
         if (answer == null) {
             return null;
         }
@@ -605,12 +605,12 @@ public class DecisionTree {
         }
 
         @Nullable
-        private Answer getAnswerWithId(final String id) {
+        protected Answer getAnswer(final String id) {
             return mapAnswers.get(id);
         }
 
         @Nullable
-        private Checkbox getCheckboxWithId(final String id) {
+        private Checkbox getCheckbox(final String id) {
             return mapCheckboxes.get(id);
         }
     }
