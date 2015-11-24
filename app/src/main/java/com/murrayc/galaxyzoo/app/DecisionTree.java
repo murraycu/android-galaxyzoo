@@ -605,12 +605,12 @@ public class DecisionTree {
         }
 
         @Nullable
-        protected Answer getAnswer(final String id) {
+        Answer getAnswer(final String id) {
             return mapAnswers.get(id);
         }
 
         @Nullable
-        private Checkbox getCheckbox(final String id) {
+        Checkbox getCheckbox(final String id) {
             return mapCheckboxes.get(id);
         }
     }
