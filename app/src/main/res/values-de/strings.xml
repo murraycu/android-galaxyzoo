@@ -112,7 +112,7 @@
   <string name="pref_title_wifi_only">Nur über WLAN herunterladen</string>
   <string name="pref_description_wifi_only">Downloads über Mobilfunknetze vermeiden, um Kosten für die Datenübertragung zu senken.</string>
   <string name="pref_title_show_discuss_question">Diskussion anbieten</string>
-  <string name="pref_description_show_discuss_question">Soll die Frage: \"Möchten Sie das Objekt mit anderen diskutieren?\" angezeigt werden?</string>
+  <string name="pref_description_show_discuss_question">Soll die Frage: \“Möchten Sie das Objekt mit anderen diskutieren?\” angezeigt werden?</string>
   <!--The possible numbers of items that may be downloaded in advance before they are needed.-->
   <string-array name="pref_cache_size_entries">
     <item>5 Objekte</item>
