@@ -399,7 +399,7 @@ public class DecisionTree {
 
             final Element element = (Element) node;
             final Answer answer = loadAnswer(element);
-            result.answers.add(answer);
+            result.addAnswer(answer);
         }
 
         return result;
@@ -573,6 +573,10 @@ public class DecisionTree {
             }
 
             return true;
+        }
+
+        public void addAnswer(final Answer answer) {
+            answers.add(answer);
         }
 
         public void addCheckbox(final Checkbox checkbox) {
