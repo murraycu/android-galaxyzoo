@@ -291,21 +291,8 @@ public class DecisionTree {
         if (question == null) {
             return null;
         }
-
-        if (question.answers == null) {
-            return null;
-        }
-
-        //TODO: Use a map for performance if there are many answers:
-        //For now we use a list, instead of a map, for the answers, to have an order.
-        Answer answer = null;
-        for (final Answer anAnswer : question.answers) {
-            if (TextUtils.equals(anAnswer.getId(), answerId)) {
-                answer = anAnswer;
-                break;
-            }
-        }
-
+ 
+        final Answer answer = question.getAnswerWithId(answerId);
         if (answer == null) {
             return null;
         }
