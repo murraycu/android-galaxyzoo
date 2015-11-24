@@ -53,7 +53,7 @@ public class Singleton {
 
     //A cache of the logged in status,
     //to avoid the need for an async check via the AccountManager.
-    private boolean loggedIn;
+    private boolean loggedIn = false;
 
     /**
      * Don't use this: Use Singleton::init() and then call getInstance().
