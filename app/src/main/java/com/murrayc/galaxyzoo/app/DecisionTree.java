@@ -519,8 +519,19 @@ public class DecisionTree {
      * It returns and takes references, but only to objects that are immutable too.
      */
     public static final class Question {
+
+        //The checkboxes in sequence:
         private final List<Checkbox> checkboxes = new ArrayList<>();
+
+        //The checkboxes for retrieval by ID:
+        private final Map<String, Checkbox> mapCheckboxes = new HashMap<>();
+
+        //The answers in sequence:
         private final List<Answer> answers = new ArrayList<>();
+
+        //The answers for retrieval by ID:
+        private final Map<String, Answer> mapAnswers = new HashMap<>();
+
         private final String id;
         private String title;
         private String text;
@@ -577,10 +588,12 @@ public class DecisionTree {
 
         private void addAnswer(final Answer answer) {
             answers.add(answer);
+            mapAnswers.put(answer.getId(), answer);
         }
 
         private void addCheckbox(final Checkbox checkbox) {
             checkboxes.add(checkbox);
+            mapCheckboxes.put(checkbox.getId(), checkbox);
         }
 
         public List<Checkbox> getCheckboxes() {
@@ -593,26 +606,12 @@ public class DecisionTree {
 
         @Nullable
         private Answer getAnswerWithId(final String id) {
-            //TODO: Performance:
-            for (final Answer answer : answers) {
-                if (TextUtils.equals(id, answer.getId())) {
-                    return answer;
-                }
-            }
-
-            return null;
+            return mapAnswers.get(id);
         }
 
         @Nullable
         private Checkbox getCheckboxWithId(final String id) {
-            //TODO: Performance:
-            for (final Checkbox checkbox : checkboxes) {
-                if (TextUtils.equals(id, checkbox.getId())) {
-                    return checkbox;
-                }
-            }
-
-            return null;
+            return mapCheckboxes.get(id);
         }
     }
 
