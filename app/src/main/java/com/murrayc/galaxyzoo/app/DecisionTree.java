@@ -575,11 +575,11 @@ public class DecisionTree {
             return true;
         }
 
-        public void addAnswer(final Answer answer) {
+        private void addAnswer(final Answer answer) {
             answers.add(answer);
         }
 
-        public void addCheckbox(final Checkbox checkbox) {
+        private void addCheckbox(final Checkbox checkbox) {
             checkboxes.add(checkbox);
         }
 
