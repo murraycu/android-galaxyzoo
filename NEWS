@@ -1,3 +1,9 @@
+1.54
+
+* Add a German translation.
+* Update the French translation.
+
+
 1.53
 
 * Use the latest decals and illustris subjects.
@@ -6,6 +12,7 @@
   http://blog.galaxyzoo.org/2015/09/21/new-images-for-galaxy-zoo-part-2-illustris/
 * Settings: Add "200" as a number of items to download in advance.
 * Hopefully support Android Marshmallow and its runtime permissions.
+
 
 1.52
 
