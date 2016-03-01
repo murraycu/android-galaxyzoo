@@ -32,6 +32,8 @@
   <!--An action. Shown on a button or menu item.-->
   <string name="action_discuss">Discuti</string>
   <!--An action. Shown on a button or menu item.-->
+  <string name="action_share">Condividi</string>
+  <!--An action. Shown on a button or menu item.-->
   <string name="action_list">Lista</string>
   <!--An action. Shown on a button or menu item.-->
   <string name="action_next">Classifica</string>

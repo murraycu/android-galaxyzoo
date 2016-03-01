@@ -32,6 +32,8 @@
   <!--An action. Shown on a button or menu item.-->
   <string name="action_discuss">Diskutieren</string>
   <!--An action. Shown on a button or menu item.-->
+  <string name="action_share">Teilen</string>
+  <!--An action. Shown on a button or menu item.-->
   <string name="action_list">Liste</string>
   <!--An action. Shown on a button or menu item.-->
   <string name="action_next">Klassifizieren</string>
