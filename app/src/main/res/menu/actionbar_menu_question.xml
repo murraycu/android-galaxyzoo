@@ -15,16 +15,16 @@
         android:icon="@drawable/ic_action_help"
         app:showAsAction="ifRoom"
         android:title="@string/action_examples"
-        android:orderInCategory="4" />
+        android:orderInCategory="5" />
     <item
         android:id="@+id/option_menu_item_restart"
         android:icon="@drawable/ic_action_undo"
         app:showAsAction="ifRoom"
         android:title="@string/action_restart"
-        android:orderInCategory="5" />
+        android:orderInCategory="6" />
     <item
         android:id="@+id/option_menu_item_discuss"
         app:showAsAction="ifRoom"
         android:title="@string/action_discuss"
-        android:orderInCategory="6" />
+        android:orderInCategory="7" />
 </menu>

@@ -4,21 +4,21 @@
     <item
         android:id="@+id/option_menu_item_login"
         android:title="@string/action_login"
-        android:orderInCategory="7" />
+        android:orderInCategory="8" />
     <item
         android:id="@+id/option_menu_item_logout"
         android:title="@string/action_logout"
-        android:orderInCategory="7" />
+        android:orderInCategory="8" />
     <item
         android:id="@+id/option_menu_item_list"
         android:title="@string/action_list"
-        android:orderInCategory="8" />
+        android:orderInCategory="9" />
     <item
         android:id="@+id/option_menu_item_settings"
         android:title="@string/action_settings"
-        android:orderInCategory="9" />
+        android:orderInCategory="10" />
     <item
         android:id="@+id/option_menu_item_about"
         android:title="@string/action_about"
-        android:orderInCategory="10" />
+        android:orderInCategory="11" />
 </menu>

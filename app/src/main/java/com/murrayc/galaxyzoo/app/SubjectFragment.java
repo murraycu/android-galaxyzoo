@@ -22,12 +22,15 @@ package com.murrayc.galaxyzoo.app;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -77,6 +80,7 @@ public class SubjectFragment extends ItemFragment
     private String mUriImageInverted = null;
     private String mUriStandardRemote = null;
 
+    private ShareActionProvider mShareActionProvider = null;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -137,6 +141,13 @@ public class SubjectFragment extends ItemFragment
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         // Inflate the menu items for use in the action bar
         inflater.inflate(R.menu.actionbar_menu_subject, menu);
+
+        // Locate MenuItem with ShareActionProvider
+        final MenuItem item = menu.findItem(R.id.option_menu_item_share);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        updateShareActionIntent();
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -317,6 +328,8 @@ public class SubjectFragment extends ItemFragment
                 SubjectFragment.this.abandonItem();
             }
         });
+
+        updateShareActionIntent();
     }
 
     private boolean getInverted() {
@@ -385,5 +398,18 @@ public class SubjectFragment extends ItemFragment
         //though it doesn't suggest where/when to call it:
         //http://square.github.io/picasso/javadoc/com/squareup/picasso/RequestCreator.html#into-android.widget.ImageView-com.squareup.picasso.Callback-
         Picasso.with(getActivity()).cancelRequest(mImageView);
+    }
+
+    private void updateShareActionIntent() {
+        if (mShareActionProvider == null) {
+            Log.error("updateShareActionIntent(): mShareActionProvider is null.");
+            return;
+        }
+
+        final Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, mUriImageStandard);
+        shareIntent.setType("image/*");
+        mShareActionProvider.setShareIntent(shareIntent);
     }
 }

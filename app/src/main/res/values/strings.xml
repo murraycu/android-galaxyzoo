@@ -51,6 +51,9 @@
     <string name="action_discuss">Discuss</string>
 
     <!-- An action. Shown on a button or menu item. -->
+    <string name="action_share">Share</string>
+
+    <!-- An action. Shown on a button or menu item. -->
     <string name="action_list">List</string>
 
     <!-- An action. Shown on a button or menu item. -->
