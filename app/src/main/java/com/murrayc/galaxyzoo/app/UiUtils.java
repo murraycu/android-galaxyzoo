@@ -55,7 +55,7 @@ final class UiUtils {
         //final Uri.Builder uriBuilder = new Uri.Builder();
         //uriBuilder.path("http://talk.galaxyzoo.org/#/subjects/");
         //uriBuilder.appendPath(getZooniverseId());
-        final String uriTalk = Config.TALK_URI + zooniverseId;
+        final String uriTalk = Utils.getTalkUri(zooniverseId);
 
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriTalk));
         context.startActivity(intent);

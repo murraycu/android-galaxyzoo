@@ -27,6 +27,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -129,6 +130,11 @@ public final class Utils {
         } else {
             return ASSET_PATH_DECISION_TREE_DIR + language + JSON_FILE_EXTENSION;
         }
+    }
+
+    @NonNull
+    public static String getTalkUri(final String zooniverseId) {
+        return Config.TALK_URI + zooniverseId;
     }
 
     public static final class NetworkConnected {
