@@ -422,11 +422,18 @@ public class SubjectFragment extends ItemFragment
             shareIntent.setType("text/plain");
         }
 
-        //TODO: This doesn't seem to work, maybe because the other app wouldn't have access to our
-        //content provider?
-        //shareIntent.putExtra(Intent.EXTRA_STREAM, mUriImageStandard);
-        //shareIntent.setType("image/*");
+        if (!TextUtils.isEmpty(mUriImageStandard)) {
+            //TODO: According to this
+            //https://plus.google.com/105051985738280261832/posts/LpL9ieJZ7tg
+            //this should work if we use FLAG_GRANT_READ_URI_PERMISSION and setData().
+            shareIntent.putExtra(Intent.EXTRA_STREAM, mUriImageStandard);
+            shareIntent.setType("image/*");
 
+            //TODO: We apparently need this, but it makes the share menu item do nothing:
+            shareIntent.setData(Uri.parse(mUriImageStandard));
+
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
 
         mShareActionProvider.setShareIntent(shareIntent);
     }

@@ -113,7 +113,9 @@
             android:name=".provider.ItemsContentProvider"
             android:authorities="com.murrayc.galaxyzoo.app"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false">
+            <grant-uri-permission android:pathPattern=".*" />
+        </provider>
 
         <service
             android:name=".syncadapter.AuthenticatorService"
