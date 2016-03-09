@@ -55,7 +55,6 @@ public class SubjectExtrasFragment extends ItemFragment
     private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
     private final String[] mColumns = {Item.Columns._ID, Item.Columns.ZOONIVERSE_ID};
     private Cursor mCursor = null;
-    private String mZooniverseId = null; //Only used for the talk URI so far.
 
     // A map of checkbox IDs to buttons.
     private boolean mLoaderFinished = false;
@@ -66,14 +65,6 @@ public class SubjectExtrasFragment extends ItemFragment
      * fragment (e.g. upon screen orientation changes).
      */
     public SubjectExtrasFragment() {
-    }
-
-    private String getZooniverseId() {
-        return mZooniverseId;
-    }
-
-    private void setZooniverseId(final String zooniverseId) {
-        mZooniverseId = zooniverseId;
     }
 
     @Override

@@ -112,7 +112,6 @@ public class QuestionFragment extends BaseQuestionFragment
     // A map of checkbox IDs to buttons.
     private final Map<String, ToggleButton> mCheckboxButtons = new HashMap<>();
     private Cursor mCursor = null;
-    private String mZooniverseId = null; //Only used for the talk URI so far.
     private boolean mLoaderFinished = false;
 
     private ClassificationInProgress mClassificationInProgress = new ClassificationInProgress();
@@ -123,14 +122,6 @@ public class QuestionFragment extends BaseQuestionFragment
      * fragment (e.g. upon screen orientation changes).
      */
     public QuestionFragment() {
-    }
-
-    private String getZooniverseId() {
-        return mZooniverseId;
-    }
-
-    private void setZooniverseId(final String zooniverseId) {
-        mZooniverseId = zooniverseId;
     }
 
     @Override

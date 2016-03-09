@@ -56,6 +56,7 @@ public class ItemFragment extends ZooFragment {
     private Callbacks mCallbacks = sDummyCallbacks;
     private Singleton mSingleton = null;
     private String mItemId = null;
+    private String mZooniverseId = null; //Only used for the talk URI so far.
 
     String getItemId() {
         return mItemId;
@@ -67,6 +68,14 @@ public class ItemFragment extends ZooFragment {
 
     Singleton getSingleton() {
         return mSingleton;
+    }
+
+    protected String getZooniverseId() {
+        return mZooniverseId;
+    }
+
+    protected void setZooniverseId(final String zooniverseId) {
+        mZooniverseId = zooniverseId;
     }
 
     @Override
