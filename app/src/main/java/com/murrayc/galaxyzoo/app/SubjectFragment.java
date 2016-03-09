@@ -62,13 +62,16 @@ public class SubjectFragment extends ItemFragment
     // not our ContentProvider's column names. That seems like a design error in the Android API.
     //TODO: Use org.apache.commons.lang.ArrayUtils.indexOf() instead?
     /* private static final int COLUMN_INDEX_ID = 0; */
-    private static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 1;
-    private static final int COLUMN_INDEX_LOCATION_STANDARD_DOWNLOADED = 2;
-    private static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 3;
-    private static final int COLUMN_INDEX_LOCATION_INVERTED_DOWNLOADED = 4;
-    private static final int COLUMN_INDEX_LOCATION_STANDARD_URI_REMOTE = 5;
+    private static final int COLUMN_INDEX_ZOONIVERSE_ID = 1;
+    private static final int COLUMN_INDEX_LOCATION_STANDARD_URI = 2;
+    private static final int COLUMN_INDEX_LOCATION_STANDARD_DOWNLOADED = 3;
+    private static final int COLUMN_INDEX_LOCATION_INVERTED_URI = 4;
+    private static final int COLUMN_INDEX_LOCATION_INVERTED_DOWNLOADED = 5;
+    private static final int COLUMN_INDEX_LOCATION_STANDARD_URI_REMOTE = 6;
 
-    private final String[] mColumns = {Item.Columns._ID,
+    private final String[] mColumns = {
+            Item.Columns._ID,
+            Item.Columns.ZOONIVERSE_ID,
             Item.Columns.LOCATION_STANDARD_URI, Item.Columns.LOCATION_STANDARD_DOWNLOADED,
             Item.Columns.LOCATION_INVERTED_URI, Item.Columns.LOCATION_INVERTED_DOWNLOADED,
             Item.Columns.LOCATION_STANDARD_URI_REMOTE};
@@ -268,6 +271,8 @@ public class SubjectFragment extends ItemFragment
             return;
         }
 
+        setZooniverseId(mCursor.getString(COLUMN_INDEX_ZOONIVERSE_ID));
+
         mUriImageStandard = null;
         if (mCursor.getInt(COLUMN_INDEX_LOCATION_STANDARD_DOWNLOADED) == 1) {
             mUriImageStandard = mCursor.getString(COLUMN_INDEX_LOCATION_STANDARD_URI);
@@ -408,8 +413,21 @@ public class SubjectFragment extends ItemFragment
 
         final Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, mUriImageStandard);
-        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "A Galaxy Zoo image.");
+        //Only useful with ACTION_CHOOSER: shareIntent.putExtra(Intent.EXTRA_TITLE, "Share the Galaxy Zoo image.");
+
+        final String uri = Utils.getTalkUri(getZooniverseId());
+        if (!TextUtils.isEmpty(uri)) {
+            shareIntent.putExtra(Intent.EXTRA_TEXT, uri);
+            shareIntent.setType("text/plain");
+        }
+
+        //TODO: This doesn't seem to work, maybe because the other app wouldn't have access to our
+        //content provider?
+        //shareIntent.putExtra(Intent.EXTRA_STREAM, mUriImageStandard);
+        //shareIntent.setType("image/*");
+
+
         mShareActionProvider.setShareIntent(shareIntent);
     }
 }
