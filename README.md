@@ -13,8 +13,7 @@ Feedback and source code pull requests (or patches) are very welcome.
 Try beta versions early here: https://play.google.com/apps/testing/com.murrayc.galaxyzoo.app .
 
 See also the iPhone app for Galaxy Zoo:
-https://github.com/murraycu/ios-galaxyzoo/ https://play.google.com/store/apps/details?id=com.murrayc.galaxyzoo.app — 
-
+https://github.com/murraycu/ios-galaxyzoo/
 
 See README_permissions.md and README_translors.md
 
