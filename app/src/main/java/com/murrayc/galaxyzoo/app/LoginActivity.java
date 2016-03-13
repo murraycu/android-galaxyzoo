@@ -33,14 +33,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -102,27 +99,19 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         }
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new AppCompatTextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(final TextView textView, final int id, final KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+        mPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
+            if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                attemptLogin();
+                return true;
             }
+            return false;
         });
 
         setTextViewLink(R.id.textViewForgot, Config.FORGET_PASSWORD_URI, R.string.forgot_password_button_text);
         setTextViewLink(R.id.textViewRegister, Config.REGISTER_URI, R.string.register_button_text);
 
         final Button mUsernameSignInButton = (Button) findViewById(R.id.username_sign_in_button);
-        mUsernameSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                attemptLogin();
-            }
-        });
+        mUsernameSignInButton.setOnClickListener(view -> attemptLogin());
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);

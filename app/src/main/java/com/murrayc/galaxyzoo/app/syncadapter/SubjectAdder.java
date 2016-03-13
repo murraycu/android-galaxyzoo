@@ -29,8 +29,6 @@ import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
@@ -425,18 +423,10 @@ public class SubjectAdder {
             Log.info("cacheUriToFile(): uriFileToCache=" + uriFileToCache);
 
             final Request<Boolean> request = new HttpUtils.FileCacheRequest(getContext(), uriFileToCache, cacheFileUri,
-                    new Response.Listener<Boolean>() {
-                        @Override
-                        public void onResponse(final Boolean response) {
-                            onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(final VolleyError error) {
-                            Log.error("cacheUriToFile.onErrorResponse()", error);
-                            onImageDownloadDone(false, uriFileToCache, itemUri, imageType);
-                        }
+                    response -> onImageDownloadDone(response, uriFileToCache, itemUri, imageType),
+                    error -> {
+                        Log.error("cacheUriToFile.onErrorResponse()", error);
+                        onImageDownloadDone(false, uriFileToCache, itemUri, imageType);
                     });
 
             //We won't request the same image again if it succeeded once:

@@ -97,9 +97,7 @@ public class QuestionFragment extends BaseQuestionFragment
      * A dummy implementation of the {@link com.murrayc.galaxyzoo.app.ListFragment.Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
      */
-    private static final Callbacks sDummyCallbacks = new Callbacks() {
-        public void onClassificationFinished() {
-        }
+    private static final Callbacks sDummyCallbacks = () -> {
     };
 
     /**
@@ -417,11 +415,9 @@ public class QuestionFragment extends BaseQuestionFragment
 
             final String questionId = question.getId();
             final String answerId = answer.getId();
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(final View v) {
-                    // Perform action on click
-                    onAnswerButtonClicked(questionId, answerId);
-                }
+            button.setOnClickListener(v -> {
+                // Perform action on click
+                onAnswerButtonClicked(questionId, answerId);
             });
 
             if (col < COL_COUNT) {
