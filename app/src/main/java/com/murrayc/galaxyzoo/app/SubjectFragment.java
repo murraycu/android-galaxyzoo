@@ -114,12 +114,7 @@ public class SubjectFragment extends ItemFragment
         } else {
             //Make the image invert when clicked,
             //like in the web UI:
-            mImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View v) {
-                    doInvert();
-                }
-            });
+            mImageView.setOnClickListener(v -> doInvert());
         }
 
         setHasOptionsMenu(true);

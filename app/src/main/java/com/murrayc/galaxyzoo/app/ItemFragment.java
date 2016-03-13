@@ -167,12 +167,7 @@ public class ItemFragment extends ZooFragment {
     }
 
     void initializeSingleton() {
-        Singleton.init(getActivity(), new Singleton.Callbacks() {
-            @Override
-            public void onInitialized() {
-                onSingletonInitialized();
-            }
-        });
+        Singleton.init(getActivity(), () -> onSingletonInitialized());
     }
 
     /**
