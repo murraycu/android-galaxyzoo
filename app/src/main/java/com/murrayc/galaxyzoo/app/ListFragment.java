@@ -192,7 +192,7 @@ public class ListFragment extends ZooFragment
         mAdapter = new ListCursorAdapter(
                 activity,
                 /* No cursor yet */
-                (position, sharedElementView) -> onGridItemClicked(position, sharedElementView));
+                this::onGridItemClicked);
 
         //TODO: Can we specify the layout manager in the layout XML?
         int gridSpan = 3; //A suitable default for the error case.
