@@ -259,7 +259,11 @@ public class ZooniverseClient {
             throw new RequestMoreItemsException("response is null.");
         }
 
-        return MoreItemsJsonParser.parseMoreItemsResponseContent(response);
+        final List<ZooniverseClient.Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(response);
+        if (result == null || result.isEmpty()) {
+            throw new RequestMoreItemsException("requestMoreItemsSync(): response contained no subjects.");
+        }
+        return result;
     }
 
     public void requestMoreItemsAsync(final int count, final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
