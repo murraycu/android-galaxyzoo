@@ -429,10 +429,17 @@ public class ItemsContentProvider extends ContentProvider {
                 final ContentValues valuesComplete = new ContentValues(values);
 
                 //This doesn't actually get any data from the locations.
+                boolean fileUrisCreated = false;
                 try {
-                    createFileUrisForImages(valuesComplete);
+                    fileUrisCreated =  createFileUrisForImages(valuesComplete);
                 } catch (final IOException e) {
                     Log.error("insert(): createFileUrisForImages() failed", e);
+                }
+
+                if (!fileUrisCreated) {
+                    //Abandon the item.
+                    //We cannot add an item without its file URIs.
+                    return null;
                 }
 
                 uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_ITEMS, valuesComplete,
