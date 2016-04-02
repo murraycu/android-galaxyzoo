@@ -109,8 +109,15 @@ public final class Utils {
     @Nullable
     public static File getExternalCacheDir(final Context context) {
         try {
-            return context.getExternalCacheDir();
-        }  catch (final UnsupportedOperationException e) {
+            final File result = context.getExternalCacheDir();
+            if (result == null) {
+                Log.error("getExternalCacheDir(): null result without an exception from Context.getExternalCacheDir()");
+            }
+            return result;
+        }  catch (final SecurityException e) {
+            Log.error("getExternalCacheDir(): SecurityException from Context.getExternalCacheDir()", e);
+            return null;
+        } catch (final UnsupportedOperationException e) {
             //This happens while running under ProviderTestCase2.
             //so we just catch it and provide a useful value,
             //so at least the other functionality can be tested.
