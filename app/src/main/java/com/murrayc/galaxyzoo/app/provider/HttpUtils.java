@@ -208,7 +208,10 @@ public final class HttpUtils {
                 try {
                     parseGetFileResponseContent(context, response.data, mCacheFileUri);
                 } catch (final IOException e) {
-                    Log.error("HttpUtils.parseNetworkResponse(): parseGetFileResponseContent failed", e);
+                    //Note that this error can actually mean that the _data column _is_ there, but
+                    //that it contains a null value for the path:
+                    //  java.io.FileNotFoundException: Column _data not found.
+                    Log.error("HttpUtils.parseNetworkResponse(): parseGetFileResponseContent failed for cache content URI: " + mCacheFileUri, e);
                     return Response.error(new VolleyError("parseGetFileResponseContent() failed.", e));
                 }
             } else {
