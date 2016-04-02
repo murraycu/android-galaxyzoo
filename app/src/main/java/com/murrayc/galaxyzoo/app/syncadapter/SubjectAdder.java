@@ -133,6 +133,14 @@ public class SubjectAdder {
                 final String uriStandardRemote = c.getString(2);
                 if (!mImageDownloadsInProgress.containsKey(uriStandardRemote)) {
                     final String uriStandard = c.getString(3);
+                    if (TextUtils.isEmpty(uriStandard)) {
+                        //This shouldn't happen.
+                        //We cannot save an image to a null local URI.
+                        c.close();
+                        Utils.abandonItem(getContext(), itemId);
+                        return false;
+                    }
+
                     downloadMissingImage(itemUri, uriStandardRemote, uriStandard, ImageType.STANDARD);
                     noWorkNeeded = false;
                 }
@@ -143,6 +151,14 @@ public class SubjectAdder {
                 final String uriThumbnailRemote = c.getString(5);
                 if (!mImageDownloadsInProgress.containsKey(uriThumbnailRemote)) {
                     final String uriThumbnail = c.getString(6);
+                    if (TextUtils.isEmpty(uriThumbnail)) {
+                        //This shouldn't happen.
+                        //We cannot save an image to a null local URI.
+                        c.close();
+                        Utils.abandonItem(getContext(), itemId);
+                        return false;
+                    }
+
                     downloadMissingImage(itemUri, uriThumbnailRemote, uriThumbnail, ImageType.THUMBNAIL);
                     noWorkNeeded = false;
                 }
@@ -153,6 +169,14 @@ public class SubjectAdder {
                 final String uriInvertedRemote = c.getString(8);
                 if (!mImageDownloadsInProgress.containsKey(uriInvertedRemote)) {
                     final String uriInverted = c.getString(9);
+                    if (TextUtils.isEmpty(uriInverted)) {
+                        //This shouldn't happen.
+                        //We cannot save an image to a null local URI.
+                        c.close();
+                        Utils.abandonItem(getContext(), itemId);
+                        return false;
+                    }
+
                     downloadMissingImage(itemUri, uriInvertedRemote, uriInverted, ImageType.INVERTED);
                     noWorkNeeded = false;
                 }
@@ -171,7 +195,7 @@ public class SubjectAdder {
      * @param uriContent A Content URI for a cache file.
      * @param imageType
      */
-    private void downloadMissingImage(final Uri itemUri, final String uriRemote, final String uriContent, final ImageType imageType) {
+    private void downloadMissingImage(@NonNull final Uri itemUri, @NonNull final String uriRemote, @NonNull final String uriContent, final ImageType imageType) {
         Log.info("downloadMissingImage(): imageType=" + imageType + ", uriRemote=" + uriRemote);
 
         try {
@@ -302,14 +326,18 @@ public class SubjectAdder {
      * @param subjects
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    public void addSubjects(@NonNull final List<ZooniverseClient.Subject> subjects, final boolean asyncFileDownloads) {
+    public boolean addSubjects(@NonNull final List<ZooniverseClient.Subject> subjects, final boolean asyncFileDownloads) {
         if (subjects == null) {
-            return;
+            return false;
         }
 
         for (final ZooniverseClient.Subject subject : subjects) {
-            addSubject(subject, asyncFileDownloads);
+            if(!addSubject(subject, asyncFileDownloads)) {
+                return false;
+            }
         }
+
+        return true;
     }
 
 
@@ -501,11 +529,11 @@ public class SubjectAdder {
      * @param item
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
-    private void addSubject(final ZooniverseClient.Subject item, final boolean asyncFileDownloads) {
+    private boolean addSubject(final ZooniverseClient.Subject item, final boolean asyncFileDownloads) {
         if (subjectIsInDatabase(item.getSubjectId())) {
             //It is already in the database.
             //TODO: Update the row?
-            return;
+            return true;
         }
 
         final ContentResolver resolver = getContext().getContentResolver();
@@ -523,13 +551,14 @@ public class SubjectAdder {
 
         final Uri itemUri = resolver.insert(Item.ITEMS_URI, values);
         if (itemUri == null) {
-            throw new IllegalStateException("could not insert " +
-                    "content values: " + values);
+            Log.error("could not insert content values: " + values);
+            return false;
         }
 
         cacheUrisToFiles(itemUri, asyncFileDownloads);
 
         //TODO: notifyRowChangeById(rowId);
+        return true;
     }
 
     private boolean subjectIsInDatabase(final String subjectId) {
