@@ -1,3 +1,11 @@
+1.55
+
+* Use the latest Galaxy Zoo (decals_dr2 and ssds_lost_set) surveys,
+  as on the website.
+* Add a Share menu item, though it only shares the Discussion link for now.
+* Wait longer before failing on very slow networks.
+
+
 1.54
 
 * Add a German translation.
