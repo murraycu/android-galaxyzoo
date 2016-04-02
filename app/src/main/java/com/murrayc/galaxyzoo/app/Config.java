@@ -25,9 +25,9 @@ package com.murrayc.galaxyzoo.app;
  * Created by murrayc on 10/10/14.
  */
 public final class Config {
-    public static final String TALK_URI = "http://talk.galaxyzoo.org/#/subjects/";
+    public static final String TALK_URI = "https://talk.galaxyzoo.org/#/subjects/";
 
-    public static final String EXAMINE_URI = "http://www.galaxyzoo.org/#/examine/";
+    public static final String EXAMINE_URI = "https://www.galaxyzoo.org/#/examine/";
 
     //TODO: Is there a stable URI for this?
     //public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2015-03-30_14-13-33.css";
