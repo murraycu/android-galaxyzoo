@@ -112,6 +112,9 @@ public final class Utils {
             final File result = context.getExternalCacheDir();
             if (result == null) {
                 Log.error("getExternalCacheDir(): null result without an exception from Context.getExternalCacheDir()");
+
+                final String state = android.os.Environment.getExternalStorageState();
+                Log.error("  getExternalCacheDir(): getExternalStorageState() returned: " + state);
             }
             return result;
         }  catch (final SecurityException e) {
