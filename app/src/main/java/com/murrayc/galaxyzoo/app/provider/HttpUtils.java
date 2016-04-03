@@ -26,7 +26,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -112,7 +111,6 @@ public final class HttpUtils {
         //so don't waste memory or storage caching it.
         //(We are downloading it to our own cache, of course.)
         request.setShouldCache(false);
-        request.setRetryPolicy(new DefaultRetryPolicy(30, 2, 1f));
 
         requestQueue.add(request);
 
