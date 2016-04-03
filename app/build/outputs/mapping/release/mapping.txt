@@ -14727,7 +14727,7 @@ com.murrayc.galaxyzoo.app.provider.ItemsContentProvider -> com.murrayc.galaxyzoo
     android.database.sqlite.SQLiteDatabase getDb() -> b
     void removeItem(java.lang.String) -> c
     void removeItem(java.lang.String,java.lang.String[]) -> a
-    void createFileUrisForImages(android.content.ContentValues) -> a
+    boolean createFileUrisForImages(android.content.ContentValues) -> a
     void requestSync() -> c
     void <clinit>() -> <clinit>
 com.murrayc.galaxyzoo.app.provider.ItemsContentProvider$1 -> com.murrayc.galaxyzoo.app.provider.l:
@@ -14829,7 +14829,7 @@ com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder -> com.murrayc.galaxyzoo.app.
     void downloadMissingImage(android.net.Uri,java.lang.String,java.lang.String,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
     boolean checkForDeletedCachedImages() -> b
     boolean cachedImageExists(java.lang.String) -> a
-    void addSubjects(java.util.List,boolean) -> a
+    boolean addSubjects(java.util.List,boolean) -> a
     void cacheUrisToFiles(android.net.Uri,boolean) -> a
     void cacheUriToFileWithNullChecks(java.lang.String,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,boolean) -> a
     void cacheUriToFile(java.lang.String,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,boolean) -> b
@@ -14839,7 +14839,7 @@ com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder -> com.murrayc.galaxyzoo.app.
     void throwIfNoNetwork() -> d
     void markImageDownloadAsNotInProgress(java.lang.String) -> b
     void markImageAsDownloaded(android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType,java.lang.String) -> a
-    void addSubject(com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject,boolean) -> a
+    boolean addSubject(com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient$Subject,boolean) -> a
     boolean subjectIsInDatabase(java.lang.String) -> c
     void access$000(com.murrayc.galaxyzoo.app.syncadapter.SubjectAdder,boolean,java.lang.String,android.net.Uri,com.murrayc.galaxyzoo.app.provider.ImageType) -> a
     void <clinit>() -> <clinit>

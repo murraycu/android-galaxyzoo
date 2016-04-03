@@ -1,18 +1,8 @@
-1.57
+1.58
 
-* Use only the decals_dr2 survey. ssds_lost_set should not be active yet,
-  and does not work on the server yet.
-
-1.56
-
-* Use the new Galaxy Zoo server to retrieve new subjects.
-
-1.55
-
-* Use the latest Galaxy Zoo (decals_dr2 and ssds_lost_set) surveys,
+* Use the latest Galaxy Zoo server and survey (decals_dr2),
   as on the website.
 * Add a Share menu item, though it only shares the Discussion link for now.
-* Wait longer before failing on very slow networks.
 
 
 1.54
