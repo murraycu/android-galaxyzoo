@@ -106,12 +106,11 @@ public class ZooniverseClientTest extends AndroidTestCase {
         //See com.murrayc.galaxyzoo.app.provider.Config
         final String possiblePath1 = "/groups/" + TEST_GROUP_ID + "/subjects?limit=5";
         final String possiblePath2 = "/groups/" + Config.SUBJECT_GROUP_ID_DECALS_DR2+ "/subjects?limit=5";
-        final String possiblePath3 = "/groups/" + Config.SUBJECT_GROUP_ID_SDSS_LOST_SET + "/subjects?limit=5";
 
         //TODO: Can we use this?
         // assertThat(request.getPath(), anyOf(is(possiblePath1), is(possiblePath2)));
         final String path = request.getPath();
-        assertTrue( path.equals(possiblePath1) || path.equals(possiblePath2) || path.equals(possiblePath3));
+        assertTrue( path.equals(possiblePath1) || path.equals(possiblePath2) );
 
         server.shutdown();
     }
