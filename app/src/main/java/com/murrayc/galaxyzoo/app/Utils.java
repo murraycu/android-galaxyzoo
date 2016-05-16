@@ -219,5 +219,5 @@ public final class Utils {
         PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
     }
 
- 
+
 }

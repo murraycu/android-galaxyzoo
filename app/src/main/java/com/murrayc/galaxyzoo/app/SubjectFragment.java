@@ -206,7 +206,7 @@ public class SubjectFragment extends ItemFragment
             Log.error("doDownloadImage(): Could not get DOWNLOAD_SERVICE.");
             return;
         }
-        
+
         final DownloadManager downloadManager = (DownloadManager)systemService;
         downloadManager.enqueue(request);
     }
