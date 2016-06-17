@@ -20,9 +20,12 @@
 package com.murrayc.galaxyzoo.app;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.LocaleList;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -154,9 +157,29 @@ public class Singleton {
     }
 
     private static LocaleDetails getLocaleDetails(final Context context) {
-        final Locale locale = context.getResources().getConfiguration().locale;
-        final LocaleDetails result = new LocaleDetails();
+        final Configuration config = context.getResources().getConfiguration();
+        if (config == null) {
+            return null;
+        }
 
+        Locale locale = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            final LocaleList locales = config.getLocales();
+            if (locales == null || locales.isEmpty()) {
+                return null;
+            }
+
+            locale = locales.get(0);
+        } else {
+            //noinspection deprecation
+            locale = config.locale;
+        }
+
+        if (locale == null) {
+            return null;
+        }
+
+        final LocaleDetails result = new LocaleDetails();
         result.language = locale.getLanguage();
 
         //The Galaxy zoo files, such as ch_cn.json are lowercase, instead of having the
