@@ -19,11 +19,17 @@
 
 package com.murrayc.galaxyzoo.app.test;
 
-import android.test.AndroidTestCase;
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.murrayc.galaxyzoo.app.DecisionTree;
 import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.Config;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -31,12 +37,24 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+
 /**
  * Simple test to ensure that the generated bindings are working.
  */
-public class DecisionTreeTest extends AndroidTestCase {
-    @Override
-    public void setUp() {
+@RunWith(AndroidJUnit4.class)
+public class DecisionTreeTest {
+    Context mockContext;
+
+    @Before
+    public void setup() {
+        mockContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+    }
+
+    private Context getContext() {
+        return mockContext;
     }
 
     private static DecisionTree createCorrectDecisionTree(final boolean withTranslation) throws DecisionTree.DecisionTreeException, IOException {
@@ -62,10 +80,7 @@ public class DecisionTreeTest extends AndroidTestCase {
         return decisionTree;
     }
 
-    @Override
-    public void tearDown() {
-    }
-
+    @Test
     public void testSize() throws DecisionTree.DecisionTreeException, IOException {
         final DecisionTree decisionTree = createCorrectDecisionTree(false);
 
@@ -74,6 +89,7 @@ public class DecisionTreeTest extends AndroidTestCase {
         assertEquals(12, decisionTree.getAllQuestions().size());
     }
 
+    @Test
     public void testAllDecisionTreesWithAllTranslations() throws DecisionTree.DecisionTreeException, IOException {
         for (final Map.Entry<String, Config.SubjectGroup> entry : Config.SUBJECT_GROUPS.entrySet()) {
             final Config.SubjectGroup subjectGroup = entry.getValue();
@@ -115,6 +131,7 @@ public class DecisionTreeTest extends AndroidTestCase {
         }
     }
 
+    @Test
     public void testQuestionsWithTranslation() throws DecisionTree.DecisionTreeException, IOException {
         final DecisionTree decisionTree = createCorrectDecisionTree(true /* withTranslation */);
 
@@ -141,6 +158,7 @@ public class DecisionTreeTest extends AndroidTestCase {
         checkAnswersForQuestionSloan4(question);
     }
 
+    @Test
     public void testQuestionsWithoutTranslation() throws DecisionTree.DecisionTreeException, IOException {
         final DecisionTree decisionTree = createCorrectDecisionTree(false /* withTranslation */);
 
@@ -178,6 +196,7 @@ public class DecisionTreeTest extends AndroidTestCase {
         assertEquals(2, answer.getExamplesCount());
     }
 
+    @Test
     public void testParseBadXml() {
         final String xml = "nonsense";
         final InputStream is = new ByteArrayInputStream(xml.getBytes());

@@ -19,33 +19,32 @@
 
 package com.murrayc.galaxyzoo.app.provider.test;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+
 /**
  * Simple test to ensure that the generated bindings are working.
  */
-public class HttpUtilsTest extends AndroidTestCase {
+@RunWith(AndroidJUnit4.class)
+public class HttpUtilsTest {
 
-    @Override
-    public void setUp() throws IOException {
-    }
-
-    @Override
-    public void tearDown() {
-    }
-
-
+    @Test
     public void testGenerateAuthorizationHeader() throws IOException {
         final String header = HttpUtils.generateAuthorizationHeader("somename", "somekey123");
         assertEquals("Basic c29tZW5hbWU6c29tZWtleTEyMw==", header);
     }
 
+    @Test
     public void testGetPostDataBytes() throws IOException {
         final List<HttpUtils.NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new HttpUtils.NameValuePair("classification[subject_ids][]",

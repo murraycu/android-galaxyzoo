@@ -19,27 +19,26 @@
 
 package com.murrayc.galaxyzoo.app.provider.test;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.murrayc.galaxyzoo.app.LoginUtils;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
 /**
  * Simple test to ensure that the generated bindings are working.
  */
-public class LoginResponseJsonParserTest extends AndroidTestCase {
-
-
-    @Override
-    public void setUp() throws IOException {
-    }
-
-    @Override
-    public void tearDown() {
-    }
-
+@RunWith(AndroidJUnit4.class)
+public class LoginResponseJsonParserTest {
+    @Test
     public void testParseSuccess() throws IOException {
         final InputStream inputStream = LoginResponseJsonParserTest.class.getClassLoader().getResourceAsStream("test_login_response_success.json");
         assertNotNull(inputStream);

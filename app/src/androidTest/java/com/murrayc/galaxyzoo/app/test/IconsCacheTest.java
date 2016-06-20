@@ -19,13 +19,19 @@
 
 package com.murrayc.galaxyzoo.app.test;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.test.AndroidTestCase;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 
+import com.murrayc.galaxyzoo.app.Config;
 import com.murrayc.galaxyzoo.app.DecisionTree;
 import com.murrayc.galaxyzoo.app.IconsCache;
-import com.murrayc.galaxyzoo.app.Config;
 import com.murrayc.galaxyzoo.app.Utils;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,16 +41,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
 /**
  * Simple test to ensure that the generated bindings are working.
  */
-public class IconsCacheTest extends AndroidTestCase {
-    @Override
-    public void setUp() {
+@RunWith(AndroidJUnit4.class)
+public class IconsCacheTest {
+    Context mockContext;
+
+    @Before
+    public void setup() {
+        mockContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
     }
 
-    @Override
-    public void tearDown() {
+    private Context getContext() {
+        return mockContext;
     }
 
     private static void checkIcon(final IconsCache iconsCache, final String iconName) {
@@ -59,6 +74,7 @@ public class IconsCacheTest extends AndroidTestCase {
         assertEquals(Config.ICON_WIDTH_HEIGHT, exampleBitmap.getWidth());
     }
 
+    @Test
     public void testIconsCache() throws DecisionTree.DecisionTreeException, IOException {
         final List<DecisionTree> trees = new ArrayList<>();
         for (final Map.Entry<String, com.murrayc.galaxyzoo.app.provider.Config.SubjectGroup> entry : com.murrayc.galaxyzoo.app.provider.Config.SUBJECT_GROUPS.entrySet()) {

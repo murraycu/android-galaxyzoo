@@ -19,21 +19,39 @@
 
 package com.murrayc.galaxyzoo.app.test;
 
-import android.test.AndroidTestCase;
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.murrayc.galaxyzoo.app.DecisionTree;
 import com.murrayc.galaxyzoo.app.Singleton;
 import com.murrayc.galaxyzoo.app.provider.Config;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.io.IOException;
 import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotSame;
 
 /**
  * Simple test to ensure that the generated bindings are working.
  */
-public class SingletonTest extends AndroidTestCase {
-    @Override
-    public void setUp() {
+@RunWith(AndroidJUnit4.class)
+public class SingletonTest {
+    Context mockContext;
+
+    @Before
+    public void setup() {
+        mockContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+    }
+
+    private Context getContext() {
+        return mockContext;
     }
 
     private Singleton getSingleton() throws DecisionTree.DecisionTreeException {
@@ -55,10 +73,7 @@ public class SingletonTest extends AndroidTestCase {
         return singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_SLOAN);
     }
 
-    @Override
-    public void tearDown() {
-    }
-
+    @Test
     public void testMultipleTrees() throws DecisionTree.DecisionTreeException, IOException {
         final Singleton singleton = new Singleton(getContext());
 

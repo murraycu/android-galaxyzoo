@@ -19,11 +19,15 @@
 
 package com.murrayc.galaxyzoo.app.provider.test;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.client.MoreItemsJsonParser;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,14 +35,18 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+
 /**
  * Simple test to ensure that the generated bindings are working.
  */
-public class MoreItemsJsonParserTest extends AndroidTestCase {
+@RunWith(AndroidJUnit4.class)
+public class MoreItemsJsonParserTest {
     private List<ZooniverseClient.Subject> mSubjects = null;
 
 
-    @Override
+    @Before
     public void setUp() throws IOException {
         final InputStream inputStream = MoreItemsJsonParserTest.class.getClassLoader().getResourceAsStream("test_more_items_response.json");
         assertNotNull(inputStream);
@@ -51,14 +59,12 @@ public class MoreItemsJsonParserTest extends AndroidTestCase {
         reader.close();
     }
 
-    @Override
-    public void tearDown() {
-    }
-
+    @Test
     public void testSize() {
         assertEquals(5, mSubjects.size());
     }
 
+    @Test
     public void testValues() {
 
     }

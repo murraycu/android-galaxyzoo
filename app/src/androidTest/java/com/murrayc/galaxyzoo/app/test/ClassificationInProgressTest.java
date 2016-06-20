@@ -20,27 +20,21 @@
 package com.murrayc.galaxyzoo.app.test;
 
 import android.os.Parcel;
-import android.test.AndroidTestCase;
 
 import com.murrayc.galaxyzoo.app.QuestionFragment;
+
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+
 /**
  */
-public class ClassificationInProgressTest extends AndroidTestCase {
-
-
-    @Override
-    public void setUp() {
-
-    }
-
-    @Override
-    public void tearDown() {
-    }
-
+public class ClassificationInProgressTest {
+    @Test
     public void testParcelable() {
         final QuestionFragment.ClassificationInProgress classificationInProgress =
                 createTestClassificationInProgress();
@@ -75,6 +69,7 @@ public class ClassificationInProgressTest extends AndroidTestCase {
         return result;
     }
 
+    @Test
     public void testEqualsExpectSuccess() {
         final QuestionFragment.ClassificationInProgress a = createTestClassificationInProgress();
         final QuestionFragment.ClassificationInProgress b = createTestClassificationInProgress();
@@ -92,6 +87,7 @@ public class ClassificationInProgressTest extends AndroidTestCase {
         assertFalse(b.equals(a));
     }
 
+    @Test
     public void testEqualsExpectFailureExtraQuestion() {
         final QuestionFragment.ClassificationInProgress a = createTestClassificationInProgress();
         final QuestionFragment.ClassificationInProgress b = createTestClassificationInProgress();
