@@ -19,41 +19,66 @@
 
 package com.murrayc.galaxyzoo.app.test;
 
+import android.app.Instrumentation;
 import android.content.Intent;
-import android.test.ActivityUnitTestCase;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.murrayc.galaxyzoo.app.ListActivity;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static junit.framework.Assert.assertNotNull;
 
 /**
  * Created by murrayc on 5/26/14.
  */
-public class ListActivityTest
-        extends ActivityUnitTestCase<ListActivity> {
+@RunWith(AndroidJUnit4.class)
+public class ListActivityTest {
+    // This must be public, or we'll get this exception:
+    // org.junit.internal.runners.rules.ValidationError: The @Rule 'testRule' must be public
+    // Note: If the third argument (launchActivity) is not false (really), the tests will fail because the
+    // activity cannot be launched when you call launchActivity().
+    @Rule
+    public ActivityTestRule<ListActivity> testRule = new ActivityTestRule<>(ListActivity.class, false, false);
 
     private ListActivity mActivity;
 
-    public ListActivityTest() {
-        super(ListActivity.class);
-    }
-
-    protected void setUp() throws Exception {
-        super.setUp();
-
-        TestUtils.setTheme(this);
-
-        startActivity(new Intent(getInstrumentation().getTargetContext(), ListActivity.class), null, null);
-
-        mActivity = getActivity();
+    @Before
+    public void setUp() throws Exception {
+        final Intent intent = new Intent();
+        mActivity = testRule.launchActivity(intent);
         assertNotNull(mActivity);
     }
 
+    @Test
     public void testExists() {
         assertNotNull(mActivity);
     }
 
+    @Test
     public void testStateDestroy() {
+        //final String TEST_SOMETHING = "test123456789";
+        //TODO: mActivity.setSomething();
         mActivity.finish();
-        mActivity = this.getActivity();
-        assertNotNull(mActivity);
+
+        // Based on this:
+        // http://stackoverflow.com/a/33213279/1123654
+        final Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        instrumentation.runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                mActivity.recreate();
+            }
+        });
+
+        //TODOassertEquals(TEST_SOMETHING, mActivity.getSomething());
+
+        //TODO: Do something like this too:
+        //onView(withText("a string depending on XXX value")).check(doesNotExist())
     }
 }
