@@ -157,7 +157,11 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
                 getString(strResourceId) + "</a>";
 
         final TextView textView = (TextView) findViewById(textViewResourceId);
-        textView.setText(Html.fromHtml(html));
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            textView.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            textView.setText(Html.fromHtml(html));
+        }
 
         //This setMovementMethod() voodoo makes the textviews' HTML links clickable:
         //See http://stackoverflow.com/questions/2734270/how-do-i-make-links-in-a-textview-clickable/20647011#20647011
