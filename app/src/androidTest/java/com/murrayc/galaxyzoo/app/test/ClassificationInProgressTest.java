@@ -78,7 +78,7 @@ public class ClassificationInProgressTest {
 
     }
 
-
+    @Test
     public void testEqualsExpectFailureExtraAnswer() {
         final QuestionFragment.ClassificationInProgress a = createTestClassificationInProgress();
         final QuestionFragment.ClassificationInProgress b = createTestClassificationInProgress();
