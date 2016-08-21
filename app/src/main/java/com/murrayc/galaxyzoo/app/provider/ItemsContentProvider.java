@@ -860,7 +860,7 @@ public class ItemsContentProvider extends ContentProvider {
     private static String[] prependToArray(final String[] array, final String value) {
         //Handle array being null:
         if (array == null) {
-            String[] result = new String[1];
+            final String[] result = new String[1];
             result[0] = value;
             return result;
         }
