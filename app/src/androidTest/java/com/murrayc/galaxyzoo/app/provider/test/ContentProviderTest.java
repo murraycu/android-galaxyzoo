@@ -60,6 +60,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
 
     public void testInsertUri() {
         final Uri uri = mMockResolver.insert(Item.CONTENT_URI, getFullContentValues());
+        assertNotNull(uri);
         assertEquals(1L, ContentUris.parseId(uri));
     }
 
@@ -80,6 +81,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
 
     public void testInsertThenQuerySpecific() {
         final Uri uri = mMockResolver.insert(Item.CONTENT_URI, getFullContentValues());
+        assertNotNull(uri);
 
         final Cursor cursor = mMockResolver.query(uri, null, null, null, null);
         assertNotNull(cursor);
@@ -96,6 +98,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
 
     public void testInsertThenOpenFile() throws IOException {
         final Uri uriItem = mMockResolver.insert(Item.CONTENT_URI, getFullContentValues());
+        assertNotNull(uriItem);
         final Cursor cursor = mMockResolver.query(uriItem, null, null, null, null);
         assertNotNull(cursor);
         assertEquals(1, cursor.getCount());
