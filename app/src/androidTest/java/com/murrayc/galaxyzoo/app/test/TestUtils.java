@@ -19,8 +19,9 @@
 
 package com.murrayc.galaxyzoo.app.test;
 
-import android.test.ActivityUnitTestCase;
-import android.view.ContextThemeWrapper;
+import android.app.Instrumentation;
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 
 import com.murrayc.galaxyzoo.app.R;
 
@@ -28,10 +29,12 @@ import com.murrayc.galaxyzoo.app.R;
  * Created by murrayc on 11/7/14.
  */
 final class TestUtils {
-    static void setTheme(final ActivityUnitTestCase<?> testCase) {
+    static void setTheme() {
         //Avoid this exception:
         //java.lang.IllegalStateException: You need to use a Theme.AppCompat theme (or descendant) with this activity.
-        final ContextThemeWrapper context = new ContextThemeWrapper(testCase.getInstrumentation().getTargetContext(), R.style.AppTheme);
-        testCase.setActivityContext(context);
+        final Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        final Context context = instrumentation.getTargetContext();
+        context.setTheme(R.style.AppTheme);
+
     }
 }

@@ -51,7 +51,7 @@ public class ClassifyActivityTest {
 
     @Before
     public void setUp() throws Exception {
-        //TOOD: TestUtils.setTheme(this);
+        TestUtils.setTheme();
 
         final Intent intent = new Intent();
         mActivity = testRule.launchActivity(intent);
