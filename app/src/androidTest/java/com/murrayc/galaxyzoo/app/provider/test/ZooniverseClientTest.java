@@ -19,7 +19,9 @@
 
 package com.murrayc.galaxyzoo.app.provider.test;
 
-import android.test.AndroidTestCase;
+import android.app.Instrumentation;
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.util.MalformedJsonException;
 
 import com.murrayc.galaxyzoo.app.LoginUtils;
@@ -32,6 +34,10 @@ import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,21 +49,27 @@ import java.util.concurrent.ExecutionException;
 
 import okio.Buffer;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
 /**
  * Simple test to ensure that the generated bindings are working.
  */
-public class ZooniverseClientTest extends AndroidTestCase {
+public class ZooniverseClientTest{
 
     private static final String TEST_GROUP_ID = "551453e12f0eef21f2000001";
 
-    @Override
+    @Before
     public void setUp() throws IOException {
     }
 
-    @Override
+    @After
     public void tearDown() {
     }
 
+    @Test
     public void testMoreItems() throws IOException, InterruptedException, ZooniverseClient.RequestMoreItemsException {
         final MockWebServer server = new MockWebServer();
 
@@ -115,6 +127,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
+    @Test
     public void testLoginWithSuccess() throws IOException, InterruptedException, ZooniverseClient.LoginException {
         final MockWebServer server = new MockWebServer();
 
@@ -146,6 +159,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
+    @Test
     public void testLoginWithFailure() throws IOException {
         final MockWebServer server = new MockWebServer();
 
@@ -174,6 +188,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
+    @Test
     public void testLoginWithBadResponseContent() throws IOException {
         final MockWebServer server = new MockWebServer();
 
@@ -194,7 +209,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
-
+    @Test
     public void testMoreItemsWithBadResponseContent() throws IOException {
         final MockWebServer server = new MockWebServer();
 
@@ -215,6 +230,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
+    @Test
     public void testMoreItemsWithBadResponseCode() throws IOException {
         final MockWebServer server = new MockWebServer();
 
@@ -238,6 +254,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
+    @Test
     public void testUploadWithSuccess() throws IOException, InterruptedException, ZooniverseClient.UploadException {
         final MockWebServer server = new MockWebServer();
 
@@ -282,6 +299,7 @@ public class ZooniverseClientTest extends AndroidTestCase {
         server.shutdown();
     }
 
+    @Test
     public void testUploadWithFailure() throws IOException {
         final MockWebServer server = new MockWebServer();
 
@@ -311,7 +329,11 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
     private ZooniverseClient createZooniverseClient(final MockWebServer server) {
         final HttpUrl mockUrl = server.url("/");
-        return new ZooniverseClient(getContext(), mockUrl.toString());
+
+        final Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        final Context context = instrumentation.getTargetContext();
+
+        return new ZooniverseClient(context, mockUrl.toString());
     }
 
     private static String getStringFromStream(final InputStream input) throws IOException {
@@ -330,5 +352,4 @@ public class ZooniverseClientTest extends AndroidTestCase {
 
         return sb.toString();
     }
-
 }
