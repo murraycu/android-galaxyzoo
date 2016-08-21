@@ -223,7 +223,10 @@ public class ZooniverseClientTest{
             final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
             assertTrue((subjects == null) || (subjects.isEmpty()));
         } catch (final ZooniverseClient.RequestMoreItemsException e) {
-            assertTrue(e.getCause() instanceof IOException);
+            final Throwable cause = e.getCause();
+            if (cause != null) {
+                assertTrue(e.getCause() instanceof IOException);
+            }
         }
 
 
