@@ -70,12 +70,7 @@ public class SubjectViewerActivityTest {
         // Based on this:
         // http://stackoverflow.com/a/33213279/1123654
         final Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        instrumentation.runOnMainSync(new Runnable() {
-            @Override
-            public void run() {
-                mActivity.recreate();
-            }
-        });
+        instrumentation.runOnMainSync(() -> mActivity.recreate());
 
         assertEquals(TEST_ITEM_ID, mActivity.getItemId());
 
