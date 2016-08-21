@@ -330,7 +330,7 @@ public class ZooniverseClientTest{
         server.shutdown();
     }
 
-    private ZooniverseClient createZooniverseClient(final MockWebServer server) {
+    private static ZooniverseClient createZooniverseClient(final MockWebServer server) {
         final HttpUrl mockUrl = server.url("/");
 
         final Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
