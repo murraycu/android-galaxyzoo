@@ -7,4 +7,11 @@
 
     </application>
 
+    <!-- As suggested here:  https://www.chromium.org/chromium-os/android-apps -->
+    <!-- Some Chromebooks don't support touch.
+       It's very important to explicitly have this. -->
+    <uses-feature android:name="android.hardware.touchscreen"
+        required="false" />
+
+
 </manifest>
