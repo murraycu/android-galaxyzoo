@@ -1,3 +1,9 @@
+1.59
+
+* Correct the French translation.
+* Avoid multi-window warning on Android 7 (Nougat).
+
+
 1.58
 
 * Use the latest Galaxy Zoo server and survey (decals_dr2),
