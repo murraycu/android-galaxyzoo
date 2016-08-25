@@ -1,8 +1,4 @@
-1.60
-
-* Just rebuilt to hopefully avoid a problem with the previous apk.
-
-1.59
+1.61
 
 * Correct the French translation.
 * Avoid multi-window warning on Android 7 (Nougat).
