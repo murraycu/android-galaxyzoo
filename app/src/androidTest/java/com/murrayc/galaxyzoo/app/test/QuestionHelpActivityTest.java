@@ -70,7 +70,12 @@ public class QuestionHelpActivityTest {
         // Based on this:
         // http://stackoverflow.com/a/33213279/1123654
         final Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        instrumentation.runOnMainSync(() -> mActivity.recreate());
+        instrumentation.runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                mActivity.recreate();
+            }
+        });
 
         assertEquals(TEST_QUESTION_ID, mActivity.getQuestionId());
 
