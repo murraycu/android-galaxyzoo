@@ -167,7 +167,7 @@ public class ItemFragment extends ZooFragment {
     }
 
     void initializeSingleton() {
-        Singleton.init(getActivity(), this::onSingletonInitialized);
+        Singleton.init(getActivity(), () -> onSingletonInitialized());
     }
 
     /**
