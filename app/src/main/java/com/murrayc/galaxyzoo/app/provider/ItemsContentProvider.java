@@ -470,7 +470,7 @@ public class ItemsContentProvider extends ContentProvider {
     }
 
     private int updateMappedValues(final String tableName, final ContentValues values, final Map<String, String> projectionMap, final String selection,
-                                   final String... selectionArgs) {
+                                   final String[] selectionArgs) {
         final ContentValues valuesToUse = getMappedContentValues(values, projectionMap);
 
         // insert the initialValues into a new database row
@@ -1009,7 +1009,7 @@ public class ItemsContentProvider extends ContentProvider {
         removeItem(itemId, imageUris);
     }
 
-    private void removeItem(final String itemId, final String... imageUris) {
+    private void removeItem(final String itemId, final String[] imageUris) {
         final SQLiteDatabase db = getDb();
 
         final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
