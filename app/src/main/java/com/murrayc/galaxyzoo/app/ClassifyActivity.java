@@ -25,6 +25,7 @@ import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -598,17 +599,26 @@ public class ClassifyActivity extends ItemActivity
 
         builder.setMessage(getString(R.string.error_no_subjects));
 
-        builder.setPositiveButton(getString(R.string.error_button_retry), (dialog, which) -> {
-            onClickListenerRetry();
+        builder.setPositiveButton(getString(R.string.error_button_retry), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                onClickListenerRetry();
+            }
         });
 
-        builder.setNegativeButton(getString(R.string.error_button_cancel), (dialog, which) -> {
-            dialog.cancel();
+        builder.setNegativeButton(getString(R.string.error_button_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                dialog.cancel();
+            }
         });
 
-        builder.setOnCancelListener(dialog -> {
-            dialog.dismiss();
-            mAlertDialog = null;
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(final DialogInterface dialog) {
+                dialog.dismiss();
+                mAlertDialog = null;
+            }
         });
 
         mAlertDialog = builder.create();

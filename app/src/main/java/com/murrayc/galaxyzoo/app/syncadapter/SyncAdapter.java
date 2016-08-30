@@ -33,6 +33,8 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.R;
@@ -187,14 +189,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         try {
             mClient.requestMoreItemsAsync(count,
-                    response -> {
-                        final List<ZooniverseClient.Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(response);
-                        onQueryTaskFinished(result);
-                        mRequestMoreItemsTaskInProgress = false;
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(final String response) {
+                            final List<ZooniverseClient.Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(response);
+                            onQueryTaskFinished(result);
+                            mRequestMoreItemsTaskInProgress = false;
+                        }
                     },
-                    error -> {
-                        Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", error);
-                        mRequestMoreItemsTaskInProgress = false;
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(final VolleyError error) {
+                            Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", error);
+                            mRequestMoreItemsTaskInProgress = false;
+                        }
                     });
         } catch (final HttpUtils.NoNetworkException e) {
             //Ignore this - it is normal if wifi-only is set in the settings
@@ -488,7 +496,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
             //Call onPostExecute in the main thread:
             final boolean resultToUse = result;
-            mHandler.post(() -> onPostExecute(resultToUse));
+            mHandler.post(new Runnable() {
+                public void run() {
+                    onPostExecute(resultToUse);
+                }
+            });
         }
 
         protected void onPostExecute(final boolean result) {

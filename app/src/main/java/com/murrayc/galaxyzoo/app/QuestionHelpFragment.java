@@ -173,9 +173,11 @@ public class QuestionHelpFragment extends BaseQuestionFragment {
             MarginLayoutParamsCompat.setMarginStart(paramsImage, UiUtils.getPxForDpResource(context, R.dimen.standard_large_margin));
 
             final int answerIndex = i;
-            imageExample.setOnClickListener(v -> {
-                // Perform action on click
-                onExampleImageClicked(v, answer, answerIndex);
+            imageExample.setOnClickListener(new View.OnClickListener() {
+                public void onClick(final View v) {
+                    // Perform action on click
+                    onExampleImageClicked(v, answer, answerIndex);
+                }
             });
 
             layoutHorizontal.addView(imageExample, paramsImage);

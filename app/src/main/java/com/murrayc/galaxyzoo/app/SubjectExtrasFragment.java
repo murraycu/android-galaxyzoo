@@ -139,14 +139,24 @@ public class SubjectExtrasFragment extends ItemFragment
             Log.error("buttonExamine is null.");
             return;
         }
-        buttonExamine.setOnClickListener(view -> doExamine());
+        buttonExamine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                doExamine();
+            }
+        });
 
         final Button buttonDiscuss = (Button) mRootView.findViewById(R.id.buttonDiscuss);
         if (buttonDiscuss == null) {
             Log.error("buttonDiscuss is null.");
             return;
         }
-        buttonDiscuss.setOnClickListener(view -> doDiscuss());
+        buttonDiscuss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                doDiscuss();
+            }
+        });
 
     }
 
