@@ -1,4 +1,4 @@
-1.61
+1.64
 
 * Correct the French translation.
 * Avoid multi-window warning on Android 7 (Nougat).
