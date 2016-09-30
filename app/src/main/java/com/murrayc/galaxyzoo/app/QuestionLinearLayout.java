@@ -21,10 +21,8 @@ package com.murrayc.galaxyzoo.app;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.SparseIntArray;
 import android.widget.LinearLayout;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by murrayc on 10/9/14.
@@ -32,7 +30,7 @@ import java.util.Map;
 public class QuestionLinearLayout extends LinearLayout {
 
     //A map of number-of-rows-of-icons to max height experienced.
-    private final Map<Integer, Integer> mMaxHeightsExperienced = new HashMap<>();
+    private final SparseIntArray mMaxHeightsExperienced = new SparseIntArray();
     private int mCurrentRowsCountForMaxHeight = 0;
 
     public QuestionLinearLayout(final Context context, final AttributeSet attrs) {
@@ -59,10 +57,6 @@ public class QuestionLinearLayout extends LinearLayout {
     }
 
     public int getMaximumHeightExperienced(final int rowsCount) {
-        if (!mMaxHeightsExperienced.containsKey(rowsCount)) {
-            return 0;
-        }
-
         return mMaxHeightsExperienced.get(rowsCount);
     }
 }
