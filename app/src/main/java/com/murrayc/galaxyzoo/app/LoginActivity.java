@@ -160,6 +160,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             textView.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT));
         } else {
+            //noinspection deprecation
             textView.setText(Html.fromHtml(html));
         }
 
