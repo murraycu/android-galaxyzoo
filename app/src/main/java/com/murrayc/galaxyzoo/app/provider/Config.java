@@ -123,9 +123,9 @@ public final class Config {
             SUBJECT_GROUPS.put("551456e02f0eef2535000001", // candels_2epoch
                     new SubjectGroup("candels_tree.xml", false,
                             new DecisionTree.DiscussQuestion("candels-17", "a-0", "a-1")));
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GOODS_FULL, // goods_full
-                    new SubjectGroup("goods_full_tree.xml", false,
-                            new DecisionTree.DiscussQuestion("goods_full-16", "a-0", "a-1")));
+            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GOODS_FULL, // goods_full
+            //        new SubjectGroup("goods_full_tree.xml", false,
+            //                new DecisionTree.DiscussQuestion("goods_full-16", "a-0", "a-1")));
             //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SLOAN_SINGLEBAND, // sloan_singleband
             //        new SubjectGroup("sloan_singleband_tree.xml", false,
             //                new DecisionTree.DiscussQuestion("sloan_singleband-11", "a-0", "a-1")));
