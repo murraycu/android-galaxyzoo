@@ -51,7 +51,7 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 public class IconsCacheTest {
-    Context mockContext;
+    private Context mockContext;
 
     @Before
     public void setup() {

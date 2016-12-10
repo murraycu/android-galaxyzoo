@@ -46,7 +46,7 @@ import static junit.framework.Assert.assertNull;
  */
 @RunWith(AndroidJUnit4.class)
 public class DecisionTreeTest {
-    Context mockContext;
+    private Context mockContext;
 
     @Before
     public void setup() {
