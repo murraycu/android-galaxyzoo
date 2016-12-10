@@ -44,7 +44,7 @@ public class ListActivityTest {
     // Note: If the third argument (launchActivity) is not false (really), the tests will fail because the
     // activity cannot be launched when you call launchActivity().
     @Rule
-    public ActivityTestRule<ListActivity> testRule = new ActivityTestRule<>(ListActivity.class, false, false);
+    public final ActivityTestRule<ListActivity> testRule = new ActivityTestRule<>(ListActivity.class, false, false);
 
     private ListActivity mActivity;
 

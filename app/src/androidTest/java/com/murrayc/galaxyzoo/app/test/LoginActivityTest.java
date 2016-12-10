@@ -44,7 +44,7 @@ public class LoginActivityTest {
     // Note: If the third argument (launchActivity) is not false (really), the tests will fail because the
     // activity cannot be launched when you call launchActivity().
     @Rule
-    public ActivityTestRule<LoginActivity> testRule = new ActivityTestRule<>(LoginActivity.class, false, false);
+    public final ActivityTestRule<LoginActivity> testRule = new ActivityTestRule<>(LoginActivity.class, false, false);
 
     private LoginActivity mActivity;
 

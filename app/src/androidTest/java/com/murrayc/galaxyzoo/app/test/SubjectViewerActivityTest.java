@@ -45,7 +45,7 @@ public class SubjectViewerActivityTest {
     // Note: If the third argument (launchActivity) is not false (really), the tests will fail because the
     // activity cannot be launched when you call launchActivity().
     @Rule
-    public ActivityTestRule<SubjectViewerActivity> testRule = new ActivityTestRule<>(SubjectViewerActivity.class, false, false);
+    public final ActivityTestRule<SubjectViewerActivity> testRule = new ActivityTestRule<>(SubjectViewerActivity.class, false, false);
 
     private SubjectViewerActivity mActivity;
 
