@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.test.mock.MockContentResolver;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.provider.Item;
@@ -125,6 +126,10 @@ public final class Utils {
             //so we just catch it and provide a useful value,
             //so at least the other functionality can be tested.
             //TODO: Find a way to let it succeed.
+            if (context.getContentResolver() instanceof MockContentResolver) {
+                return new File("testExternalCacheDirForAndroidGalaxyZooWithMockContentResolver");
+            }
+
             Log.error("getExternalCacheDir(): Unsupported operation from Context.getExternalCacheDir()", e);
             return null;
         }
