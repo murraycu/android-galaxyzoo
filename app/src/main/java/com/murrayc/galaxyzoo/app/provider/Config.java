@@ -85,6 +85,7 @@ public final class Config {
 
     //See Config.coffee:production:
     //https://github.com/zooniverse/Galaxy-Zoo/blob/master/app/lib/config.coffee
+    public static final String SUBJECT_GROUP_ID_FERENGI2 = "5249cbc33ae74070ed000001";
     public static final String SUBJECT_GROUP_ID_DECALS_DR2 = "56f3d4645925d95984000001";
     //public static final String SUBJECT_GROUP_ID_SDSS_LOST_SET = "56f2b5ed5925d9004200c775";
     public static final String SUBJECT_GROUP_ID_DECALS = "55db7cf01766276e7b000001";
@@ -98,6 +99,9 @@ public final class Config {
 
         //Production:
         {
+            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_FERENGI2, //Ferengi 2
+                    new SubjectGroup("ferengi_tree.xml", true,
+                            new DecisionTree.DiscussQuestion("ferengi-16", "a-0", "a-1")));
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_DECALS_DR2, //Decals DR2
                     new SubjectGroup("decals_tree.xml", true,
                             new DecisionTree.DiscussQuestion("decals-11", "a-0", "a-1")));
