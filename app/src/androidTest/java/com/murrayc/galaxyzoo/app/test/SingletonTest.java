@@ -68,37 +68,37 @@ public class SingletonTest {
         return new Singleton(getContext());
     }
 
-    private DecisionTree getDecisionTreeSloan() throws DecisionTree.DecisionTreeException {
+    private DecisionTree getDecisionTreeSdssLostSet() throws DecisionTree.DecisionTreeException {
         final Singleton singleton = getSingleton();
-        return singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_SLOAN);
+        return singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_SDSS_LOST_SET);
     }
 
     @Test
     public void testMultipleTrees() throws DecisionTree.DecisionTreeException, IOException {
         final Singleton singleton = new Singleton(getContext());
 
-        final DecisionTree decisionTreeSloan = singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_SLOAN);
-        assertNotNull(decisionTreeSloan);
-        assertNotNull(decisionTreeSloan.getAllQuestions());
-        assertEquals(12, decisionTreeSloan.getAllQuestions().size());
+        final DecisionTree decisionTree1 = singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_FERENGI2);
+        assertNotNull(decisionTree1);
+        assertNotNull(decisionTree1.getAllQuestions());
+        assertEquals(19, decisionTree1.getAllQuestions().size());
 
-        final DecisionTree decisionTreeDecals = singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_DECALS);
-        assertNotNull(decisionTreeDecals);
-        assertNotNull(decisionTreeDecals.getAllQuestions());
-        assertEquals(12, decisionTreeDecals.getAllQuestions().size());
+        final DecisionTree decisionTree2 = singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_DECALS_DR2);
+        assertNotNull(decisionTree2);
+        assertNotNull(decisionTree2.getAllQuestions());
+        assertEquals(12, decisionTree2.getAllQuestions().size());
 
-        final DecisionTree decisionTreeIllustris = singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_ILLUSTRIS);
-        assertNotNull(decisionTreeIllustris);
-        assertNotNull(decisionTreeIllustris.getAllQuestions());
-        assertEquals(12, decisionTreeIllustris.getAllQuestions().size());
+        final DecisionTree decisionTree3 = singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_SDSS_LOST_SET);
+        assertNotNull(decisionTree3);
+        assertNotNull(decisionTree3.getAllQuestions());
+        assertEquals(12, decisionTree3.getAllQuestions().size());
 
-        assertNotSame(decisionTreeSloan, decisionTreeDecals);
-        assertNotSame(decisionTreeSloan, decisionTreeIllustris);
-        assertNotSame(decisionTreeDecals, decisionTreeIllustris);
+        assertNotSame(decisionTree1, decisionTree2);
+        assertNotSame(decisionTree1, decisionTree3);
+        assertNotSame(decisionTree2, decisionTree3);
     }
 
     public void testQuestionsWithoutTranslation() throws DecisionTree.DecisionTreeException, IOException {
-        final DecisionTree decisionTree = getDecisionTreeSloan();
+        final DecisionTree decisionTree = getDecisionTreeSdssLostSet();
 
         final String QUESTION_ID = "sloan-3";
         final DecisionTree.Question question = decisionTree.getQuestion(QUESTION_ID);
