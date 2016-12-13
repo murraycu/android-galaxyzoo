@@ -38,6 +38,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.test.mock.MockContentResolver;
 import android.text.TextUtils;
 
 import com.murrayc.galaxyzoo.app.Log;
@@ -578,13 +579,17 @@ public class ItemsContentProvider extends ContentProvider {
                 Log.info("createFileUri(): subject id=" + subjectId +", file created: " + realFile.getAbsolutePath());
             }
             */
-        }  catch (final UnsupportedOperationException e) {
+        }  catch (final IOException|UnsupportedOperationException e) {
             //This happens while running under ProviderTestCase2.
             //so we just catch it and provide a useful value,
             //so at least the other functionality can be tested.
             //TODO: Find a way to let it succeed.
-            Log.error("createCacheFile(): Unsupported operation for filename=" + file.getAbsolutePath(), e);
-            return "testuri";
+            if (context.getContentResolver() instanceof MockContentResolver) {
+                Log.error("createCacheFile(): exception expected during testing: for filename=" + file.getAbsolutePath(), e);
+                return "testuri";
+            } else {
+                throw e;
+            }
         }
 
         return file.getAbsolutePath();
