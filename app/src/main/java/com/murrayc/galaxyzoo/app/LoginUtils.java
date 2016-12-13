@@ -369,6 +369,7 @@ public final class LoginUtils {
     private static Account getAccount(final AccountManager mgr) {
         //Note this needs the GET_ACCOUNTS permission on
         //SDK <=22
+        // Ignore android-lint warnings about this: https://code.google.com/p/android/issues/detail?id=223244
         final Account[] accts = mgr.getAccountsByType(ACCOUNT_TYPE);
         if((accts == null) || (accts.length < 1)) {
             //Log.error("getAccountLoginDetails(): getAccountsByType() returned no account.");
