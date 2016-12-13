@@ -1,3 +1,12 @@
+1.65
+
+* Use the latest Galaxy Zoo surveys.
+  (Ferengi 2 and SDSS Lost Set in addition to the
+  existing Decals DR2 survey.)
+* Reduce the application size by removing support
+  for old inactive surveys.
+
+
 1.64
 
 * Correct the French translation.
