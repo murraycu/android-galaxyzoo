@@ -90,8 +90,8 @@ public final class Config {
     public static final String SUBJECT_GROUP_ID_DECALS = "55db7cf01766276e7b000001";
     public static final String SUBJECT_GROUP_ID_ILLUSTRIS = "55db71251766276613000001";
     public static final String SUBJECT_GROUP_ID_SLOAN = "50251c3b516bcb6ecb000002";
-    public static final String SUBJECT_GROUP_ID_SLOAN_SINGLEBAND = "5514521e2f0eef2012000001";
-    public static final String SUBJECT_GROUP_ID_GOODS_FULL = "551453e12f0eef21f2000001";
+    //public static final String SUBJECT_GROUP_ID_SLOAN_SINGLEBAND = "5514521e2f0eef2012000001";
+    //public static final String SUBJECT_GROUP_ID_GOODS_FULL = "551453e12f0eef21f2000001";
 
     static {
         SUBJECT_GROUPS = new HashMap<>();

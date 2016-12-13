@@ -82,19 +82,19 @@ public class SingletonTest {
         assertNotNull(decisionTreeSloan.getAllQuestions());
         assertEquals(12, decisionTreeSloan.getAllQuestions().size());
 
-        final DecisionTree decisionTreeSloanSingleBand = singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_SLOAN_SINGLEBAND);
-        assertNotNull(decisionTreeSloanSingleBand);
-        assertNotNull(decisionTreeSloanSingleBand.getAllQuestions());
-        assertEquals(12, decisionTreeSloanSingleBand.getAllQuestions().size());
+        final DecisionTree decisionTreeDecals = singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_DECALS);
+        assertNotNull(decisionTreeDecals);
+        assertNotNull(decisionTreeDecals.getAllQuestions());
+        assertEquals(12, decisionTreeDecals.getAllQuestions().size());
 
-        final DecisionTree decisionTreeGoodsFull = singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_GOODS_FULL);
-        assertNotNull(decisionTreeGoodsFull);
-        assertNotNull(decisionTreeGoodsFull.getAllQuestions());
-        assertEquals(19, decisionTreeGoodsFull.getAllQuestions().size());
+        final DecisionTree decisionTreeIllustris = singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_ILLUSTRIS);
+        assertNotNull(decisionTreeIllustris);
+        assertNotNull(decisionTreeIllustris.getAllQuestions());
+        assertEquals(12, decisionTreeIllustris.getAllQuestions().size());
 
-        assertNotSame(decisionTreeSloan, decisionTreeSloanSingleBand);
-        assertNotSame(decisionTreeSloan, decisionTreeGoodsFull);
-        assertNotSame(decisionTreeSloanSingleBand, decisionTreeGoodsFull);
+        assertNotSame(decisionTreeSloan, decisionTreeDecals);
+        assertNotSame(decisionTreeSloan, decisionTreeIllustris);
+        assertNotSame(decisionTreeDecals, decisionTreeIllustris);
     }
 
     public void testQuestionsWithoutTranslation() throws DecisionTree.DecisionTreeException, IOException {
