@@ -46,9 +46,6 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
-/**
- * Simple test to ensure that the generated bindings are working.
- */
 @RunWith(AndroidJUnit4.class)
 public class IconsCacheTest {
     private Context mockContext;

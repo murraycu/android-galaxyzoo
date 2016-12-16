@@ -38,9 +38,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNotSame;
 
-/**
- * Simple test to ensure that the generated bindings are working.
- */
 @RunWith(AndroidJUnit4.class)
 public class SingletonTest {
     private Context mockContext;

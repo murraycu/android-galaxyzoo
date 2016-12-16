@@ -32,9 +32,6 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * Simple test to ensure that the generated bindings are working.
- */
 @RunWith(AndroidJUnit4.class)
 public class HttpUtilsTest {
 

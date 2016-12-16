@@ -31,9 +31,6 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 
 import java.io.IOException;
 
-/**
- * Simple test to ensure that the generated bindings are working.
- */
 public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider> {
 
     private static final String VALID_SUBJECT_ID = "SomeSubjectID";

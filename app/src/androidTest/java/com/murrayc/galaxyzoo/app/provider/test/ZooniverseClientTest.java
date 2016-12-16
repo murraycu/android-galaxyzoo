@@ -54,9 +54,6 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
-/**
- * Simple test to ensure that the generated bindings are working.
- */
 public class ZooniverseClientTest{
 
     private static final String TEST_GROUP_ID = "551453e12f0eef21f2000001";

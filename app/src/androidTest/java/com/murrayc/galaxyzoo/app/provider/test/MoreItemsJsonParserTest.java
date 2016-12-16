@@ -38,9 +38,6 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
-/**
- * Simple test to ensure that the generated bindings are working.
- */
 @RunWith(AndroidJUnit4.class)
 public class MoreItemsJsonParserTest {
     private List<ZooniverseClient.Subject> mSubjects = null;
