@@ -6,8 +6,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 25
-        versionCode 66
-        versionName '1.66'
+        versionCode 67
+        versionName '1.67'
 
         // Suggested here: https://developer.android.com/topic/libraries/testing-support-library/index.html
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
