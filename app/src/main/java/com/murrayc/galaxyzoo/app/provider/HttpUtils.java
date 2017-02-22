@@ -20,7 +20,6 @@
 package com.murrayc.galaxyzoo.app.provider;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -294,10 +293,11 @@ public final class HttpUtils {
         FileOutputStream fout = null;
         try {
             //Use this instead when using the commented icon-downloading code in IconsCache:
-            //fout = new FileOutputStream(cacheFileContentUri);
-            //fout.write(data);
+            fout = new FileOutputStream(cacheFileContentUri);
+            fout.write(data);
 
             //FileOutputStream doesn't seem to understand content provider URIs:
+            /*
             pfd = context.getContentResolver().
                     openFileDescriptor(Uri.parse(cacheFileContentUri), "w");
             if (pfd == null) {
@@ -307,6 +307,7 @@ public final class HttpUtils {
                 fout = new FileOutputStream(pfd.getFileDescriptor());
                 fout.write(data);
             }
+            */
         } finally {
             if (fout != null) {
                 try {

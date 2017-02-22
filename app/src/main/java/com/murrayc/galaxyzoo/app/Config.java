@@ -30,22 +30,22 @@ public final class Config {
     public static final String EXAMINE_URI = "https://www.galaxyzoo.org/#/examine/";
 
     //TODO: Is there a stable URI for this?
-    //public static final String ICONS_CSS_URI = "http://www.galaxyzoo.org/application-2015-03-30_14-13-33.css";
+    public static final String ICONS_CSS_URI = "https://www.galaxyzoo.org/application-2017-02-08_11-34-04.css";
     //TODO: Avoid hard-coding the 100px, 100px here:
     public static final int ICON_WIDTH_HEIGHT = 100; /* px */
 
 
-    private static final String STATIC_SERVER = "https://static.zooniverse.org/www.galaxyzoo.org/";
+    public static final String STATIC_SERVER = "https://static.zooniverse.org/www.galaxyzoo.org/";
     private static final String STATIC_IMAGES_SERVER = STATIC_SERVER + "images/";
 
     //This is one big image file containing many icons,
     //for use with the CSS Sprites technique.
-    //public static final String ICONS_URI = STATIC_IMAGES_SERVER + "workflow.png";
+    public static final String ICONS_URI = STATIC_IMAGES_SERVER + "workflow.png";
 
     //This is one big image file containing many icons,
     //for use with the CSS Sprites technique.
     //Note: Do not use the examples.png which is also there - it seems to be outdated and unused.
-    //public static final String EXAMPLES_URI = STATIC_IMAGES_SERVER + "examples.jpg";
+    public static final String EXAMPLES_URI = STATIC_IMAGES_SERVER + "examples.jpg";
 
     //Add the example ID and .jpg to this:
     public static final String FULL_EXAMPLE_URI = STATIC_IMAGES_SERVER + "examples/";
