@@ -103,15 +103,15 @@ public final class Config {
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GAMA_09, //GAMA 09
                     new SubjectGroup("gama_tree.xml", true,
                             new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_FERENGI2, //Ferengi 2
-                    new SubjectGroup("ferengi_tree.xml", true,
-                            new DecisionTree.DiscussQuestion("ferengi-16", "a-0", "a-1")));
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_DECALS_DR2, //Decals DR2
-                    new SubjectGroup("decals_tree.xml", true,
-                            new DecisionTree.DiscussQuestion("decals-11", "a-0", "a-1")));
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SDSS_LOST_SET, //SSDS Lost Set
                     new SubjectGroup("sloan_tree.xml", true,
                             new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
+            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_FERENGI2, //Ferengi 2
+                    new SubjectGroup("ferengi_tree.xml", false,
+                            new DecisionTree.DiscussQuestion("ferengi-16", "a-0", "a-1")));
+            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_DECALS_DR2, //Decals DR2
+                    new SubjectGroup("decals_tree.xml", false,
+                            new DecisionTree.DiscussQuestion("decals-11", "a-0", "a-1")));
 
             //We don't request items for all these groups any more, but we still want to load the
             //trees so can ask questions about items that have already been downloaded and stored in
