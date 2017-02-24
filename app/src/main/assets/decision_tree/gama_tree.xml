@@ -40,7 +40,7 @@
     <checkbox id="x-1" icon="ring" examplesCount="6">
       <text>Ring</text>
     </checkbox>
-    <checkbox id="x-2" icon="lens" examplesCount="4">
+    <checkbox id="x-2" icon="lens" examplesCount="3">
       <text>Lens or arc</text>
     </checkbox>
     <checkbox id="x-3" icon="irregular" examplesCount="6">
