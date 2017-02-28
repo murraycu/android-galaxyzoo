@@ -105,7 +105,7 @@ public final class Config {
                     new SubjectGroup("gama_tree.xml", true,
                             new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SDSS_LOST_SET, //SSDS Lost Set
-                    new SubjectGroup("sloan_tree.xml", false,
+                    new SubjectGroup("sloan_tree.xml", true,
                             new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_ILLUSTRIS, //Illustris
                     new SubjectGroup("illustris_tree.xml", true,
