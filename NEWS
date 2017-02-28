@@ -1,11 +1,19 @@
+1.68
+
+* Use the latest Galaxy Zoo surveys.
+  (Gama 09, SDSS Lost Set, and Illustris.)
+
+
 1.67
 
 * Attempting to avoid an occasional crash.
+
 
 1.66
 
 * Actually use the Ferengi 2 survey.
 * Reduce the application size some more.
+
 
 1.65
 
