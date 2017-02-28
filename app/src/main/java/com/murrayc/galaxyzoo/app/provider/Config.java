@@ -88,8 +88,8 @@ public final class Config {
     public static final String SUBJECT_GROUP_ID_FERENGI2 = "58417dcb9afc3a007d000001";
     public static final String SUBJECT_GROUP_ID_DECALS_DR2 = "56f3d4645925d95984000001";
     public static final String SUBJECT_GROUP_ID_SDSS_LOST_SET = "56f2b5ed5925d9004200c775";
-    public static final String SUBJECT_GROUP_ID_MISSING_MANGA = "5894999f7d25c7236f000001";
     public static final String SUBJECT_GROUP_ID_GAMA_09 = "5853fa7b95ad361930000001";
+    //public static final String SUBJECT_GROUP_ID_MISSING_MANGA = "5894999f7d25c7236f000001";
     //public static final String SUBJECT_GROUP_ID_DECALS = "55db7cf01766276e7b000001";
     //public static final String SUBJECT_GROUP_ID_ILLUSTRIS = "55db71251766276613000001";
     //public static final String SUBJECT_GROUP_ID_SLOAN = "50251c3b516bcb6ecb000002";
@@ -104,9 +104,6 @@ public final class Config {
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GAMA_09, //GAMA 09
                     new SubjectGroup("gama_tree.xml", true,
                             new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_MISSING_MANGA, //Missing Manga
-                    new SubjectGroup("sloan_tree.xml", true,
-                            new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SDSS_LOST_SET, //SSDS Lost Set
                     new SubjectGroup("sloan_tree.xml", false,
                             new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
@@ -121,6 +118,9 @@ public final class Config {
             //trees so can ask questions about items that have already been downloaded and stored in
             //the cache.
             //At some point we can remove some when we are sure they are unnecessary.
+            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_MISSING_MANGA, //Missing Manga
+            //        new SubjectGroup("sloan_tree.xml", true,
+            //                new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
             //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_DECALS, //Decals
             //        new SubjectGroup("decals_tree.xml", false,
             //                new DecisionTree.DiscussQuestion("decals-11", "a-0", "a-1")));
