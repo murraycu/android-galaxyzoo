@@ -110,6 +110,10 @@ public final class Config {
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_ILLUSTRIS, //Illustris
                     new SubjectGroup("illustris_tree.xml", true,
                             new DecisionTree.DiscussQuestion("illustris-11", "a-0", "a-1")));
+
+            //We don't request items for all these groups any more, but we still want to load the
+            //trees so can ask questions about items that have already been downloaded and stored in
+            //the cache.
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_FERENGI2, //Ferengi 2
                     new SubjectGroup("ferengi_tree.xml", false,
                             new DecisionTree.DiscussQuestion("ferengi-16", "a-0", "a-1")));
@@ -117,9 +121,6 @@ public final class Config {
                     new SubjectGroup("decals_tree.xml", false,
                             new DecisionTree.DiscussQuestion("decals-11", "a-0", "a-1")));
 
-            //We don't request items for all these groups any more, but we still want to load the
-            //trees so can ask questions about items that have already been downloaded and stored in
-            //the cache.
             //At some point we can remove some when we are sure they are unnecessary.
             //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_MISSING_MANGA, //Missing Manga
             //        new SubjectGroup("sloan_tree.xml", true,
