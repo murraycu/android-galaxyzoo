@@ -318,6 +318,10 @@ public class Singleton {
                 return null;
             }
 
+            if (isCancelled()) {
+                return null;
+            }
+
             final Context context = params[0];
             try {
                 Singleton.ourInstance = new Singleton(context);

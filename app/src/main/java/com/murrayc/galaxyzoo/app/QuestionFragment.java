@@ -681,6 +681,10 @@ public class QuestionFragment extends BaseQuestionFragment
                 return null;
             }
 
+            if (isCancelled()) {
+                return null;
+            }
+
             fragment.saveClassificationSync(classificationInProgress);
 
             return null;

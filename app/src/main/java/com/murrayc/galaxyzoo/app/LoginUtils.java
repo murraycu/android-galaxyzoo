@@ -470,6 +470,10 @@ public final class LoginUtils {
                 return null;
             }
 
+            if (isCancelled()) {
+                return null;
+            }
+
             LoginDetails result = null;
 
             try {
@@ -517,6 +521,10 @@ public final class LoginUtils {
                 return null;
             }
 
+            if (isCancelled()) {
+                return null;
+            }
+
             final LoginUtils.LoginDetails loginDetails = LoginUtils.getAccountLoginDetails(context);
             if(!LoginUtils.getLoggedIn(loginDetails)) {
                 return null;
@@ -524,6 +532,10 @@ public final class LoginUtils {
 
             final String accountName = loginDetails.name;
             if (TextUtils.isEmpty(accountName)) {
+                return null;
+            }
+
+            if (isCancelled()) {
                 return null;
             }
 

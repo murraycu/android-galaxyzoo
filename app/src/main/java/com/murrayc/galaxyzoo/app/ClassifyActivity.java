@@ -160,6 +160,10 @@ public class ClassifyActivity extends ItemActivity
                 return Boolean.FALSE;
             }
 
+            if (isCancelled()) {
+                return Boolean.FALSE;
+            }
+
             return LoginUtils.getLoggedIn(context);
         }
 
@@ -205,6 +209,10 @@ public class ClassifyActivity extends ItemActivity
                 return null;
             }
 
+            if (isCancelled()) {
+                return null;
+            }
+
             final AccountManager mgr = AccountManager.get(context);
 
             //Note this needs the GET_ACCOUNTS permission on
@@ -216,11 +224,14 @@ public class ClassifyActivity extends ItemActivity
                 return null;
             }
 
+            if (isCancelled()) {
+                return null;
+            }
+
             final Account account = accts[0];
 
             final Bundle extras = new Bundle();
             extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-
 
             //Ask the framework to run our SyncAdapter.
             ContentResolver.requestSync(account, Item.AUTHORITY, extras);

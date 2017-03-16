@@ -315,6 +315,10 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
                 return null;
             }
 
+            if (isCancelled()) {
+                return null;
+            }
+
             final String accountName = loginResult.getName();
 
             final AccountManager accountManager = AccountManager.get(context);
