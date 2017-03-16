@@ -20,6 +20,8 @@
 package com.murrayc.galaxyzoo.app;
 
 
+import com.google.firebase.crash.FirebaseCrash;
+
 /**
  * A class that wraps methods in Log to add the calling method name from the servlet to
  * log messages.
@@ -46,6 +48,8 @@ public final class Log {
     private static void fatal(final String message) {
         if(android.util.Log.isLoggable(LOG_TAG, android.util.Log.ERROR)) {
             android.util.Log.e(LOG_TAG, defaultString(message));
+
+            FirebaseCrash.log(defaultString(message));
         }
     }
 
@@ -53,12 +57,16 @@ public final class Log {
     public static void error(final String message, final Throwable e) {
         if(android.util.Log.isLoggable(LOG_TAG, android.util.Log.ERROR)) {
             android.util.Log.e(LOG_TAG, defaultString(message), e);
+
+            FirebaseCrash.log(defaultString(message));
         }
     }
 
     public static void error(final String message) {
         if(android.util.Log.isLoggable(LOG_TAG, android.util.Log.ERROR)) {
             android.util.Log.e(LOG_TAG, defaultString(message));
+
+            FirebaseCrash.log(defaultString(message));
         }
     }
 
