@@ -46,9 +46,9 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
  * in two-pane mode (on tablets) or a {@link ClassifyActivity}
  * on handsets.
  */
-public class ClassifyFragment extends ItemFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ClassifyFragment extends ItemFragment {
+    private static final int LOADER_ID_NEXT_ID = 0;
 
-    private static final int URL_LOADER = 0;
     // We have to hard-code the indices - we can't use getColumnIndex because the Cursor
     // (actually a SQliteDatabase cursor returned
     // from our ContentProvider) only knows about the underlying SQLite database column names,
@@ -100,6 +100,70 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         void listenForNetworkReconnection();
     }
 
+    private class GetNextIdLoader implements LoaderManager.LoaderCallbacks<Cursor> {
+        @Nullable
+        public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle bundle) {
+            //We only bother using this when we have asked for the "next" item,
+            //because we want to know its ID.
+            if (loaderId != ClassifyFragment.LOADER_ID_NEXT_ID) {
+                return null;
+            }
+
+            final String itemId = ClassifyFragment.this.getItemId();
+            if (TextUtils.isEmpty(itemId)) {
+                return null;
+            }
+
+            //Asynchronously get the actual ID,
+            //because we have just asked for the "next" item.
+            final Activity activity = getActivity();
+
+            final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
+            builder.appendPath(itemId);
+
+            showLoadingInProgress(true);
+
+            return new CursorLoader(
+                    activity,
+                    builder.build(),
+                    mColumns,
+                    null, // No where clause, return all records. We already specify just one via the itemId in the URI
+                    null, // No where clause, therefore no where column values.
+                    null // Use the default sort order.
+            );
+        }
+
+
+        @Override
+        public void onLoadFinished(final Loader<Cursor> cursorLoader, final Cursor cursor) {
+            if (cursorLoader.getId() != ClassifyFragment.LOADER_ID_NEXT_ID) {
+                return;
+            }
+
+            mCursor = cursor;
+            mGetNextInProgress = false;
+
+            updateFromCursor();
+
+            // Avoid this being called twice, which seems to be an Android bug,
+            // and which could cause us to get a different item ID if our virtual "next" item changes to
+            // another item:
+            // See http://stackoverflow.com/questions/14719814/onloadfinished-called-twice
+            // and https://code.google.com/p/android/issues/detail?id=63179
+            getLoaderManager().destroyLoader(ClassifyFragment.LOADER_ID_NEXT_ID);
+        }
+
+        @Override
+        public void onLoaderReset(final Loader<Cursor> cursorLoader) {
+        /*
+         * Clears out our reference to the Cursor.
+         * This prevents memory leaks.
+         */
+            mCursor = null;
+        }
+    }
+
+    private GetNextIdLoader getNextIdLoader = new GetNextIdLoader();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -274,7 +338,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
 
         if (TextUtils.equals(getItemId(), ItemsContentProvider.URI_PART_ITEM_ID_NEXT)) {
             /*
-             * Initializes the CursorLoader. The URL_LOADER value is eventually passed
+             * Initializes the CursorLoader. The LOADER_ID_NEXT_ID value is eventually passed
              * to onCreateLoader().
              * We use restartLoader(), instead of initLoader(),
              * so we can refresh this fragment to show a different subject,
@@ -295,7 +359,7 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
                 }
 
                 //Get the actual ID and other details:
-                getLoaderManager().restartLoader(URL_LOADER, null, this);
+                getLoaderManager().restartLoader(LOADER_ID_NEXT_ID, null, getNextIdLoader);
             }
         } else {
             //Add, or update, the child fragments already, because we know the Item IDs:
@@ -372,60 +436,5 @@ public class ClassifyFragment extends ItemFragment implements LoaderManager.Load
         }
 
         addOrUpdateChildFragments();
-    }
-
-    //We only bother using this when we have asked for the "next" item,
-    //because we want to know its ID.
-    @Override
-    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle bundle) {
-        if (loaderId != URL_LOADER) {
-            return null;
-        }
-        final String itemId = getItemId();
-        if (TextUtils.isEmpty(itemId)) {
-            return null;
-        }
-
-        //Asynchronously get the actual ID,
-        //because we have just asked for the "next" item.
-        final Activity activity = getActivity();
-
-        final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
-        builder.appendPath(itemId);
-
-        showLoadingInProgress(true);
-
-        return new CursorLoader(
-                activity,
-                builder.build(),
-                mColumns,
-                null, // No where clause, return all records. We already specify just one via the itemId in the URI
-                null, // No where clause, therefore no where column values.
-                null // Use the default sort order.
-        );
-    }
-
-    @Override
-    public void onLoadFinished(final Loader<Cursor> cursorLoader, final Cursor cursor) {
-        mCursor = cursor;
-        mGetNextInProgress = false;
-
-        updateFromCursor();
-
-        // Avoid this being called twice, which seems to be an Android bug,
-        // and which could cause us to get a different item ID if our virtual "next" item changes to
-        // another item:
-        // See http://stackoverflow.com/questions/14719814/onloadfinished-called-twice
-        // and https://code.google.com/p/android/issues/detail?id=63179
-        getLoaderManager().destroyLoader(URL_LOADER);
-    }
-
-    @Override
-    public void onLoaderReset(final Loader<Cursor> cursorLoader) {
-        /*
-         * Clears out our reference to the Cursor.
-         * This prevents memory leaks.
-         */
-        mCursor = null;
     }
 }
