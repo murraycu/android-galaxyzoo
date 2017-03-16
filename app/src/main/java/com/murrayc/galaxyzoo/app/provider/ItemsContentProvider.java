@@ -568,7 +568,7 @@ public class ItemsContentProvider extends ContentProvider {
         //otherwise when we try to write to it via openOutputStream()
         //we will get a FileNotFoundException.
         try {
-            if(!file.createNewFile()) {
+            if (!file.createNewFile()) {
                 //This can happen while debugging, if we wipe the database but don't wipe the cached files.
                 //You can do that by uninstalling the app.
                 //When this happens we just reuse the file.
@@ -579,7 +579,11 @@ public class ItemsContentProvider extends ContentProvider {
                 Log.info("createFileUri(): subject id=" + subjectId +", file created: " + realFile.getAbsolutePath());
             }
             */
-        }  catch (final IOException|UnsupportedOperationException e) {
+        } catch (final SecurityException e) {
+            // This can theoretically happen (according to the createNewFile() docs.
+            Log.fatal("createcacheFile(): SecurityException during testing: for filename=" + file.getAbsolutePath(), e);
+            throw e;
+        } catch (final IOException|UnsupportedOperationException e) {
             Log.error("createCacheFile(): exception during testing: for filename=" + file.getAbsolutePath(), e);
 
             //This happens while running under ProviderTestCase2.
