@@ -580,6 +580,8 @@ public class ItemsContentProvider extends ContentProvider {
             }
             */
         }  catch (final IOException|UnsupportedOperationException e) {
+            Log.error("createCacheFile(): exception during testing: for filename=" + file.getAbsolutePath(), e);
+
             //This happens while running under ProviderTestCase2.
             //so we just catch it and provide a useful value,
             //so at least the other functionality can be tested.
