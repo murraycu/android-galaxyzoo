@@ -149,6 +149,10 @@ public final class Utils {
 
     @NonNull
     public static String getTalkUri(final String zooniverseId) {
+        if (zooniverseId == null) {
+            return null;
+        }
+
         return Config.TALK_URI + zooniverseId;
     }
 
