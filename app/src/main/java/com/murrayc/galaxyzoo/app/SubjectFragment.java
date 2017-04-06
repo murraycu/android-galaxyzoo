@@ -23,11 +23,17 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
@@ -44,6 +50,11 @@ import com.murrayc.galaxyzoo.app.provider.Item;
 import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * A fragment representing a single subject.
@@ -427,7 +438,63 @@ public class SubjectFragment extends ItemFragment
         //shareIntent.putExtra(Intent.EXTRA_STREAM, mUriImageStandard);
         //shareIntent.setType("image/*");
 
+        if (mUriStandardRemote!=null) {
+            GetImageBitmapAsyncTask getImageBitmapAsyncTask = new GetImageBitmapAsyncTask(){
+                @Override
+                protected void onPostExecute(Uri uri) {
+                    shareIntent.setType("image/*");
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    mShareActionProvider.setShareIntent(shareIntent);
+                }
+            };
+            getImageBitmapAsyncTask.execute(mUriStandardRemote);
+        }
+
 
         mShareActionProvider.setShareIntent(shareIntent);
+    }
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            "android.permission.WRITE_EXTERNAL_STORAGE",
+            "android.permission.READ_EXTERNAL_STORAGE"
+    };
+
+    public static void verifyStoragePermissions(Activity activity) {
+        int permission = ActivityCompat.checkSelfPermission(activity, "android.permission.WRITE_EXTERNAL_STORAGE");
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+    private class GetImageBitmapAsyncTask extends AsyncTask<String,Integer,Uri> {
+        @Override
+        protected Uri doInBackground(String... params) {
+            try {
+                Bitmap image = Picasso.with(getContext()).load(params[0]).get();
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+
+                //TODO: PROVIDE A MORE DESCRIPTIVE FILENAME HERE IF PLAUSIBLE. Filename will be visible when sharing via certain apps like Gmail etc.
+                String filename = "galaxy_zoo_image.jpg";
+
+                String pathname = Environment.getExternalStorageDirectory() + File.separator + filename;
+                File f = new File(pathname);
+                f.createNewFile();
+                FileOutputStream fo = new FileOutputStream(f);
+                fo.write(bytes.toByteArray());
+                return FileProvider.getUriForFile(getActivity(), getString(R.string.authority_fileprovider), f);
+            } catch (IOException e) {
+                verifyStoragePermissions(getActivity());
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }
