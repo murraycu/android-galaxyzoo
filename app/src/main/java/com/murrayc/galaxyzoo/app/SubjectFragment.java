@@ -419,6 +419,9 @@ public class SubjectFragment extends ItemFragment
     }
 
     private void updateShareActionIntent() {
+        /**
+         * Initialization and setup of the share intent is done here so that less work is left after the AsyncTask's execution
+         */
         if (mShareActionProvider == null) {
             Log.error("updateShareActionIntent(): mShareActionProvider is null.");
             return;
