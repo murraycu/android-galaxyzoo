@@ -164,7 +164,7 @@ public class ClassifyFragment extends ItemFragment {
         }
     }
 
-    private GetNextIdLoader getNextIdLoader = new GetNextIdLoader();
+    private final GetNextIdLoader getNextIdLoader = new GetNextIdLoader();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the

@@ -186,6 +186,9 @@
     //when specifying a transition when starting an activity that contains this SubjectFragment.
     <string name="transition_subject_image" translatable="false">transition_subject_image</string>
 
+    <!--share image strings-->
+    <string name="authority_fileprovider" translatable="false">com.murrayc.galaxyzoo.app.fileprovider</string>
+
     <!-- The possible numbers of items that may be downloaded in advance before they are needed. -->
     <string-array name="pref_cache_size_entries">
         <item>5 subjects</item>
