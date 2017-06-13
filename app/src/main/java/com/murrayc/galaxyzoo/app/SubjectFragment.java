@@ -445,7 +445,7 @@ public class SubjectFragment extends ItemFragment
         /**
          * if the image URI is not null, a GetImageBitmapAsyncTask is executed for it, and the
          * returned URI is set as a stream extra on the intent that will be shared, along with an
-         * explicit permission for recieving contexts to read the content URI, enabling them to
+         * explicit permission for receiving contexts to read the content URI, enabling them to
          * access the generated image.
          */
         if (mUriStandardRemote != null) {
