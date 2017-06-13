@@ -473,8 +473,8 @@ public class SubjectFragment extends ItemFragment
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
-    public static void verifyStoragePermissions(Activity activity) {
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    private static void verifyStoragePermissions(final Activity activity) {
+        final int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
@@ -507,7 +507,7 @@ public class SubjectFragment extends ItemFragment
                 FileOutputStream fo = new FileOutputStream(f);
                 fo.write(bytes.toByteArray());
                 return FileProvider.getUriForFile(getActivity(), getString(R.string.authority_fileprovider), f);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 verifyStoragePermissions(getActivity());
                 e.printStackTrace();
             }
