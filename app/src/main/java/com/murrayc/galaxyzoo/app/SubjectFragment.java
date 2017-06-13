@@ -449,7 +449,7 @@ public class SubjectFragment extends ItemFragment
          * access the generated image.
          */
         if (mUriStandardRemote != null) {
-            GetImageBitmapAsyncTask getImageBitmapAsyncTask = new GetImageBitmapAsyncTask(){
+            GetImageBitmapAsyncTask asyncTask = new GetImageBitmapAsyncTask(){
                 @Override
                 protected void onPostExecute(final Uri uri) {
                     shareIntent.setType("image/*");
@@ -458,7 +458,7 @@ public class SubjectFragment extends ItemFragment
                     mShareActionProvider.setShareIntent(shareIntent);
                 }
             };
-            getImageBitmapAsyncTask.execute(mUriStandardRemote);
+            asyncTask.execute(mUriStandardRemote);
         }
 
     }
