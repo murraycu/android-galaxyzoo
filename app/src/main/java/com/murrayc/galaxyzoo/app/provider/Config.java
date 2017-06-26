@@ -117,7 +117,7 @@ public final class Config {
             //trees so can ask questions about items that have already been downloaded and stored in
             //the cache.
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GAMA_09, //GAMA 09
-                    new SubjectGroup("gama_tree.xml", true,
+                    new SubjectGroup("gama_tree.xml", false,
                             new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_FERENGI2, //Ferengi 2
                     new SubjectGroup("ferengi_tree.xml", false,
