@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--The FileProvider class will draw from the root directory of the app's external storage area (specified by path="."),
-    and the generated content URI will indicate that this directory is called "external_files" for security reasons.-->
-    <external-path name="external_files" path="."/>
-</paths>

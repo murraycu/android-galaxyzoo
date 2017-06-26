@@ -140,26 +140,6 @@
             <meta-data android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
-
-        <!-- Generates a FileProvider class for the app with the appropriate authority.
-        This allows the system to securely share files by creating content URI for files rather than
-        file URI, thus granting temporary file access permissions to sharing apps.
-
-        This is required for devices with Android M or above, while it wasn't necessary before.
-        Without a file provider class, the OS will deny other apps the permission to access
-        GalaxyZoo's files, and sharing locally stored images will be impossible. -->
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="@string/authority_fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-
-            <!-- This meta data and the associated XML file specify that the files will be written to the root folder
-            of the app's external storage area. -->
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
-        </provider>
     </application>
 
 </manifest>
