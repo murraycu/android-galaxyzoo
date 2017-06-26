@@ -4339,29 +4339,30 @@ android.support.v4.content.Loader -> android.support.v4.c.m:
     void deliverResult(java.lang.Object) -> b
     void deliverCancellation() -> l
     android.content.Context getContext() -> m
+    int getId() -> n
     void registerListener(int,android.support.v4.content.Loader$OnLoadCompleteListener) -> a
     void unregisterListener(android.support.v4.content.Loader$OnLoadCompleteListener) -> a
     void registerOnLoadCanceledListener(android.support.v4.content.Loader$OnLoadCanceledListener) -> a
     void unregisterOnLoadCanceledListener(android.support.v4.content.Loader$OnLoadCanceledListener) -> b
-    boolean isStarted() -> n
-    boolean isAbandoned() -> o
-    boolean isReset() -> p
-    void startLoading() -> q
+    boolean isStarted() -> o
+    boolean isAbandoned() -> p
+    boolean isReset() -> q
+    void startLoading() -> r
     void onStartLoading() -> i
-    boolean cancelLoad() -> r
+    boolean cancelLoad() -> s
     boolean onCancelLoad() -> b
-    void forceLoad() -> s
+    void forceLoad() -> t
     void onForceLoad() -> a
-    void stopLoading() -> t
+    void stopLoading() -> u
     void onStopLoading() -> j
-    void abandon() -> u
-    void onAbandon() -> v
-    void reset() -> w
+    void abandon() -> v
+    void onAbandon() -> w
+    void reset() -> x
     void onReset() -> k
-    boolean takeContentChanged() -> x
-    void commitContentChanged() -> y
-    void rollbackContentChanged() -> z
-    void onContentChanged() -> A
+    boolean takeContentChanged() -> y
+    void commitContentChanged() -> z
+    void rollbackContentChanged() -> A
+    void onContentChanged() -> B
     java.lang.String dataToString(java.lang.Object) -> c
     java.lang.String toString() -> toString
     void dump(java.lang.String,java.io.FileDescriptor,java.io.PrintWriter,java.lang.String[]) -> a
@@ -18010,7 +18011,9 @@ com.google.firebase.crash.FirebaseCrash -> com.google.firebase.crash.FirebaseCra
     void zzUM() -> b
     com.google.android.gms.internal.zzbkr zzUN() -> c
     boolean isEnabled() -> d
+    void log(java.lang.String) -> a
     void zza(java.lang.String,long,android.os.Bundle) -> a
+    void zziC(java.lang.String) -> b
     void zzb(java.lang.String,long,android.os.Bundle) -> b
     void zzi(java.lang.Throwable) -> a
     boolean zzUO() -> e
@@ -18326,6 +18329,7 @@ com.murrayc.galaxyzoo.app.ClassifyFragment -> com.murrayc.galaxyzoo.app.c:
     boolean mGetNextInProgress -> af
     com.murrayc.galaxyzoo.app.ClassifyFragment$Callbacks sDummyCallbacks -> ag
     com.murrayc.galaxyzoo.app.ClassifyFragment$Callbacks mCallbacks -> ah
+    com.murrayc.galaxyzoo.app.ClassifyFragment$GetNextIdLoader getNextIdLoader -> ai
     boolean $assertionsDisabled -> aa
     void <init>() -> <init>
     void onAttach(android.content.Context) -> a
@@ -18342,10 +18346,11 @@ com.murrayc.galaxyzoo.app.ClassifyFragment -> com.murrayc.galaxyzoo.app.c:
     void addOrUpdateChildFragments() -> U
     void update() -> L
     void updateFromCursor() -> V
-    android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
-    void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    void onLoaderReset(android.support.v4.content.Loader) -> a
-    void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
+    void access$000(com.murrayc.galaxyzoo.app.ClassifyFragment,boolean) -> a
+    java.lang.String[] access$100(com.murrayc.galaxyzoo.app.ClassifyFragment) -> a
+    android.database.Cursor access$202(com.murrayc.galaxyzoo.app.ClassifyFragment,android.database.Cursor) -> a
+    boolean access$302(com.murrayc.galaxyzoo.app.ClassifyFragment,boolean) -> b
+    void access$400(com.murrayc.galaxyzoo.app.ClassifyFragment) -> b
     void <clinit>() -> <clinit>
 com.murrayc.galaxyzoo.app.ClassifyFragment$1 -> com.murrayc.galaxyzoo.app.c$1:
     void <init>() -> <init>
@@ -18356,6 +18361,14 @@ com.murrayc.galaxyzoo.app.ClassifyFragment$1 -> com.murrayc.galaxyzoo.app.c$1:
 com.murrayc.galaxyzoo.app.ClassifyFragment$Callbacks -> com.murrayc.galaxyzoo.app.c$a:
     void warnAboutNetworkProblemWithRetry() -> m
     void listenForNetworkReconnection() -> n
+com.murrayc.galaxyzoo.app.ClassifyFragment$GetNextIdLoader -> com.murrayc.galaxyzoo.app.c$b:
+    com.murrayc.galaxyzoo.app.ClassifyFragment this$0 -> a
+    void <init>(com.murrayc.galaxyzoo.app.ClassifyFragment) -> <init>
+    android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
+    void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    void onLoaderReset(android.support.v4.content.Loader) -> a
+    void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
+    void <init>(com.murrayc.galaxyzoo.app.ClassifyFragment,com.murrayc.galaxyzoo.app.ClassifyFragment$1) -> <init>
 com.murrayc.galaxyzoo.app.DecisionTree -> com.murrayc.galaxyzoo.app.d:
     java.util.Map questionsMap -> a
     java.lang.String firstQuestionId -> b
@@ -18616,9 +18629,11 @@ com.murrayc.galaxyzoo.app.ListFragment$Callbacks -> com.murrayc.galaxyzoo.app.Li
     void navigateToNextAvailable() -> k
 com.murrayc.galaxyzoo.app.Log -> com.murrayc.galaxyzoo.app.j:
     java.lang.String defaultString(java.lang.String) -> c
-    void error(java.lang.String,java.lang.Throwable) -> a
+    void fatal(java.lang.String,java.lang.Throwable) -> a
+    void fatal(java.lang.String) -> d
+    void error(java.lang.String,java.lang.Throwable) -> b
     void error(java.lang.String) -> a
-    void info(java.lang.String,java.lang.Throwable) -> b
+    void info(java.lang.String,java.lang.Throwable) -> c
     void info(java.lang.String) -> b
 com.murrayc.galaxyzoo.app.LoginActivity -> com.murrayc.galaxyzoo.app.LoginActivity:
     com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient mClient -> n
