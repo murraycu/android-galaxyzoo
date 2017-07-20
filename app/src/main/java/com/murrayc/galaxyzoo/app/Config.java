@@ -53,6 +53,6 @@ public final class Config {
     // galaxyzoo.org also has a register page, but it's only visible as part of the login page
     // (not an actual page either) after clicking a button.
     // Hopefully there is no disadvantage to using the general zooniverse pages instead.
-    public static final String REGISTER_URI = "https://www.zooniverse.org/signup";
+    public static final String REGISTER_URI = "https://www.zooniverse.org/accounts/register";
     public static final String FORGET_PASSWORD_URI = "https://www.zooniverse.org/password/reset";
 }
