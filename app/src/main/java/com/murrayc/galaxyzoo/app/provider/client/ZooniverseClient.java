@@ -377,10 +377,6 @@ public class ZooniverseClient {
         }
     }
 
-    public RequestQueue getRequestQueue() {
-        return mQueue;
-    }
-
     /**
      * This class is meant to be immutable.
      * It only returns references to immutable Strings.

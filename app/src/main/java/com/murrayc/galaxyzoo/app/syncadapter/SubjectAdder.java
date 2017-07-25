@@ -31,6 +31,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
@@ -93,9 +94,20 @@ public class SubjectAdder {
             Item.Columns.LOCATION_INVERTED_DOWNLOADED + " == 1" +
             ")";
 
-    public SubjectAdder(final Context context, final RequestQueue requestQueue) {
+    public SubjectAdder(final Context context) {
         this.mContext = context;
-        this.mRequestQueue = requestQueue;
+
+        //The MockContext used by ProviderTestCase2 (in our unit tests),
+        //doesn't implement getPackageName(), but Volley.newRequestQueue()
+        //calls it. Replacing that MockContext in ProviderTestCase2 is rather difficult,
+        //so this is a quick workaround until we really need to use volley from our ContentProvider test:
+        try {
+            context.getPackageName();
+
+            mRequestQueue = Volley.newRequestQueue(context);
+        } catch (final UnsupportedOperationException ex) {
+            Log.info("ZooniverseClient: Not creating mRequestQueue because context.getPackageName() would fail.");
+        }
     }
 
     /**

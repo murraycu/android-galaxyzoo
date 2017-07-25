@@ -90,7 +90,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         //Uncomment this to make debugger breakpoints work: android.os.Debug.waitForDebugger();
 
         mClient = new ZooniverseClient(context, Config.SERVER);
-        mSubjectAdder = new SubjectAdder(context, mClient.getRequestQueue());
+        mSubjectAdder = new SubjectAdder(context);
 
         //We don't listen for the SharedPreferences changes here because it doesn't currently
         //work across processes, so our listener would never be called.
