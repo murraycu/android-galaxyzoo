@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.murrayc.galaxyzoo.app.QuestionLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/parentLayout"
-    style="@style/TextAppearance.AppCompat.Large"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:textIsSelectable="true"
-    tools:context="com.murrayc.galaxyzoo.app.QuestionFragment">
+    <layout>
+    <data>
+        <variable name="question" type="com.murrayc.galaxyzoo.app.DecisionTree.Question"/>
+    </data>
+    <com.murrayc.galaxyzoo.app.QuestionLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/parentLayout"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:textIsSelectable="true"
+        tools:context="com.murrayc.galaxyzoo.app.QuestionFragment">
 
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textIsSelectable="false" />
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textIsSelectable="false"
+            android:text="@{question.title}"/>
 
-    <TextView
-        android:id="@+id/textViewText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/standard_margin"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:minLines="2"
-        android:textIsSelectable="false" />
+        <TextView
+            android:id="@+id/textViewText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/standard_margin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:minLines="2"
+            android:textIsSelectable="false"
+            android:text="@{question.text}"/>
 
-    <TableLayout
-        android:id="@+id/layoutAnswers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-    </TableLayout>
-
-
-</com.murrayc.galaxyzoo.app.QuestionLinearLayout>
+        <TableLayout
+            android:id="@+id/layoutAnswers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+        </TableLayout>
+    </com.murrayc.galaxyzoo.app.QuestionLinearLayout>
+</layout>
