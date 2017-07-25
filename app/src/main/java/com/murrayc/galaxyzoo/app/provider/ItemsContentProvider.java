@@ -613,7 +613,7 @@ public class ItemsContentProvider extends ContentProvider {
         //but we will then just reuse the files.
         //mOpenDbHelper.onUpgrade(mOpenDbHelper.getWritableDatabase(), 0, 1);
         mZooniverseClient = new ZooniverseClient(context, Config.SERVER);
-        mSubjectAdder = new SubjectAdder(context, mZooniverseClient.getRequestQueue());
+        mSubjectAdder = new SubjectAdder(context);
 
         //This isn't necessary when using the private getExternalCacheDir():
         //Make sure that the .nomedia file exists,

@@ -101,12 +101,18 @@ public class SubjectAdder {
         //doesn't implement getPackageName(), but Volley.newRequestQueue()
         //calls it. Replacing that MockContext in ProviderTestCase2 is rather difficult,
         //so this is a quick workaround until we really need to use volley from our ContentProvider test:
+        boolean contextIsComplete = true;
         try {
             context.getPackageName();
-
-            mRequestQueue = Volley.newRequestQueue(context);
         } catch (final UnsupportedOperationException ex) {
             Log.info("ZooniverseClient: Not creating mRequestQueue because context.getPackageName() would fail.");
+            contextIsComplete = false;
+        }
+
+        if (contextIsComplete) {
+            mRequestQueue = Volley.newRequestQueue(context);
+        } else {
+            mRequestQueue = null;
         }
     }
 
