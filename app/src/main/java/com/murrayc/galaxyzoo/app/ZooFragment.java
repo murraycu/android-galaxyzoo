@@ -62,7 +62,7 @@ public class ZooFragment extends Fragment {
                     Log.error("ZooFragment.cacheLoggedInStatus(): GetExistingLogin asynctask failed, probably due to a missing permission:", mException);
                 }
 
-                ZooFragment.this.setCachedLoggedIn(LoginUtils.getLoggedIn(loginDetails));
+                ZooFragment.setCachedLoggedIn(LoginUtils.getLoggedIn(loginDetails));
             }
         };
         task.execute();
