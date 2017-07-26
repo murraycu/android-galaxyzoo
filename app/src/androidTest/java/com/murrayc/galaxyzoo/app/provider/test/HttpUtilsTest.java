@@ -27,8 +27,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -40,24 +38,4 @@ public class HttpUtilsTest {
         final String header = HttpUtils.generateAuthorizationHeader("somename", "somekey123");
         assertEquals("Basic c29tZW5hbWU6c29tZWtleTEyMw==", header);
     }
-
-    @Test
-    public void testGetPostDataBytes() throws IOException {
-        final List<HttpUtils.NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new HttpUtils.NameValuePair("classification[subject_ids][]",
-                "504f217bc499611ea60410ed"));
-        nameValuePairs.add(new HttpUtils.NameValuePair("classification[annotations][0][sloan-0]",
-                "a-1"));
-        nameValuePairs.add(new HttpUtils.NameValuePair("classification[annotations][1][sloan-1]",
-                "a-1"));
-        nameValuePairs.add(new HttpUtils.NameValuePair("classification[annotations][2][sloan-2]",
-                "a-1"));
-        nameValuePairs.add(new HttpUtils.NameValuePair("classification[annotations][3][sloan-3]",
-                "a-0"));
-
-        final String content = HttpUtils.getPostDataBytes(nameValuePairs);
-        assertEquals("classification%5Bsubject_ids%5D%5B%5D=504f217bc499611ea60410ed&classification%5Bannotations%5D%5B0%5D%5Bsloan-0%5D=a-1&classification%5Bannotations%5D%5B1%5D%5Bsloan-1%5D=a-1&classification%5Bannotations%5D%5B2%5D%5Bsloan-2%5D=a-1&classification%5Bannotations%5D%5B3%5D%5Bsloan-3%5D=a-0",
-                content);
-    }
-
 }

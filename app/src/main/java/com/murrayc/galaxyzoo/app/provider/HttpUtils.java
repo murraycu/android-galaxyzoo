@@ -36,13 +36,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 import okhttp3.Call;
+import okhttp3.FormBody;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -57,7 +58,6 @@ public final class HttpUtils {
     public static final String HTTP_REQUEST_HEADER_PARAM_ACCEPT = "Accept";
     public static final String HTTP_REQUEST_HEADER_PARAM_CONTENT_TYPE = "Content-Type";
     public static final String CONTENT_TYPE_JSON = "application/vnd.api+json; version=1";
-    public static final int TIMEOUT_MILLIS = 20000; //20 seconds. Long but not too short for GPRS connections and not endless.
 
     private static final OkHttpClient client = new OkHttpClient.Builder()
             .addInterceptor(new UserAgentInterceptor())
@@ -126,6 +126,10 @@ public final class HttpUtils {
         return true;
     }
 
+    public static OkHttpClient getHttpClient() {
+        return client;
+    }
+
     public static Call createGetRequestCall(final String uri, final boolean cacheResponse) {
         final Request request = new Request.Builder()
                     .url(uri)
@@ -142,31 +146,15 @@ public final class HttpUtils {
     }
 
     @Nullable
-    public static String getPostDataBytes(final List<NameValuePair> nameValuePairs) {
-        final StringBuilder result = new StringBuilder();
-        boolean first = true;
+    public static RequestBody getPostFormBody(final List<NameValuePair> nameValuePairs) {
+        FormBody.Builder builder = new FormBody.Builder();
 
         for (final NameValuePair pair : nameValuePairs) {
-            if (first) {
-                first = false;
-            } else {
-                result.append("&");
-            }
-
-            try {
-                result.append(URLEncoder.encode(pair.getName(), Utils.STRING_ENCODING));
-                result.append("=");
-                result.append(URLEncoder.encode(pair.getValue(), Utils.STRING_ENCODING));
-            } catch (final UnsupportedEncodingException e) {
-                //This is incredibly unlikely for the UTF-8 encoding,
-                //so we just log it instead of trying to recover from it.
-                Log.error("getPostDataBytes(): Exception", e);
-                return null;
-            }
+            builder = builder.add(pair.getName(), pair.getValue());
         }
 
         //Log.info("galaxyzoodebug: content:" + result);
-        return result.toString();
+        return builder.build();
     }
 
     @Nullable

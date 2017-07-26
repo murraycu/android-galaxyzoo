@@ -32,22 +32,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
-import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -84,25 +79,6 @@ public class ZooniverseClient {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Subject.class, new SubjectDeserializer());
         return gsonBuilder.create();
-    }
-
-    private static HttpURLConnection openConnection(final String strURL) throws IOException {
-        final URL url= new URL(strURL);
-
-        final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        setConnectionUserAgent(conn);
-
-        //Set a reasonable timeout.
-        //Otherwise there is no timeout so we might never know if it fails,
-        //so never have the chance to try again.
-        conn.setConnectTimeout(HttpUtils.TIMEOUT_MILLIS);
-        conn.setReadTimeout(HttpUtils.TIMEOUT_MILLIS);
-
-        return conn;
-    }
-
-    private static void setConnectionUserAgent(final HttpURLConnection connection) {
-        connection.setRequestProperty(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, HttpUtils.getUserAgent());
     }
 
     /** Return a group ID selected at random.
@@ -148,88 +124,44 @@ public class ZooniverseClient {
         HttpUtils.throwIfNoNetwork(getContext(),
                 false); //Ignore the wifi-only setting because this will be when the user is explicitly requesting a login.
 
-        final HttpURLConnection conn;
-        try {
-            conn = openConnection(getLoginUri());
-        } catch (final IOException e) {
-            Log.error("loginSync(): Could not open connection", e);
+        final RequestBody formBody = new FormBody.Builder()
+                .add("username", username)
+                .add("password", password)
+                .build();
+        final Request request = new Request.Builder()
+                .url(getLoginUri())
+                .post(formBody)
+                .build();
 
-            throw new LoginException("Could not open connection.", e);
+        final okhttp3.Call call = HttpUtils.getHttpClient().newCall(request);
+
+        okhttp3.Response response = null;
+        try {
+            response = call.execute();
+        } catch (final IOException e) {
+            Log.error("loginSync(): exception during request.", e);
+            return null;
         }
 
-        final List<HttpUtils.NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new HttpUtils.NameValuePair("username", username));
-        nameValuePairs.add(new HttpUtils.NameValuePair("password", password));
+        if (response == null) {
+            Log.error("loginSync(): response is null.");
+            return null;
+        }
 
-        try {
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-
-            writeParamsToHttpPost(conn, nameValuePairs);
-
-            conn.connect();
-        } catch (final IOException e) {
-            Log.error("loginSync(): exception during HTTP connection", e);
-
-            conn.disconnect();
-
-            throw new LoginException("Could not create POST.", e);
+        if (!response.isSuccessful()) {
+            Log.error("loginSync(): response not successful.");
+            response.close();
+            return null;
         }
 
         //Get the response:
-        InputStream in = null;
         try {
-            in = conn.getInputStream();
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.error("loginSync(): response code: " + conn.getResponseCode());
-                return null;
-            }
-
-            return LoginUtils.parseLoginResponseContent(in);
+            final LoginUtils.LoginResult result = LoginUtils.parseLoginResponseContent(response.body().byteStream());
+            response.close();
+            return result;
         } catch (final IOException e) {
-            Log.error("loginSync(): exception during HTTP connection", e);
-
+            Log.error("loginSync(): parseLoginResponseContent failed.", e);
             throw new LoginException("Could not parse response.", e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (final IOException e) {
-                    Log.error("loginSync(): exception while closing in", e);
-                }
-            }
-
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
-    }
-
-    private static void writeParamsToHttpPost(final HttpURLConnection conn, final List<HttpUtils.NameValuePair> nameValuePairs) throws IOException {
-        OutputStream out = null;
-        try {
-            out = conn.getOutputStream();
-
-            BufferedWriter writer = null;
-            try {
-                writer = new BufferedWriter(
-                        new OutputStreamWriter(out, Utils.STRING_ENCODING));
-                writer.write(HttpUtils.getPostDataBytes(nameValuePairs));
-                writer.flush();
-            } finally {
-                if (writer != null) {
-                    writer.close();
-                }
-            }
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (final IOException e) {
-                    Log.error("writeParamsToHttpPost(): Exception while closing out", e);
-                }
-            }
         }
     }
 
@@ -299,27 +231,10 @@ public class ZooniverseClient {
 
     public boolean uploadClassificationSync(final String authName, final String authApiKey, final String groupId, final List<HttpUtils.NameValuePair> nameValuePairs) throws UploadException {
         throwIfNoNetwork();
-
-        final HttpURLConnection conn;
-        try {
-            conn = openConnection(getPostUploadUri(groupId));
-        } catch (final IOException e) {
-            Log.error("uploadClassificationSync(): Could not open connection", e);
-
-            throw new UploadException("Could not open connection.", e);
-        }
-
-        try {
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-        } catch (final IOException e) {
-            Log.error("uploadClassificationSync: exception during HTTP connection", e);
-
-            conn.disconnect();
-
-            throw new UploadException("exception during HTTP connection", e);
-        }
+        final RequestBody body = HttpUtils.getPostFormBody(nameValuePairs);
+        Request.Builder builder = new Request.Builder()
+                .url(getPostUploadUri(groupId))
+                .post(body);
 
         //Add the authentication details to the headers;
         //Be careful: The server still returns OK_CREATED even if we provide the wrong Authorization here.
@@ -327,56 +242,39 @@ public class ZooniverseClient {
         //classifications in your profile.
         //See https://github.com/zooniverse/Galaxy-Zoo/issues/184
         if ((authName != null) && (authApiKey != null)) {
-            conn.setRequestProperty("Authorization", HttpUtils.generateAuthorizationHeader(authName, authApiKey));
+            builder = builder.header("Authorization", HttpUtils.generateAuthorizationHeader(authName, authApiKey));
         }
+
+        final Request request = builder.build();
 
         //This will be required by the newer API, but we don't ask for it already
         //because the current server wants it to be "application/x-www-form-urlencoded" instead,
         //See http://docs.panoptes.apiary.io/#introduction/authentication
         //conn.setRequestProperty(HttpUtils.HTTP_REQUEST_HEADER_PARAM_CONTENT_TYPE, HttpUtils.CONTENT_TYPE_JSON);
 
+        final okhttp3.Call call = HttpUtils.getHttpClient().newCall(request);
+
+        okhttp3.Response response = null;
         try {
-            writeParamsToHttpPost(conn, nameValuePairs);
+            response = call.execute();
         } catch (final IOException e) {
-            Log.error("uploadClassificationSync: writeParamsToHttpPost() failed", e);
-
-            conn.disconnect();
-
-            throw new UploadException("writeParamsToHttpPost() failed.", e);
+            Log.error("uploadClassificationSync(): exception during request.", e);
+            throw new UploadException("uploadClassificationSync(): exception during request.", e);
         }
 
-        //TODO: Is this necessary? conn.connect();
-
-        //Get the response:
-        InputStream in = null;
-        try {
-            //Note: At least with okhttp.mockwebserver, getInputStream() will throw an IOException (file
-            //not found) if the response code was an error, such as HTTP_UNAUTHORIZED.
-            in = conn.getInputStream();
-            final int responseCode = conn.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_CREATED) {
-                Log.error("uploadClassificationSync: Did not receive the 201 Created status code: " + conn.getResponseCode());
-                return false;
-            }
-
-            return true;
-        } catch (final IOException e) {
-            Log.error("uploadClassificationSync: exception during HTTP connection", e);
-
-            throw new UploadException("exception during HTTP connection", e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (final IOException e) {
-                    Log.error("uploadClassificationSync: exception while closing in", e);
-                }
-            }
-
-            if (conn != null) {
-                conn.disconnect();
-            }
+        if (response == null) {
+            Log.error("uploadClassificationSync(): response is null.");
+            return false;
         }
+
+        if (!response.isSuccessful()) {
+            Log.error("uploadClassificationSync(): response not successful.");
+            response.close();
+            return false;
+        }
+
+        response.close();
+        return true;
     }
 
     /**
