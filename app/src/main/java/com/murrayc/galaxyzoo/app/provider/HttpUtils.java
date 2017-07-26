@@ -341,7 +341,6 @@ public final class HttpUtils {
          *                 none of any kind was available.
          */
         public NoNetworkException(final boolean wifiOnly) {
-            super();
             this.wifiOnly = wifiOnly;
         }
 
@@ -361,7 +360,6 @@ public final class HttpUtils {
         private final String value;
 
         public NameValuePair(final String name, final String value) {
-            super();
             this.name = name;
             this.value = value;
         }
