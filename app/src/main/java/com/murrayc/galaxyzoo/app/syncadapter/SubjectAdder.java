@@ -27,11 +27,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.Utils;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
@@ -41,11 +36,15 @@ import com.murrayc.galaxyzoo.app.provider.ItemsContentProvider;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
 
 public class SubjectAdder {
     private final Context mContext;
@@ -53,7 +52,6 @@ public class SubjectAdder {
     /* A map of remote URIs to the last dates that we tried to download them.
      */
     private final Map<String, Date> mImageDownloadsInProgress = new HashMap<>();
-    private final RequestQueue mRequestQueue;
     private static final String[] PROJECTION_DOWNLOAD_MISSING_IMAGES = {Item.Columns._ID,
             Item.Columns.LOCATION_STANDARD_DOWNLOADED,
             Item.Columns.LOCATION_STANDARD_URI_REMOTE,
@@ -96,24 +94,6 @@ public class SubjectAdder {
 
     public SubjectAdder(final Context context) {
         this.mContext = context;
-
-        //The MockContext used by ProviderTestCase2 (in our unit tests),
-        //doesn't implement getPackageName(), but Volley.newRequestQueue()
-        //calls it. Replacing that MockContext in ProviderTestCase2 is rather difficult,
-        //so this is a quick workaround until we really need to use volley from our ContentProvider test:
-        boolean contextIsComplete = true;
-        try {
-            context.getPackageName();
-        } catch (final UnsupportedOperationException ex) {
-            Log.info("ZooniverseClient: Not creating mRequestQueue because context.getPackageName() would fail.");
-            contextIsComplete = false;
-        }
-
-        if (contextIsComplete) {
-            mRequestQueue = Volley.newRequestQueue(context);
-        } else {
-            mRequestQueue = null;
-        }
     }
 
     /**
@@ -442,42 +422,39 @@ public class SubjectAdder {
         if (asyncFileDownloads) {
             Log.info("cacheUriToFile(): uriFileToCache=" + uriFileToCache);
 
-            final Request<Boolean> request = new HttpUtils.FileCacheRequest(getContext(), uriFileToCache, cacheFileUri,
-                    new Response.Listener<Boolean>() {
-                        @Override
-                        public void onResponse(final Boolean response) {
-                            onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(final VolleyError error) {
-                            Log.error("cacheUriToFile.onErrorResponse()", error);
-                            onImageDownloadDone(false, uriFileToCache, itemUri, imageType);
-                        }
-                    });
+            final Call call = HttpUtils.createGetRequestCall(uriFileToCache, false);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(final Call call, final IOException e) {
+                    onImageDownloadDone(false, uriFileToCache, itemUri, imageType);
+                }
 
-            //We won't request the same image again if it succeeded once:
-            addRequestToQueue(request);
+                @Override
+                public void onResponse(final Call call, final okhttp3.Response response) throws IOException {
+                    boolean successful = false;
+
+                    if (response != null && response.isSuccessful()) {
+                        try {
+                            HttpUtils.parseGetFileResponseContent(mContext, response.body().byteStream(), cacheFileUri);
+                            successful = true;
+                        } catch (IOException e) {
+                            Log.error("cacheUriToFile(): parseGetFileResponseContent failed for cache content URI: " + cacheFileUri, e);
+                        }
+                    }
+
+                    onImageDownloadDone(successful, uriFileToCache, itemUri, imageType);
+                }
+            });
         } else {
             boolean response = false;
             try {
-                response = HttpUtils.cacheUriToFileSync(getContext(), mRequestQueue, uriFileToCache, cacheFileUri);
+                response = HttpUtils.cacheUriToFileSync(getContext(), uriFileToCache, cacheFileUri);
             } catch (final HttpUtils.FileCacheException e) {
                 Log.error("SubjectAdder.CacheUriToFile(): Exception from HttpUtils.cacheUriToFileSync", e);
             }
 
             onImageDownloadDone(response, uriFileToCache, itemUri, imageType);
         }
-    }
-
-    private void addRequestToQueue(final Request<Boolean> request) {
-        //We won't request the same image again if it succeeded once,
-        //so don't waste memory or storage caching it.
-        //(We are downloading it to our own cache, of course.)
-        request.setShouldCache(false);
-
-        mRequestQueue.add(request);
     }
 
     private void onImageDownloadDone(final boolean success, final String uriFileToCache, final Uri itemUri, final ImageType imageType) {

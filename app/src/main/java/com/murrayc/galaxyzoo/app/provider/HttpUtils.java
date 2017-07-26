@@ -26,13 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.RequestFuture;
+import com.google.common.io.ByteStreams;
 import com.murrayc.galaxyzoo.app.BuildConfig;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
@@ -40,15 +34,16 @@ import com.murrayc.galaxyzoo.app.Utils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+
+import okhttp3.Call;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Don't use any of these methods from the main thread.
@@ -63,6 +58,10 @@ public final class HttpUtils {
     public static final String HTTP_REQUEST_HEADER_PARAM_CONTENT_TYPE = "Content-Type";
     public static final String CONTENT_TYPE_JSON = "application/vnd.api+json; version=1";
     public static final int TIMEOUT_MILLIS = 20000; //20 seconds. Long but not too short for GPRS connections and not endless.
+
+    private static final OkHttpClient client = new OkHttpClient.Builder()
+            .addInterceptor(new UserAgentInterceptor())
+            .build();
 
     public static void throwIfNoNetwork(final Context context) {
         final boolean wifiOnly = LoginUtils.getUseWifiOnly(context);
@@ -94,41 +93,52 @@ public final class HttpUtils {
     /**
      *
      * @param context
-     * @param requestQueue
      * @param uriFileToCache  A Content URI for a cache file.
      * @param cacheFileUri
      * @return
      * @throws FileCacheException
      */
-    public static boolean cacheUriToFileSync(final Context context, final RequestQueue requestQueue, final String uriFileToCache, final String cacheFileUri) throws FileCacheException {
+    public static boolean cacheUriToFileSync(final Context context, final String uriFileToCache, final String cacheFileUri) throws FileCacheException {
         Log.info("cacheUriToFileSync(): uriFileToCache=" + uriFileToCache);
 
-        final RequestFuture<Boolean> futureListener = RequestFuture.newFuture();
-        final Request<Boolean> request = new FileCacheRequest(context, uriFileToCache, cacheFileUri,
-                futureListener, futureListener);
+        final Call call = createGetRequestCall(uriFileToCache, false);
 
-        //We won't request the same image again if it succeeded once,
-        //so don't waste memory or storage caching it.
-        //(We are downloading it to our own cache, of course.)
-        request.setShouldCache(false);
-
-        requestQueue.add(request);
-
-        boolean response = false;
+        final Response response;
         try {
-            //Note: If we don't provider the RequestFuture as the errorListener too,
-            //then this won't return until after the timeout, even if an error happen earlier.
-            response = futureListener.get(TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-        } catch (final InterruptedException | ExecutionException e) {
+            response = call.execute();
+        } catch (final IOException e) {
             Log.error("cacheUriToFile(): Exception from request.", e);
             throw new FileCacheException("Exception from request.", e);
-        } catch (final TimeoutException e) {
-            Log.error("cacheUriToFile(): Timeout Exception from request.", e);
-            throw new FileCacheException("Timeout Exception from request.", e);
-
         }
 
-        return response;
+        if (!response.isSuccessful()) {
+            Log.error("cacheUriToFile(): Request was not succcessful.");
+            return false;
+        }
+
+        try {
+            parseGetFileResponseContent(context, response.body().byteStream(), cacheFileUri);
+        } catch (final IOException e) {
+            Log.error("cacheUriToFile(): parseGetFileResponseContent failed for cache content URI: " + cacheFileUri, e);
+            throw new FileCacheException("Exception while parsing response for cache content URI: " + cacheFileUri, e);
+        }
+
+        return true;
+    }
+
+    public static Call createGetRequestCall(final String uriFileToCache, final boolean cacheResponse) {
+        final Request request = new Request.Builder()
+                    .url(uriFileToCache)
+                    .build();
+
+        // We won't request the same image again if it succeeded once,
+        // so don't waste memory or storage caching it.
+        // (We are downloading it to our own cache, of course.)
+        if (!cacheResponse) {
+            request.cacheControl().noCache();
+        }
+
+        return client.newCall(request);
     }
 
     @Nullable
@@ -175,62 +185,6 @@ public final class HttpUtils {
         }
 
         return "Basic " + Base64.encodeToString(asBytes, Base64.NO_WRAP);
-    }
-
-    public static class FileCacheRequest extends Request<Boolean> {
-
-        private final String mCacheFileUri;
-        private final WeakReference<Context> mContext;
-        private final Response.Listener<Boolean> mListener;
-
-        /**
-         *
-         * @param context
-         * @param uriFileToCache
-         * @param cacheFileUri  A Content URI for a cache file.
-         * @param listener
-         * @param errorListener
-         */
-        public FileCacheRequest(final Context context, final String uriFileToCache, final String cacheFileUri, final Response.Listener<Boolean> listener, final Response.ErrorListener errorListener) {
-            super(Method.GET, uriFileToCache, errorListener);
-
-            mCacheFileUri = cacheFileUri;
-            mContext = new WeakReference<>(context);
-            mListener = listener;
-        }
-
-        @Override
-        protected Response<Boolean> parseNetworkResponse(final NetworkResponse response) {
-            if (mContext != null) {
-                final Context context = mContext.get();
-                try {
-                    parseGetFileResponseContent(context, response.data, mCacheFileUri);
-                } catch (final IOException e) {
-                    //Note that this error can actually mean that the _data column _is_ there, but
-                    //that it contains a null value for the path:
-                    //  java.io.FileNotFoundException: Column _data not found.
-                    Log.error("HttpUtils.parseNetworkResponse(): parseGetFileResponseContent failed for cache content URI: " + mCacheFileUri, e);
-                    return Response.error(new VolleyError("parseGetFileResponseContent() failed.", e));
-                }
-            } else {
-                Log.error("parseNetworkResponse(): context is null.");
-                return Response.error(new VolleyError("context is null."));
-            }
-
-            return Response.success(true, HttpHeaderParser.parseCacheHeaders(response));
-        }
-
-        @Override
-        protected void deliverResponse(final Boolean response) {
-            mListener.onResponse(response);
-        }
-
-        @Override
-        public Map<String, String> getHeaders(){
-            final Map<String, String> headers = new HashMap<>();
-            headers.put(HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT, getUserAgent());
-            return headers;
-        }
     }
 
     @NonNull
@@ -327,6 +281,51 @@ public final class HttpUtils {
     }
 
     /**
+     *
+     * @param context
+     * @param data
+     * @param cacheFileContentUri A Content URI for a cache file.
+     * @throws IOException
+     */
+    public static void parseGetFileResponseContent(final Context context, final InputStream data, final String cacheFileContentUri) throws IOException {
+        //Write the content to the file:
+        ParcelFileDescriptor pfd = null;
+        FileOutputStream fout = null;
+        try {
+            //Use this instead when using the commented icon-downloading code in IconsCache:
+            //fout = new FileOutputStream(cacheFileContentUri);
+            //fout.write(data);
+
+            //FileOutputStream doesn't seem to understand content provider URIs:
+            pfd = context.getContentResolver().
+                    openFileDescriptor(Uri.parse(cacheFileContentUri), "w");
+            if (pfd == null) {
+                Log.error("parseGetFileResponseContent(): pfd is null.");
+            } else {
+
+                fout = new FileOutputStream(pfd.getFileDescriptor());
+                ByteStreams.copy(data, fout);
+            }
+        } finally {
+            if (fout != null) {
+                try {
+                    fout.close();
+                } catch (final IOException e) {
+                    Log.error("parseGetFileResponseContent(): Exception while closing fout", e);
+                }
+            }
+
+            if (pfd != null) {
+                try {
+                    pfd.close();
+                } catch (final IOException e) {
+                    Log.error("parseGetFileResponseContent(): Exception while closing pfd", e);
+                }
+            }
+        }
+    }
+
+    /**
      * Thrown by methods that required a suitable network connection.
      *
      * This is a RuntimeException because only RuntimeExceptions may be thrown by
@@ -374,5 +373,15 @@ public final class HttpUtils {
         String getValue() {
             return value;
         }
+    }
+
+    private static class UserAgentInterceptor implements Interceptor {
+        @Override
+        public Response intercept(final Chain chain) throws IOException {
+            Request originalRequest = chain.request();
+            Request requestWithUserAgent = originalRequest.newBuilder()
+                    .header(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC)
+                    .build();
+            return chain.proceed(requestWithUserAgent);        }
     }
 }
