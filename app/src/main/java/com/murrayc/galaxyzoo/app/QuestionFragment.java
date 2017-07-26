@@ -120,7 +120,7 @@ public class QuestionFragment extends BaseQuestionFragment
     private FragmentQuestionBinding binding;
 
     // This avoids the need for null checks in the layout XML's data binding.
-    private DecisionTree.Question emptyQuestion = new DecisionTree.Question(null, null, null, null);
+    private final DecisionTree.Question emptyQuestion = new DecisionTree.Question(null, null, null, null);
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
