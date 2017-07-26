@@ -133,7 +133,7 @@ public class ItemFragment extends ZooFragment {
      * @param menu
      * @param inflater
      */
-    protected void createCommonOptionsMenu(final Menu menu, final MenuInflater inflater) {
+    protected static void createCommonOptionsMenu(final Menu menu, final MenuInflater inflater) {
         // Inflate the menu items for use in the action bar
         inflater.inflate(R.menu.actionbar_menu_item_common, menu);
     }

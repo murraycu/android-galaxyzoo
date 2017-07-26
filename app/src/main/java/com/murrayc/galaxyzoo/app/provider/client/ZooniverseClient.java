@@ -459,7 +459,7 @@ public class ZooniverseClient {
             return new Subject(id, zooniverseId, groupId, locationStandard, locationThumbnail, locationInverted);
         }
 
-        private String getString(JsonObject jsonObject, final String name) {
+        private static String getString(JsonObject jsonObject, final String name) {
             final JsonElement jsonElementId = jsonObject.get(name);
             return jsonElementId.getAsString();
         }
