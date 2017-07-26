@@ -126,9 +126,9 @@ public final class HttpUtils {
         return true;
     }
 
-    public static Call createGetRequestCall(final String uriFileToCache, final boolean cacheResponse) {
+    public static Call createGetRequestCall(final String uri, final boolean cacheResponse) {
         final Request request = new Request.Builder()
-                    .url(uriFileToCache)
+                    .url(uri)
                     .build();
 
         // We won't request the same image again if it succeeded once,
