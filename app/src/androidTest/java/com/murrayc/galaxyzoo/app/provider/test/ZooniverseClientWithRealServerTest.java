@@ -61,7 +61,7 @@ public class ZooniverseClientWithRealServerTest {
 
             final ZooniverseClient.Subject subject = subjects.get(0);
             assertNotNull(subject);
-            assertFalse(TextUtils.isEmpty(subject.getSubjectId()));
+            assertFalse(TextUtils.isEmpty(subject.getId()));
         }
     }
 

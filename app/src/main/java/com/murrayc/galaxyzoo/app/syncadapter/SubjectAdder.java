@@ -548,7 +548,7 @@ public class SubjectAdder {
      * @param asyncFileDownloads Get the image data asynchronously if this is true.
      */
     private boolean addSubject(final ZooniverseClient.Subject item, final boolean asyncFileDownloads) {
-        if (subjectIsInDatabase(item.getSubjectId())) {
+        if (subjectIsInDatabase(item.getId())) {
             //It is already in the database.
             //TODO: Update the row?
             return true;
@@ -557,7 +557,7 @@ public class SubjectAdder {
         final ContentResolver resolver = getContext().getContentResolver();
 
         final ContentValues values = new ContentValues();
-        values.put(Item.Columns.SUBJECT_ID, item.getSubjectId());
+        values.put(Item.Columns.SUBJECT_ID, item.getId());
         values.put(Item.Columns.ZOONIVERSE_ID, item.getZooniverseId());
         values.put(Item.Columns.GROUP_ID, item.getGroupId());
 

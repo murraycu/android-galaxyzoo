@@ -381,15 +381,15 @@ public class ZooniverseClient {
      * It only returns references to immutable Strings.
      */
     public static final class Subject {
-        private final String mSubjectId;
+        private final String mId;
         private final String mZooniverseId;
         private final String mGroupId;
         private final String mLocationStandard;
         private final String mLocationThumbnail;
         private final String mLocationInverted;
 
-        public Subject(final String subjectId, final String zooniverseId, final String groupId, final String locationStandard, final String locationThumbnail, final String locationInverted) {
-            this.mSubjectId = subjectId;
+        public Subject(final String id, final String zooniverseId, final String groupId, final String locationStandard, final String locationThumbnail, final String locationInverted) {
+            this.mId = id;
             this.mZooniverseId = zooniverseId;
             this.mGroupId = groupId;
             this.mLocationStandard = locationStandard;
@@ -397,8 +397,8 @@ public class ZooniverseClient {
             this.mLocationInverted = locationInverted;
         }
 
-        public String getSubjectId() {
-            return mSubjectId;
+        public String getId() {
+            return mId;
         }
 
         public String getZooniverseId() {

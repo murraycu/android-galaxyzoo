@@ -86,8 +86,8 @@ public class ZooniverseClientTest{
         final ZooniverseClient.Subject subject = subjects.get(0);
         assertNotNull(subject);
 
-        assertNotNull(subject.getSubjectId());
-        assertEquals(subject.getSubjectId(), "5500684569736d5964271400");
+        assertNotNull(subject.getId());
+        assertEquals(subject.getId(), "5500684569736d5964271400");
 
         assertNotNull(subject.getZooniverseId());
         assertEquals(subject.getZooniverseId(), "AGZ00081ls");
