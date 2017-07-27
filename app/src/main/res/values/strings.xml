@@ -10,7 +10,7 @@
     <string name="about_text1">An android app for classifying <a href="http://www.galaxyzoo.org/">Galaxy Zoo</a> subjects. This is an official Zooniverse and Galaxy Zoo app.</string>
     <string name="about_text2">This android app was developed by <a href="http://murrayc.com/">Murray Cumming</a>.</string>
 
-    <string name="about_text3">This app uses the <a href="https://android.googlesource.com/platform/frameworks/volley">Volley</a> library, under the Apache License version 2.0.</string>
+    <string name="about_text3">This app uses the <a href="https://square.github.io/retrofit/">Retrofit</a> library, under the Apache License version 2.0.</string>
 
     <string name="about_text3b">This app uses the <a href="http://square.github.io/picasso/">Picasso</a> library, under the Apache License version 2.0.</string>
 

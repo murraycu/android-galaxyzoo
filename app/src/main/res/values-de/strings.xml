@@ -6,7 +6,7 @@
     to make life easier for translators.-->
   <string name="about_text1">Dies ist eine Android App zur Klassifierung von <a href="http://www.galaxyzoo.org/">Galaxy Zoo</a> Objekten. Dies ist eine offiziele Zooniverse und Galaxy Zoo App.</string>
   <string name="about_text2">Diese Android App wurde von <a href="http://murrayc.com/">Murray Cumming</a> entwickelt.</string>
-  <string name="about_text3">Diese App benutzt die <a href="https://android.googlesource.com/platform/frameworks/volley">Volley</a> Bibliothek unter der Apache License version 2.0.</string>
+  <string name="about_text3">Diese App benutzt die <a href="https://square.github.io/retrofit/">Retrofit</a> Bibliothek unter der Apache License version 2.0.</string>
   <string name="about_text3b">Diese App benutzt die <a href="http://square.github.io/picasso/">Picasso</a> Bibliothek unter der Apache License Version 2.0</string>
   <string name="about_text4">Die Antwortsymbole und die Beispielbilder stammen aus der <a href="https://github.com/zooniverse/Galaxy-Zoo">Web-basierten Benutzeroberfläche für Galaxy-Zoo</a> von Zooniverse, unter der Apache License Version 2.0.</string>
   <string name="about_text5">Objektbilder der <a href="http://www.sdss3.org/">Sloan Digital Sky Survey</a> werden unter der <a href="http://www.sdss3.org/collaboration/imageuse.php">non-commercial license</a> benutzt.</string>

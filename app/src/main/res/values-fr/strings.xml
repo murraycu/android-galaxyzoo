@@ -6,7 +6,7 @@
     to make life easier for translators.-->
   <string name="about_text1">Une application android pour classer les sujets <a href="http://www.galaxyzoo.org/">Galaxy Zoo</a>. C\'est une application Zooniverse and Galaxy Zoo officielle.</string>
   <string name="about_text2">Cette application android a été développé par <a href="http://murrayc.com/">Murray Cumming</a>.</string>
-  <string name="about_text3">Cette application utilise l\'archive <a href="https://android.googlesource.com/platform/frameworks/volley">Volley</a>, sous la Licence Apache version 2.0.</string>
+  <string name="about_text3">Cette application utilise l\'archive <a href="https://square.github.io/retrofit/">Retrofit</a>, sous la Licence Apache version 2.0.</string>
   <string name="about_text3b">Cette application utilise l\'archive <a href="http://square.github.io/picasso/">Picasso</a>, sous la Licence Apache version 2.0.</string>
   <string name="about_text4">Les icônes de réponses et les images d\'exemples viennent de l\'interface web de Zooniverse <a href="https://github.com/zooniverse/Galaxy-Zoo">pour Galaxy-Zoo</a>, sous la Licence Apache version 2.0.</string>
   <string name="about_text5">Les images des sujets venant de <a href="http://www.sdss3.org/">Sloan Digital Sky Survey</a> sont utilisées sous <a href="http://www.sdss3.org/collaboration/imageuse.php">une licence non-commercial</a>.</string>
