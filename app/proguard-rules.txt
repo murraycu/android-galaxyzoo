@@ -44,5 +44,13 @@
 -keepattributes Exceptions
 
 
+
+
 # See https://github.com/square/okio#proguard
 -dontwarn okio.**
+
+
+# For Guava:
+-dontwarn java.lang.ClassValue
+-dontwarn com.google.errorprone.annotations.**
+-dontwarn sun.misc.Unsafe
