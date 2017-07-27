@@ -99,18 +99,6 @@ public class ZooniverseClient {
         return (String)values[idx];
     }
 
-    /** Get the first part of the Query URI.
-     * The caller should append a number to indicate how many items are being requested.
-     * @return
-     */
-    private String getQueryMoreItemsUri() {
-        /**
-         * REST uri for querying items.
-         * Like, the Galaxy-Zoo website's code, this hard-codes the Group ID for the Sloan survey:
-         */
-        return mServerBaseUri + "groups/" + getGroupIdForNextQuery() + "/subjects?limit="; //Should have a number, such as 5, appended.
-    }
-
     private String getPostUploadUri(final String groupId) {
         return mServerBaseUri + "workflows/" + groupId + "/classifications";
     }
