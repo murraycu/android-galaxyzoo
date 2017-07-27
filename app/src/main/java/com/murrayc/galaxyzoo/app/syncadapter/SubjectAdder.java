@@ -440,6 +440,9 @@ public class SubjectAdder {
                         } catch (IOException e) {
                             Log.error("cacheUriToFile(): parseGetFileResponseContent failed for cache content URI: " + cacheFileUri, e);
                         }
+
+                        // In case parseGetFileResponseContent() didn't read to the end, for some reason:
+                        response.close();
                     }
 
                     onImageDownloadDone(successful, uriFileToCache, itemUri, imageType);
