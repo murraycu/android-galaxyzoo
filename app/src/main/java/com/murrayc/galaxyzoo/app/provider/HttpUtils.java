@@ -220,53 +220,7 @@ public final class HttpUtils {
         con.disconnect(); //Otherwise StrictMode says (with an exception) that we leak.
         return result;
     }
-    */
-
-
-    /**
-     *
-     * @param context
-     * @param data
-     * @param cacheFileContentUri A Content URI for a cache file.
-     * @throws IOException
-     */
-    private static void parseGetFileResponseContent(final Context context, final byte[] data, final String cacheFileContentUri) throws IOException {
-        //Write the content to the file:
-        ParcelFileDescriptor pfd = null;
-        FileOutputStream fout = null;
-        try {
-            //Use this instead when using the commented icon-downloading code in IconsCache:
-            //fout = new FileOutputStream(cacheFileContentUri);
-            //fout.write(data);
-
-            //FileOutputStream doesn't seem to understand content provider URIs:
-            pfd = context.getContentResolver().
-                    openFileDescriptor(Uri.parse(cacheFileContentUri), "w");
-            if (pfd == null) {
-                Log.error("parseGetFileResponseContent(): pfd is null.");
-            } else {
-
-                fout = new FileOutputStream(pfd.getFileDescriptor());
-                fout.write(data);
-            }
-        } finally {
-            if (fout != null) {
-                try {
-                    fout.close();
-                } catch (final IOException e) {
-                    Log.error("parseGetFileResponseContent(): Exception while closing fout", e);
-                }
-            }
-
-            if (pfd != null) {
-                try {
-                    pfd.close();
-                } catch (final IOException e) {
-                    Log.error("parseGetFileResponseContent(): Exception while closing pfd", e);
-                }
-            }
-        }
-    }
+    *
 
     /**
      *
