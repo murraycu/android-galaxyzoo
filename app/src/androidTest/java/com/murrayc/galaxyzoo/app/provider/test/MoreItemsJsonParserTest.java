@@ -21,8 +21,9 @@ package com.murrayc.galaxyzoo.app.provider.test;
 
 import android.support.test.runner.AndroidJUnit4;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.murrayc.galaxyzoo.app.Utils;
-import com.murrayc.galaxyzoo.app.provider.client.MoreItemsJsonParser;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 import org.junit.Before;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -50,7 +52,9 @@ public class MoreItemsJsonParserTest {
 
         final Reader reader = new InputStreamReader(inputStream, Utils.STRING_ENCODING);
 
-        mSubjects = MoreItemsJsonParser.parseMoreItemsResponseContent(reader);
+        Gson gson = ZooniverseClient.createGson();
+        mSubjects = gson.fromJson(reader, new TypeToken<ArrayList<ZooniverseClient.Subject>>() {}.getType());
+
         assertNotNull(mSubjects);
 
         reader.close();

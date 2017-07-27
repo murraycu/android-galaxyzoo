@@ -20,13 +20,16 @@
 package com.murrayc.galaxyzoo.app.provider.client;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.Utils;
@@ -38,14 +41,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by murrayc on 10/10/14.
@@ -53,25 +60,30 @@ import java.util.concurrent.TimeoutException;
 public class ZooniverseClient {
     private final Context mContext;
     private final String mServerBaseUri;
-
-    private RequestQueue mQueue = null;
+    private final ZooniverseSubjectsService mRetrofitService;
 
     public ZooniverseClient(final Context context, final String serverBaseUri) {
         mContext = context;
         mServerBaseUri = serverBaseUri;
 
-        //The MockContext used by ProviderTestCase2 (in our unit tests),
-        //doesn't implement getPackageName(), but Volley.newRequestQueue()
-        //calls it. Replacing that MockContext in ProviderTestCase2 is rather difficult,
-        //so this is a quick workaround until we really need to use volley from our ContentProvider test:
-        try {
-            context.getPackageName();
+        final Retrofit retrofit = createRetrofit(mServerBaseUri);
+        mRetrofitService = retrofit.create(ZooniverseSubjectsService.class);
+    }
 
-            mQueue = Volley.newRequestQueue(context);
-        } catch (final UnsupportedOperationException ex) {
-            Log.info("ZooniverseClient: Not creating mQueue because context.getPackageName() would fail.");
-            mQueue = null; //Just for the unit test.
-        }
+    private static Retrofit createRetrofit(final String baseUrl) {
+        final Gson gson = createGson();
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+    }
+
+    @NonNull
+    public static Gson createGson() {
+        // Register our custom GSON deserializer for use by Retrofit.
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Subject.class, new SubjectDeserializer());
+        return gsonBuilder.create();
     }
 
     private static HttpURLConnection openConnection(final String strURL) throws IOException {
@@ -235,55 +247,46 @@ public class ZooniverseClient {
             count = Config.MAXIMUM_DOWNLOAD_ITEMS;
         }
 
-        // Request a string response from the provided URL.
-        // TODO: Use HttpUrlConnection directly instead of trying to use Volley synchronously?
-        final RequestFuture<String> futureListener = RequestFuture.newFuture();
-        requestMoreItemsAsync(count, futureListener, futureListener);
+        Response<List<Subject>> response = null;
 
-        String response = null;
         try {
-            //Note: If we don't provider the RequestFuture as the errorListener too,
-            //then this won't return until after the timeout, even if an error happen earlier.
-            response = futureListener.get(HttpUtils.TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-        } catch (final InterruptedException | ExecutionException e) {
-            Log.error("requestMoreItemsSync(): Exception from request.", e);
+            final Call<List<Subject>> call = callGetSubjects(count);
+            response = call.execute();
+        } catch (final IOException e) {
+            Log.error("requestMoreItemsSync(): request failed.", e);
             throw new RequestMoreItemsException("Exception from request.", e);
-        } catch (final TimeoutException e) {
-            Log.error("requestMoreItemsSync(): Timeout Exception from request.", e);
-            throw new RequestMoreItemsException("Timeout Exception from request.", e);
         }
 
-        //Presumably this happens when onErrorResponse() is called.
+        //Presumably this happens when onFailure() is called.
         if (response == null) {
-            throw new RequestMoreItemsException("response is null.");
+            Log.error("requestMoreItemsSync(): response is null.");
+            throw new RequestMoreItemsException("Response is null.");
         }
 
-        final List<ZooniverseClient.Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(response);
+        if (!response.isSuccessful()) {
+            Log.error("requestMoreItemsSync(): request failed with error code: " + response.message());
+            throw new RequestMoreItemsException("Request failed with error code: " + response.message());
+        }
+
+        final List<Subject> result = response.body();
         if (result == null || result.isEmpty()) {
             throw new RequestMoreItemsException("requestMoreItemsSync(): response contained no subjects.");
         }
+
         return result;
     }
 
-    public void requestMoreItemsAsync(final int count, final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
+    public void requestMoreItemsAsync(final int count, final Callback<List<Subject>> callback) {
         throwIfNoNetwork();
 
         Log.info("requestMoreItemsAsync(): count=" + count);
 
-        final Request request = new ZooStringRequest(Request.Method.GET,
-                getQueryUri(count),
-                listener,
-                errorListener);
-
-        //Identical requests for more items should get different results each time.
-        request.setShouldCache(false);
-
-        // Add the request to the RequestQueue.
-        mQueue.add(request);
+        final Call<List<Subject>> call = callGetSubjects(count);
+        call.enqueue(callback);
     }
 
-    private String getQueryUri(final int count) {
-        return getQueryMoreItemsUri() + Integer.toString(count); //TODO: Is Integer.toString() locale-dependent?
+    private Call<List<Subject>> callGetSubjects(final int count) {
+        return mRetrofitService.getSubjects(getGroupIdForNextQuery(), count);
     }
 
     private void throwIfNoNetwork() {
@@ -421,6 +424,45 @@ public class ZooniverseClient {
             return mLocationInverted;
         }
 
+    }
+
+    /** A custom GSON deserializer,
+     * so we can create Subject objects using the constructor.
+     * We want to do so Subject can remain an immutable class.
+     */
+    static class SubjectDeserializer implements JsonDeserializer<Subject> {
+        public Subject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            final JsonObject jsonObject = json.getAsJsonObject();
+            if (jsonObject == null) {
+                return null;
+            }
+
+            final String id = getString(jsonObject, "id");
+            final String zooniverseId = getString(jsonObject, "zooniverse_id");
+            final String groupId = getString(jsonObject, "group_id");
+
+            final JsonElement jsonElementLocations = jsonObject.get("location");
+            if (jsonElementLocations == null) {
+                return null;
+            }
+
+            final JsonObject jsonObjectLocations = jsonElementLocations.getAsJsonObject();
+            if (jsonObjectLocations == null) {
+                return null;
+            }
+
+            final String locationStandard = getString(jsonObjectLocations, "standard");
+            final String locationThumbnail = getString(jsonObjectLocations, "thumbnail");
+            final String locationInverted = getString(jsonObjectLocations, "inverted");
+
+            return new Subject(id, zooniverseId, groupId, locationStandard, locationThumbnail, locationInverted);
+        }
+
+        private String getString(JsonObject jsonObject, final String name) {
+            final JsonElement jsonElementId = jsonObject.get(name);
+            return jsonElementId.getAsString();
+        }
     }
 
     public static class LoginException extends Exception {

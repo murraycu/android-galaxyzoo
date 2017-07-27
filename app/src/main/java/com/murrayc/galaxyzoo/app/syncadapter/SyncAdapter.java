@@ -33,8 +33,6 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.R;
@@ -44,11 +42,13 @@ import com.murrayc.galaxyzoo.app.provider.ClassificationCheckbox;
 import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.Item;
-import com.murrayc.galaxyzoo.app.provider.client.MoreItemsJsonParser;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * Created by murrayc on 10/4/14.
@@ -189,18 +189,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         try {
             mClient.requestMoreItemsAsync(count,
-                    new Response.Listener<String>() {
+                    new Callback<List<ZooniverseClient.Subject>>() {
                         @Override
-                        public void onResponse(final String response) {
-                            final List<ZooniverseClient.Subject> result = MoreItemsJsonParser.parseMoreItemsResponseContent(response);
-                            onQueryTaskFinished(result);
+                        public void onResponse(Call<List<ZooniverseClient.Subject>> call, final retrofit2.Response<List<ZooniverseClient.Subject>> response) {
+                            onQueryTaskFinished(response.body());
                             mRequestMoreItemsTaskInProgress = false;
                         }
-                    },
-                    new Response.ErrorListener() {
+
                         @Override
-                        public void onErrorResponse(final VolleyError error) {
-                            Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", error);
+                        public void onFailure(Call<List<ZooniverseClient.Subject>> call, final Throwable t) {
+                            Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", t);
                             mRequestMoreItemsTaskInProgress = false;
                         }
                     });
@@ -528,6 +526,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         if (missing < size) {
             listToUse = result.subList(0, missing);
         }
+
         mSubjectAdder.addSubjects(listToUse, true /* async */);
     }
 
