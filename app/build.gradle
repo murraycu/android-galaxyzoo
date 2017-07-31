@@ -51,7 +51,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:26.0.0'
     compile 'com.android.support:support-annotations:26.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile 'com.google.firebase:firebase-crash:11.0.2'
 
     // Use Retrofit, with the GSON converter.
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
@@ -74,4 +74,5 @@ dependencies {
 }
 
 
+// See https://firebase.google.com/docs/android/setup#manually_add_firebase
 apply plugin: 'com.google.gms.google-services'
