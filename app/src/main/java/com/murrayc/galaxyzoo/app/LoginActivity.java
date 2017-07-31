@@ -31,6 +31,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatTextView;
@@ -46,6 +48,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResolvingResultCallbacks;
+import com.google.android.gms.common.api.Status;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import com.murrayc.galaxyzoo.app.provider.client.ZooniverseClient;
 
@@ -62,7 +70,7 @@ import java.lang.ref.WeakReference;
 /**
  * A login screen that offers login via username/password.
  */
-public class LoginActivity extends ZooAccountAuthenticatorActivity {
+public class LoginActivity extends ZooAccountAuthenticatorActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     /** The Intent extra to store username. */
     public static final String ARG_USERNAME = "username";
@@ -82,11 +90,22 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
     private String mExistingAccountName = null;
     private boolean mExistingAccountIsAnonymous = false;
 
+    private GoogleApiClient mCredentialsApiClient = null;
+    private static final int RC_SAVE = 1;
+
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mClient = new ZooniverseClient(this, com.murrayc.galaxyzoo.app.provider.Config.SERVER);
+
+        mCredentialsApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .enableAutoManage(this/* FragmentActivity */,
+                        this /* OnConnectionFailedListener */)
+                .addApi(Auth.CREDENTIALS_API)
+                .build();
 
         setContentView(R.layout.activity_login);
 
@@ -288,6 +307,21 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         }
     }
 
+    @Override
+    public void onConnected(@Nullable final Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
     private static class AccountSaveTask extends AsyncTask<Void, Void, Void> {
 
         private final WeakReference<Context> contextReference;
@@ -366,7 +400,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         }
     }
 
-    private void finishWithResult(final LoginUtils.LoginResult result) {
+    private void finishWithResult(final LoginUtils.LoginResult result, String username, String password) {
         boolean loggedIn = false;
         if ((result != null) && result.getSuccess()) {
             loggedIn = true;
@@ -382,6 +416,32 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         if (loggedIn) {
             final AccountSaveTask task = new AccountSaveTask(this, result, mExistingAccountName, mExistingAccountIsAnonymous);
             task.execute();
+
+
+            // Save the password in Android Smart Lock:
+            if (mCredentialsApiClient.hasConnectedApi(Auth.CREDENTIALS_API)) {
+                final Credential credential = new Credential.Builder(username)
+                        .setPassword(password)
+                        .build();
+
+                Auth.CredentialsApi.save(mCredentialsApiClient, credential).setResultCallback(
+                        new ResolvingResultCallbacks<Status>(this, RC_SAVE) {
+                            @Override
+                            public void onSuccess(@NonNull Status status) {
+                                final Snackbar snackbar = Snackbar.make(LoginActivity.this.mLoginFormView, R.string.message_saved_credentials, Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                            }
+
+                            @Override
+                            public void onUnresolvableFailure(@NonNull Status status) {
+                                final int code = status.getStatusCode();
+                                Log.error("finishWithResult(): Credentials (Smart Lock) save Failed with status code " + code + " : " + status);
+                                final Snackbar snackbar = Snackbar.make(LoginActivity.this.mLoginFormView, R.string.error_save_credentials_failed, Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                            }
+                        });
+            }
+
 
             //Set the accountName in the intent result:
             intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, result.getName());
@@ -401,7 +461,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
         // super.onBackPressed();
 
         //Let callers (via startActivityForResult() know that this was cancelled.
-        finishWithResult(null);
+        finishWithResult(null, null, null);
     }
 
     /**
@@ -462,7 +522,7 @@ public class LoginActivity extends ZooAccountAuthenticatorActivity {
             }
 
             if (result.getSuccess()) {
-                LoginActivity.this.finishWithResult(result);
+                LoginActivity.this.finishWithResult(result, mUsername, mPassword);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
