@@ -106,16 +106,16 @@ public final class Config {
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GAMA_12, //GAMA 12
                     new SubjectGroup("gama_tree.xml", true,
                             new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SDSS_LOST_SET, //SSDS Lost Set
-                    new SubjectGroup("sloan_tree.xml", true,
-                            new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_ILLUSTRIS, //Illustris
-                    new SubjectGroup("illustris_tree.xml", true,
-                            new DecisionTree.DiscussQuestion("illustris-11", "a-0", "a-1")));
 
             //We don't request items for all these groups any more, but we still want to load the
             //trees so can ask questions about items that have already been downloaded and stored in
             //the cache.
+            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SDSS_LOST_SET, //SSDS Lost Set
+                    new SubjectGroup("sloan_tree.xml", false,
+                            new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
+            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_ILLUSTRIS, //Illustris
+                    new SubjectGroup("illustris_tree.xml", false,
+                            new DecisionTree.DiscussQuestion("illustris-11", "a-0", "a-1")));
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GAMA_09, //GAMA 09
                     new SubjectGroup("gama_tree.xml", false,
                             new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
