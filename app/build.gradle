@@ -45,13 +45,13 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:support-fragment:26.0.0'
-    compile 'com.android.support:appcompat-v7:26.0.0'
-    compile 'com.android.support:design:26.0.0'
-    compile 'com.android.support:recyclerview-v7:26.0.0'
-    compile 'com.android.support:support-annotations:26.0.0'
+    compile 'com.android.support:support-fragment:26.1.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:support-annotations:27.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.google.firebase:firebase-crash:11.0.2'
+    compile 'com.google.firebase:firebase-crash:11.4.2'
 
     // Use Retrofit, with the GSON converter.
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
