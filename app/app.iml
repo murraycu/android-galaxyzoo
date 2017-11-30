@@ -131,7 +131,6 @@
     <orderEntry type="library" name="com.android.support:support-media-compat-26.1.0" level="project" />
     <orderEntry type="library" name="com.android.support:recyclerview-v7-26.1.0" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-crash-11.4.2" level="project" />
-    <orderEntry type="library" name="com.android.databinding:baseLibrary:3.0.0@jar" level="project" />
     <orderEntry type="library" name="org.codehaus.mojo:animal-sniffer-annotations:1.14@jar" level="project" />
     <orderEntry type="library" name="android.arch.lifecycle:common:1.0.0@jar" level="project" />
     <orderEntry type="library" name="android.arch.lifecycle:runtime-1.0.0" level="project" />
@@ -175,6 +174,7 @@
     <orderEntry type="library" name="com.squareup.retrofit2:retrofit:2.3.0@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="com.android.support.test:runner-0.5" level="project" />
     <orderEntry type="library" name="com.android.support:support-v4-26.1.0" level="project" />
+    <orderEntry type="library" name="com.android.databinding:baseLibrary:3.0.1@jar" level="project" />
     <orderEntry type="library" name="com.android.support:animated-vector-drawable-26.1.0" level="project" />
     <orderEntry type="library" name="com.android.support:support-annotations:27.0.0@jar" level="project" />
     <orderEntry type="library" name="com.google.j2objc:j2objc-annotations:1.1@jar" level="project" />
