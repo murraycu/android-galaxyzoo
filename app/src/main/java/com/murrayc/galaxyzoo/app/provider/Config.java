@@ -123,14 +123,14 @@ public final class Config {
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GAMA_09, //GAMA 09
                     new SubjectGroup("gama_tree.xml", false,
                             new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_FERENGI2, //Ferengi 2
-                    new SubjectGroup("ferengi_tree.xml", false,
-                            new DecisionTree.DiscussQuestion("ferengi-16", "a-0", "a-1")));
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_DECALS_DR2, //Decals DR2
-                    new SubjectGroup("decals_tree.xml", false,
-                            new DecisionTree.DiscussQuestion("decals-11", "a-0", "a-1")));
 
             //At some point we can remove some when we are sure they are unnecessary.
+            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_FERENGI2, //Ferengi 2
+            //        new SubjectGroup("ferengi_tree.xml", false,
+            //                new DecisionTree.DiscussQuestion("ferengi-16", "a-0", "a-1")));
+            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_DECALS_DR2, //Decals DR2
+            //        new SubjectGroup("decals_tree.xml", false,
+            //                new DecisionTree.DiscussQuestion("decals-11", "a-0", "a-1")));
             //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_MISSING_MANGA, //Missing Manga
             //        new SubjectGroup("sloan_tree.xml", true,
             //                new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
