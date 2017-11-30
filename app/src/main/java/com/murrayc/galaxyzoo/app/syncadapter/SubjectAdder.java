@@ -437,7 +437,7 @@ public class SubjectAdder {
                         try {
                             HttpUtils.parseGetFileResponseContent(mContext, response.body().byteStream(), cacheFileUri);
                             successful = true;
-                        } catch (IOException e) {
+                        } catch (final IOException e) {
                             Log.error("cacheUriToFile(): parseGetFileResponseContent failed for cache content URI: " + cacheFileUri, e);
                         }
 

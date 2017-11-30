@@ -191,13 +191,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             mClient.requestMoreItemsAsync(count,
                     new Callback<List<ZooniverseClient.Subject>>() {
                         @Override
-                        public void onResponse(Call<List<ZooniverseClient.Subject>> call, final retrofit2.Response<List<ZooniverseClient.Subject>> response) {
+                        public void onResponse(final Call<List<ZooniverseClient.Subject>> call, final retrofit2.Response<List<ZooniverseClient.Subject>> response) {
                             onQueryTaskFinished(response.body());
                             mRequestMoreItemsTaskInProgress = false;
                         }
 
                         @Override
-                        public void onFailure(Call<List<ZooniverseClient.Subject>> call, final Throwable t) {
+                        public void onFailure(final Call<List<ZooniverseClient.Subject>> call, final Throwable t) {
                             Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", t);
                             mRequestMoreItemsTaskInProgress = false;
                         }

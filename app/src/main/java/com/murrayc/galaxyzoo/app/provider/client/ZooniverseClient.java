@@ -76,7 +76,7 @@ public class ZooniverseClient {
     @NonNull
     public static Gson createGson() {
         // Register our custom GSON deserializer for use by Retrofit.
-        GsonBuilder gsonBuilder = new GsonBuilder();
+        final GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Subject.class, new SubjectDeserializer());
         return gsonBuilder.create();
     }
@@ -317,7 +317,7 @@ public class ZooniverseClient {
      * We want to do so Subject can remain an immutable class.
      */
     static class SubjectDeserializer implements JsonDeserializer<Subject> {
-        public Subject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public Subject deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
                 throws JsonParseException {
             final JsonObject jsonObject = json.getAsJsonObject();
             if (jsonObject == null) {
@@ -345,7 +345,7 @@ public class ZooniverseClient {
             return new Subject(id, zooniverseId, groupId, locationStandard, locationThumbnail, locationInverted);
         }
 
-        private static String getString(JsonObject jsonObject, final String name) {
+        private static String getString(final JsonObject jsonObject, final String name) {
             final JsonElement jsonElementId = jsonObject.get(name);
             return jsonElementId.getAsString();
         }

@@ -318,8 +318,8 @@ public final class HttpUtils {
     private static class UserAgentInterceptor implements Interceptor {
         @Override
         public Response intercept(final Chain chain) throws IOException {
-            Request originalRequest = chain.request();
-            Request requestWithUserAgent = originalRequest.newBuilder()
+            final Request originalRequest = chain.request();
+            final Request requestWithUserAgent = originalRequest.newBuilder()
                     .header(HTTP_REQUEST_HEADER_PARAM_USER_AGENT, USER_AGENT_MURRAYC)
                     .build();
             return chain.proceed(requestWithUserAgent);        }
