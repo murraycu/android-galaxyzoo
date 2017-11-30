@@ -70,11 +70,11 @@ public class ItemFragment extends ZooFragment {
         return mSingleton;
     }
 
-    protected String getZooniverseId() {
+    String getZooniverseId() {
         return mZooniverseId;
     }
 
-    protected void setZooniverseId(final String zooniverseId) {
+    void setZooniverseId(final String zooniverseId) {
         mZooniverseId = zooniverseId;
     }
 
@@ -133,7 +133,7 @@ public class ItemFragment extends ZooFragment {
      * @param menu
      * @param inflater
      */
-    protected static void createCommonOptionsMenu(final Menu menu, final MenuInflater inflater) {
+    static void createCommonOptionsMenu(final Menu menu, final MenuInflater inflater) {
         // Inflate the menu items for use in the action bar
         inflater.inflate(R.menu.actionbar_menu_item_common, menu);
     }

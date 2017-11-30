@@ -78,7 +78,7 @@ public class SubjectExtrasFragment extends ItemFragment
     }
 
     @Override
-    protected void setItemId(final String itemId) {
+    void setItemId(final String itemId) {
         super.setItemId(itemId);
 
         /*

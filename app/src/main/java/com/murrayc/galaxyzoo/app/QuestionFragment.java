@@ -162,7 +162,7 @@ public class QuestionFragment extends BaseQuestionFragment
     }
 
     @Override
-    protected void setItemId(final String itemId) {
+    void setItemId(final String itemId) {
         super.setItemId(itemId);
 
         /*

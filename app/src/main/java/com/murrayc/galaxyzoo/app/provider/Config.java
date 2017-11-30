@@ -89,8 +89,8 @@ public final class Config {
     public static final String SUBJECT_GROUP_ID_DECALS_DR2 = "56f3d4645925d95984000001";
     public static final String SUBJECT_GROUP_ID_SDSS_LOST_SET = "56f2b5ed5925d9004200c775";
     public static final String SUBJECT_GROUP_ID_GAMA_09 = "5853fa7b95ad361930000001";
-    public static final String SUBJECT_GROUP_ID_GAMA_12 = "5853faaf95ad361930000002";
-    public static final String SUBJECT_GROUP_ID_GAMA_15 = "5853fab395ad361930000003";
+    private static final String SUBJECT_GROUP_ID_GAMA_12 = "5853faaf95ad361930000002";
+    private static final String SUBJECT_GROUP_ID_GAMA_15 = "5853fab395ad361930000003";
     //public static final String SUBJECT_GROUP_ID_MISSING_MANGA = "5894999f7d25c7236f000001";
     //public static final String SUBJECT_GROUP_ID_DECALS = "55db7cf01766276e7b000001";
     public static final String SUBJECT_GROUP_ID_ILLUSTRIS = "55db71251766276613000001";
