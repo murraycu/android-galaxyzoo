@@ -90,6 +90,7 @@ public final class Config {
     public static final String SUBJECT_GROUP_ID_SDSS_LOST_SET = "56f2b5ed5925d9004200c775";
     public static final String SUBJECT_GROUP_ID_GAMA_09 = "5853fa7b95ad361930000001";
     public static final String SUBJECT_GROUP_ID_GAMA_12 = "5853faaf95ad361930000002";
+    public static final String SUBJECT_GROUP_ID_GAMA_15 = "5853fab395ad361930000003";
     //public static final String SUBJECT_GROUP_ID_MISSING_MANGA = "5894999f7d25c7236f000001";
     //public static final String SUBJECT_GROUP_ID_DECALS = "55db7cf01766276e7b000001";
     public static final String SUBJECT_GROUP_ID_ILLUSTRIS = "55db71251766276613000001";
@@ -103,13 +104,16 @@ public final class Config {
         //Production:
         {
             // TODO: Avoid re-parsing the whole XML tree when surveys share a tree.
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GAMA_12, //GAMA 12
+            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GAMA_15, //GAMA 15
                     new SubjectGroup("gama_tree.xml", true,
                             new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
 
             //We don't request items for all these groups any more, but we still want to load the
             //trees so can ask questions about items that have already been downloaded and stored in
             //the cache.
+            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GAMA_12, //GAMA 12
+                    new SubjectGroup("gama_tree.xml", false,
+                            new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
             SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SDSS_LOST_SET, //SSDS Lost Set
                     new SubjectGroup("sloan_tree.xml", false,
                             new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
