@@ -15,6 +15,7 @@
         android:layout_gravity="top"
         android:adjustViewBounds="true"
         android:clickable="true"
+        android:focusable="true"
         android:contentDescription="@string/description_standard_image"
         android:scaleType="fitStart"
         android:transitionName="@string/transition_subject_image" />
