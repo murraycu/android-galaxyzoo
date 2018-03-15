@@ -58,7 +58,7 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
 
-    compile 'com.google.guava:guava:22.0-android'
+    compile 'com.google.guava:guava:23.0-android'
 
     // The voodoo exclude lines are necessary to avoid conflicts between 24.0.0 and 23.0.1.
     // See http://stackoverflow.com/a/36899202/1123654
