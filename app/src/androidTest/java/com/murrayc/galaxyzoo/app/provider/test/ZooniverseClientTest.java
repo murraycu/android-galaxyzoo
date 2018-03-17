@@ -86,23 +86,23 @@ public class ZooniverseClientTest{
         assertNotNull(subject);
 
         assertNotNull(subject.getId());
-        assertEquals(subject.getId(), "5500684569736d5964271400");
+        assertEquals("5500684569736d5964271400", subject.getId());
 
         assertNotNull(subject.getZooniverseId());
-        assertEquals(subject.getZooniverseId(), "AGZ00081ls");
+        assertEquals("AGZ00081ls", subject.getZooniverseId());
 
         assertNotNull(subject.getGroupId());
-        assertEquals(subject.getGroupId(), TEST_GROUP_ID);
+        assertEquals(TEST_GROUP_ID, subject.getGroupId());
 
         assertNotNull(subject.getLocationStandard());
-        assertEquals(subject.getLocationStandard(),
-                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/goods_full_n_27820_standard.jpg");
+        assertEquals("http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/goods_full_n_27820_standard.jpg",
+                subject.getLocationStandard());
         assertNotNull(subject.getLocationThumbnail());
-        assertEquals(subject.getLocationThumbnail(),
-                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/goods_full_n_27820_thumbnail.jpg");
+        assertEquals("http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/goods_full_n_27820_thumbnail.jpg",
+                subject.getLocationThumbnail());
         assertNotNull(subject.getLocationInverted());
-        assertEquals(subject.getLocationInverted(),
-                "http://www.galaxyzoo.org.s3.amazonaws.com/subjects/inverted/goods_full_n_27820_inverted.jpg");
+        assertEquals("http://www.galaxyzoo.org.s3.amazonaws.com/subjects/inverted/goods_full_n_27820_inverted.jpg",
+                subject.getLocationInverted());
 
 
         //Test what the server received:
@@ -140,7 +140,7 @@ public class ZooniverseClientTest{
         final LoginUtils.LoginResult result = client.loginSync("testusername", "testpassword");
         assertNotNull(result);
         assertTrue(result.getSuccess());
-        assertEquals(result.getApiKey(), "testapikey");
+        assertEquals("testapikey", result.getApiKey());
 
         //Test what the server received:
         assertEquals(1, server.getRequestCount());
