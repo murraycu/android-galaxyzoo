@@ -30,6 +30,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
 import com.murrayc.galaxyzoo.app.provider.Config;
@@ -173,6 +174,9 @@ public class ZooniverseClient {
             final Call<List<Subject>> call = callGetSubjects(count);
             response = call.execute();
         } catch (final IOException e) {
+            Log.error("requestMoreItemsSync(): request failed.", e);
+            throw new RequestMoreItemsException("Exception from request.", e);
+        } catch (final JsonSyntaxException e) {
             Log.error("requestMoreItemsSync(): request failed.", e);
             throw new RequestMoreItemsException("Exception from request.", e);
         }
