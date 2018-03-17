@@ -347,6 +347,16 @@ public class ZooniverseClient {
 
         private static String getString(final JsonObject jsonObject, final String name) {
             final JsonElement jsonElementId = jsonObject.get(name);
+            if (jsonElementId == null) {
+                // The field does not exist in the JSON object.
+                return null;
+            }
+
+            if (jsonElementId.isJsonNull()) {
+                // The field is null in the JSON object.
+                return null;
+            }
+
             return jsonElementId.getAsString();
         }
     }
