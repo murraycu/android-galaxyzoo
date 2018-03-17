@@ -837,13 +837,7 @@ public class QuestionFragment extends BaseQuestionFragment
         final String zooniverseId = mCursor.getString(COLUMN_INDEX_ZOONIVERSE_ID);
         setZooniverseId(zooniverseId);
 
-        String groupId = mCursor.getString(COLUMN_INDEX_GROUP_ID);
-        if (TextUtils.isEmpty(groupId)) {
-            Log.error("updateFromCursor(): We don't have a group ID. Using a default.");
-            //Assume that this is an old cached item from before we added the group ID
-            //database field, when we only use the sloan group:
-            groupId = com.murrayc.galaxyzoo.app.provider.Config.SUBJECT_GROUP_ID_SDSS_LOST_SET;
-        }
+        final String groupId = mCursor.getString(COLUMN_INDEX_GROUP_ID);
         setGroupId(groupId);
     }
 
