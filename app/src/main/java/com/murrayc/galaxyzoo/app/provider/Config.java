@@ -85,18 +85,7 @@ public final class Config {
 
     //See Config.coffee:production:
     //https://github.com/zooniverse/Galaxy-Zoo/blob/master/app/lib/config.coffee
-    public static final String SUBJECT_GROUP_ID_FERENGI2 = "58417dcb9afc3a007d000001";
-    public static final String SUBJECT_GROUP_ID_DECALS_DR2 = "56f3d4645925d95984000001";
-    public static final String SUBJECT_GROUP_ID_SDSS_LOST_SET = "56f2b5ed5925d9004200c775";
-    public static final String SUBJECT_GROUP_ID_GAMA_09 = "5853fa7b95ad361930000001";
-    private static final String SUBJECT_GROUP_ID_GAMA_12 = "5853faaf95ad361930000002";
-    private static final String SUBJECT_GROUP_ID_GAMA_15 = "5853fab395ad361930000003";
-    //public static final String SUBJECT_GROUP_ID_MISSING_MANGA = "5894999f7d25c7236f000001";
-    //public static final String SUBJECT_GROUP_ID_DECALS = "55db7cf01766276e7b000001";
-    public static final String SUBJECT_GROUP_ID_ILLUSTRIS = "55db71251766276613000001";
-    //public static final String SUBJECT_GROUP_ID_SLOAN = "50251c3b516bcb6ecb000002";
-    //public static final String SUBJECT_GROUP_ID_SLOAN_SINGLEBAND = "5514521e2f0eef2012000001";
-    //public static final String SUBJECT_GROUP_ID_GOODS_FULL = "551453e12f0eef21f2000001";
+    public static final String SUBJECT_GROUP_ID_GAMA_15 = "5853fab395ad361930000003";
 
     static {
         SUBJECT_GROUPS = new HashMap<>();
@@ -108,86 +97,7 @@ public final class Config {
                     new SubjectGroup("gama_tree.xml", true,
                             new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
 
-            //We don't request items for all these groups any more, but we still want to load the
-            //trees so can ask questions about items that have already been downloaded and stored in
-            //the cache.
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GAMA_12, //GAMA 12
-                    new SubjectGroup("gama_tree.xml", false,
-                            new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SDSS_LOST_SET, //SSDS Lost Set
-                    new SubjectGroup("sloan_tree.xml", false,
-                            new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_ILLUSTRIS, //Illustris
-                    new SubjectGroup("illustris_tree.xml", false,
-                            new DecisionTree.DiscussQuestion("illustris-11", "a-0", "a-1")));
-            SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GAMA_09, //GAMA 09
-                    new SubjectGroup("gama_tree.xml", false,
-                            new DecisionTree.DiscussQuestion("gama-11", "a-0", "a-1")));
-
-            //At some point we can remove some when we are sure they are unnecessary.
-            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_FERENGI2, //Ferengi 2
-            //        new SubjectGroup("ferengi_tree.xml", false,
-            //                new DecisionTree.DiscussQuestion("ferengi-16", "a-0", "a-1")));
-            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_DECALS_DR2, //Decals DR2
-            //        new SubjectGroup("decals_tree.xml", false,
-            //                new DecisionTree.DiscussQuestion("decals-11", "a-0", "a-1")));
-            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_MISSING_MANGA, //Missing Manga
-            //        new SubjectGroup("sloan_tree.xml", true,
-            //                new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
-            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_DECALS, //Decals
-            //        new SubjectGroup("decals_tree.xml", false,
-            //                new DecisionTree.DiscussQuestion("decals-11", "a-0", "a-1")));
-            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_ILLUSTRIS, //Illustris
-            //        new SubjectGroup("illustris_tree.xml", false,
-            //                new DecisionTree.DiscussQuestion("illustris-11", "a-0", "a-1")));
-            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SLOAN, //Sloan
-            //        new SubjectGroup("sloan_tree.xml", false,
-            //                new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
-            //SUBJECT_GROUPS.put("551456e02f0eef2535000001", // candels_2epoch
-            //        new SubjectGroup("candels_tree.xml", false,
-            //                new DecisionTree.DiscussQuestion("candels-17", "a-0", "a-1")));
-            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GOODS_FULL, // goods_full
-            //        new SubjectGroup("goods_full_tree.xml", false,
-            //                new DecisionTree.DiscussQuestion("goods_full-16", "a-0", "a-1")));
-            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SLOAN_SINGLEBAND, // sloan_singleband
-            //        new SubjectGroup("sloan_singleband_tree.xml", false,
-            //                new DecisionTree.DiscussQuestion("sloan_singleband-11", "a-0", "a-1")));
         }
-
-        //Test:
-        /*
-        {
-            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SLOAN, // SSID / sloan
-            //        new SubjectGroup("sloan_tree.xml", true,
-            //                new DecisionTree.DiscussQuestion("sloan-11", "a-0", "a-1")));
-
-            //candels_2epoch is not on dev.zooniverse.org:
-            //SUBJECT_GROUPS.put("551456e02f0eef2535000001", // candels_2epoch
-            //        new SubjectGroup("candels_tree.xml", true,
-            //                new DecisionTree.DiscussQuestion("candels-17", "a-0", "a-1")));
-
-            //goods_full is not on dev.zooniverse.org:
-            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_GOODS_FULL, // goods_full
-            //        new SubjectGroup("goods_full_tree.xml", true,
-            //                new DecisionTree.DiscussQuestion("goods_full-16", "a-0", "a-1")));
-
-            //sloan_singlefield is not on dev.zooniverse.org:
-            //SUBJECT_GROUPS.put(SUBJECT_GROUP_ID_SLOAN_SINGLEBAND, // sloan_singleband
-            //        new SubjectGroup("sloan_singleband_tree.xml", true,
-            //                new DecisionTree.DiscussQuestion("sloan_singleband-11", "a-0", "a-1")));
-
-            //Some older surveys, which are on dev.zooniverse.org, just for testing:
-            SUBJECT_GROUPS.put("5244909c3ae7402d53000001", // ukidss
-                    new SubjectGroup("candels_tree.xml", true,
-                            new DecisionTree.DiscussQuestion("candels-17", "a-0", "a-1")));
-
-            SUBJECT_GROUPS.put("5249cbce3ae740728d000001", // ferengi
-                    new SubjectGroup("goods_full_tree.xml", true,
-                            new DecisionTree.DiscussQuestion("goods_full-16", "a-0", "a-1")));
-        }
-        */
-
-
 
         SUBJECT_GROUPS_TO_USE_FOR_NEW_QUERIES = new ArrayList<>();
         for (final Map.Entry<String, SubjectGroup> entry : SUBJECT_GROUPS.entrySet()) {

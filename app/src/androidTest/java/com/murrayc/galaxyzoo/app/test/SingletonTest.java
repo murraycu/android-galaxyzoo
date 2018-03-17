@@ -36,7 +36,6 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNotSame;
 
 @RunWith(AndroidJUnit4.class)
 public class SingletonTest {
@@ -65,11 +64,12 @@ public class SingletonTest {
         return new Singleton(getContext());
     }
 
-    private DecisionTree getDecisionTreeSdssLostSet() throws DecisionTree.DecisionTreeException {
+    private DecisionTree getDecisionTreeGama() throws DecisionTree.DecisionTreeException {
         final Singleton singleton = getSingleton();
-        return singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_SDSS_LOST_SET);
+        return singleton.getDecisionTree(Config.SUBJECT_GROUP_ID_GAMA_15);
     }
 
+    /* TODO: Bring this back when there are multiple trees.
     @Test
     public void testMultipleTrees() throws DecisionTree.DecisionTreeException, IOException {
         final Singleton singleton = new Singleton(getContext());
@@ -93,11 +93,13 @@ public class SingletonTest {
         assertNotSame(decisionTree1, decisionTree3);
         assertNotSame(decisionTree2, decisionTree3);
     }
+    */
 
+    @Test
     public void testQuestionsWithoutTranslation() throws DecisionTree.DecisionTreeException, IOException {
-        final DecisionTree decisionTree = getDecisionTreeSdssLostSet();
+        final DecisionTree decisionTree = getDecisionTreeGama();
 
-        final String QUESTION_ID = "sloan-3";
+        final String QUESTION_ID = "gama-3";
         final DecisionTree.Question question = decisionTree.getQuestion(QUESTION_ID);
         assertNotNull(question);
         assertEquals(QUESTION_ID, question.getId());
@@ -107,7 +109,7 @@ public class SingletonTest {
 
         final DecisionTree.Question nextQuestion = decisionTree.getNextQuestionForAnswer(QUESTION_ID, "a-1");
         assertNotNull(nextQuestion);
-        assertEquals("sloan-4", nextQuestion.getId());
+        assertEquals("gama-4", nextQuestion.getId());
 
         final List<DecisionTree.Answer> answers = question.getAnswers();
         assertNotNull(answers);
@@ -118,10 +120,10 @@ public class SingletonTest {
         assertNotNull(answer);
         assertEquals("No spiral", answer.getText());
 
-        checkAnswersForQuestionSloan4(question);
+        checkAnswersForQuestionGama4(question);
     }
 
-    private static void checkAnswersForQuestionSloan4(final DecisionTree.Question question) {
+    private static void checkAnswersForQuestionGama4(final DecisionTree.Question question) {
         final List<DecisionTree.Answer> answers = question.getAnswers();
         assertNotNull(answers);
         assertEquals(2, answers.size());
@@ -130,6 +132,6 @@ public class SingletonTest {
         assertNotNull(answer);
         assertEquals("a-0", answer.getId());
         assertEquals("yes", answer.getIcon());
-        assertEquals(2, answer.getExamplesCount());
+        assertEquals(6, answer.getExamplesCount());
     }
 }
