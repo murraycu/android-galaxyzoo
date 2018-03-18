@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -39,6 +40,7 @@ import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.FormBody;
@@ -78,7 +80,7 @@ public class ZooniverseClient {
     public static Gson createGson() {
         // Register our custom GSON deserializer for use by Retrofit.
         final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Subject.class, new SubjectDeserializer());
+        gsonBuilder.registerTypeAdapter(SubjectsResponse.class, new SubjectsResponseDeserializer());
         return gsonBuilder.create();
     }
 
@@ -168,10 +170,10 @@ public class ZooniverseClient {
             count = Config.MAXIMUM_DOWNLOAD_ITEMS;
         }
 
-        Response<List<Subject>> response = null;
+        Response<SubjectsResponse> response = null;
 
         try {
-            final Call<List<Subject>> call = callGetSubjects(count);
+            final Call<SubjectsResponse> call = callGetSubjects(count);
             response = call.execute();
         } catch (final IOException e) {
             Log.error("requestMoreItemsSync(): request failed.", e);
@@ -192,7 +194,7 @@ public class ZooniverseClient {
             throw new RequestMoreItemsException("Request failed with error code: " + response.message());
         }
 
-        final List<Subject> result = response.body();
+        final List<Subject> result = response.body().subjects;
         if (result == null || result.isEmpty()) {
             throw new RequestMoreItemsException("requestMoreItemsSync(): response contained no subjects.");
         }
@@ -200,16 +202,16 @@ public class ZooniverseClient {
         return result;
     }
 
-    public void requestMoreItemsAsync(final int count, final Callback<List<Subject>> callback) {
+    public void requestMoreItemsAsync(final int count, final Callback<SubjectsResponse> callback) {
         throwIfNoNetwork();
 
         Log.info("requestMoreItemsAsync(): count=" + count);
 
-        final Call<List<Subject>> call = callGetSubjects(count);
+        final Call<SubjectsResponse> call = callGetSubjects(count);
         call.enqueue(callback);
     }
 
-    private Call<List<Subject>> callGetSubjects(final int count) {
+    private Call<SubjectsResponse> callGetSubjects(final int count) {
         return mRetrofitService.getSubjects(getGroupIdForNextQuery(), count);
     }
 
@@ -270,6 +272,22 @@ public class ZooniverseClient {
     }
 
     /**
+     */
+    public static final class SubjectsResponse {
+        public final List<Subject> subjects;
+
+        public SubjectsResponse(final List<Subject> subjects) {
+            this.subjects = subjects;
+        }
+
+        public static class Metadata {
+            String explorer_link = "";
+        }
+
+        public final Metadata metadata = new Metadata();
+    }
+
+    /**
      * This class is meant to be immutable.
      * It only returns references to immutable Strings.
      */
@@ -320,6 +338,88 @@ public class ZooniverseClient {
      * so we can create Subject objects using the constructor.
      * We want to do so Subject can remain an immutable class.
      */
+    static class SubjectsResponseDeserializer implements JsonDeserializer<SubjectsResponse> {
+        public SubjectsResponse deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
+                throws JsonParseException {
+            final JsonObject jsonObject = json.getAsJsonObject();
+            if (jsonObject == null) {
+                return null;
+            }
+
+            final JsonArray jsonSubjects = jsonObject.getAsJsonArray("subjects");
+
+            // Parse each subject:
+            final List<Subject> subjects = new ArrayList<>();
+            for (final JsonElement jsonSubject : jsonSubjects) {
+                final JsonObject asObject = jsonSubject.getAsJsonObject();
+                final Subject subject = deserializeSubjectFromJsonObject(asObject);
+                subjects.add(subject);
+            }
+
+            // final JsonElement jsonMetadata = jsonObject.get("metadata");
+
+            final SubjectsResponse result = new SubjectsResponse(subjects);
+            return result;
+        }
+
+        private static String getString(final JsonObject jsonObject, final String name) {
+            final JsonElement jsonElementId = jsonObject.get(name);
+            if (jsonElementId == null) {
+                // The field does not exist in the JSON object.
+                return null;
+            }
+
+            if (jsonElementId.isJsonNull()) {
+                // The field is null in the JSON object.
+                return null;
+            }
+
+            return jsonElementId.getAsString();
+        }
+
+        @Nullable
+        private Subject deserializeSubjectFromJsonObject(JsonObject jsonObject) {
+            final String id = getString(jsonObject, "id");
+            final String zooniverseId = getString(jsonObject, "zooniverse_id");
+            final String groupId = getString(jsonObject, "group_id");
+
+            String locationStandard = null; //TODO: Others too.
+            List<String> locations = null;
+            final JsonElement jsonElementLocations = jsonObject.get("locations");
+            if (jsonElementLocations != null) {
+                locations = deserializeLocationsFromJsonElement(jsonElementLocations);
+                if (locations != null && !locations.isEmpty()) {
+                    locationStandard = locations.get(0);
+                }
+            }
+
+            return new Subject(id, zooniverseId, groupId, locationStandard, null, null);
+        }
+
+        private List<String> deserializeLocationsFromJsonElement(final JsonElement jsonElement) {
+            final JsonArray jsonLocations = jsonElement.getAsJsonArray();
+            if (jsonLocations == null) {
+                return null;
+            }
+
+            // Parse each location:
+            final List<String> locations = new ArrayList<>();
+            for (final JsonElement jsonLocation : jsonLocations) {
+                final JsonObject asObject = jsonLocation.getAsJsonObject();
+                final String url = getString(asObject, "image/jpeg");
+                if (url != null) {
+                    locations.add(url);
+                }
+            }
+
+            return locations;
+        }
+    }
+
+    /** A custom GSON deserializer,
+     * so we can create Subject objects using the constructor.
+     * We want to do so Subject can remain an immutable class.
+     */
     static class SubjectDeserializer implements JsonDeserializer<Subject> {
         public Subject deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
                 throws JsonParseException {
@@ -328,11 +428,16 @@ public class ZooniverseClient {
                 return null;
             }
 
+            return deserializeSubjectFromJsonObject(jsonObject);
+        }
+
+        @Nullable
+        private Subject deserializeSubjectFromJsonObject(JsonObject jsonObject) {
             final String id = getString(jsonObject, "id");
             final String zooniverseId = getString(jsonObject, "zooniverse_id");
             final String groupId = getString(jsonObject, "group_id");
 
-            final JsonElement jsonElementLocations = jsonObject.get("location");
+            final JsonElement jsonElementLocations = jsonObject.get("locations");
             if (jsonElementLocations == null) {
                 return null;
             }
@@ -342,11 +447,9 @@ public class ZooniverseClient {
                 return null;
             }
 
-            final String locationStandard = getString(jsonObjectLocations, "standard");
-            final String locationThumbnail = getString(jsonObjectLocations, "thumbnail");
-            final String locationInverted = getString(jsonObjectLocations, "inverted");
+            final String locationStandard = getString(jsonObjectLocations, "image/jpg");
 
-            return new Subject(id, zooniverseId, groupId, locationStandard, locationThumbnail, locationInverted);
+            return new Subject(id, zooniverseId, groupId, locationStandard, null, null);
         }
 
         private static String getString(final JsonObject jsonObject, final String name) {

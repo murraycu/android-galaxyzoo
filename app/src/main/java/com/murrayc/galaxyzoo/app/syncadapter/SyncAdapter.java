@@ -189,15 +189,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         try {
             mClient.requestMoreItemsAsync(count,
-                    new Callback<List<ZooniverseClient.Subject>>() {
+                    new Callback<ZooniverseClient.SubjectsResponse>() {
                         @Override
-                        public void onResponse(final Call<List<ZooniverseClient.Subject>> call, final retrofit2.Response<List<ZooniverseClient.Subject>> response) {
+                        public void onResponse(final Call<ZooniverseClient.SubjectsResponse> call, final retrofit2.Response<ZooniverseClient.SubjectsResponse> response) {
                             onQueryTaskFinished(response.body());
                             mRequestMoreItemsTaskInProgress = false;
                         }
 
                         @Override
-                        public void onFailure(final Call<List<ZooniverseClient.Subject>> call, final Throwable t) {
+                        public void onFailure(final Call<ZooniverseClient.SubjectsResponse> call, final Throwable t) {
                             Log.error("ZooniverseClient.requestMoreItemsSync(): request failed", t);
                             mRequestMoreItemsTaskInProgress = false;
                         }
@@ -506,7 +506,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private void onQueryTaskFinished(@NonNull final List<ZooniverseClient.Subject> result) {
+    private void onQueryTaskFinished(@NonNull final ZooniverseClient.SubjectsResponse result) {
         mRequestMoreItemsTaskInProgress = false;
 
         if (result == null) {
@@ -516,15 +516,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         //Check that we are not adding too many,
         //which can happen if a second request was queued before we got the result from a
         //first request.
-        List<ZooniverseClient.Subject> listToUse = result;
+        List<ZooniverseClient.Subject> listToUse = result.subjects;
         final int missing = getNotDoneNeededForCache();
         if (missing <= 0) {
             return;
         }
 
-        final int size = result.size();
+        final int size = listToUse.size();
         if (missing < size) {
-            listToUse = result.subList(0, missing);
+            listToUse = listToUse.subList(0, missing);
         }
 
         mSubjectAdder.addSubjects(listToUse, true /* async */);

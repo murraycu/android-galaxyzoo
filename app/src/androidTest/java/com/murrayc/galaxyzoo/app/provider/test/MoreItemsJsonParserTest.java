@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -53,8 +52,10 @@ public class MoreItemsJsonParserTest {
         final Reader reader = new InputStreamReader(inputStream, Utils.STRING_ENCODING);
 
         Gson gson = ZooniverseClient.createGson();
-        mSubjects = gson.fromJson(reader, new TypeToken<ArrayList<ZooniverseClient.Subject>>() {}.getType());
+        final ZooniverseClient.SubjectsResponse response = gson.fromJson(reader, new TypeToken<ZooniverseClient.SubjectsResponse>() {}.getType());
+        assertNotNull(response);
 
+        mSubjects = response.subjects;
         assertNotNull(mSubjects);
 
         reader.close();
@@ -62,7 +63,7 @@ public class MoreItemsJsonParserTest {
 
     @Test
     public void testSize() {
-        assertEquals(5, mSubjects.size());
+        assertEquals(10, mSubjects.size());
     }
 
     @Test
