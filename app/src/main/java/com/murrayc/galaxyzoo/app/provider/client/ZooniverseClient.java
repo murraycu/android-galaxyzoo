@@ -25,12 +25,6 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.murrayc.galaxyzoo.app.Log;
 import com.murrayc.galaxyzoo.app.LoginUtils;
@@ -38,9 +32,7 @@ import com.murrayc.galaxyzoo.app.provider.Config;
 import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.FormBody;
@@ -330,89 +322,6 @@ public class ZooniverseClient {
 
         public String getLocationInverted() {
             return mLocationInverted;
-        }
-
-    }
-
-    /** A custom GSON deserializer,
-     * so we can create Subject objects using the constructor.
-     * We want to do so Subject can remain an immutable class.
-     */
-    static class SubjectsResponseDeserializer implements JsonDeserializer<SubjectsResponse> {
-        public SubjectsResponse deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
-                throws JsonParseException {
-            final JsonObject jsonObject = json.getAsJsonObject();
-            if (jsonObject == null) {
-                return null;
-            }
-
-            final JsonArray jsonSubjects = jsonObject.getAsJsonArray("subjects");
-
-            // Parse each subject:
-            final List<Subject> subjects = new ArrayList<>();
-            for (final JsonElement jsonSubject : jsonSubjects) {
-                final JsonObject asObject = jsonSubject.getAsJsonObject();
-                final Subject subject = deserializeSubjectFromJsonObject(asObject);
-                subjects.add(subject);
-            }
-
-            // final JsonElement jsonMetadata = jsonObject.get("metadata");
-
-            final SubjectsResponse result = new SubjectsResponse(subjects);
-            return result;
-        }
-
-        private static String getString(final JsonObject jsonObject, final String name) {
-            final JsonElement jsonElementId = jsonObject.get(name);
-            if (jsonElementId == null) {
-                // The field does not exist in the JSON object.
-                return null;
-            }
-
-            if (jsonElementId.isJsonNull()) {
-                // The field is null in the JSON object.
-                return null;
-            }
-
-            return jsonElementId.getAsString();
-        }
-
-        @Nullable
-        private Subject deserializeSubjectFromJsonObject(JsonObject jsonObject) {
-            final String id = getString(jsonObject, "id");
-            final String zooniverseId = getString(jsonObject, "zooniverse_id");
-            final String groupId = getString(jsonObject, "group_id");
-
-            String locationStandard = null; //TODO: Others too.
-            List<String> locations = null;
-            final JsonElement jsonElementLocations = jsonObject.get("locations");
-            if (jsonElementLocations != null) {
-                locations = deserializeLocationsFromJsonElement(jsonElementLocations);
-                if (locations != null && !locations.isEmpty()) {
-                    locationStandard = locations.get(0);
-                }
-            }
-
-            return new Subject(id, zooniverseId, groupId, locationStandard, null, null);
-        }
-
-        private List<String> deserializeLocationsFromJsonElement(final JsonElement jsonElement) {
-            final JsonArray jsonLocations = jsonElement.getAsJsonArray();
-            if (jsonLocations == null) {
-                return null;
-            }
-
-            // Parse each location:
-            final List<String> locations = new ArrayList<>();
-            for (final JsonElement jsonLocation : jsonLocations) {
-                final JsonObject asObject = jsonLocation.getAsJsonObject();
-                final String url = getString(asObject, "image/jpeg");
-                if (url != null) {
-                    locations.add(url);
-                }
-            }
-
-            return locations;
         }
     }
 
