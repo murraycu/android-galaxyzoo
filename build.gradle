@@ -4,9 +4,10 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.3'
 
         // See https://firebase.google.com/docs/android/setup#manually_add_firebase
         classpath 'com.google.gms:google-services:3.1.1'
