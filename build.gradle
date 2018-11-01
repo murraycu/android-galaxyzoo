@@ -10,7 +10,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.2.1'
 
         // See https://firebase.google.com/docs/android/setup#manually_add_firebase
-        classpath 'com.google.gms:google-services:3.1.1'
+        classpath 'com.google.gms:google-services:4.2.0'
     }
 }
 
