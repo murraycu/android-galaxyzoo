@@ -30,15 +30,11 @@ public final class Item {
             "com.murrayc.galaxyzoo.app";
 
     /**
-     * The URI for the list of all Items,
+     * The The content:// style URI for the list of all Items,
      * or part of the URI for a single Item.
      */
     public static final Uri ITEMS_URI = Uri.parse("content://" +
             AUTHORITY + "/" + ItemsContentProvider.URI_PART_ITEM);
-    /**
-     * The content:// style URI for this item.
-     */
-    public static final Uri CONTENT_URI = ITEMS_URI;
 
     /**
      * The URI for the list of all files,

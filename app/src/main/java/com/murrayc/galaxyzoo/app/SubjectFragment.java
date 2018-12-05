@@ -358,7 +358,7 @@ public class SubjectFragment extends ItemFragment
 
         final Activity activity = getActivity();
 
-        final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
+        final Uri.Builder builder = Item.ITEMS_URI.buildUpon();
         builder.appendPath(itemId);
 
         return new CursorLoader(

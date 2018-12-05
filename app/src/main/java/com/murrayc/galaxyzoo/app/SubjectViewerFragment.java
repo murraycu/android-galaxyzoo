@@ -214,7 +214,7 @@ public class SubjectViewerFragment extends ItemFragment implements LoaderManager
         //because we have just asked for the "next" item.
         final Activity activity = getActivity();
 
-        final Uri.Builder builder = Item.CONTENT_URI.buildUpon();
+        final Uri.Builder builder = Item.ITEMS_URI.buildUpon();
         builder.appendPath(itemId);
 
         showLoadingView(true);

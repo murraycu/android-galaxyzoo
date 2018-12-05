@@ -68,52 +68,52 @@ public class ItemsContentProvider extends ContentProvider {
     public static final String URI_PART_DATA = "_data";
 
     /**
-     * The MIME type of {@link Item#CONTENT_URI} providing a directory of items.
+     * The MIME type of {@link Item#ITEMS_URI} providing a directory of items.
      */
     private static final String CONTENT_TYPE_ITEMS =
             "vnd.android.cursor.dir/vnd.android-galaxyzoo.item";
 
     /**
-     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
+     * The MIME type of a {@link Item#ITEMS_URI} sub-directory of a single
      * item.
      */
     private static final String CONTENT_TYPE_ITEM =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.item";
 
     /**
-     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
+     * The MIME type of {@link Item#ITEMS_URI} providing a directory of classifications.
      */
     private static final String CONTENT_TYPE_CLASSIFICATIONS =
             "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification";
 
     /**
-     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
+     * The MIME type of a {@link Item#ITEMS_URI} sub-directory of a single
      * classification.
      */
     private static final String CONTENT_TYPE_CLASSIFICATION =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.classification";
 
     /**
-     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
+     * The MIME type of {@link Item#ITEMS_URI} providing a directory of classifications.
      */
     private static final String CONTENT_TYPE_CLASSIFICATION_ANSWERS =
             "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification-answer";
 
     /**
-     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
+     * The MIME type of a {@link Item#ITEMS_URI} sub-directory of a single
      * classification answer.
      */
     private static final String CONTENT_TYPE_CLASSIFICATION_ANSWER =
             "vnd.android.cursor.item/vnd.android-galaxyzoo.classification-answer";
 
     /**
-     * The MIME type of {@link Item#CONTENT_URI} providing a directory of classifications.
+     * The MIME type of {@link Item#ITEMS_URI} providing a directory of classifications.
      */
     private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOXES =
             "vnd.android.cursor.dir/vnd.android-galaxyzoo.classification-checkboxes";
 
     /**
-     * The MIME type of a {@link Item#CONTENT_URI} sub-directory of a single
+     * The MIME type of a {@link Item#ITEMS_URI} sub-directory of a single
      * classification checkbox.
      */
     private static final String CONTENT_TYPE_CLASSIFICATION_CHECKBOX =
@@ -652,7 +652,7 @@ public class ItemsContentProvider extends ContentProvider {
                         null, null, orderBy);
 
                 c.setNotificationUri(getContext().getContentResolver(),
-                        Item.CONTENT_URI);
+                        Item.ITEMS_URI);
 
                 //The client must call(TODO) sometime to actually fill the database with items,
                 //and the client will then be notified via the cursor that there are new items.
@@ -674,7 +674,7 @@ public class ItemsContentProvider extends ContentProvider {
                         selection, prependToArray(selectionArgs, uriParts.itemId),
                         null, null, orderBy);
                 c.setNotificationUri(getContext().getContentResolver(),
-                        Item.CONTENT_URI); //TODO: More precise?
+                        Item.ITEMS_URI); //TODO: More precise?
                 break;
             }
 
@@ -741,7 +741,7 @@ public class ItemsContentProvider extends ContentProvider {
 
 
                     c.setNotificationUri(getContext().getContentResolver(),
-                            Item.CONTENT_URI); //TODO: More precise?
+                            Item.ITEMS_URI); //TODO: More precise?
                 }
 
                 //Make sure we have enough soon enough
