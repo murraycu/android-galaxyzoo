@@ -11,7 +11,13 @@ import retrofit2.http.Query;
  * Created by murrayc on 7/25/17.
  */
 
-public interface ZooniverseSubjectsService {
+public interface ZooniverseBackendService {
+    /** Gets the subjects for use with a workflow.
+     *
+     * @param workflowId
+     * @param limit
+     * @return
+     */
     @Headers({
             HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT + ": " + HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT
     })

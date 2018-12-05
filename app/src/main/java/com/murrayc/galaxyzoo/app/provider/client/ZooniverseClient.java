@@ -50,14 +50,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ZooniverseClient {
     private final Context mContext;
     private final String mServerBaseUri;
-    private final ZooniverseSubjectsService mRetrofitService;
+    private final ZooniverseBackendService mRetrofitService;
 
     public ZooniverseClient(final Context context, final String serverBaseUri) {
         mContext = context;
         mServerBaseUri = serverBaseUri;
 
         final Retrofit retrofit = createRetrofit(mServerBaseUri);
-        mRetrofitService = retrofit.create(ZooniverseSubjectsService.class);
+        mRetrofitService = retrofit.create(ZooniverseBackendService.class);
     }
 
     private static Retrofit createRetrofit(final String baseUrl) {
