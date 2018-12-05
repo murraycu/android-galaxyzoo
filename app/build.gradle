@@ -55,8 +55,8 @@ dependencies {
     compile 'com.google.firebase:firebase-crash:16.2.1'
 
     // Use Retrofit, with the GSON converter.
-    compile 'com.squareup.retrofit2:retrofit:2.4.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.4.0'
+    compile 'com.squareup.retrofit2:retrofit:2.5.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     compile 'com.google.guava:guava:23.0-android'
 
