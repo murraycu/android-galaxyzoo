@@ -70,9 +70,10 @@ public class ZooniverseClient {
 
     @NonNull
     public static Gson createGson() {
-        // Register our custom GSON deserializer for use by Retrofit.
+        // Register our custom GSON deserializers for use by Retrofit.
         final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(SubjectsResponse.class, new SubjectsResponseDeserializer());
+        gsonBuilder.registerTypeAdapter(SubjectsResponse.class, new JsonParserSubjects.SubjectsResponseDeserializer());
+        gsonBuilder.registerTypeAdapter(WorkflowsResponse.class, new JsonParserWorkflows.WorkflowsResponseDeserializer());
         return gsonBuilder.create();
     }
 
@@ -325,55 +326,11 @@ public class ZooniverseClient {
         }
     }
 
-    /** A custom GSON deserializer,
-     * so we can create Subject objects using the constructor.
-     * We want to do so Subject can remain an immutable class.
-     */
-    static class SubjectDeserializer implements JsonDeserializer<Subject> {
-        public Subject deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
-                throws JsonParseException {
-            final JsonObject jsonObject = json.getAsJsonObject();
-            if (jsonObject == null) {
-                return null;
-            }
+    public static final class WorkflowsResponse {
+        public final List<Workflow> workflows;
 
-            return deserializeSubjectFromJsonObject(jsonObject);
-        }
-
-        @Nullable
-        private Subject deserializeSubjectFromJsonObject(JsonObject jsonObject) {
-            final String id = getString(jsonObject, "id");
-            final String zooniverseId = getString(jsonObject, "zooniverse_id");
-            final String groupId = getString(jsonObject, "group_id");
-
-            final JsonElement jsonElementLocations = jsonObject.get("locations");
-            if (jsonElementLocations == null) {
-                return null;
-            }
-
-            final JsonObject jsonObjectLocations = jsonElementLocations.getAsJsonObject();
-            if (jsonObjectLocations == null) {
-                return null;
-            }
-
-            final String locationStandard = getString(jsonObjectLocations, "image/jpg");
-
-            return new Subject(id, zooniverseId, groupId, locationStandard, null, null);
-        }
-
-        private static String getString(final JsonObject jsonObject, final String name) {
-            final JsonElement jsonElementId = jsonObject.get(name);
-            if (jsonElementId == null) {
-                // The field does not exist in the JSON object.
-                return null;
-            }
-
-            if (jsonElementId.isJsonNull()) {
-                // The field is null in the JSON object.
-                return null;
-            }
-
-            return jsonElementId.getAsString();
+        public WorkflowsResponse(final List<Workflow> workflows) {
+            this.workflows = workflows;
         }
     }
 
@@ -396,6 +353,82 @@ public class ZooniverseClient {
 
         public RequestMoreItemsException(final String detail) {
             super(detail);
+        }
+    }
+
+    public static class Answer {
+        final String next;
+        final String label;
+
+        public Answer(final String label, final String next) {
+            this.label = label;
+            this.next = next;
+        }
+    }
+
+    public static class Task {
+        final String id;
+        final String type;
+        final String question;
+        final String help;
+        final List<Answer> answers;
+        final boolean required;
+
+        public Task(final String id, final String type, final String question, final String help, final List<Answer> answers, final boolean required) {
+            this.id = id;
+            this.type = type;
+            this.question = question;
+            this.help = help;
+            this.answers = answers;
+            this.required = required;
+        }
+
+        public String id() {
+            return id;
+        }
+
+        public String type() {
+            return type;
+        }
+
+        public String question() {
+            return question;
+        }
+
+        public String help() {
+            return help;
+        }
+
+        public List<Answer> answers() {
+            return answers;
+        }
+
+        public boolean required() {
+            return required;
+        }
+    }
+
+    public static final class Workflow {
+        String id;
+        String displayName;
+        List<Task> tasks;
+
+        public Workflow(final String id, final String displayName, final List<Task> tasks) {
+            this.id = id;
+            this.displayName = displayName;
+            this.tasks = tasks;
+        }
+
+        public String id() {
+            return this.id;
+        }
+
+        public String displayName() {
+            return this.displayName;
+        }
+
+        public List<Task> tasks() {
+            return this.tasks;
         }
     }
 }

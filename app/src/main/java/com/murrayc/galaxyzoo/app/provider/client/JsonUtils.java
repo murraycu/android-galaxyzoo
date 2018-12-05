@@ -22,4 +22,19 @@ public class JsonUtils {
 
         return jsonElementId.getAsString();
     }
+
+    static boolean getBoolean(final JsonObject jsonObject, final String name) {
+        final JsonElement jsonElementId = jsonObject.get(name);
+        if (jsonElementId == null) {
+            // The field does not exist in the JSON object.
+            return false;
+        }
+
+        if (jsonElementId.isJsonNull()) {
+            // The field is null in the JSON object.
+            return false;
+        }
+
+        return jsonElementId.getAsBoolean();
+    }
 }
