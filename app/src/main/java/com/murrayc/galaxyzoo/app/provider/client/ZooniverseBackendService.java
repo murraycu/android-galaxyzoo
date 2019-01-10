@@ -5,6 +5,7 @@ import com.murrayc.galaxyzoo.app.provider.HttpUtils;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -23,6 +24,19 @@ public interface ZooniverseBackendService {
     })
     @GET("projects?http_cache=true")
     Call<ZooniverseClient.ProjectsResponse> getProject(@Query("slug") String projectSlug);
+
+
+    /**
+     * Gets the decision tree.
+     *
+     * @param workflowId
+     * @return
+     */
+    @Headers({
+            HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT + ": " + HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT
+    })
+    @GET("workflows/{workflow_id}?http_cache=true")
+    Call<ZooniverseClient.WorkflowsResponse> getWorkflow(@Path("workflow_id") String workflowId);
 
     /** Gets the subjects for use with a workflow.
      *

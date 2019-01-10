@@ -56,6 +56,7 @@ import static junit.framework.Assert.assertTrue;
 public class ZooniverseClientTest{
 
     private static final String TEST_GROUP_ID = "5853fab395ad361930000003";
+    public static final String TEST_WORKFLOW_ID = "6122";
 
     @Before
     public void setUp() throws IOException {
@@ -161,6 +162,37 @@ public class ZooniverseClientTest{
         final String activeWorkflowID = activeWorkflowIds.get(0);
         assertNotNull(activeWorkflowID);
         assertEquals("6122", activeWorkflowID);
+
+        server.shutdown();
+    }
+
+    @Test
+    public void testWorkflow() throws IOException, ZooniverseClient.RequestWorkflowException {
+        final MockWebServer server = new MockWebServer();
+
+        final String strResponse = getStringFromStream(
+                MoreItemsJsonParserTest.class.getClassLoader().getResourceAsStream("test_workflow_response.json"));
+        assertNotNull(strResponse);
+        server.enqueue(new MockResponse().setBody(strResponse));
+        server.start();
+
+        final ZooniverseClient client = createZooniverseClient(server);
+
+        final ZooniverseClient.Workflow workflow = client.requestWorkflowSync(TEST_WORKFLOW_ID);
+        assertNotNull(workflow);
+
+        assertNotNull(workflow.id());
+        assertEquals(TEST_WORKFLOW_ID, workflow.id());
+
+        assertNotNull(workflow.displayName());
+        assertEquals("DECaLS DR5", workflow.displayName());
+
+        final List<ZooniverseClient.Task> tasks = workflow.tasks();
+        assertNotNull(tasks);
+        assertEquals(11, tasks.size());
+
+        assertEquals("T0", tasks.get(0).id());
+        assertEquals("T1", tasks.get(1).id());
 
         server.shutdown();
     }

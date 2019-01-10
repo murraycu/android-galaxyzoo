@@ -1,0 +1,360 @@
+{
+  "workflows": [
+    {
+      "id": "6122",
+      "display_name": "DECaLS DR5",
+      "tasks": {
+        "T0": {
+          "help": "The aim here is to divide featureless galaxies from all the rest. *Please consider only the galaxy in the center of the image in your answer.* If the central galaxy is interacting with another galaxy, you will be able to tell us about that in a later question. For this question, ignore nearby galaxies and foreground stars that are in front of the central galaxy.  If you can see any interesting features at all in the central galaxy, or if you think it is an edge-on disk, click \"Features or Disk\".\n\nOccasionally you might see something that isn't a galaxy at all -- the long streak of a satellite, for example, or an image swamped by light from a bright star. If this obscures the galaxy, click \"Star or Artifact\". **Only tick the \"Star or Artifact\" box if the galaxy is unclassifiable due to the star/artifact.**\n\n**Smooth**\nThe galaxy gradually fades in all directions from the center. There may be a small bright symmetric core.\n![decals-0_a-0_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-0_a-0_0.jpg =200x) ![decals-0_a-0_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-0_a-0_1.jpg =200x) ![decals-0_a-0_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-0_a-0_2.jpg =200x) ![decals-0_a-0_3.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-0_a-0_3.jpg =200x) ![decals-0_a-0_4.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-0_a-0_4.jpg =200x) ![decals-0_a-0_5.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-0_a-0_5.jpg =200x)\n\n**Features or Disk**\nThe opposite of \"Smooth\". The galaxy has any features at all. Below are examples of common features - but there may be something else interesting!\n\nThe galaxy might have spiral arms:\n![default_spiral.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/f3c90689-76c1-4585-8c90-5124f3dfb858.jpeg =200x) ![sloan-0_a-1_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-0_a-1_1.jpg =200x) ![decals-4_a-1_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_0.jpg =200x) ![decals-4_a-1_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_1.jpg =200x) ![decals-4_a-1_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_2.jpg =200x)\nThe galaxy could have a bulge or bar:\n![decals-4_a-1_3.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_3.jpg =200x) ![decals-4_a-1_4.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_4.jpg =200x) ![decals-4_a-1_5.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_5.jpg =200x) ![decals-4_a-2_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-2_0.jpg =200x) ![decals-4_a-2_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-2_1.jpg =200x) ![decals-4_a-2_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-2_2.jpg =200x)\nOr any other interesting feature!\n![sloan-0_a-1_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-0_a-1_0.jpg =200x) ![decals-4_a-2_3.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-2_3.jpg =200x) ![edge-on 1](https://panoptes-uploads.zooniverse.org/production/subject_location/1821036b-79ca-442e-96e1-d98e4749a51e.jpeg =200x) ![edge-on 2](https://panoptes-uploads.zooniverse.org/production/subject_location/9ad16677-b0a3-4534-baab-13db5be52630.jpeg =200x)\n\n**Star or Artifact**\n\nOnly tick the \"Star or Artifact\" box if the galaxy is unclassifiable due to the star/artifact. For example, **these are all classifiable images** even though there is also a star or artifact present:\n\n![CANDELS spiral with bright star](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/GDS_2817.jpg =200x) ![587727867255521429](https://panoptes-uploads.zooniverse.org/production/subject_location/04e06619-4edd-40c2-8d87-a7b1c806c248.jpeg =200x) ![GZH spheroid with bright core and nearby star](http://zoo-hst.s3.amazonaws.com/20094708.jpg =200x) ![CANDELS noisy](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/COS_6446.jpg =200x) ![CANDELS with small artifact](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/COS_3186.jpg =200x)\n\n**When should I choose \"Star or Artifact\"?**\n\nChoose \"Star or Artifact\" if there is no central galaxy to classify, or if the artifact is so bad that you can't ignore it and classify the galaxy with reasonable confidence.\n\nThe telescopes taking our data were designed to look at faint galaxies, which means that bright, compact objects like stars sometimes look a bit strange:\n\n![WFC3 bright star](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/UDS_25098.jpg) ![SDSS bright stars](https://s3.amazonaws.com/www.galaxyzoo.org/subjects/thumbnail/1237672024630102787.jpg) ![WFC3 medium star](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/GDS_22517.jpg) ![WFC3 bright star](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/UDS_10103.jpg) ![SDSS diffraction spikes](https://s3.amazonaws.com/www.galaxyzoo.org/subjects/thumbnail/1237668332566675568.jpg) ![TWO bright stars](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/COS_25147.jpg) ![sloan-0_a-2_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-0_a-2_0.jpg =150x) ![sloan-0_a-2_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-0_a-2_1.jpg =150x)\n\nAlso, things like satellites can pass overhead while the camera shutter is open (note one of these has a classifiable galaxy):\n\n![satellite trails](https://s3.amazonaws.com/www.galaxyzoo.org/subjects/thumbnail/1237679253598765338.jpg) ![satellite trail 2](https://s3.amazonaws.com/www.galaxyzoo.org/subjects/thumbnail/1237671762629820436.jpg)\n\nSometimes weird things happen when you get to the edge of the camera chip:\n\n![CANDELS chip artifact](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/COS_1.jpg) ![CANDELS chip artifact](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/thumbnail/COS_8.jpg)\n\nAnd sometimes something just... goes a bit weird:\n\n![olives... in...](https://s3.amazonaws.com/www.galaxyzoo.org/subjects/thumbnail/1237664620098552177.jpg) ![...spaaaace...](https://s3.amazonaws.com/www.galaxyzoo.org/subjects/thumbnail/1237656232029127081.jpg) ![oops, the telescope moved](https://s3.amazonaws.com/www.galaxyzoo.org/subjects/thumbnail/1237654896296264385.jpg) ![bright star nearby](https://s3.amazonaws.com/www.galaxyzoo.org/subjects/thumbnail/1237678437017583659.jpg) ![oops, bad data](https://s3.amazonaws.com/www.galaxyzoo.org/subjects/thumbnail/1237668585434316837.jpg)\n\nOccasionally you might see something that *is* astronomical, but isn't a galaxy, like a nebula or star-forming cloud from our own galaxy:\n\n![1237667725903790995](https://panoptes-uploads.zooniverse.org/production/subject_location/4c0ac87c-7bd3-40ff-86e4-75c1a2c19a1e.jpeg =150x) ![1237667726977663041](https://panoptes-uploads.zooniverse.org/production/subject_location/9d50d618-135c-4480-b441-f33277e1b8ed.jpeg =150x) ![1237667726977663100](https://panoptes-uploads.zooniverse.org/production/subject_location/534e8966-7f00-4636-985e-800bb9bb7474.jpeg =150x)\n\nThese are often very pretty, but they're not galaxies, so please mark them as \"Star or Artifact\" -- but feel free to discuss them on Talk!\n",
+          "type": "single",
+          "answers": [
+            {
+              "next": "T1",
+              "label": "![smooth_triple_flat_new.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/75cec1ed-f50a-4151-8877-f6e74f6748eb.png =60x) Smooth"
+            },
+            {
+              "next": "T2",
+              "label": "![features_or_disk_new.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/1ec52a74-9e49-4579-91ff-0140eb5371e6.png =60x) Features or Disk"
+            },
+            {
+              "label": "![star.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/cd46dc5a-44b3-426e-82c1-31812ca65a3e.png =60x) Star or Artifact"
+            }
+          ],
+          "question": "Is the galaxy simply smooth and rounded, with no sign of a disk?",
+          "required": true
+        },
+        "T1": {
+          "help": "Look at the overall shape and decide how round it is. Remember to always concentrate on the galaxy in the centre and ignore any other galaxies.\n\n**Completely round**\n![sloan-7_a-0_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-7_a-0_0.jpg =200x) ![AHZ2000jnr](http://zoo-hst.s3.amazonaws.com/20066328.jpg =200x) ![AHZ40002wy](http://zoo-hst.s3.amazonaws.com/90020800.jpg =200x)\n\n**Inbetween**\n![sloan-7_a-1_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-7_a-1_0.jpg =200x) ![20015991](http://zoo-hst.s3.amazonaws.com/20015991.jpg =200x) ![AHZ2001627](http://zoo-hst.s3.amazonaws.com/20142106.jpg =200x)\n\n**Cigar-shaped**\n![AHZ20009dq](http://zoo-hst.s3.amazonaws.com/20030058.jpg =200x) ![AHZ2000z88](http://zoo-hst.s3.amazonaws.com/20118746.jpg =200x) ![AHZ40002wd](http://zoo-hst.s3.amazonaws.com/90019630.jpg =200x)\n\n*Note*: \"cigar-shaped\" smooth galaxies can look a lot like edge-on disk galaxies. Edge-on disks are often thinner than cigar-shaped ellipticals. They also tend to come to more of a point at either end, so people use the \"pointy ends\" test: if it has them, it's more likely an edge-on disk than a cigar-shaped elliptical.\n\nThese are *edge-on disks* (which we'd call \"featured or disk\" in the previous question):\n![1237680507724300460](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/1237680507724300460.jpg =200x) ![AHZ2000j54](http://zoo-hst.s3.amazonaws.com/20064554.jpg =200x) ![AHZ2001rx8](http://zoo-hst.s3.amazonaws.com/20154144.jpg =200x)",
+          "type": "single",
+          "answers": [
+            {
+              "next": "T11",
+              "label": "![rounded.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/94412557-f564-40b9-9423-1d2e47cb1104.png =60x) Completely round"
+            },
+            {
+              "next": "T11",
+              "label": "![in_between_shaped.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/26f909a0-26da-4237-ac47-dadb120d0af3.png =60x) In between"
+            },
+            {
+              "next": "T11",
+              "label": "![cigar_shaped.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/41a2716a-52a5-4871-b98d-f0c6bd8b0a83.png =60x) Cigar-shaped"
+            }
+          ],
+          "question": "How rounded is it?",
+          "required": true
+        },
+        "T2": {
+          "help": "Disk galaxies tend to be very flat, like a pancake or frisbee, and sometimes they are tilted so that we see them from the side. When that's the case, we can't see the other details of their structure. These galaxies should be labelled as edge-on so that we know what we *can't* know about what else might be in the disk. \n\nSome examples of edge-on and not-edge-on disks (to see many more, check the *Field Guide*):\n\n**Yes - Edge On Disk**\nThe galaxy looks too tilted to see whether its disk has structures (such as spiral arms).\n*Note: edge-on disks may still have bulges (example below).*\n![sloan-1_a-0_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-1_a-0_0.jpg =200x)![This is edge-on *enough* that we can't see the details.](https://panoptes-uploads.zooniverse.org/production/subject_location/1821036b-79ca-442e-96e1-d98e4749a51e.jpeg =200x)\n![Edge-on disk with a bulge](https://panoptes-uploads.zooniverse.org/production/subject_location/e4dea284-096d-4f9d-a453-a5a03d51a38f.jpeg =200x)![You can see there's dust, but you can't see whether the disk has a spiral or a bar](https://panoptes-uploads.zooniverse.org/production/subject_location/671b37a3-c297-4554-adaa-e8e83d1c9b11.jpeg =200x)\n\n**No - Something Else**\nThe galaxy is face-on enough to see whether there are other structures in the disk, or it is not a disk at all (e.g. an irregular galaxy).\n![Face-on disk with spiral structure](https://panoptes-uploads.zooniverse.org/production/subject_location/4382faba-2b1b-4219-8951-3b126ffd71fa.jpeg =200x)![Tilted, but you can still see the details](https://panoptes-uploads.zooniverse.org/production/subject_location/27b0e971-33d0-4a82-aaae-da87de853077.jpeg =200x) \n![sloan-1_a-1_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-1_a-1_1.jpg =200x)![An Irregular galaxy](https://panoptes-uploads.zooniverse.org/production/subject_location/964a2bdb-00a4-4806-acfc-b52f0b3bb787.jpeg =200x)",
+          "type": "single",
+          "answers": [
+            {
+              "next": "T3",
+              "label": "![edge_on_diskier.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/eb9136ff-f6c1-4787-ae52-b1bcb5783198.png =60x) Yes -  Edge On Disk"
+            },
+            {
+              "next": "T4",
+              "label": "![feature_or_disk.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/f353f2f1-a47e-439d-b9ca-020199162a79.png =60x) No - Something Else"
+            }
+          ],
+          "question": "Could this be a disk viewed edge-on?",
+          "required": true
+        },
+        "T3": {
+          "help": "Concentrate on the shape of the galaxy. If the galaxy bulges outwards in the center, select Rounded or Boxy depending on the shape of the bulge.\n\n**Rounded**\nThe galaxy has a central bulge which is smoothly curving.\n\n![rounded_0_1.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/be57a61d-6082-491b-a1f1-b0083681f6f0.png =200x) ![rounded_0_2.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/0be6de56-40b8-46c1-a611-9c4c39da7ff9.png =200x) ![decals-7_a-0_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-7_a-0_0.jpg =200x) ![decals-7_a-0_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-7_a-0_1.jpg =200x) ![decals-7_a-0_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-7_a-0_2.jpg =200x) ![decals-7_a-0_3.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-7_a-0_3.jpg =200x)\n\n**Boxy**\nThe galaxy has a bulge which is shaped like a box or like an 'X'. \n\n![box_bulge_0_2.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/16907b8f-9d33-4e5d-b5b6-77a3662b360b.png =200x) ![box_bulge_0_1.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/9b90c46a-962f-4b5f-9dea-3183d3e3d50c.png =200x) ![x_bulge_0_4.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/991cdd7c-b439-41cd-9f51-181a7be831f2.png =200x) ![x_bulge_0_2.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/c40d849d-7332-4c03-ada4-30bc1a0450ee.png =200x) ![x_bulge_1_4.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/3ff64705-f70a-48cc-8bd3-03f2858f4a96.png =200x) ![x_bulge_1_3.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/da5cf08b-60d1-49d8-9a29-76c7a9e103ef.png =200x) ![decals-7_a-1_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-7_a-1_0.jpg =200x) ![sloan-8_a-0_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-8_a-0_0.jpg =200x) ![sloan-8_a-1_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-8_a-1_0.jpg =200x) ![decals-7_a-1_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-7_a-1_2.jpg =200x)\n\n\n**No Bulge**\nIf the galaxy is shaped like a smooth flat needle, or a gently and continuously curving arc, then click \"no bulge\". \n![decals-7_a-2_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-7_a-2_0.jpg =200x) ![decals-7_a-2_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-7_a-2_2.jpg =200x) ![decals-7_a-2_3.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-7_a-2_3.jpg =200x) ![decals-7_a-2_4.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-7_a-2_4.jpg =200x) ![decals-7_a-2_5.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-7_a-2_5.jpg =200x)",
+          "type": "single",
+          "answers": [
+            {
+              "next": "T11",
+              "label": "![edge_on_round_bulge.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/e2f9a422-0b84-42ca-ba63-1f497fbcf35b.png =60x) Rounded"
+            },
+            {
+              "next": "T11",
+              "label": "![edge_on_boxy_bulge.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/1ef094dd-b24e-4ad8-ae35-f1a4fc6dcc16.png =60x) Boxy"
+            },
+            {
+              "next": "T11",
+              "label": "![edge_on_no_bulge.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/568f7c93-1e4d-47ee-b354-14ea7b255446.png =60x) No bulge"
+            }
+          ],
+          "question": "Does the galaxy have a bulge at its centre? If so, what shape?",
+          "required": true
+        },
+        "T4": {
+          "help": "We're looking for galaxies with a straight \"bar\" feature. \n\n![bar_ctr_sdss_annotated_inv.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/43679bcd-2364-47d9-8866-24927e1a6b99.jpeg)![bar_offset_sdss_annotated_inv.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/1a6def0a-8d9e-4abf-b484-46be73a812c3.jpeg)\n\nA bar is often found in the center of its galaxy, but not always. Bars can be either Weak or Strong. Weak bars are be hard to spot, so look carefully! (Inverting the image sometimes helps weaker bars become more visible.)\n\nAlthough bars are often seen with spiral arms, they can be in any type of galaxy.\n\n**Strong Bar**\nStrong bars are clearly visible straight features. They extend across a large fraction of the galaxy, and they're bright enough to be pretty obvious. They are usually in the center of the galaxy, but not always.\n![sloan-2_a-0_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-2_a-0_0.jpg =200x) ![sloan-2_a-0_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-2_a-0_1.jpg =200x) ![sloan-2_a-0_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-2_a-0_2.jpg =200x) ![sloan-2_a-0_4.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-2_a-0_4.jpg =200x) ![J090339.90+032211.3.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/9fc694ff-1071-47c2-9672-8e90f3404474.png =200x) ![J112736.73+002342.7.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/09d8e65b-389c-4b17-9d66-958045dca4e5.png =200x) ![J133729.36+040615.9.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/68233d74-7b0f-4288-a010-6e759be82cdd.png =200x) ![J225246.39+010758.0.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/feb621ad-b590-42e3-be11-1fd30f6bd076.png =200x) ![J021219.80-004835.0.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/2972ca11-f0d0-45af-b41c-bb572d7a6ffe.png =200x)\n\n**Weak Bar**\nWeak bars are the little siblings of strong bars. They are the same shape, but smaller and fainter relative to the galaxy. Since they don't stand out quite as much they can look a little more oval, but they are still longer in one direction than the other.\n![J140808.50-014208.2.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/8be99bf5-771c-403c-8e8e-7c48a8589e74.png =200x) ![J091135.57+325055.6.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/b6c482df-7dfc-4880-8b8c-bbc317df81b0.png =200x) ![J132132.19+121115.8.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/7d7e6ad1-8c46-45b2-8e30-e1dd661714e9.png =200x) ![J135406.26+052122.8.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/9640d02d-6614-4705-935b-8c7fbe64af10.png =200x) ![J103351.36-003340.8.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/933cedaf-3b30-4913-8ace-a2d7794d9068.png =200x) ![sloan-2_a-0_3.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-2_a-0_3.jpg =200x) \n\n\n**No bar**\nIf the center of the galaxy has no straight feature, even a very small one, this is the correct choice.\n![sloan-2_a-1_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-2_a-1_0.jpg =200x) ![sloan-2_a-1_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-2_a-1_1.jpg =200x) ![sloan-2_a-1_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-2_a-1_2.jpg =200x) ![sloan-2_a-1_3.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-2_a-1_3.jpg =200x) ![sloan-2_a-1_4.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-2_a-1_4.jpg =200x) ![J011341.82-000609.7.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/f0cf582b-0bf8-4d24-9053-21f275e4a287.png =200x) ![J101819.60+070252.9.png =200x](https://panoptes-uploads.zooniverse.org/production/project_attached_image/3822ed54-28ca-4ffc-b1e6-66a1202a2e3a.png =200x) ![J104031.24+121739.8.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/cccdd1e1-be31-4226-8f11-28c8bb4b68c5.png =200x)\n\nTwo things to note:\n\n 1. Bars are embedded in galaxies, not standalone features. If you see a long, thin feature that doesn't have any larger underlying galaxy, it may in fact be an edge-on or cigar-shaped galaxy.\n\n 2. The more tilted a galaxy disk is, the harder a bar is to spot, no matter how strong it is. If you're looking at a partially inclined galaxy and you see an elongated feature, ask yourself whether the feature is *more* or *differently* elongated than the appearance of the rest of the galaxy. That is, if you *could* see the galaxy face-on, would the feature still look like a bar? That helps tell the difference between bars and projection effects because of the inclination.\n\nSome bars can be hard to spot, so please just give us your best guess. Thank you!",
+          "type": "single",
+          "answers": [
+            {
+              "next": "T5",
+              "label": "![bar_none_sidebyside_acwacw_200x100.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/043f8c64-226c-4ff4-957d-af0b06d634df.png =120x60) No Bar"
+            },
+            {
+              "next": "T5",
+              "label": "![bar_weak_sidebyside_acwacw_200x100.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/3719029b-da5b-43d1-83da-ddfd153f6de7.png =120x60) Weak Bar"
+            },
+            {
+              "next": "T5",
+              "label": "![bar_strong_sidebyside_acwacw_200x100.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/4b9b5758-ca37-47bd-bb24-ca0933f45d1b.png =120x60) Strong Bar"
+            }
+          ],
+          "question": "Is there a bar feature through the centre of the galaxy?",
+          "required": true
+        },
+        "T5": {
+          "help": "Look carefully for spiral arms - remember they may be embedded in the disk and not that easy to see.\n\n**Spiral**\n![default_spiral.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/f3c90689-76c1-4585-8c90-5124f3dfb858.jpeg =200x) ![sloan-0_a-1_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-0_a-1_1.jpg =200x) ![decals-4_a-1_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_0.jpg =200x) ![decals-4_a-1_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_1.jpg =200x) ![decals-4_a-1_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_2.jpg =200x)\n\n**No spiral**\n![sloan-3_a-1_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-3_a-1_0.jpg =200x) ![AHZ10001sr](http://zoo-hst.s3.amazonaws.com/12015592.jpg =200x) ![AHZ10002yc](http://zoo-hst.s3.amazonaws.com/12025310.jpg =200x)\n",
+          "type": "single",
+          "answers": [
+            {
+              "next": "T6",
+              "label": "![4_arms.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/f2a9fa02-c666-4a78-bd90-6c1a5a5bbcca.png =60x) Yes"
+            },
+            {
+              "next": "T8",
+              "label": "![rounded.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/94412557-f564-40b9-9423-1d2e47cb1104.png =60x) No"
+            }
+          ],
+          "question": "Is there any sign of a spiral arm pattern?",
+          "required": true
+        },
+        "T6": {
+          "help": "Astronomers classify spiral galaxies by how tight their arms are -- you might find it easiest to assess this by looking at the arms where they're closest to the centre. \n\n**Tight**\n![sloan-9_a-0_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-9_a-0_0.jpg =200x) ![AHZ40004w0](http://zoo-hst.s3.amazonaws.com/90032156.jpg =200x) ![AHZ40002tn](http://zoo-hst.s3.amazonaws.com/90019810.jpg =200x) ![AHZ40006dr](http://zoo-hst.s3.amazonaws.com/90032831.jpg =200x) ![AHZ40006dq](http://zoo-hst.s3.amazonaws.com/90002212.jpg =200x) ![COS_10143](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/COS_10143.jpg =200x)\n\n**Medium**\n![sloan-9_a-1_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-9_a-1_0.jpg =200x) ![medium-wound-spiral-ring-bar-AGNprobably.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/c9ff93bc-5628-4e77-8c58-e42acb9e2026.jpeg =200x) ![AHZ40004wz](http://zoo-hst.s3.amazonaws.com/90030763.jpg =200x) ![AHZ400020y](http://zoo-hst.s3.amazonaws.com/90014727.jpg =200x) ![GDS_17125](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/GDS_17125.jpg =200x) ![COS_5227](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/COS_5227.jpg =200x)\n\n**Loose**\n![sloan-9_a-2_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-9_a-2_0.jpg =200x) ![mod_spiral_loose_1.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/981d522f-7e44-4fed-95aa-9781915e5c86.jpeg =200x) ![mod_spiral_loose_2.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/cecc59fd-22d6-4319-a096-d114efefdffd.jpeg =200x) ![mod_spiral_loose_3.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/3521255d-4ee0-437a-ad79-48042b6e4c56.jpeg =200x) ![mod_spiral_loose_0.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/3aca4b55-52fa-4f97-a04d-62475a0b0fee.jpeg =200x) ![AHZ20015y3](http://zoo-hst.s3.amazonaws.com/20141895.jpg =200x)",
+          "type": "single",
+          "answers": [
+            {
+              "next": "T7",
+              "label": "![tight_arms.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/0726dfdd-72fa-49e8-a112-439294937d5e.png =60x) Tight"
+            },
+            {
+              "next": "T7",
+              "label": "![mid_arms.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/5f4a0511-7ae5-4f1f-a327-fbfdcc65b033.png =60x) Medium"
+            },
+            {
+              "next": "T7",
+              "label": "![loose_arms.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/c6f3c839-d63d-4eae-bd8e-e57073005b56.png =60x) Loose"
+            }
+          ],
+          "question": "How tightly wound do the spiral arms appear?",
+          "required": true
+        },
+        "T7": {
+          "help": "Some spiral galaxies are rather complicated, but we want your best guess as to how many individual arms you can see. Note that the arms don't always begin at the very centre of the galaxy. If there are more than four arms, don't worry about counting them individually, but select the \"more than 4\" button.\n\n**1**\n![sloan-10_a-0_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-0_0.jpg =200x) ![sloan-10_a-0_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-0_1.jpg =200x)\n\n**2**\n![sloan-10_a-1_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-1_0.jpg =200x) ![sloan-10_a-1_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-1_1.jpg =200x) ![sloan-10_a-1_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-1_2.jpg =200x) ![sloan-10_a-1_3.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-1_3.jpg =200x)\n\n**3**\n![sloan-10_a-2_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-2_0.jpg =200x) ![sloan-10_a-2_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-2_1.jpg =200x) ![sloan-10_a-2_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-2_2.jpg =200x) \n\n**4**\n![sloan-10_a-3_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-3_0.jpg =200x) ![sloan-10_a-3_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-3_1.jpg =200x)\n\n**More than 4**\n![sloan-10_a-4_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-4_0.jpg =200x) ![sloan-10_a-4_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-4_1.jpg =200x)\n\n**Can't tell**\n![sloan-10_a-5_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-5_0.jpg =200x) ![sloan-10_a-5_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-5_1.jpg =200x) ![sloan-10_a-5_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-10_a-5_2.jpg =200x) \n![mod_spiral_cant_tell_0.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/95f3d6a5-7e05-4ec6-94e1-56fcd77b5ffa.jpeg =200x) ![mod_spiral_cant_tell_1.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/740b2726-5667-46d2-bfdd-de05f98c5e43.jpeg =200x)",
+          "type": "single",
+          "answers": [
+            {
+              "next": "T8",
+              "label": "![1_arm.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/b7734ae0-ce7a-43b6-ab05-028174c4527c.png =35x) 1"
+            },
+            {
+              "next": "T8",
+              "label": "![2_arms.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/a1389764-5b9e-4d52-bf31-2272a3161aba.png =35x) 2"
+            },
+            {
+              "next": "T8",
+              "label": "![3_arms.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/cd24b1d0-3395-423e-b51b-a1a91dd36010.png =35x) 3"
+            },
+            {
+              "next": "T8",
+              "label": "![4_arms.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/f2a9fa02-c666-4a78-bd90-6c1a5a5bbcca.png =35x) 4"
+            },
+            {
+              "next": "T8",
+              "label": "![5_arms.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/2f198ca9-3cd5-4c2a-a078-e96838b14d2d.png =35x) More than 4"
+            },
+            {
+              "next": "T8",
+              "label": "![cant_tell_arms.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/e40e428f-3e73-4d40-9eff-1616a7399819.png =35x) Can't tell"
+            }
+          ],
+          "question": "How many spiral arms are there?",
+          "required": true
+        },
+        "T8": {
+          "help": "Look at the centre of the galaxy for a round bulge of stars. This bulge may obscure any bar and the spiral arms in this central region. If you see a bulge, rank its size and brightness compared to the rest of the galaxy's disk.\n\nExamples are below, and there are more in the Field Guide.\n\n**No bulge**\n![sloan-4_a-0_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-4_a-0_0.jpg =200x) ![sloan-4_a-0_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-4_a-0_1.jpg =200x) ![J100039.47+123738.3.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/5f291733-07c8-4e4b-9ee6-375c21184d7d.png =200x) ![J084539.78+250017.2.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/57c0d45d-be22-45c1-8033-1b71c9855984.png =200x) ![J101326.41+300856.1.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/a7bb4305-df54-4fb1-b11c-6dd9b97fe34c.png =200x) ![J103329.06-005137.4.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/577b3ab4-fcd6-4c0a-bb10-26f8399f9614.png =200x)\n\n**Small**\n![sloan-4_a-1_4.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-4_a-1_4.jpg =200x) ![AHZ10005q9 - also a gorgeous overlap showing the extended dust in the disk at 10 oclock](http://zoo-hst.s3.amazonaws.com/13049851.jpg =200x) ![AHZ10000kx](http://zoo-hst.s3.amazonaws.com/11044627.jpg =200x) ![sloan-4_a-1_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-4_a-1_0.jpg =200x) ![sloan-4_a-1_3_smallbulge.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/ab8d86d8-963b-479c-8e4d-b218532ae885.jpeg =200x) ![sloan-4_a-1_1_smallbulge.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/0de013cf-7000-4ae3-9bc0-11d4073fa92c.jpeg =200x) \n\n**Moderate**\n![AHZ40006dn](http://zoo-hst.s3.amazonaws.com/90006284.jpg =200x) ![AHZ2000819](http://zoo-hst.s3.amazonaws.com/20025942.jpg =200x) ![AHZ40001z0](http://zoo-hst.s3.amazonaws.com/90012067.jpg =200x) ![sloan-4_a-2_4.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-4_a-2_4.jpg =200x) ![sloan-4_a-2_3_moderatebulge.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/899dba53-0a16-4b3a-95b5-caf517b729c5.jpeg =200x) ![sloan-4_a-2_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-4_a-2_1.jpg =200x) \n\n**Large**\n![sloan-4_a-2_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-4_a-2_2.jpg =200x) ![AHZ40003tv](http://zoo-hst.s3.amazonaws.com/90025517.jpg =200x) ![AHZ2001cao](http://zoo-hst.s3.amazonaws.com/20162432.jpg =200x) ![J150145.98+114006.9.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/53067f13-b71e-4b01-b20f-3b211ea40b2b.png =200x) ![588015510356885551_largebulge.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/c477a49a-2854-4e4c-8d54-5bf69bfabd0d.jpeg =200x) ![588017978886586411_largebulge.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/3e3176f1-c6df-4647-b1d7-6b7d2cdaf854.jpeg =200x) \n\n**Dominant**\n![sloan-4_a-3_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-4_a-3_0.jpg =200x) ![AHZ2000sgs](http://zoo-hst.s3.amazonaws.com/20096323.jpg =200x) ![AHZ20018y5](http://zoo-hst.s3.amazonaws.com/20151784.jpg =200x) ![AHZ2000iyr](http://zoo-hst.s3.amazonaws.com/20063762.jpg =200x) ![AHZ2000j9e_20064764_GZH_dominantbulge.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/dee61cdc-cc40-421f-bd00-21f2343f2fe9.jpeg =200x) ![587730022795575629_dominantbulge.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/ffc8942b-ed9b-4e29-af5c-77b57f981858.jpeg =200x) \n\n**Ambiguous Examples, and how your classification helps**\nThere aren't really 5 *distinct* categories of bulge strength: it's more of a continuum, so some galaxies won't exactly match the icons or examples and will be more in between two of them. Just try to pick the answer that's closest to what you see. Thanks!\n\nFor example, what do you think these galaxies' bulge strengths are?\n![AHZ2000jj3](http://zoo-hst.s3.amazonaws.com/20065657.jpg =200x) ![AHZ2000d7x_20043972_GZH_largedominantbulge.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/35c1635d-842a-4dee-abe1-1cd96ad52451.jpeg =200x) ![587742062692007968_largedominantbulge.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/1f69f67d-cdc1-4c96-b66a-297bf796d15d.jpeg =200x)\nMost people think these bulges are either \"Large\" or \"Dominant\".\n\nHow about this? Most people think this is either \"Small\" or \"No bulge\" (because even a pure disk can have a slightly concentrated center).\n![AHZ2000nnw](http://zoo-hst.s3.amazonaws.com/20080528.jpg =200x)\n\nWhen we combine answers from multiple people to arrive at a consensus classification, the disagreement itself alerts us to the fact that a galaxy is somewhere in between 2 categories. So your best guess is helpful, even when it's hard!",
+          "type": "single",
+          "answers": [
+            {
+              "next": "T11",
+              "label": "![bulge_icon_no_bulge.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/b4f200c4-71e6-4ded-a8d6-4d040787e991.png =50x) No Bulge"
+            },
+            {
+              "next": "T11",
+              "label": "![bulge_icon_small_bulge.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/3c2dddce-2a8b-4170-9896-edf605032d7a.png =50x) Small"
+            },
+            {
+              "next": "T11",
+              "label": "![bulge_icon_moderate_bulge.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/5dcf50ce-c481-4c9e-a97b-260a686ed5ee.png =50x) Moderate"
+            },
+            {
+              "next": "T11",
+              "label": "![bulge_icon_obvious_bulge.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/93145e7b-57de-4671-8a23-27d1db5e09cb.png =50x) Large"
+            },
+            {
+              "next": "T11",
+              "label": "![bulge_icon_dominant_bulge.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/8bc477bd-bfa0-4c5b-89bd-50148845d463.png =50x) Dominant"
+            }
+          ],
+          "question": "Is there a central bulge? If so, how large is it compared with the galaxy?",
+          "required": true
+        },
+        "T10": {
+          "help": "These are examples of galaxy morphology that are rare, but still important to note when you see them. You can select more than one option if you see multiple features in the same galaxy. \n\n**Ring**\n Ring galaxies have a bright circle of stars. Rings are often found 'inner' around the core or 'outer' at the edge of the galaxy.\n![sloan-6_x-0_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-0_0.jpg =200x) ![sloan-6_x-0_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-0_1.jpg =200x) ![J090128.45+311433.1.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/2a7b24f6-7ad5-4576-a5cc-f78ce6a62240.png =200x) ![J090800.03+314005.5.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/f489ac1a-a806-48ab-9af9-67764f5222ea.png =200x) ![els_ring13.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/81aedee2-c44d-457b-85f1-3cafdcb80b60.jpeg =200x) ![els_ring20.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/f314293d-25fb-48d8-b66b-0c8bf2241cf1.jpeg =200x)\n\nGalaxies can have both rings and bars (and spirals!):\n![J225246.39+010758.0.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/feb621ad-b590-42e3-be11-1fd30f6bd076.png =200x) ![J132132.19+121115.8.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/7d7e6ad1-8c46-45b2-8e30-e1dd661714e9.png =200x) ![sloan-2_a-0_4.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-2_a-0_4.jpg =200x) ![J090011.05+074333.9.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/a766427d-c7f4-4c37-a31a-64ea62ca52d9.png =200x)\n \n**Lens or arc**\nLenses and arcs are curved bands of light that can be caused by gravitational lensing. They can appear detached from the galaxy or be within the light profile of the galaxy (sometimes, but not always, a different color). A lens will *not* go through the center of the lensing galaxy -- only *around* the center -- which helps distinguish arcs from spiral arms.\n![CANDELS red lens](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/UDS_9906.jpg =200x) ![GZH GEMS blue arc](http://zoo-hst.s3.amazonaws.com/90023947.jpg =200x) ![GZH AEGIS arc](http://zoo-hst.s3.amazonaws.com/12016031.jpg =200x) ![GZH COSMOS arcs](http://zoo-hst.s3.amazonaws.com/20154846.jpg =200x) ![arc_els2.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/d0d0a323-bde2-41bc-b3e6-cb050c19ae36.jpeg =200x)\nIn that last example the lens is the 3 points of blue light that are outside the central galaxy and symmetric around it.\n\n**Irregular**\nIrregular galaxies have shapes that are neither smooth ellipses or well-behaved spirals, but look more chaotic. \n![sloan-6_x-3_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-3_0.jpg =200x) ![sloan-6_x-3_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-3_1.jpg =200x) ![587736541485072640](https://panoptes-uploads.zooniverse.org/production/subject_location/964a2bdb-00a4-4806-acfc-b52f0b3bb787.jpeg =200x) ![587739506087952516](https://panoptes-uploads.zooniverse.org/production/subject_location/a7ffd336-2cec-4f7a-baf8-acc1b312d459.jpeg =200x) ![587742060515950783](https://panoptes-uploads.zooniverse.org/production/subject_location/d0180455-6a1c-443c-8d40-147ed7720fb6.jpeg =200x) ![587742014358093986](https://panoptes-uploads.zooniverse.org/production/subject_location/8d23cb7e-edfa-4e23-bfaf-8e8b94ba485a.jpeg =200x)\n\n**Dust lane**\nDust lanes are thin, dark features across a galaxy that resemble shadows.\n![sloan-6_x-6_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-6_0.jpg =200x) ![sloan-6_x-6_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-6_1.jpg =200x) ![J090530.12+032822.8.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/89358094-70d1-428f-b321-c674441456fd.png =200x) ![dustlane_els5.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/9096fde8-1a4b-464b-b013-6d9b9bcb9b27.jpeg =200x) ![dustlane_els7.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/5fd5612f-19ae-4ecb-beed-a77b7c412843.jpeg =200x) ![dustlane_els9.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/bcb6ea95-cf70-4553-955e-51a54f354914.jpeg =200x)\n\n**Overlapping**\nOverlapping galaxies occur when one galaxy is far behind another galaxy on the sky, so the two galaxies appear to be located at least partially on top of each other, but you don't see any distortions or features that would indicate the galaxies are actually interacting.\n![decals-6_x-6_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-10_x-6_0.jpg =200x) ![GDS_1725](http://www.galaxyzoo.org.s3.amazonaws.com/subjects/standard/GDS_1725.jpg =200x) ![decals-6_x-6_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-10_x-6_2.jpg =200x) ![overlap_els1.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/e5462771-5ac6-4d76-8420-7f1ad0369366.jpeg =200x) ![decals-6_x-6_4.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-10_x-6_4.jpg =200x) ![overlap_els2.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/d76121ef-3ba1-4361-bd36-d6ac7d586b12.jpeg =200x)\n\n**Something Else**\nHave you discovered something that doesn't fit into the options above? Select Something Else and consider pressing \"Talk\" in the next screen to share what you've found!\n![sloan-6_x-4_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-4_0.jpg =200x) ![sloan-6_x-4_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-4_1.jpg =200x) ![sloan-6_x-4_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-4_2.jpg =200x) ![mod_something_else_0.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/1dbaca86-9c45-477e-b99b-f6a04fb729e1.jpeg =200x) ![mod_something_else_1.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/f93901cf-2d89-4ae3-8e5e-8f3aeee6b56d.jpeg =200x) ![mod_something_else_2.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/76ab7c3d-e491-4dbc-8de5-ffaf3b704ece.jpeg =200x)\n\n\n**Nothing Unusual**\nNothing catch your eye? That's okay - most galaxies are normal! These are rare features, and you won't see them often. Hit Nothing Unusual and head to the next galaxy.\n![decals-4_a-2_3.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-2_3.jpg =200x) ![decals-4_a-2_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-2_1.jpg =200x) ![decals-4_a-2_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-2_2.jpg =200x) ![default_spiral.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/f3c90689-76c1-4585-8c90-5124f3dfb858.jpeg =200x) ![decals-4_a-1_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_1.jpg =200x) ![decals-4_a-1_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_2.jpg =200x)",
+          "type": "multiple",
+          "answers": [
+            {
+              "label": "![ring.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/aa3e8836-6f38-474c-a643-4dda5f3776f6.png =35x) Ring"
+            },
+            {
+              "label": "![lens_or_arc.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/dc46f379-642d-4cf3-a4f2-6771aa1d8f20.png =35x) Lens or arc"
+            },
+            {
+              "label": "![irregular.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/30704464-5307-46db-b318-c57f851a9cb3.png =35x) Irregular"
+            },
+            {
+              "label": "![dust_lane.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/8e834cec-7c10-4e67-a35b-c2f9987838c4.png =35x) Dust lane"
+            },
+            {
+              "label": "![overlapping.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/fb2ddbf0-9992-4cb9-a80d-3107f995c5d2.png =35x) Overlapping"
+            },
+            {
+              "label": "![question_mark_manual.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/d84ba4fc-0324-4c8c-988b-46e118677fca.png =35x) Something Else"
+            },
+            {
+              "label": "![no.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/096879e1-12ae-4df8-abb8-d4a93bc7797f.png =35x) Nothing Unusual"
+            }
+          ],
+          "question": "Do you see any of these rare features?",
+          "required": true
+        },
+        "T11": {
+          "help": "\n\n**Merger**\n\nThe central galaxy is colliding with another. You can see both galaxies in the image.\n\n![from_talk](https://panoptes-uploads.zooniverse.org/production/subject_location/23f0fab3-5caa-464b-ac16-791e5acc4787.png =200x)\n![sloan-6_x-5_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-5_1.jpg =200x)\n![decals-9_a-0_0.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-9_a-0_0.jpg =200x) \n![sloan-6_x-5_5.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-5_5.jpg =200x)\n![decals-9_a-0_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-9_a-0_2.jpg =200x)\n![sloan-6_x-5_4.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-5_4.jpg =200x)\n   \nLook carefully - the second galaxy may be much smaller.\n\n![decals-9_a-0_3.jpg =200x](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-9_a-0_3.jpg =200x)\n![sloan-6_x-5_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-5_2.jpg =200x)\n![sloan-6_x-5_3.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/sloan-6_x-5_3.jpg =200x) \n\n**Major Disturbance**\n\nThe shape of the galaxy is obviously unusual. Any familiar features (like spiral arms or smooth cores) compete for attention with bright, asymmetric shapes.\n\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/92ee6b6e-5df1-4652-afd8-cc68d135be22.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/b39565b5-5f3c-4660-badb-8412a770911b.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/92f34b91-f820-4c62-bb17-4cfc6eea27c5.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/8330486a-14a2-49af-92b2-9b519057713b.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/7363f894-c873-42c7-8fd0-e0c97628da25.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/79592b39-9ceb-43e0-a59e-4c26239cb0a3.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/f611c203-bcc9-4bdb-b885-bf9dbc944c39.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/70568fb4-84b6-4532-9df1-6e8be38684b3.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/645f179b-74b0-4d48-8681-80e8a1571942.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/78be69ce-6a5d-453d-94a7-20d1ce92759e.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/8d6d92ff-17aa-45e6-88c1-e150b7865543.png =200x)\n\n**Minor Disturbance**\n\nThe galaxy still has a recognisable shape. Unusual features are much fainter than the main galaxy and might be missed.\n\n![minor_1_annotated.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/513b8e94-2e7d-4424-8fde-df97a776abf9.png =200x200)\n![minor_2_annotated.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/1d7fedd3-8ff5-4b0c-9a22-bd6c7d2f706e.png =200x200)\n![minor_4_annotated.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/dfed80e6-7b1e-49be-bc9c-c0e1616bd9bb.png =200x200)\n![minor_3_annotated.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/67c83547-f4ba-4236-bec3-7a57705dfc4b.png =200x200)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/433026e4-d072-4915-a11d-6b9fe48b10ea.png =200x200)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/23c617e5-ad56-4217-a038-fddb8a6fbeae.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/20aff308-a8b4-4837-bf8b-4146fdcc43c4.png =200x)\n\n**None**\n\nThe shape is regular rather than asymmetric and there's no indication of any disturbance. \n\n![decals-4_a-2_3.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-2_3.jpg =200x)\n![decals-4_a-2_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-2_1.jpg =200x)\n![decals-4_a-2_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-2_2.jpg =200x)\n![default_spiral.jpg](https://panoptes-uploads.zooniverse.org/production/project_attached_image/f3c90689-76c1-4585-8c90-5124f3dfb858.jpeg =200x) \n![decals-4_a-1_1.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_1.jpg =200x)\n\n\nTwo galaxies might look nearby, but actually be at very different distances.\n\nRemember that the image is only a projection.\nIf both galaxies look totally undisturbed, they are most likely overlapping and \"None\" is the correct response. \nYou can point out overlapping galaxies in the next question.\n\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/634e0e8a-eef1-40eb-9c33-1074f3604c3a.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/08eda1bb-128e-4a9c-bf54-0fbad9a879a1.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/93cf5fcc-d008-4973-9e44-3f214f130fca.png =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/b36fa327-1f51-48d1-bdbd-ceeb6e91b22e.jpeg =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/2ec7081c-dfdd-41df-9498-766b146f7230.jpeg =200x)\n![a](https://panoptes-uploads.zooniverse.org/production/subject_location/1fed34c3-db58-405e-8ada-52467f79ccf5.png =200x)\n![decals-4_a-1_2.jpg](https://static.zooniverse.org/www.galaxyzoo.org/images/examples/decals-4_a-1_2.jpg =200x)",
+          "type": "single",
+          "answers": [
+            {
+              "next": "T10",
+              "label": "![merger_icons_merger.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/cd92c56d-db09-4297-a5f7-90708c78e833.png) Merging"
+            },
+            {
+              "next": "T10",
+              "label": "![merger_icons_major_disturbance.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/9ce9fae3-0c27-44a3-a35f-b1f1f60729df.png) Major Disturbance"
+            },
+            {
+              "next": "T10",
+              "label": "![merger_icons_minor_disturbance.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/5776c185-1d2a-460e-8fb5-8fae0b652a1a.png) Minor Disturbance"
+            },
+            {
+              "next": "T10",
+              "label": "![no.png](https://panoptes-uploads.zooniverse.org/production/project_attached_image/096879e1-12ae-4df8-abb8-d4a93bc7797f.png =60x) None"
+            }
+          ],
+          "question": "Is the galaxy merging or disturbed?",
+          "required": true
+        }
+      },
+      "steps": {},
+      "classifications_count": 1600472,
+      "subjects_count": 51868,
+      "created_at": "2018-02-20T10:31:05.014Z",
+      "updated_at": "2018-12-07T11:48:11.353Z",
+      "finished_at": null,
+      "first_task": "T0",
+      "primary_language": "en",
+      "version": "66.425",
+      "content_language": "en",
+      "prioritized": false,
+      "grouped": false,
+      "pairwise": false,
+      "retirement": {
+        "options": {
+          "count": 40
+        },
+        "criteria": "classification_count"
+      },
+      "retired_set_member_subjects_count": 36368,
+      "href": "/workflows/6122",
+      "active": true,
+      "mobile_friendly": false,
+      "aggregation": {},
+      "configuration": {
+        "stats_hidden": false,
+        "invert_subject": true,
+        "stats_completeness_type": "classification",
+        "hide_classification_summaries": true
+      },
+      "public_gold_standard": false,
+      "completeness": 0.701164494486003,
+      "links": {
+        "project": "5733",
+        "subject_sets": [
+          "19832",
+          "20036",
+          "20156",
+          "20354",
+          "20603",
+          "21156",
+          "51756",
+          "60258",
+          "60259",
+          "60995",
+          "67382",
+          "67383"
+        ],
+        "tutorial_subject": null,
+        "workflow_versions": [],
+        "published_version": null,
+        "attached_images": {
+          "href": "/workflows/6122/attached_images",
+          "type": "attached_images",
+          "ids": []
+        },
+        "classifications_export": {
+          "href": "/workflows/6122/classifications_export",
+          "type": "classifications_exports"
+        }
+      }
+    }
+  ],
+  "links": {
+    "workflows.project": {
+      "href": "/projects/{workflows.project}",
+      "type": "projects"
+    },
+    "workflows.subject_sets": {
+      "href": "/subject_sets?workflow_id={workflows.id}",
+      "type": "subject_sets"
+    },
+    "workflows.tutorial_subject": {
+      "href": "/subjects/{workflows.tutorial_subject}",
+      "type": "tutorial_subjects"
+    },
+    "workflows.workflow_versions": {
+      "href": "/workflow_versions?workflow_id={workflows.id}",
+      "type": "workflow_versions"
+    },
+    "workflows.published_version": {
+      "href": "/workflow_versions/{workflows.published_version}",
+      "type": "published_versions"
+    },
+    "workflows.attached_images": {
+      "href": "/workflows/{workflows.id}/attached_images",
+      "type": "media"
+    },
+    "workflows.classifications_export": {
+      "href": "/workflows/{workflows.id}/classifications_export",
+      "type": "media"
+    }
+  },
+  "meta": {
+    "workflows": {
+      "page": 1,
+      "page_size": 20,
+      "count": 1,
+      "include": [],
+      "page_count": 1,
+      "previous_page": null,
+      "next_page": null,
+      "first_href": "/workflows?id=6122",
+      "previous_href": null,
+      "next_href": null,
+      "last_href": "/workflows?id=6122"
+    }
+  }
+}

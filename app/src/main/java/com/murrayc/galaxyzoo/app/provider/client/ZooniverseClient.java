@@ -74,6 +74,7 @@ public class ZooniverseClient {
         final GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(SubjectsResponse.class, new JsonParserSubjects.SubjectsResponseDeserializer());
         gsonBuilder.registerTypeAdapter(ProjectsResponse.class, new JsonParserProjects.ProjectsResponseDeserializer());
+        gsonBuilder.registerTypeAdapter(WorkflowsResponse.class, new JsonParserWorkflows.WorkflowsResponseDeserializer());
         return gsonBuilder.create();
     }
 
@@ -240,6 +241,51 @@ public class ZooniverseClient {
         return projects.get(0);
     }
 
+    /**
+     * @param workflowId
+     * @return
+     */
+    public Workflow requestWorkflowSync(final String workflowId) throws RequestWorkflowException {
+        throwIfNoNetwork();
+
+        Response<WorkflowsResponse> response = null;
+
+        try {
+            final Call<WorkflowsResponse> call = callGetWorkflow(workflowId);
+            response = call.execute();
+        } catch (final IOException e) {
+            Log.error("requestWorkflowSync(): request failed.", e);
+            throw new RequestWorkflowException("Exception from request.", e);
+        } catch (final JsonSyntaxException e) {
+            Log.error("requestWorkflowSync(): request failed.", e);
+            throw new RequestWorkflowException("Exception from request.", e);
+        }
+
+        //Presumably this happens when onFailure() is called.
+        if (response == null) {
+            Log.error("requestWorkflowSync(): response is null.");
+            throw new RequestWorkflowException("Response is null.");
+        }
+
+        if (!response.isSuccessful()) {
+            Log.error("requestWorkflowSync(): request failed with error code: " + response.message());
+            throw new RequestWorkflowException("Request failed with error code: " + response.message());
+        }
+
+        final WorkflowsResponse workflowsResponse = response.body();
+        if (workflowsResponse == null) {
+            Log.error("requestWorkflowSync(): request failed with null WorkflowResponse.");
+            throw new RequestWorkflowException("Request failed with null WorkflowResponse.");
+        }
+
+        final List<Workflow> workflows = workflowsResponse.workflows;
+        if (workflows == null || workflows.isEmpty()) {
+            throw new RequestWorkflowException("requestMoreItemsSync(): response contained no workflows.");
+        }
+
+        return workflows.get(0);
+    }
+
     public void requestMoreItemsAsync(final int count, final Callback<SubjectsResponse> callback) {
         throwIfNoNetwork();
 
@@ -249,12 +295,23 @@ public class ZooniverseClient {
         call.enqueue(callback);
     }
 
+    public void requestWorkflowAsync(final String workflowId, final Callback<WorkflowsResponse> callback) {
+        throwIfNoNetwork();
+
+        final Call<WorkflowsResponse> call = callGetWorkflow(workflowId);
+        call.enqueue(callback);
+    }
+
     private Call<SubjectsResponse> callGetSubjects(final int count) {
         return mRetrofitService.getSubjects(getGroupIdForNextQuery(), count);
     }
 
     private Call<ProjectsResponse> callGetProject(final String projectSlug) {
         return mRetrofitService.getProject(projectSlug);
+    }
+
+    private Call<WorkflowsResponse> callGetWorkflow(final String workflowId) {
+        return mRetrofitService.getWorkflow(workflowId);
     }
 
     private void throwIfNoNetwork() {
@@ -423,6 +480,16 @@ public class ZooniverseClient {
         }
     }
 
+    public static class RequestWorkflowException extends Exception {
+        RequestWorkflowException(final String detail, final Exception cause) {
+            super(detail, cause);
+        }
+
+        public RequestWorkflowException(final String detail) {
+            super(detail);
+        }
+    }
+
     public static class Answer {
         final String next;
         final String label;
@@ -478,13 +545,14 @@ public class ZooniverseClient {
     public static final class Project {
         String id;
         String displayName;
-        List<Task> tasks;
+        List<String> workflowIds;
+        List<String> activeWorkflowIds;
 
-        public Project(final String id, final String displayName, final List<Task> tasks) {
+        public Project(final String id, final String displayName, final List<String> workflowIds, final List<String> activeWorkflowIds) {
             this.id = id;
             this.displayName = displayName;
-            this.tasks = tasks;
-        }
+            this.workflowIds = workflowIds;
+            this.activeWorkflowIds = activeWorkflowIds;        }
 
         public String id() {
             return this.id;
@@ -494,8 +562,12 @@ public class ZooniverseClient {
             return this.displayName;
         }
 
-        public List<Task> tasks() {
-            return this.tasks;
+        public List<String> workflowIds() {
+            return this.workflowIds;
+        }
+
+        public List<String> activeWorkflowIds() {
+            return this.activeWorkflowIds;
         }
     }
 
