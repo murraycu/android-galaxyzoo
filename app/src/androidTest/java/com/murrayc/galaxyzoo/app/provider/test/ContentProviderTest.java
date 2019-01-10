@@ -56,15 +56,15 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
     }
 
     public void testInsertUri() {
-        final Uri uri = mMockResolver.insert(Item.CONTENT_URI, getFullContentValues());
+        final Uri uri = mMockResolver.insert(Item.ITEMS_URI, getFullContentValues());
         assertNotNull(uri);
         assertEquals(1L, ContentUris.parseId(uri));
     }
 
     public void testInsertThenQueryAll() {
-        mMockResolver.insert(Item.CONTENT_URI, getFullContentValues());
+        mMockResolver.insert(Item.ITEMS_URI, getFullContentValues());
 
-        final Cursor cursor = mMockResolver.query(Item.CONTENT_URI, null, null, null, null);
+        final Cursor cursor = mMockResolver.query(Item.ITEMS_URI, null, null, null, null);
         assertNotNull(cursor);
         assertEquals(1, cursor.getCount());
         assertTrue(cursor.moveToFirst());
@@ -77,7 +77,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
     }
 
     public void testInsertThenQuerySpecific() {
-        final Uri uri = mMockResolver.insert(Item.CONTENT_URI, getFullContentValues());
+        final Uri uri = mMockResolver.insert(Item.ITEMS_URI, getFullContentValues());
         assertNotNull(uri);
 
         final Cursor cursor = mMockResolver.query(uri, null, null, null, null);
@@ -94,7 +94,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
 
 
     public void testInsertThenOpenFile() throws IOException {
-        final Uri uriItem = mMockResolver.insert(Item.CONTENT_URI, getFullContentValues());
+        final Uri uriItem = mMockResolver.insert(Item.ITEMS_URI, getFullContentValues());
         assertNotNull(uriItem);
         final Cursor cursor = mMockResolver.query(uriItem, null, null, null, null);
         assertNotNull(cursor);
@@ -131,7 +131,7 @@ public class ContentProviderTest extends ProviderTestCase2<ItemsContentProvider>
     public void testGetStreamTypesWrongUri() {
         //Only a file uri should provide a data stream:
         try {
-            final String[] mimeTypes = mMockResolver.getStreamTypes(Item.CONTENT_URI,
+            final String[] mimeTypes = mMockResolver.getStreamTypes(Item.ITEMS_URI,
                     "*/*" /* cannot be null */);
             assertNull(mimeTypes);
             fail(); //This should not be reached: The exception should always be thrown.
