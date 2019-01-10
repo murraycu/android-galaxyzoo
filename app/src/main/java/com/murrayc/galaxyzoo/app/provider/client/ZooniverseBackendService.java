@@ -12,6 +12,18 @@ import retrofit2.http.Query;
  */
 
 public interface ZooniverseBackendService {
+    /**
+     * Gets the project details, including the list of workflows.
+     *
+     * @param projectSlug
+     * @return
+     */
+    @Headers({
+            HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT + ": " + HttpUtils.HTTP_REQUEST_HEADER_PARAM_USER_AGENT
+    })
+    @GET("projects?http_cache=true")
+    Call<ZooniverseClient.ProjectsResponse> getProject(@Query("slug") String projectSlug);
+
     /** Gets the subjects for use with a workflow.
      *
      * @param workflowId

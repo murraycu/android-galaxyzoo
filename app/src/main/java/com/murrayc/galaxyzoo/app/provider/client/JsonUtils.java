@@ -1,7 +1,11 @@
 package com.murrayc.galaxyzoo.app.provider.client;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by murrayc on 3/27/18.
@@ -36,5 +40,22 @@ public class JsonUtils {
         }
 
         return jsonElementId.getAsBoolean();
+    }
+
+    static List<String> listOfStringsFromJsonArray(final JsonObject jsonObject, final String fieldName) {
+        final List<String> result = new ArrayList<>();
+        final JsonArray jsonArray = jsonObject.getAsJsonArray(fieldName);
+        for (final JsonElement jsonElement : jsonArray) {
+            if (jsonElement == null) {
+                continue;
+            }
+
+            final String text = jsonElement.getAsString();
+            if (text != null && !text.isEmpty()) {
+                result.add(text);
+            }
+        }
+
+        return result;
     }
 }

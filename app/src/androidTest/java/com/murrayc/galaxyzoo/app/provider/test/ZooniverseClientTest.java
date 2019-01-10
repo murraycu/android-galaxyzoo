@@ -130,6 +130,42 @@ public class ZooniverseClientTest{
     }
 
     @Test
+    public void testProject() throws IOException, ZooniverseClient.RequestProjectException {
+        final MockWebServer server = new MockWebServer();
+
+        final String strResponse = getStringFromStream(
+                MoreItemsJsonParserTest.class.getClassLoader().getResourceAsStream("test_project_response.json"));
+        assertNotNull(strResponse);
+        server.enqueue(new MockResponse().setBody(strResponse));
+        server.start();
+
+        final ZooniverseClient client = createZooniverseClient(server);
+
+        final ZooniverseClient.Project project = client.requestProjectSync("zookeeper/galaxy-zoo");
+        assertNotNull(project);
+
+        assertNotNull(project.id());
+        assertEquals("5733", project.id());
+
+        assertNotNull(project.displayName());
+        assertEquals("Galaxy Zoo", project.displayName());
+
+        final List<String> workflowIds = project.workflowIds();
+        assertNotNull(workflowIds);
+        assertEquals(5, workflowIds.size());
+
+        final List<String> activeWorkflowIds = project.activeWorkflowIds();
+        assertNotNull(activeWorkflowIds);
+        assertEquals(1, activeWorkflowIds.size());
+
+        final String activeWorkflowID = activeWorkflowIds.get(0);
+        assertNotNull(activeWorkflowID);
+        assertEquals("6122", activeWorkflowID);
+
+        server.shutdown();
+    }
+
+    @Test
     public void testLoginWithSuccess() throws IOException, InterruptedException, ZooniverseClient.LoginException {
         final MockWebServer server = new MockWebServer();
 

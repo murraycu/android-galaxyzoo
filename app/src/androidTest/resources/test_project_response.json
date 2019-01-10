@@ -1,0 +1,591 @@
+{
+  "projects": [
+    {
+      "id": "5733",
+      "display_name": "Galaxy Zoo",
+      "classifications_count": 1600518,
+      "subjects_count": 51868,
+      "created_at": "2017-11-29T15:13:07.597Z",
+      "updated_at": "2019-01-10T11:29:45.730Z",
+      "available_languages": [
+        "en"
+      ],
+      "title": "Galaxy Zoo",
+      "description": "Few have witnessed what you're about to see",
+      "introduction": "To understand how galaxies formed we need your help to classify them according to their shapes. If you're quick, you may even be the first person to see the galaxies you're asked to classify.\n\nLook at telescope images of distant galaxies. \n\nExplore the sky. What will you find?",
+      "private": false,
+      "retired_subjects_count": 36368,
+      "configuration": {
+        "announcement": "",
+        "researcherID": "245",
+        "default_workflow": "6122"
+      },
+      "live": true,
+      "urls": [
+        {
+          "url": "https://twitter.com/galaxyzoo",
+          "path": "galaxyzoo",
+          "site": "twitter.com/",
+          "label": ""
+        },
+        {
+          "url": "https://facebook.com/thegalaxyzoo",
+          "path": "thegalaxyzoo",
+          "site": "facebook.com/",
+          "label": ""
+        },
+        {
+          "url": "https://blog.galaxyzoo.org/",
+          "label": "Blog"
+        }
+      ],
+      "migrated": false,
+      "classifiers_count": 19704,
+      "slug": "zookeeper/galaxy-zoo",
+      "redirect": "",
+      "beta_requested": false,
+      "beta_approved": false,
+      "launch_requested": false,
+      "launch_approved": true,
+      "launch_date": "2018-03-15T12:25:12.815Z",
+      "href": "/projects/5733",
+      "workflow_description": "",
+      "primary_language": "en",
+      "tags": [
+        "astronomy",
+        "physics"
+      ],
+      "experimental_tools": [
+        "translator-role"
+      ],
+      "completeness": 0.701164494486003,
+      "activity": 4831,
+      "state": "live",
+      "researcher_quote": "In the decade the project has been running, Galaxy Zoo volunteers have helped understand the Universe and made spectacular discoveries. We hope you'll join us for the next stage of the adventure. ",
+      "mobile_friendly": true,
+      "featured": false,
+      "links": {
+        "workflows": [
+          "5528",
+          "6122",
+          "6527",
+          "5653",
+          "6280"
+        ],
+        "active_workflows": [
+          "6122"
+        ],
+        "subject_sets": [
+          "19829",
+          "19832",
+          "20036",
+          "20156",
+          "20354",
+          "20603",
+          "21156",
+          "51756",
+          "60259",
+          "60258",
+          "60995",
+          "67383",
+          "67382",
+          "17452",
+          "16811",
+          "60988"
+        ],
+        "owner": {
+          "id": "245",
+          "display_name": "zookeeper",
+          "type": "users",
+          "href": "/users/245"
+        },
+        "project_contents": [
+          "5733"
+        ],
+        "project_roles": [
+          "116945",
+          "150876",
+          "150253",
+          "133002",
+          "132783",
+          "132782",
+          "132781",
+          "132780",
+          "132779",
+          "132778",
+          "132777",
+          "132776",
+          "132775",
+          "125145",
+          "125088",
+          "131134",
+          "130939",
+          "119203",
+          "119023",
+          "117891",
+          "117890",
+          "116953",
+          "116949",
+          "116947",
+          "116946",
+          "116943",
+          "116942",
+          "116941"
+        ],
+        "pages": [
+          "7221",
+          "7220",
+          "7218",
+          "7219",
+          "7217"
+        ],
+        "organization": "17",
+        "avatar": {
+          "href": "/projects/5733/avatar",
+          "type": "avatars",
+          "id": "22882938"
+        },
+        "background": {
+          "href": "/projects/5733/background",
+          "type": "backgrounds",
+          "id": "22880788"
+        },
+        "attached_images": {
+          "href": "/projects/5733/attached_images",
+          "type": "attached_images",
+          "ids": [
+            "33584262",
+            "33584261",
+            "33584260",
+            "33325208",
+            "33325207",
+            "33325206",
+            "33325205",
+            "33325204",
+            "33325203",
+            "33325202",
+            "33325198",
+            "33325199",
+            "33325197",
+            "33325196",
+            "33325195",
+            "33325193",
+            "33325192",
+            "29454026",
+            "29452873",
+            "29452718",
+            "29452717",
+            "29452716",
+            "29452715",
+            "29452714",
+            "29452713",
+            "29452712",
+            "29452711",
+            "29452710",
+            "29452709",
+            "29452708",
+            "29452706",
+            "29452705",
+            "29452078",
+            "29452077",
+            "29452076",
+            "29452075",
+            "29452074",
+            "29446974",
+            "29446973",
+            "29446972",
+            "29446971",
+            "29446970",
+            "29446969",
+            "29446968",
+            "29446967",
+            "29446966",
+            "29446965",
+            "29446964",
+            "29446963",
+            "29446962",
+            "29446831",
+            "29446830",
+            "29446787",
+            "29446786",
+            "29446785",
+            "29446784",
+            "29446783",
+            "29446733",
+            "29446732",
+            "29446731",
+            "29446730",
+            "29446729",
+            "29446728",
+            "29446727",
+            "29446726",
+            "29446725",
+            "29446724",
+            "29446723",
+            "29446722",
+            "29446721",
+            "29446720",
+            "29446719",
+            "29446718",
+            "29446717",
+            "29446716",
+            "29446715",
+            "29446714",
+            "29445283",
+            "29445118",
+            "29445117",
+            "29403581",
+            "29403481",
+            "29403480",
+            "29403354",
+            "29403353",
+            "29401106",
+            "29401105",
+            "29379968",
+            "29379967",
+            "29379966",
+            "29379964",
+            "29379965",
+            "29379963",
+            "29379962",
+            "29379961",
+            "29379960",
+            "29379957",
+            "29379959",
+            "29379958",
+            "29379956",
+            "29379955",
+            "29379954",
+            "29379953",
+            "29379952",
+            "29379951",
+            "29379950",
+            "29379563",
+            "29379562",
+            "29379561",
+            "29379560",
+            "29379551",
+            "29379550",
+            "29379542",
+            "29379541",
+            "29379540",
+            "29379539",
+            "29379538",
+            "29379537",
+            "29379536",
+            "29379535",
+            "29377774",
+            "29377773",
+            "29377772",
+            "29377771",
+            "29377770",
+            "29377769",
+            "29377768",
+            "29377767",
+            "29377766",
+            "29377765",
+            "29377601",
+            "29377408",
+            "29377407",
+            "29377013",
+            "29377012",
+            "29377011",
+            "29377010",
+            "29377009",
+            "29377008",
+            "29377007",
+            "29377006",
+            "29377005",
+            "29377004",
+            "29377003",
+            "29374092",
+            "29374091",
+            "29374090",
+            "29374089",
+            "29366001",
+            "29365275",
+            "29365274",
+            "29365273",
+            "29365272",
+            "29365271",
+            "29342810",
+            "29342804",
+            "29342770",
+            "29342769",
+            "29342768",
+            "29342767",
+            "29260670",
+            "29260669",
+            "29260668",
+            "29260666",
+            "29260193",
+            "29260192",
+            "29260191",
+            "29260009",
+            "29260007",
+            "29255705",
+            "29255704",
+            "29255703",
+            "29255702",
+            "29255701",
+            "29255700",
+            "29255699",
+            "29255434",
+            "29255433",
+            "29255432",
+            "29255431",
+            "29246756",
+            "29246755",
+            "29246754",
+            "29246753",
+            "29246642",
+            "29246641",
+            "29246640",
+            "29246639",
+            "29246637",
+            "29245477",
+            "29245100",
+            "29245099",
+            "29245098",
+            "29245097",
+            "28815102",
+            "28815101",
+            "28815099",
+            "28813014",
+            "28808192",
+            "28808191",
+            "28808189",
+            "28808186",
+            "28808185",
+            "28808184",
+            "28785936",
+            "28782230",
+            "28782229",
+            "28782228",
+            "28782227",
+            "28782225",
+            "28770470",
+            "28770469",
+            "28498191",
+            "28498192",
+            "28498190",
+            "28498189",
+            "28498188",
+            "28498187",
+            "28498186",
+            "28498185",
+            "28498184",
+            "28498183",
+            "28498182",
+            "28498181",
+            "28498180",
+            "28427349",
+            "28427348",
+            "28427347",
+            "28427346",
+            "28427345",
+            "28427344",
+            "28427343",
+            "28427342",
+            "28427341",
+            "28427340",
+            "28427339",
+            "28427338",
+            "28427337",
+            "28427336",
+            "22887756",
+            "22887757",
+            "22887755",
+            "22887754",
+            "22887753",
+            "22887752",
+            "22887750",
+            "22882658",
+            "22882656",
+            "22882655",
+            "22882654",
+            "22882653",
+            "22882652",
+            "22882651",
+            "22882650",
+            "22882649",
+            "22882648",
+            "22882647",
+            "22882646",
+            "22882645",
+            "22882644",
+            "22882643",
+            "22882642",
+            "22882640",
+            "22882639",
+            "22882638",
+            "22882637",
+            "22882636",
+            "22882635",
+            "22882634",
+            "22882633",
+            "22882316"
+          ]
+        },
+        "classifications_export": {
+          "href": "/projects/5733/classifications_export",
+          "type": "classifications_exports"
+        },
+        "subjects_export": {
+          "href": "/projects/5733/subjects_export",
+          "type": "subjects_exports"
+        }
+      }
+    }
+  ],
+  "linked": {
+    "avatars": [
+      {
+        "id": "22882938",
+        "href": "/projects/5733/avatar",
+        "src": "https://panoptes-uploads.zooniverse.org/production/project_avatar/fb519654-d9e7-4324-9b51-7263214f8723.jpeg",
+        "content_type": "image/jpeg",
+        "media_type": "project_avatar",
+        "external_link": false,
+        "created_at": "2017-11-29T15:29:32.166Z",
+        "metadata": null,
+        "updated_at": "2017-11-29T15:29:32.166Z",
+        "links": {
+          "linked": {
+            "href": "/projects/5733",
+            "id": "5733",
+            "type": "projects"
+          }
+        }
+      }
+    ],
+    "backgrounds": [
+      {
+        "id": "22880788",
+        "href": "/projects/5733/background",
+        "src": "https://panoptes-uploads.zooniverse.org/production/project_background/b77d361a-f11e-4c30-8eda-4fbee24a18bc.jpeg",
+        "content_type": "image/jpeg",
+        "media_type": "project_background",
+        "external_link": false,
+        "created_at": "2017-11-29T15:18:26.264Z",
+        "metadata": null,
+        "updated_at": "2017-11-29T15:18:26.264Z",
+        "links": {
+          "linked": {
+            "href": "/projects/5733",
+            "id": "5733",
+            "type": "projects"
+          }
+        }
+      }
+    ],
+    "owners": [
+      {
+        "id": "245",
+        "login": "zookeeper",
+        "display_name": "zookeeper",
+        "credited_name": "Chris Lintott",
+        "created_at": "2007-07-11T18:55:09.000Z",
+        "updated_at": "2019-01-07T18:19:34.119Z",
+        "type": "users",
+        "href": "/users/245",
+        "private_profile": true,
+        "avatar_src": "https://panoptes-uploads.zooniverse.org/production/user_avatar/45b6b5ec-2e01-4123-b7a3-c2b72d91ba79.png",
+        "links": {}
+      }
+    ]
+  },
+  "links": {
+    "projects.workflows": {
+      "href": "/workflows?project_id={projects.id}",
+      "type": "workflows"
+    },
+    "projects.active_workflows": {
+      "href": "/workflows?project_id={projects.id}",
+      "type": "active_workflows"
+    },
+    "projects.subject_sets": {
+      "href": "/subject_sets?project_id={projects.id}",
+      "type": "subject_sets"
+    },
+    "projects.project_contents": {
+      "href": "/project_contents?project_id={projects.id}",
+      "type": "project_contents"
+    },
+    "projects.project_roles": {
+      "href": "/project_roles?project_id={projects.id}",
+      "type": "project_roles"
+    },
+    "projects.pages": {
+      "href": "/projects/{projects.id}/pages",
+      "type": "project_pages"
+    },
+    "projects.organization": {
+      "href": "/organizations/{projects.organization}",
+      "type": "organizations"
+    },
+    "projects.attached_images": {
+      "href": "/projects/{projects.id}/attached_images",
+      "type": "media"
+    },
+    "projects.owner": {
+      "href": "/{projects.owner.href}",
+      "type": "owners"
+    },
+    "projects.avatar": {
+      "href": "/projects/{projects.id}/avatar",
+      "type": "media"
+    },
+    "projects.background": {
+      "href": "/projects/{projects.id}/background",
+      "type": "media"
+    },
+    "projects.classifications_export": {
+      "href": "/projects/{projects.id}/classifications_export",
+      "type": "media"
+    },
+    "projects.subjects_export": {
+      "href": "/projects/{projects.id}/subjects_export",
+      "type": "media"
+    },
+    "user_groups.memberships": {
+      "href": "/memberships?user_group_id={user_groups.id}",
+      "type": "memberships"
+    },
+    "user_groups.users": {
+      "href": "/users?user_group_id={user_groups.id}",
+      "type": "users"
+    },
+    "user_groups.projects": {
+      "href": "/projects?owner={user_groups.name}",
+      "type": "projects"
+    },
+    "user_groups.collections": {
+      "href": "/collections?owner={user_groups.name}",
+      "type": "collections"
+    },
+    "user_groups.recents": {
+      "href": "/user_groups/{user_groups.id}/recents",
+      "type": "recents"
+    }
+  },
+  "meta": {
+    "projects": {
+      "page": 1,
+      "page_size": 20,
+      "count": 1,
+      "include": [
+        "avatar",
+        "background",
+        "owners"
+      ],
+      "page_count": 1,
+      "previous_page": null,
+      "next_page": null,
+      "first_href": "/projects?include=avatar,background,owners\u0026slug=zookeeper/galaxy-zoo",
+      "previous_href": null,
+      "next_href": null,
+      "last_href": "/projects?include=avatar,background,owners\u0026slug=zookeeper/galaxy-zoo"
+    }
+  }
+}

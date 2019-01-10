@@ -73,7 +73,7 @@ public class ZooniverseClient {
         // Register our custom GSON deserializers for use by Retrofit.
         final GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(SubjectsResponse.class, new JsonParserSubjects.SubjectsResponseDeserializer());
-        gsonBuilder.registerTypeAdapter(WorkflowsResponse.class, new JsonParserWorkflows.WorkflowsResponseDeserializer());
+        gsonBuilder.registerTypeAdapter(ProjectsResponse.class, new JsonParserProjects.ProjectsResponseDeserializer());
         return gsonBuilder.create();
     }
 
@@ -195,6 +195,51 @@ public class ZooniverseClient {
         return result;
     }
 
+    /**
+     * @param projectSlug
+     * @return
+     */
+    public Project requestProjectSync(final String projectSlug) throws RequestProjectException {
+        throwIfNoNetwork();
+
+        Response<ProjectsResponse> response = null;
+
+        try {
+            final Call<ProjectsResponse> call = callGetProject(projectSlug);
+            response = call.execute();
+        } catch (final IOException e) {
+            Log.error("requestProjectSync(): request failed.", e);
+            throw new RequestProjectException("Exception from request.", e);
+        } catch (final JsonSyntaxException e) {
+            Log.error("requestProjectSync(): request failed.", e);
+            throw new RequestProjectException("Exception from request.", e);
+        }
+
+        //Presumably this happens when onFailure() is called.
+        if (response == null) {
+            Log.error("requestProjectSync(): response is null.");
+            throw new RequestProjectException("Response is null.");
+        }
+
+        if (!response.isSuccessful()) {
+            Log.error("requestProjectSync(): request failed with error code: " + response.message());
+            throw new RequestProjectException("Request failed with error code: " + response.message());
+        }
+
+        final ProjectsResponse projectResponse = response.body();
+        if (projectResponse == null) {
+            Log.error("requestProjectSync(): request failed with null WorkflowResponse.");
+            throw new RequestProjectException("Request failed with null WorkflowResponse.");
+        }
+
+        final List<Project> projects = projectResponse.projects;
+        if (projects == null || projects.isEmpty()) {
+            throw new RequestProjectException("requestProjectSync(): response contained no projects.");
+        }
+
+        return projects.get(0);
+    }
+
     public void requestMoreItemsAsync(final int count, final Callback<SubjectsResponse> callback) {
         throwIfNoNetwork();
 
@@ -206,6 +251,10 @@ public class ZooniverseClient {
 
     private Call<SubjectsResponse> callGetSubjects(final int count) {
         return mRetrofitService.getSubjects(getGroupIdForNextQuery(), count);
+    }
+
+    private Call<ProjectsResponse> callGetProject(final String projectSlug) {
+        return mRetrofitService.getProject(projectSlug);
     }
 
     private void throwIfNoNetwork() {
@@ -326,6 +375,14 @@ public class ZooniverseClient {
         }
     }
 
+    public static final class ProjectsResponse {
+        public final List<Project> projects;
+
+        public ProjectsResponse(final List<Project> projects) {
+            this.projects = projects;
+        }
+    }
+
     public static final class WorkflowsResponse {
         public final List<Workflow> workflows;
 
@@ -352,6 +409,16 @@ public class ZooniverseClient {
         }
 
         public RequestMoreItemsException(final String detail) {
+            super(detail);
+        }
+    }
+
+    public static class RequestProjectException extends Exception {
+        RequestProjectException(final String detail, final Exception cause) {
+            super(detail, cause);
+        }
+
+        public RequestProjectException(final String detail) {
             super(detail);
         }
     }
@@ -405,6 +472,30 @@ public class ZooniverseClient {
 
         public boolean required() {
             return required;
+        }
+    }
+
+    public static final class Project {
+        String id;
+        String displayName;
+        List<Task> tasks;
+
+        public Project(final String id, final String displayName, final List<Task> tasks) {
+            this.id = id;
+            this.displayName = displayName;
+            this.tasks = tasks;
+        }
+
+        public String id() {
+            return this.id;
+        }
+
+        public String displayName() {
+            return this.displayName;
+        }
+
+        public List<Task> tasks() {
+            return this.tasks;
         }
     }
 
