@@ -33,6 +33,9 @@ public class JsonParserWorkflows {
             }
 
             final JsonArray jsonSubjects = jsonObject.getAsJsonArray("workflows");
+            if (jsonSubjects == null) {
+                return null;
+            }
 
             // Parse each workflow (usually just one):
             final List<ZooniverseClient.Workflow> workflows = new ArrayList<>();
