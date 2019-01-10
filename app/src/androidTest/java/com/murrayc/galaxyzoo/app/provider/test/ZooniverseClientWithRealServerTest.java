@@ -55,7 +55,7 @@ public class ZooniverseClientWithRealServerTest {
         // Do this enough times that we are very likely to excercise all groups:
         final int count = Config.SUBJECT_GROUPS.size() * 5;
         for (int i = 0; i < count; ++i) {
-            final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(1);
+            final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(Config.SUBJECT_GROUP_ID_GAMA_15,1);
             assertNotNull(subjects);
             assertTrue(subjects.size() == 1);
 

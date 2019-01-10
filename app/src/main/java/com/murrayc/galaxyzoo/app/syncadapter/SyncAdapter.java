@@ -112,7 +112,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         //Do the download first, to avoid the UI having to wait for new subjects to classify.
 
 
-        downloadMinimumSubjectsAsync();
+        downloadMinimumSubjectsAsync(ZooniverseClient.getGroupIdForNextQuery());
         downloadMissingImages();
 
         //Do less urgent things next:
@@ -164,17 +164,17 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      *
      * @return Return true if we know for sure that no further downloading is currently necessary.
      */
-    private boolean downloadMinimumSubjectsAsync() {
+    private boolean downloadMinimumSubjectsAsync(final String groupId) {
         final int missing = getNotDoneNeededForCache();
         if (missing > 0) {
-            requestMoreItemsAsync(missing);
+            requestMoreItemsAsync(groupId, missing);
             return false;
         } else {
             return true; //Tell the caller that no action was necessary.
         }
     }
 
-    private void requestMoreItemsAsync(final int count) {
+    private void requestMoreItemsAsync(final String groupId, final int count) {
         if(mRequestMoreItemsTaskInProgress) {
             //Do just one of these at a time,
             //to avoid requesting more while we are processing the results from a first one.
@@ -188,7 +188,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         mRequestMoreItemsTaskInProgress = true;
 
         try {
-            mClient.requestMoreItemsAsync(count,
+            mClient.requestMoreItemsAsync(groupId, count,
                     new Callback<ZooniverseClient.SubjectsResponse>() {
                         @Override
                         public void onResponse(final Call<ZooniverseClient.SubjectsResponse> call, final retrofit2.Response<ZooniverseClient.SubjectsResponse> response) {

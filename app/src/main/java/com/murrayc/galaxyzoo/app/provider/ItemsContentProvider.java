@@ -700,7 +700,8 @@ public class ItemsContentProvider extends ContentProvider {
                         for(int i = 0; i < 3; i++) {
                             List<ZooniverseClient.Subject> subjects = null;
                             try {
-                                subjects = mZooniverseClient.requestMoreItemsSync(1);
+                                final String groupId = mZooniverseClient.getGroupIdForNextQuery();
+                                subjects = mZooniverseClient.requestMoreItemsSync(groupId, 1);
                             } catch (final HttpUtils.NoNetworkException e) {
                                 //Return the empty cursor,
                                 //and let the caller guess at the cause.

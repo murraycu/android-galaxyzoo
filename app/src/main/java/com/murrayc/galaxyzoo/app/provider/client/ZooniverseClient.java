@@ -82,7 +82,7 @@ public class ZooniverseClient {
      *
      * @return
      */
-    private static String getGroupIdForNextQuery() {
+    public static String getGroupIdForNextQuery() {
 
         //Get a list of only the groups that should be used for new queries.
         //TODO: Avoid doing this each time?
@@ -155,7 +155,7 @@ public class ZooniverseClient {
      * @param count
      * @return
      */
-    public List<Subject> requestMoreItemsSync(int count) throws RequestMoreItemsException {
+    public List<Subject> requestMoreItemsSync(final String groupId, int count) throws RequestMoreItemsException {
         throwIfNoNetwork();
 
         //Avoid suddenly doing too much network and disk IO
@@ -167,7 +167,7 @@ public class ZooniverseClient {
         Response<SubjectsResponse> response = null;
 
         try {
-            final Call<SubjectsResponse> call = callGetSubjects(count);
+            final Call<SubjectsResponse> call = callGetSubjects(groupId, count);
             response = call.execute();
         } catch (final IOException e) {
             Log.error("requestMoreItemsSync(): request failed.", e);
@@ -286,12 +286,12 @@ public class ZooniverseClient {
         return workflows.get(0);
     }
 
-    public void requestMoreItemsAsync(final int count, final Callback<SubjectsResponse> callback) {
+    public void requestMoreItemsAsync(final String groupId, final int count, final Callback<SubjectsResponse> callback) {
         throwIfNoNetwork();
 
         Log.info("requestMoreItemsAsync(): count=" + count);
 
-        final Call<SubjectsResponse> call = callGetSubjects(count);
+        final Call<SubjectsResponse> call = callGetSubjects(groupId, count);
         call.enqueue(callback);
     }
 
@@ -302,8 +302,8 @@ public class ZooniverseClient {
         call.enqueue(callback);
     }
 
-    private Call<SubjectsResponse> callGetSubjects(final int count) {
-        return mRetrofitService.getSubjects(getGroupIdForNextQuery(), count);
+    private Call<SubjectsResponse> callGetSubjects(final String groupId, final int count) {
+        return mRetrofitService.getSubjects(groupId, count);
     }
 
     private Call<ProjectsResponse> callGetProject(final String projectSlug) {

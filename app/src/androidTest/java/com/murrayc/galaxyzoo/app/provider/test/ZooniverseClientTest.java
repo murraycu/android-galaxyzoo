@@ -79,7 +79,7 @@ public class ZooniverseClientTest{
         final ZooniverseClient client = createZooniverseClient(server);
 
         final int COUNT = 10;
-        final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(COUNT);
+        final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(TEST_GROUP_ID, COUNT);
         assertNotNull(subjects);
         assertEquals(COUNT, subjects.size());
 
@@ -290,7 +290,7 @@ public class ZooniverseClientTest{
 
         //Mostly we want to check that it doesn't crash on a bad HTTP response.
         try {
-            final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
+            final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(TEST_GROUP_ID, 5);
             assertTrue((subjects == null) || (subjects.isEmpty()));
         } catch (final ZooniverseClient.RequestMoreItemsException e) {
             /* We don't care about the actual cause.
@@ -320,7 +320,7 @@ public class ZooniverseClientTest{
         //Mostly we want to check that it doesn't crash on a bad HTTP response.
 
         try {
-            final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(5);
+            final List<ZooniverseClient.Subject> subjects = client.requestMoreItemsSync(TEST_GROUP_ID, 5);
             assertTrue((subjects == null) || (subjects.isEmpty()));
         } catch (final ZooniverseClient.RequestMoreItemsException e) {
             assertNotNull(e.getMessage());
