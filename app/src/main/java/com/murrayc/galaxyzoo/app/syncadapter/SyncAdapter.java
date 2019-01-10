@@ -192,7 +192,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     new Callback<ZooniverseClient.SubjectsResponse>() {
                         @Override
                         public void onResponse(final Call<ZooniverseClient.SubjectsResponse> call, final retrofit2.Response<ZooniverseClient.SubjectsResponse> response) {
-                            onQueryTaskFinished(response.body());
+                            onSubjectsQueryTaskFinished(response.body());
                             mRequestMoreItemsTaskInProgress = false;
                         }
 
@@ -506,7 +506,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private void onQueryTaskFinished(@NonNull final ZooniverseClient.SubjectsResponse result) {
+    private void onSubjectsQueryTaskFinished(@NonNull final ZooniverseClient.SubjectsResponse result) {
         mRequestMoreItemsTaskInProgress = false;
 
         if (result == null) {
