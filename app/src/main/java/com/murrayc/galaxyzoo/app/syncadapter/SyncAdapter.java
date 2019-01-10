@@ -72,7 +72,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private ZooniverseClient mClient = null;
 
-    //This does some of the work to communicate with the itemsContentProvider
+    //These do some of the work to communicate with the itemsContentProvider
     //and download image files to the local cache.
     private final SubjectAdder mSubjectAdder;
 

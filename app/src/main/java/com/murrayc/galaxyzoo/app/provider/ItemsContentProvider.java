@@ -138,7 +138,7 @@ public class ItemsContentProvider extends ContentProvider {
         // A URI for the list of all items:
         sUriMatcher.addURI(Item.AUTHORITY, URI_PART_ITEM, MATCHER_ID_ITEMS);
 
-        // A URI for a single item:
+        // A URI for the next item:
         sUriMatcher.addURI(Item.AUTHORITY, URI_PART_ITEM + "/" + URI_PART_ITEM_ID_NEXT, MATCHER_ID_ITEM_NEXT);
 
         // A URI for a single item:
@@ -415,7 +415,7 @@ public class ItemsContentProvider extends ContentProvider {
 
         switch (sUriMatcher.match(uri)) {
             case MATCHER_ID_ITEMS:
-            case MATCHER_ID_ITEM:
+            case MATCHER_ID_ITEM: {
                 //Refuse to insert without a Subject ID:
                 final String subjectId = values.getAsString(Item.Columns.SUBJECT_ID);
                 if (TextUtils.isEmpty(subjectId)) {
@@ -432,7 +432,7 @@ public class ItemsContentProvider extends ContentProvider {
                 //This doesn't actually get any data from the locations.
                 boolean fileUrisCreated = false;
                 try {
-                    fileUrisCreated =  createFileUrisForImages(valuesComplete);
+                    fileUrisCreated = createFileUrisForImages(valuesComplete);
                 } catch (final IOException e) {
                     Log.error("insert(): createFileUrisForImages() failed", e);
                 }
@@ -450,6 +450,7 @@ public class ItemsContentProvider extends ContentProvider {
                 requestSync();
 
                 break;
+            }
             case MATCHER_ID_CLASSIFICATION_ANSWERS:
             case MATCHER_ID_CLASSIFICATION_ANSWER:
                 uriInserted = insertMappedValues(DatabaseHelper.TABLE_NAME_CLASSIFICATION_ANSWERS,
